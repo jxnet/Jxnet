@@ -1,0 +1,54 @@
+
+# Specify where JAVA_HOHE directory is
+JAVA_HOME=C:\Program Files\Java\jdk\
+JAVAC=$(JAVA_HOME)\bin\javac.exe
+JAVA=$(JAVA_HOME)\bin\java.exe
+JAR=$(JAVA_HOME)\bin\jar.exe
+JNI_INCLUDE=$(JAVA_HOME)\include
+
+GCC=C:\MinGW64\mingw64\bin\gcc.exe
+
+# Specify where pcap.h is
+PCAP_LIB=C:\Windows\System32
+PCAP_INCLUDE=C:\Wpcap\include
+
+JNI_INCLUDE_PLATFORM=$(JNI_INCLUDE)/linux
+C_COMPILE_OPTION= -shared -L $(PCAP_LIB)
+SUFFIX=.dll
+INSTALL_DIR=C:\Windows\System32
+
+JAVA_SRC=\
+	java/com/jxpcap/*.java \
+	java/com/jxpcap/util/*.java \
+	java/com/jxpcap/util/packet/*.java \
+	java/com/jxpcap/packet/*.java
+	
+C_SRC=\
+	c/*.c \
+	c/util/*.c
+
+JAVA_CLASS=\
+	com/jxpcap/*.class \
+	com/jxpcap/util/*.class \
+	com/jxpcap/util/packet/*.class \
+	com/jxpcap/packet/*.class
+
+JAVA_FLAGS= -g -verbose -Werror -Xlint
+
+C_FLAGS= $(C_COMPILE_OPTION) -I $(PCAP_INCLUDE) -I $(JNI_INCLUDE) -I $(JNI_INCLUDE_PLATFORM)
+
+all:
+	$(JAVAC) $(JAVA_FLAGS) $(JAVA_SRC) -h c/jni -d bin/java
+	$(GCC) $(C_FLAGS) $(C_SRC) -o jxpcap$(SUFFIX) -lpcap
+	cd bin/java/ && $(JAR) -cvf ../../jxpcap.jar $(JAVA_CLASS)
+	
+install:
+	mv $(C_LIB_TARGET) $(INSTALL_DIR)
+	
+uninstall:
+	rm $(INSTALL_DIR)/$(C_LIB_TARGET)
+	
+clean:
+	rm -Rf jxpcap.jar libjxpcap.so
+	rm -Rf bin/java/*
+	rm -Rf bin/c/*
