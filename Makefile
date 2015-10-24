@@ -7,7 +7,7 @@ JAR=$(JAVA_HOME)/bin/jar
 JNI_INCLUDE=$(JAVA_HOME)/include
 JAVA_LIB_TARGET=jxpcap.jar
 
-GCC=/usr/bin/gcc
+GCC=gcc
 INCLUDE=/usr/lib
 PCAP_LIB=/usr/lib
 
@@ -17,10 +17,6 @@ ifeq ($(PLATFORM), Linux)
 	JNI_PLATFORM=$(JNI_INCLUDE)/linux
 	C_LIB_TARGET=libjxpcap.so
 	INSTALL_DIR=/usr/lib
-else
-	JNI_PLATFORM=$(JNI_INCLUDE)/win32
-	C_LIB_TARGET=jxpcap.dll
-	INSTALL_DIR=C:\Windows\System32
 endif
 
 JAVA_SRC=\
@@ -34,10 +30,10 @@ C_SRC=\
 	c/util/*.c
 
 JAVA_CLASS=\
-	bin/java/com/jxpcap/*.class \
-	bin/java/com/jxpcap/util/*.class \
-	bin/java/com/jxpcap/util/packet/*.class \
-	bin/java/com/jxpcap/packet/*.class
+	com/jxpcap/*.class \
+	com/jxpcap/util/*.class \
+	com/jxpcap/util/packet/*.class \
+	com/jxpcap/packet/*.class
 
 JAVA_FLAGS= -g -verbose -Werror
 
@@ -46,7 +42,7 @@ C_FLAGS= -shared -L $(PCAP_LIB) -I $(INCLUDE) -I $(JNI_INCLUDE) -I $(JNI_PLATFOR
 all:
 	$(JAVAC) $(JAVA_FLAGS) $(JAVA_SRC) -h c/jni -d bin/java
 	$(GCC) $(C_FLAGS) $(C_SRC) $(C_LIB_FLAGS) -o $(C_LIB_TARGET) -lpcap
-	$(JAR) -cvf $(JAVA_LIB_TARGET) $(JAVA_CLASS)
+	cd bin/java/ && $(JAR) -cvf ../../$(JAVA_LIB_TARGET) $(JAVA_CLASS)
 	
 install:
 	mv $(C_LIB_TARGET) $(INSTALL_DIR)
