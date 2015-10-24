@@ -1,21 +1,19 @@
 
-
 JAVA_HOME=/usr/lib/jvm/jdk-8-oracle-arm-vfp-hflt
 JAVAC=$(JAVA_HOME)/bin/javac
 JAVA=$(JAVA_HOME)/bin/java
 JAR=$(JAVA_HOME)/bin/jar
 JNI_INCLUDE=$(JAVA_HOME)/include
-JAVA_LIB_TARGET=jxpcap.jar
 
-GCC=gcc
-INCLUDE=/usr/lib
-PCAP_LIB=/usr/lib
+GCC=/usr/bin/gcc
+PCAP_INCLUDE=/usr/lib
 
 PLATFORM=$(shell "uname")
 
 ifeq ($(PLATFORM), Linux)
-	JNI_PLATFORM=$(JNI_INCLUDE)/linux
-	C_LIB_TARGET=libjxpcap.so
+	JNI_INCLUDE_PLATFORM=$(JNI_INCLUDE)/linux
+	C_COMPILE_OPTION= -shared -fPIC -L.
+	SUFFIX=.so
 	INSTALL_DIR=/usr/lib
 endif
 
@@ -37,12 +35,12 @@ JAVA_CLASS=\
 
 JAVA_FLAGS= -g -verbose -Werror
 
-C_FLAGS= -shared -L $(PCAP_LIB) -I $(INCLUDE) -I $(JNI_INCLUDE) -I $(JNI_PLATFORM)
+C_FLAGS= $(C_COMPILE_OPTION) -I $(PCAP_INCLUDE) -I $(JNI_INCLUDE) -I $(JNI_INCLUDE_PLATFORM)
 
 all:
 	$(JAVAC) $(JAVA_FLAGS) $(JAVA_SRC) -h c/jni -d bin/java
-	$(GCC) $(C_FLAGS) $(C_SRC) $(C_LIB_FLAGS) -o $(C_LIB_TARGET) -lpcap
-	cd bin/java/ && $(JAR) -cvf ../../$(JAVA_LIB_TARGET) $(JAVA_CLASS)
+	$(GCC) $(C_FLAGS) $(C_SRC) -o libjxpcap$(SUFFIX) -lpcap
+	cd bin/java/ && $(JAR) -cvf ../../jxpcap.jar $(JAVA_CLASS)
 	
 install:
 	mv $(C_LIB_TARGET) $(INSTALL_DIR)
@@ -51,6 +49,6 @@ uninstall:
 	rm $(INSTALL_DIR)/$(C_LIB_TARGET)
 	
 clean:
-	rm -Rf $(C_LIB_TARGET) $(JAVA_LIB_TARGET)
+	rm -Rf jxpcap.jar libjxpcap.so
 	rm -Rf bin/java/*
 	rm -Rf bin/c/*
