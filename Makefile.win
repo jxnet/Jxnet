@@ -1,18 +1,18 @@
 
 # Specify where JAVA_HOHE directory is
-JAVA_HOME=C:\Program Files\Java\jdk\
+JAVA_HOME="C:\Program Files\Java\jdk1.8.0_51"
 JAVAC=$(JAVA_HOME)\bin\javac.exe
 JAVA=$(JAVA_HOME)\bin\java.exe
 JAR=$(JAVA_HOME)\bin\jar.exe
 JNI_INCLUDE=$(JAVA_HOME)\include
 
-GCC=C:\MinGW64\mingw64\bin\gcc.exe
+GCC=C:\mingw-w64\mingw64\bin\gcc.exe
 
 # Specify where pcap.h is
 PCAP_LIB=C:\Windows\System32
-PCAP_INCLUDE=C:\Wpcap\include
+PCAP_INCLUDE=C:\WpdPack\Include
 
-JNI_INCLUDE_PLATFORM=$(JNI_INCLUDE)/linux
+JNI_INCLUDE_PLATFORM=$(JNI_INCLUDE)/win32
 C_COMPILE_OPTION= -shared -L $(PCAP_LIB)
 SUFFIX=.dll
 INSTALL_DIR=C:\Windows\System32
@@ -39,7 +39,7 @@ C_FLAGS= $(C_COMPILE_OPTION) -I $(PCAP_INCLUDE) -I $(JNI_INCLUDE) -I $(JNI_INCLU
 
 all:
 	$(JAVAC) $(JAVA_FLAGS) $(JAVA_SRC) -h c/jni -d bin/java
-	$(GCC) $(C_FLAGS) $(C_SRC) -o jxpcap$(SUFFIX) -lpcap
+	$(GCC) $(C_FLAGS) $(C_SRC) -o jxpcap$(SUFFIX) -lwpcap
 	cd bin/java/ && $(JAR) -cvf ../../jxpcap.jar $(JAVA_CLASS)
 	
 install:
