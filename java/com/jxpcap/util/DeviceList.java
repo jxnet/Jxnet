@@ -7,7 +7,7 @@ import java.util.List;
 
 public class DeviceList extends Jxpcap {
     
-    protected static List<NetworkInterface> all_devs = new ArrayList<>();
+    protected List<NetworkInterface> all_devs = new ArrayList<>();
     
     public NetworkInterface getIndex(int index) {
         return all_devs.get(index);
