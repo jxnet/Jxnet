@@ -43,10 +43,10 @@ all:
 	cd bin\java\ && $(JAR) -cvf ..\..\jxpcap.jar $(JAVA_CLASS)
 	
 install:
-	copy $(C_LIB_TARGET) $(INSTALL_DIR)
+	copy jxpcap$(SUFFIX) $(INSTALL_DIR)
 	
 uninstall:
-	del /Q /F $(INSTALL_DIR)\$(C_LIB_TARGET)
+	del /Q /F $(INSTALL_DIR)\jxpcap$(SUFFIX)
 	
 clean:
 	rmdir /Q /S bin\java\com
