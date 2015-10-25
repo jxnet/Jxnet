@@ -8,6 +8,7 @@ jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pc
 	jmethodID NetworkInterfaceInit = (*env)->GetMethodID(env, NetworkInterface, "<init>", "()V");
 	jfieldID nextFID = (*env)->GetFieldID(env, NetworkInterface, "next", "Lcom/jxpcap/NetworkInterface;");
 	jfieldID nameFID = (*env)->GetFieldID(env, NetworkInterface, "name", "Ljava/lang/String;");
+	jfieldID descriptionFID = (*env)->GetFieldID(env, NetworkInterface, "description", "Ljava/lang/String;");
 	jobject jobj = (*env)->NewObject(env, NetworkInterface, NetworkInterfaceInit);
 	if(device_list->next != NULL) {
 		jobject NI = setNetIface(env, jdevice_list, List_addMID, device_list->next);
@@ -29,6 +30,16 @@ jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pc
 			return NULL;
 		}
 		(*env)->SetObjectField(env, jobj, nameFID, jstr);
+		(*env)->DeleteLocalRef(env, jstr);
+	} else {
+		(*env)->SetObjectField(env, jobj, nameFID, NULL);
+	}
+	if(device_list->description != NULL) {
+		jobject jstr = (*env)->NewStringUTF(env, device_list->description);
+		if(jstr == NULL) {
+			return NULL;
+		}
+		(*env)->SetObjectField(env, jobj, descriptionFID, jstr);
 		(*env)->DeleteLocalRef(env, jstr);
 	} else {
 		(*env)->SetObjectField(env, jobj, nameFID, NULL);

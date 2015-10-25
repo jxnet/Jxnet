@@ -6,5 +6,5 @@ public class NetworkInterface {
     
     public String name;
    
-    
+    public String description;
 }

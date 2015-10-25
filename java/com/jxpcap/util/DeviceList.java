@@ -5,6 +5,7 @@ import com.jxpcap.NetworkInterface;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class DeviceList extends Jxpcap {
     
     protected List<NetworkInterface> all_devs = new ArrayList<>();
