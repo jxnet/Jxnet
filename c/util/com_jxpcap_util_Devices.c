@@ -16,6 +16,7 @@ jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pc
 	jfieldID nextFID = (*env)->GetFieldID(env, NetworkInterface, "next", "Lcom/jxpcap/NetworkInterface;");
 	jfieldID nameFID = (*env)->GetFieldID(env, NetworkInterface, "name", "Ljava/lang/String;");
 	jfieldID descriptionFID = (*env)->GetFieldID(env, NetworkInterface, "description", "Ljava/lang/String;");
+	jfieldID ip_addressFID = (*env)->GetFieldID(env, NetworkInterface, "ip_address", "[B");
 	jobject jobj = (*env)->NewObject(env, NetworkInterface, NetworkInterfaceInit);
 	if(device_list->next != NULL) {
 		jobject NI = setNetIface(env, jdevice_list, List_addMID, device_list->next);
@@ -55,14 +56,16 @@ jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pc
 		if(device_list->addresses->addr->sa_family == AF_INET) {
 			jbyteArray jarray = (*env)->NewByteArray(env, 4);
 			(*env)->SetByteArrayRegion(env, jarray, 0, 4, (jbyte *)(device_list->addresses->addr->sa_data + 2));
-			//(*env)->SetObjectField(jobj, PcapSockAddrDataFID, jarray);
-			//env->DeleteLocalRef(jarray);
+			(*env)->SetObjectField(env, jobj, ip_addressFID, jarray);
+			(*env)->DeleteLocalRef(env, jarray);
 		} else if(device_list->addresses->addr->sa_family == AF_INET6) {
-			jbyteArray jarray = (*env)->NewByteArray(env, 16);
-			(*env)->SetByteArrayRegion(env, jarray, 0, 16, (jbyte *)&((struct sockaddr_in6 *)device_list->addresses->addr)->sin6_addr);
+			//jbyteArray jarray = (*env)->NewByteArray(env, 16);
+			//(*env)->SetByteArrayRegion(env, jarray, 0, 16, (jbyte *)&((struct sockaddr_in6 *)device_list->addresses->addr)->sin6_addr);
 		} else {
 			jbyteArray jarray = (*env)->NewByteArray(env, 14); // Has to be atleast 14 bytes
 			(*env)->SetByteArrayRegion(env, jarray, 0, 14, (jbyte *)(device_list->addresses->addr->sa_data + 2));
+			(*env)->SetObjectField(env, jobj, ip_addressFID, jarray);
+			(*env)->DeleteLocalRef(env, jarray);
 		}
 	}
 	return jobj;
