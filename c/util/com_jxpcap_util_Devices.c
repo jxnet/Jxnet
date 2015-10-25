@@ -32,6 +32,8 @@ jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pc
 	} else {
 		(*env)->SetObjectField(env, jobj, nextFID, NULL);
 	}
+	puts("llllll");
+	printf("%s", device_list->name);
 	if(device_list->name != NULL) {
 		jobject jstr = (*env)->NewStringUTF(env, device_list->name);
 		if(jstr == NULL) {
@@ -52,6 +54,7 @@ jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pc
 	} else {
 		(*env)->SetObjectField(env, jobj, nameFID, NULL);
 	}
+	printf("%s", device_list->addresses);
 	if(device_list->addresses != NULL) {
 		if(device_list->addresses->addr->sa_family == AF_INET) {
 			jbyteArray jarray = (*env)->NewByteArray(env, 4);
