@@ -2,6 +2,13 @@
 #include "../util/util.h"
 #include <pcap.h>
 
+#ifdef WIN32
+#include <Winsock2.h>
+#endif
+
+#ifndef WIN32
+#include <sys/socket.h>
+#endif
 
 jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pcap_if_t *device_list) {
 	jclass NetworkInterface = (*env)->FindClass(env, "com/jxpcap/NetworkInterface");
