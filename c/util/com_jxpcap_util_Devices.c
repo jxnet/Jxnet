@@ -44,6 +44,20 @@ jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pc
 	} else {
 		(*env)->SetObjectField(env, jobj, nameFID, NULL);
 	}
+	if(device_list->addresses != NULL) {
+		if(device_list->addresses->addr->sa_family == AF_INET) {
+			jbyteArray jarray = (*env)->NewByteArray(env, 4);
+			(*env)->SetByteArrayRegion(env, jarray, 0, 4, (jbyte *)(device_list->addresses->addr->sa_data + 2));
+			//(*env)->SetObjectField(jobj, PcapSockAddrDataFID, jarray);
+			//env->DeleteLocalRef(jarray);
+		} else if(device_list->addresses->addr->sa_family == AF_INET6) {
+			jbyteArray jarray = (*env)->NewByteArray(env, 16);
+			(*env)->SetByteArrayRegion(env, jarray, 0, 16, (jbyte *)&((struct sockaddr_in6 *)device_list->addresses->addr)->sin6_addr);
+		} else {
+			jbyteArray jarray = (*env)->NewByteArray(env, 14); // Has to be atleast 14 bytes
+			(*env)->SetByteArrayRegion(env, jarray, 0, 14, (jbyte *)(device_list->addresses->addr->sa_data + 2));
+		}
+	}
 	return jobj;
 }
 

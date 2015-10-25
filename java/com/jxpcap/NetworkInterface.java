@@ -7,4 +7,8 @@ public class NetworkInterface {
     public String name;
    
     public String description;
+
+    public byte[] ip_address;
+    
+    public byte[] mac_address;
 }
