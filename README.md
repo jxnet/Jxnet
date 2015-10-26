@@ -6,10 +6,13 @@ Pcap library for java.
 
 
 ### Windows
+
 make -f Makefile.win
+
 make -f Makefile.win install
 
 
 ### Linux
 make
+
 make install
