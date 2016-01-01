@@ -13,6 +13,9 @@ GCC=/usr/bin/gcc
 PCAP_INCLUDE=/usr/lib
 #PCAP_INCLUDE=/usr/lib/pcap
 
+# Target
+JAVA_LIB_TARGET=jxpcap.jar
+
 PLATFORM=$(shell "uname")
 
 ifeq ($(PLATFORM), Linux)
@@ -52,15 +55,15 @@ C_FLAGS= $(C_COMPILE_OPTION) -I $(PCAP_INCLUDE) -I $(JNI_INCLUDE) -I $(JNI_INCLU
 all:
 	$(JAVAC) $(JAVA_FLAGS) $(JAVA_SRC) -h c/jni -d bin/java
 	$(GCC) $(C_FLAGS) $(C_SRC) -o libjxpcap$(SUFFIX) -lpcap
-	cd bin/java/ && $(JAR) -cvf ../../jxpcap.jar $(JAVA_CLASS)
+	cd bin/java/ && $(JAR) -cvf ../../$(JAVA_LIB_TARGET) $(JAVA_CLASS)
 	
 install:
-	mv $(C_LIB_TARGET) $(INSTALL_DIR)
+	mv libjxpcap$(SUFFIX) $(INSTALL_DIR)
 	
 uninstall:
-	rm $(INSTALL_DIR)/$(C_LIB_TARGET)
+	rm $(INSTALL_DIR)/libjxpcap$(SUFFIX)
 	
 clean:
-	rm -Rf jxpcap.jar libjxpcap.so
+	rm -Rf $(JAVA_LIB_TARGET) libjxpcap$(SUFFIX)
 	rm -Rf bin/java/*
 	rm -Rf bin/c/*
