@@ -22,8 +22,6 @@ import com.jxpcap.util.Message;
 
 public class Jxpcap {
         
-	private Message errmsg = new Message(null);
-	
     protected long jxpcap;
 
     private static native Jxpcap nativeOpenLive(String device_name, int snaplen, int promisc, int timeout, Message errmsg);
