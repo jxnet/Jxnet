@@ -17,16 +17,23 @@
 
 package com.jxpcap;
 
+import com.jxpcap.util.JxpcapException;
 import com.jxpcap.util.Message;
 
 public class Jxpcap {
         
+	private Message errmsg = new Message(null);
+	
     protected long jxpcap;
 
     private static native Jxpcap nativeOpenLive(String device_name, int snaplen, int promisc, int timeout, Message errmsg);
     
-    public static Jxpcap openLive(String device_name, int snaplen, boolean promisc, int timeout, Message errmsg) {
-        return nativeOpenLive(device_name, snaplen, (promisc ? 1 : 0), timeout, errmsg);
+    public static Jxpcap openLive(String device_name, int snaplen, boolean promisc, int timeout, Message errmsg) throws JxpcapException {
+        Jxpcap pcap = nativeOpenLive(device_name, snaplen, (promisc ? 1 : 0), timeout, errmsg);
+        if(pcap == null) {
+        	throw new JxpcapException(errmsg.getMessage());
+        }
+        return pcap;
     }
         
     static {
