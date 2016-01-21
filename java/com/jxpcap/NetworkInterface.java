@@ -8,7 +8,15 @@ public class NetworkInterface {
    
     public String description;
 
-    public byte[] ip_address;
+    public String netmask;
     
-    public byte[] mac_address;
+    public String broadcast_address;
+    
+    public String ip_address;
+    
+    public String mac_address;
+    
+    public String destination_address;
+    
+    public String AF_NAME;
 }
