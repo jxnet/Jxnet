@@ -10,14 +10,52 @@
 #include <sys/socket.h>
 #endif
 
+#include <sys/types.h>
+#include <netdb.h>
+
+#define IPTOSBUFFERS	12
+char *iptos(u_long in) {
+	static char output[IPTOSBUFFERS][3*4+3+1];
+    static short which;
+    u_char *p;
+    p = (u_char *)&in;
+    which = (which + 1 == IPTOSBUFFERS ? 0 : which + 1);
+    sprintf(output[which], "%d.%d.%d.%d", p[0], p[1], p[2], p[3]);
+    return output[which];
+}
+
+char* ip6tos(struct sockaddr *sockaddr, char *address, int addrlen) {
+    socklen_t sockaddrlen;
+    #ifdef WIN32
+    sockaddrlen = sizeof(struct sockaddr_in6);
+    #else
+    sockaddrlen = sizeof(struct sockaddr_storage);
+    #endif
+    if(getnameinfo(sockaddr,
+        sockaddrlen,
+        address,
+        addrlen,
+        NULL,
+        0,
+        NI_NUMERICHOST) != 0) address = NULL;
+    return address;
+}
+
 jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pcap_if_t *device_list) {
 	jclass NetworkInterface = (*env)->FindClass(env, "com/jxpcap/NetworkInterface");
 	jmethodID NetworkInterfaceInit = (*env)->GetMethodID(env, NetworkInterface, "<init>", "()V");
 	jfieldID nextFID = (*env)->GetFieldID(env, NetworkInterface, "next", "Lcom/jxpcap/NetworkInterface;");
 	jfieldID nameFID = (*env)->GetFieldID(env, NetworkInterface, "name", "Ljava/lang/String;");
 	jfieldID descriptionFID = (*env)->GetFieldID(env, NetworkInterface, "description", "Ljava/lang/String;");
-	jfieldID ip_addressFID = (*env)->GetFieldID(env, NetworkInterface, "ip_address", "[B");
+	jfieldID ip_addressFID = (*env)->GetFieldID(env, NetworkInterface, "ip_address", "Ljava/lang/String;");
+	jfieldID netmaskFID = (*env)->GetFieldID(env, NetworkInterface, "netmask", "Ljava/lang/String;");
+	jfieldID broadcast_addressFID = (*env)->GetFieldID(env, NetworkInterface, "broadcast_address", "Ljava/lang/String;");
+	jfieldID mac_addressFID = (*env)->GetFieldID(env, NetworkInterface, "mac_address", "Ljava/lang/String;");
+	jfieldID destination_addressFID = (*env)->GetFieldID(env, NetworkInterface, "destination_address", "Ljava/lang/String;");
+	jfieldID AF_NAMEFID = (*env)->GetFieldID(env, NetworkInterface, "AF_NAME", "Ljava/lang/String;");
+
 	jobject jobj = (*env)->NewObject(env, NetworkInterface, NetworkInterfaceInit);
+
 	if(device_list->next != NULL) {
 		jobject NI = setNetIface(env, jdevice_list, List_addMID, device_list->next);
 		if(NI == NULL) {
@@ -32,11 +70,9 @@ jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pc
 	} else {
 		(*env)->SetObjectField(env, jobj, nextFID, NULL);
 	}
+
 	if(device_list->name != NULL) {
 		jobject jstr = (*env)->NewStringUTF(env, device_list->name);
-		if(jstr == NULL) {
-			return NULL;
-		}
 		(*env)->SetObjectField(env, jobj, nameFID, jstr);
 		(*env)->DeleteLocalRef(env, jstr);
 	} else {
@@ -44,28 +80,55 @@ jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pc
 	}
 	if(device_list->description != NULL) {
 		jobject jstr = (*env)->NewStringUTF(env, device_list->description);
-		if(jstr == NULL) {
-			return NULL;
-		}
 		(*env)->SetObjectField(env, jobj, descriptionFID, jstr);
 		(*env)->DeleteLocalRef(env, jstr);
 	} else {
 		(*env)->SetObjectField(env, jobj, descriptionFID, NULL);
 	}
-	if(device_list->addresses != NULL) {
-		if(device_list->addresses->addr->sa_family == AF_INET) {
-			jbyteArray jarray = (*env)->NewByteArray(env, 4);
-			(*env)->SetByteArrayRegion(env, jarray, 0, 4, (jbyte *)(device_list->addresses->addr->sa_data + 2));
-			(*env)->SetObjectField(env, jobj, ip_addressFID, jarray);
-			(*env)->DeleteLocalRef(env, jarray);
-		} else if(device_list->addresses->addr->sa_family == AF_INET6) {
-			//jbyteArray jarray = (*env)->NewByteArray(env, 16);
-			//(*env)->SetByteArrayRegion(env, jarray, 0, 16, (jbyte *)&((struct sockaddr_in6 *)device_list->addresses->addr)->sin6_addr);
-		} else {
-			jbyteArray jarray = (*env)->NewByteArray(env, 14); // Has to be atleast 14 bytes
-			(*env)->SetByteArrayRegion(env, jarray, 0, 14, (jbyte *)(device_list->addresses->addr->sa_data + 2));
-			(*env)->SetObjectField(env, jobj, ip_addressFID, jarray);
-			(*env)->DeleteLocalRef(env, jarray);
+
+	pcap_addr_t *address;
+	char ip6str[128];
+	for(address=device_list->addresses; address; address=address->next) {
+		switch(address->addr->sa_family) {
+			case AF_INET:
+				if (address->addr) {
+					jobject jstr = (*env)->NewStringUTF(env, iptos(((struct sockaddr_in *)address->addr)->sin_addr.s_addr));
+					(*env)->SetObjectField(env, jobj, ip_addressFID, jstr);
+					(*env)->DeleteLocalRef(env, jstr);
+				} else {
+					(*env)->SetObjectField(env, jobj, ip_addressFID, NULL);
+				}
+				if (address->netmask) {
+					jobject jstr = (*env)->NewStringUTF(env, iptos(((struct sockaddr_in *)address->netmask)->sin_addr.s_addr));
+					(*env)->SetObjectField(env, jobj, netmaskFID, jstr);
+					(*env)->DeleteLocalRef(env, jstr);
+				} else {
+					(*env)->SetObjectField(env, jobj, netmaskFID, NULL);
+				}
+				if (address->broadaddr) {
+					jobject jstr = (*env)->NewStringUTF(env, iptos(((struct sockaddr_in *)address->broadaddr)->sin_addr.s_addr));
+					(*env)->SetObjectField(env, jobj, broadcast_addressFID, jstr);
+					(*env)->DeleteLocalRef(env, jstr);
+				} else {
+					(*env)->SetObjectField(env, jobj, broadcast_addressFID, NULL);
+				}
+				if (address->dstaddr) {
+					jobject jstr = (*env)->NewStringUTF(env, iptos(((struct sockaddr_in *)address->dstaddr)->sin_addr.s_addr));
+					(*env)->SetObjectField(env, jobj, destination_addressFID, jstr);
+					(*env)->DeleteLocalRef(env, jstr);
+				} else {
+					(*env)->SetObjectField(env, jobj, destination_addressFID, NULL);
+				}
+				break;
+
+			case AF_INET6:
+				//printf("\tAddress Family Name: AF_INET6\n");
+		        //if (address->addr)
+		        	//printf("\tAddress ->: %s\n", ip6tos(address->addr, ip6str, sizeof(ip6str)));
+		        break;
+			default:
+		        //printf("\tAddress Family Name: Unknown\n");
+		        break;
 		}
 	}
 	return jobj;
