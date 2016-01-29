@@ -20,12 +20,9 @@
 #include <sys/types.h>
 #endif
 
-char mac_addr[18];
-
 char *get_mac_addr(char *if_name) {
 	const unsigned char *mac;
 	#ifdef WIN32
-	puts("Windows\n");
 	IP_ADAPTER_INFO AdapterInfo[16];
 	DWORD dwBufLen = sizeof(AdapterInfo);
 	DWORD dwStatus = GetAdaptersInfo(AdapterInfo, &dwBufLen);
@@ -34,10 +31,9 @@ char *get_mac_addr(char *if_name) {
 	if(strcmp(pAdapterInfo->AdapterName,if_name) == 1) {
 		mac = pAdapterInfo->AdapterName;
 	} else {
-		mac = NULL;
+		return NULL;
 	}
 	#else
-	puts("Linux\n");
 	struct ifreq ifr;
 	size_t if_name_len=strlen(if_name);
 	if (if_name_len<sizeof(ifr.ifr_name)) {
@@ -59,6 +55,7 @@ char *get_mac_addr(char *if_name) {
 	}
 	mac=(unsigned char*)ifr.ifr_hwaddr.sa_data;
 	#endif
+	char *mac_addr = (char *) malloc (16 * sizeof (char));;
 	sprintf(mac_addr, "%02X:%02X:%02X:%02X:%02X:%02X", mac[0],mac[1],mac[2],mac[3],mac[4],mac[5]);
 	return (char *) mac_addr;
 }
@@ -123,6 +120,22 @@ jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pc
 
 	if(device_list->name != NULL) {
 		jobject jstr = (*env)->NewStringUTF(env, device_list->name);
+		/*char *p = strtok (device_list->name,"_");
+		char *tmp[2];
+		int i;
+		while (p != NULL)
+		{
+			tmp[i++] = p;
+			p = strtok (NULL, "/");
+		}*/	
+		char *m = get_mac_addr(device_list->name);
+		if(m != NULL) {
+			jobject jstr_mac = (*env)->NewStringUTF(env, m);
+			(*env)->SetObjectField(env, jobj, mac_addressFID, jstr_mac);
+			(*env)->DeleteLocalRef(env, jstr_mac);
+		} else {
+			(*env)->SetObjectField(env, jobj, mac_addressFID, NULL);
+		}
 		(*env)->SetObjectField(env, jobj, nameFID, jstr);
 		(*env)->DeleteLocalRef(env, jstr);
 	} else {
