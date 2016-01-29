@@ -4,14 +4,21 @@
 
 #ifdef WIN32
 #include <Winsock2.h>
+#include <Windows.h>
+#include <iphlpapi.h>
+#include <Assert.h>
+#include <stdio.h>
+#pragma comment(lib, "iphlpapi.lib")
 #endif
 
 #ifndef WIN32
 #include <sys/socket.h>
-#endif
-
-#include <sys/types.h>
 #include <netdb.h>
+#include <sys/ioctl.h>
+#include <net/if.h>
+#include <net/if_arp.h>
+#include <sys/types.h>
+#endif
 
 #define IPTOSBUFFERS	12
 char *iptos(u_long in) {
@@ -23,7 +30,7 @@ char *iptos(u_long in) {
     sprintf(output[which], "%d.%d.%d.%d", p[0], p[1], p[2], p[3]);
     return output[which];
 }
-
+/*
 char* ip6tos(struct sockaddr *sockaddr, char *address, int addrlen) {
     socklen_t sockaddrlen;
     #ifdef WIN32
@@ -39,7 +46,7 @@ char* ip6tos(struct sockaddr *sockaddr, char *address, int addrlen) {
         0,
         NI_NUMERICHOST) != 0) address = NULL;
     return address;
-}
+}*/
 
 jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pcap_if_t *device_list) {
 	jclass NetworkInterface = (*env)->FindClass(env, "com/jxpcap/NetworkInterface");

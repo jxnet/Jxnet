@@ -1,0 +1,2 @@
+all:
+	C:\mingw-w64\mingw64\bin\gcc.exe -shared -L C:\Windows\System32 -I C:\WpdPack\Include -I C:\Program Files\Java\jdk1.8.0_51\include -I C:\Program Files\Java\jdk1.8.0_51\include\win32 c\*.c c\util\*.c -o jxpcap.dll -lwpcap
