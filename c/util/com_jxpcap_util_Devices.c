@@ -127,7 +127,7 @@ jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pc
 		{
 			tmp[i++] = p;
 			p = strtok (NULL, "/");
-		}*/	
+		}*/
 		char *m = get_mac_addr(device_list->name);
 		if(m != NULL) {
 			jobject jstr_mac = (*env)->NewStringUTF(env, m);
