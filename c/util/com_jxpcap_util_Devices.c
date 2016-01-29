@@ -20,6 +20,49 @@
 #include <sys/types.h>
 #endif
 
+char mac_addr[18];
+
+char *get_mac_addr(char *if_name) {
+	const unsigned char *mac;
+	#ifdef WIN32
+	puts("Windows\n");
+	IP_ADAPTER_INFO AdapterInfo[16];
+	DWORD dwBufLen = sizeof(AdapterInfo);
+	DWORD dwStatus = GetAdaptersInfo(AdapterInfo, &dwBufLen);
+	assert(dwStatus == ERROR_SUCCESS);
+	PIP_ADAPTER_INFO pAdapterInfo = AdapterInfo;
+	if(strcmp(pAdapterInfo->AdapterName,if_name) == 1) {
+		mac = pAdapterInfo->AdapterName;
+	} else {
+		mac = NULL;
+	}
+	#else
+	puts("Linux\n");
+	struct ifreq ifr;
+	size_t if_name_len=strlen(if_name);
+	if (if_name_len<sizeof(ifr.ifr_name)) {
+    		memcpy(ifr.ifr_name,if_name,if_name_len);
+    		ifr.ifr_name[if_name_len]=0;
+	} else {
+		printf("interface name is too long");
+	}
+	int fd=socket(AF_UNIX,SOCK_DGRAM,0);
+	if (fd==-1) {
+    		printf("%s",strerror(errno));
+	}
+	if (ioctl(fd,SIOCGIFHWADDR,&ifr)==-1) {
+ 		int temp_errno=errno;
+    		printf("%s",strerror(temp_errno));
+	}
+	if (ifr.ifr_hwaddr.sa_family!=ARPHRD_ETHER) {
+    		printf("not an Ethernet interface");
+	}
+	mac=(unsigned char*)ifr.ifr_hwaddr.sa_data;
+	#endif
+	sprintf(mac_addr, "%02X:%02X:%02X:%02X:%02X:%02X", mac[0],mac[1],mac[2],mac[3],mac[4],mac[5]);
+	return (char *) mac_addr;
+}
+
 #define IPTOSBUFFERS	12
 char *iptos(u_long in) {
 	static char output[IPTOSBUFFERS][3*4+3+1];
