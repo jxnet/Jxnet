@@ -18,6 +18,9 @@
 #include <net/if.h>
 #include <net/if_arp.h>
 #include <sys/types.h>
+#include <string.h>
+#include <errno.h>
+#include <stdlib.h>
 #endif
 
 char *get_mac_addr(char *if_name) {
