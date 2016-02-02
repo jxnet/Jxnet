@@ -19,6 +19,6 @@ make install
 
 
 ### Contact
-## Email: contact@ardikars.com
+Email: contact@ardikars.com
 
-## Twitter: https://twitter.com/ardikars
+Twitter: https://twitter.com/ardikars
