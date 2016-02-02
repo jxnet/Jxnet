@@ -4,19 +4,55 @@ public class NetworkInterface {
     
     private NetworkInterface next;
     
-    public String name;
+    public String getName() {
+    	return name;
+    }
+    
+    public String getDescription() {
+    	return description;
+    }
+    
+    public String getNetmask() {
+    	return netmask;
+    }
+    
+    public String getBroadcastAddress() {
+    	return broadcast_address;
+    }
+    
+    public String getIPAddress() {
+    	return ip_address;
+    }
+    
+    public String getMACAddress() {
+    	return mac_address;
+    }
+    
+    public String getDestionationAddress() {
+    	return destination_address;
+    }
+    
+    public void closeNext() {
+    	this.next = null;
+    }
+    
+    public NetworkInterface getNext() {
+    	return next;
+    }
+    
+    private String name;
    
-    public String description;
+    private String description;
 
-    public String netmask;
+    private String netmask;
     
-    public String broadcast_address;
+    private String broadcast_address;
     
-    public String ip_address;
+    private String ip_address;
     
-    public String mac_address;
+    private String mac_address;
     
-    public String destination_address;
+    private String destination_address;
     
-    public String AF_NAME;
+    //private String AF_NAME;
 }

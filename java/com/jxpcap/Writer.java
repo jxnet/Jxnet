@@ -12,7 +12,7 @@ public class Writer extends Jxpcap {
     private native String nativeWritePacket(Packet packet);
     
     private Writer(Jxpcap pcap, String filename) {
-        String result = nativeOpenDumpFile(pcap.jxpcap, filename);
+        //String result = nativeOpenDumpFile(pcap.jxpcap, filename);
     }
     
     public static Writer openDumpFile(Jxpcap pcap, String filename) {

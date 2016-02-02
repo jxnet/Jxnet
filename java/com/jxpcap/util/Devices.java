@@ -5,7 +5,6 @@
  */
 package com.jxpcap.util;
 
-import com.jxpcap.Jxpcap;
 import com.jxpcap.NetworkInterface;
 
 import java.util.List;
