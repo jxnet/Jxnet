@@ -16,3 +16,9 @@ make -f Makefile.win install
 make
 
 make install
+
+
+### Contact
+## Email: contact@ardikars.com
+
+## Twitter: https://twitter.com/ardikars
