@@ -21,6 +21,7 @@ PLATFORM=$(shell "uname")
 ifeq ($(PLATFORM), Linux)
 	JNI_INCLUDE_PLATFORM=$(JNI_INCLUDE)/linux
 	C_COMPILE_OPTION= -shared -fPIC -L.
+	C_WARNING_OPTION= -Wall
 	SUFFIX=.so
 	INSTALL_DIR=/usr/lib
 else
@@ -54,7 +55,7 @@ C_FLAGS= $(C_COMPILE_OPTION) -I $(PCAP_INCLUDE) -I $(JNI_INCLUDE) -I $(JNI_INCLU
 
 all:
 	$(JAVAC) $(JAVA_FLAGS) $(JAVA_SRC) -h c/jni -d bin/java
-	$(GCC) $(C_FLAGS) $(C_SRC) -o libjxpcap$(SUFFIX) -lpcap
+	$(GCC) $(C_FLAGS) $(C_WARNING_OPTION) $(C_SRC) -o libjxpcap$(SUFFIX) -lpcap
 	cd bin/java/ && $(JAR) -cvf ../../$(JAVA_LIB_TARGET) $(JAVA_CLASS)
 	
 install:
