@@ -1,6 +1,15 @@
 # Jxpcap
-Pcap library for java.
+Pcap is a java project that comes with a required native shared library (JNI/Java Native Interface).
 
+## Requirement
+
+JDK 
+
+PCAP:
+
+Windows (Winpcap)
+
+Linux (Libpcap)
 
 ## Install
 
