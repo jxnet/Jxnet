@@ -102,7 +102,7 @@ jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pc
 	jfieldID broadcast_addressFID = (*env)->GetFieldID(env, NetworkInterface, "broadcast_address", "Ljava/lang/String;");
 	jfieldID mac_addressFID = (*env)->GetFieldID(env, NetworkInterface, "mac_address", "Ljava/lang/String;");
 	jfieldID destination_addressFID = (*env)->GetFieldID(env, NetworkInterface, "destination_address", "Ljava/lang/String;");
-	jfieldID AF_NAMEFID = (*env)->GetFieldID(env, NetworkInterface, "AF_NAME", "Ljava/lang/String;");
+	/*jfieldID AF_NAMEFID = (*env)->GetFieldID(env, NetworkInterface, "AF_NAME", "Ljava/lang/String;");*/
 
 	jobject jobj = (*env)->NewObject(env, NetworkInterface, NetworkInterfaceInit);
 
@@ -153,7 +153,7 @@ jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pc
 	}
 
 	pcap_addr_t *address;
-	char ip6str[128];
+	/*char ip6str[128];*/
 	for(address=device_list->addresses; address; address=address->next) {
 		switch(address->addr->sa_family) {
 			case AF_INET:
