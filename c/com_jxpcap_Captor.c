@@ -9,7 +9,7 @@ JNIEXPORT jstring JNICALL Java_com_jxpcap_Captor_nativeGetPacket
     struct pcap_pkthdr *pkt_hdr;
     const u_char *pkt_dta;
     int result;
-    /* int linktypes = pcap_datalink(pcap); */
+    /*int linktypes = pcap_datalink(pcap); */
     jclass Packet;
     jmethodID set_packet_MID;
     pcap = getPcap(jxpcap);
