@@ -120,7 +120,7 @@ char *get_gateway(char *if_name) {
 	char msg_buf[BUFSIZE];
 
 	struct nlmsghdr *nl_msg;
-	//struct rtmsg *rt_msg;
+	/*struct rtmsg *rt_msg;*/
 	struct route_info *rt_info;
 
 	if((sock = socket(PF_NETLINK, SOCK_DGRAM, NETLINK_ROUTE)) < 0) {
@@ -129,7 +129,7 @@ char *get_gateway(char *if_name) {
 	memset(msg_buf, 0, BUFSIZ);
 
 	nl_msg = (struct nlmsghdr *) msg_buf;
-	//rt_msg = (struct rtmsg *) NLMSG_DATA(nl_msg);
+	/*rt_msg = (struct rtmsg *) NLMSG_DATA(nl_msg);*/
 
 	nl_msg->nlmsg_len = NLMSG_LENGTH(sizeof(struct rtmsg));
 	nl_msg->nlmsg_type = RTM_GETROUTE;
@@ -204,7 +204,6 @@ char *get_mac_addr(JNIEnv *env, char *if_name, jobject jerrmsg) {
 	
 	char *mac_addr = (char *) malloc (16 * sizeof (char));;
 	sprintf(mac_addr, "%02X:%02X:%02X:%02X:%02X:%02X", mac[0],mac[1],mac[2],mac[3],mac[4],mac[5]);
-	printf("(%02X:%02X:%02X:%02X:%02X:%02X)", mac[0],mac[1],mac[2],mac[3],mac[4],mac[5]);
 	return (char *) mac_addr;
 }
 
