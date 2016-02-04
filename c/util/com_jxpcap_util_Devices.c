@@ -39,7 +39,7 @@ int compare_strings(char *first, char *second) {
 }
 
 char *get_mac_addr(JNIEnv *env, char *if_name, jobject jerrmsg) {
-	const unsigned char *mac;
+	char *mac;
 	#ifdef WIN32
 	IP_ADAPTER_INFO AdapterInfo[16];
 	DWORD dwBufLen = sizeof(AdapterInfo);
@@ -49,11 +49,10 @@ char *get_mac_addr(JNIEnv *env, char *if_name, jobject jerrmsg) {
 	char *ifname;
 	do {
 		ifname = pAdapterInfo->AdapterName;
-		if(compare_strings(ifname, if_name) == 1) {
-			mac = pAdapterInfo->AdapterName;
-			//printf("Mac is equal.");
+		if(strcmp(ifname, if_name) == 0) {
+			mac = pAdapterInfo->Address;
+			printf("|%s|==|%s|==|%s|\n\n", pAdapterInfo->AdapterName, ifname, if_name);
 			break;
-			//printf("This is break.");
 		}
 		pAdapterInfo = pAdapterInfo->Next; 
 	} while(pAdapterInfo);
@@ -87,8 +86,10 @@ char *get_mac_addr(JNIEnv *env, char *if_name, jobject jerrmsg) {
 	}
 	mac=(unsigned char*)ifr.ifr_hwaddr.sa_data;
 	#endif
+	
 	char *mac_addr = (char *) malloc (16 * sizeof (char));;
 	sprintf(mac_addr, "%02X:%02X:%02X:%02X:%02X:%02X", mac[0],mac[1],mac[2],mac[3],mac[4],mac[5]);
+	printf("(%02X:%02X:%02X:%02X:%02X:%02X)", mac[0],mac[1],mac[2],mac[3],mac[4],mac[5]);
 	return (char *) mac_addr;
 }
 
