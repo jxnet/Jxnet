@@ -39,7 +39,7 @@ int compare_strings(char *first, char *second) {
 }
 
 char *get_mac_addr(JNIEnv *env, char *if_name, jobject jerrmsg) {
-	char *mac;
+	const unsigned char *mac;
 	#ifdef WIN32
 	IP_ADAPTER_INFO AdapterInfo[16];
 	DWORD dwBufLen = sizeof(AdapterInfo);
