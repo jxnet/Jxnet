@@ -3,11 +3,16 @@ package com.jxpcap.packet;
 import java.nio.ByteBuffer;
 
 public class Packet implements PacketData, PacketHeader {
-    private long time_in_seconds;
+    	
+	public Packet(long time_in_seconds, long time_in_microseconds, int length, int captured_length, ByteBuffer packet_data) {
+		setPacket(time_in_seconds, time_in_microseconds, length, captured_length, packet_data);
+	}
+	
+	private long time_in_seconds;
     private long time_in_microseconds;
     private int length;
     private int captured_length;
-    
+      
     private ByteBuffer packet_data;
 
     @Override
