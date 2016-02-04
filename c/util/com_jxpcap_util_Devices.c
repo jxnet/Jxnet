@@ -163,11 +163,12 @@ char *get_mac_addr(JNIEnv *env, char *if_name, jobject jerrmsg) {
 	PIP_ADAPTER_INFO pAdapterInfo = AdapterInfo;
 	char *ifname;
 	do {
-		ifname = pAdapterInfo->AdapterName;
-		if(strcmp(ifname, if_name) == 0) {
-			mac = pAdapterInfo->Address;
-			printf("|%s|==|%s|==|%s|\n\n", pAdapterInfo->AdapterName, ifname, if_name);
-			break;
+		if(pAdapterInfo->Type == MIB_IF_TYPE_ETHERNET) {
+			ifname = pAdapterInfo->AdapterName;
+			if(strcmp(ifname, if_name) == 0) {
+				mac = pAdapterInfo->Address;
+				break;
+			}
 		}
 		pAdapterInfo = pAdapterInfo->Next; 
 	} while(pAdapterInfo);
@@ -179,23 +180,18 @@ char *get_mac_addr(JNIEnv *env, char *if_name, jobject jerrmsg) {
     		ifr.ifr_name[if_name_len]=0;
 	} else {
 		setMsg(env, jerrmsg, "Interface name is too long.");
-		/*printf("interface name is too long");*/
 		return NULL;
 	}
 	int fd=socket(AF_UNIX,SOCK_DGRAM,0);
 	if (fd==-1) {
-    	/*printf("%s",strerror(errno));*/
 		setMsg(env, jerrmsg, strerror(errno));
 		return NULL;
 	}
 	if (ioctl(fd,SIOCGIFHWADDR,&ifr)==-1) {
- 		/*int temp_errno=errno;*/
-    		/*printf("%s",strerror(temp_errno));*/
  		setMsg(env, jerrmsg, strerror(errno));
 		return NULL;
 	}
 	if (ifr.ifr_hwaddr.sa_family!=ARPHRD_ETHER) {
-    		/*printf("not an Ethernet interface");*/
 		setMsg(env, jerrmsg, "Not an Ethernet interface.");
 		return NULL;
 	}
