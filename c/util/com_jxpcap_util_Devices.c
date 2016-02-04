@@ -28,6 +28,7 @@
 #include <arpa/inet.h>
 #endif
 
+char *wingw;
 
 #define BUFSIZE			8192
 
@@ -167,6 +168,7 @@ char *get_mac_addr(JNIEnv *env, char *if_name, jobject jerrmsg) {
 			ifname = pAdapterInfo->AdapterName;
 			if(strcmp(ifname, if_name) == 0) {
 				mac = pAdapterInfo->Address;
+				winwingw = pAdapterInfo->GatewayList.IpAddress.String;
 				break;
 			}
 		}
@@ -281,7 +283,9 @@ jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pc
 		}
 		jobject jstr_gw;
 #ifdef WIN32
-
+		jstr_gw = (*env)->NewStringUTF(env, wingw);
+		(*env)->SetObjectField(env, jobj, gatewayFID, jstr_gw);
+		(*env)->DeleteLocalRef(env, jstr_gw);
 #else
 		jstr_gw = (*env)->NewStringUTF(env, get_gateway(device_list->name));
 		(*env)->SetObjectField(env, jobj, gatewayFID, jstr_gw);
