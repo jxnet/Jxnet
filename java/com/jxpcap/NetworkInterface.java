@@ -32,6 +32,10 @@ public class NetworkInterface {
     	return destination_address;
     }
     
+    public String getGateway() {
+    	return gateway;
+    }
+    
     public void closeNext() {
     	this.next = null;
     }
@@ -54,5 +58,6 @@ public class NetworkInterface {
     
     private String destination_address;
     
+    private String gateway;
     //private String AF_NAME;
 }

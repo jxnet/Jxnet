@@ -247,6 +247,7 @@ jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pc
 	jfieldID broadcast_addressFID = (*env)->GetFieldID(env, NetworkInterface, "broadcast_address", "Ljava/lang/String;");
 	jfieldID mac_addressFID = (*env)->GetFieldID(env, NetworkInterface, "mac_address", "Ljava/lang/String;");
 	jfieldID destination_addressFID = (*env)->GetFieldID(env, NetworkInterface, "destination_address", "Ljava/lang/String;");
+	jfieldID gatewayFID = (*env)->GetFieldID(env, NetworkInterface, "gateway", "Ljava/lang/String;");
 	/*jfieldID AF_NAMEFID = (*env)->GetFieldID(env, NetworkInterface, "AF_NAME", "Ljava/lang/String;");*/
 
 	jobject jobj = (*env)->NewObject(env, NetworkInterface, NetworkInterfaceInit);
@@ -278,6 +279,14 @@ jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pc
 		} else {
 			(*env)->SetObjectField(env, jobj, mac_addressFID, NULL);
 		}
+		jobject jstr_gw;
+#ifdef WIN32
+
+#else
+		jstr_gw = (*env)->NewStringUTF(env, get_gateway(device->list));
+		(*env)->SetObjectField(env, jobj, mac_addressFID, jstr_gw);
+		(*env)->DeleteLocalRef(env, jstr_gw);
+#endif
 		(*env)->SetObjectField(env, jobj, nameFID, jstr);
 		(*env)->DeleteLocalRef(env, jstr);
 	} else {
