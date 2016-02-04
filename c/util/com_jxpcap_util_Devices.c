@@ -23,7 +23,22 @@
 #include <stdlib.h>
 #endif
 
-char *get_mac_addr(char *if_name) {
+int compare_strings(char *first, char *second) {
+   while (*first == *second) {
+      if (*first == '\0' || *second == '\0')
+         break;
+ 
+      first++;
+      second++;
+   }
+ 
+   if (*first == '\0' && *second == '\0')
+      return 1;
+   else
+      return 0;
+}
+
+char *get_mac_addr(JNIEnv *env, char *if_name, jobject jerrmsg) {
 	const unsigned char *mac;
 	#ifdef WIN32
 	IP_ADAPTER_INFO AdapterInfo[16];
@@ -31,11 +46,16 @@ char *get_mac_addr(char *if_name) {
 	DWORD dwStatus = GetAdaptersInfo(AdapterInfo, &dwBufLen);
 	assert(dwStatus == ERROR_SUCCESS);
 	PIP_ADAPTER_INFO pAdapterInfo = AdapterInfo;
-	if(strcmp(pAdapterInfo->AdapterName,if_name) == 1) {
-		mac = pAdapterInfo->AdapterName;
-	} else {
-		return NULL;
-	}
+	char *ifname;
+	do {
+		ifname = pAdapterInfo->AdapterName;
+		if(strcmp(ifname, if_name) == 0) {
+			mac = pAdapterInfo->Address;
+			printf("|%s|==|%s|==|%s|\n\n", pAdapterInfo->AdapterName, ifname, if_name);
+			break;
+		}
+		pAdapterInfo = pAdapterInfo->Next; 
+	} while(pAdapterInfo);
 	#else
 	struct ifreq ifr;
 	size_t if_name_len=strlen(if_name);
@@ -43,23 +63,33 @@ char *get_mac_addr(char *if_name) {
     		memcpy(ifr.ifr_name,if_name,if_name_len);
     		ifr.ifr_name[if_name_len]=0;
 	} else {
-		printf("interface name is too long");
+		setMsg(env, jerrmsg, "Interface name is too long.");
+		/*printf("interface name is too long");*/
+		return NULL;
 	}
 	int fd=socket(AF_UNIX,SOCK_DGRAM,0);
 	if (fd==-1) {
-    		printf("%s",strerror(errno));
+    	/*printf("%s",strerror(errno));*/
+		setMsg(env, jerrmsg, strerror(errno));
+		return NULL;
 	}
 	if (ioctl(fd,SIOCGIFHWADDR,&ifr)==-1) {
- 		int temp_errno=errno;
-    		printf("%s",strerror(temp_errno));
+ 		/*int temp_errno=errno;*/
+    		/*printf("%s",strerror(temp_errno));*/
+ 		setMsg(env, jerrmsg, strerror(errno));
+		return NULL;
 	}
 	if (ifr.ifr_hwaddr.sa_family!=ARPHRD_ETHER) {
-    		printf("not an Ethernet interface");
+    		/*printf("not an Ethernet interface");*/
+		setMsg(env, jerrmsg, "Not an Ethernet interface.");
+		return NULL;
 	}
 	mac=(unsigned char*)ifr.ifr_hwaddr.sa_data;
 	#endif
+	
 	char *mac_addr = (char *) malloc (16 * sizeof (char));;
 	sprintf(mac_addr, "%02X:%02X:%02X:%02X:%02X:%02X", mac[0],mac[1],mac[2],mac[3],mac[4],mac[5]);
+	printf("(%02X:%02X:%02X:%02X:%02X:%02X)", mac[0],mac[1],mac[2],mac[3],mac[4],mac[5]);
 	return (char *) mac_addr;
 }
 
@@ -91,7 +121,7 @@ char* ip6tos(struct sockaddr *sockaddr, char *address, int addrlen) {
     return address;
 }*/
 
-jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pcap_if_t *device_list) {
+jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pcap_if_t *device_list, jobject jerrmsg) {
 	jclass NetworkInterface = (*env)->FindClass(env, "com/jxpcap/NetworkInterface");
 	jmethodID NetworkInterfaceInit = (*env)->GetMethodID(env, NetworkInterface, "<init>", "()V");
 	jfieldID nextFID = (*env)->GetFieldID(env, NetworkInterface, "next", "Lcom/jxpcap/NetworkInterface;");
@@ -102,12 +132,12 @@ jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pc
 	jfieldID broadcast_addressFID = (*env)->GetFieldID(env, NetworkInterface, "broadcast_address", "Ljava/lang/String;");
 	jfieldID mac_addressFID = (*env)->GetFieldID(env, NetworkInterface, "mac_address", "Ljava/lang/String;");
 	jfieldID destination_addressFID = (*env)->GetFieldID(env, NetworkInterface, "destination_address", "Ljava/lang/String;");
-	jfieldID AF_NAMEFID = (*env)->GetFieldID(env, NetworkInterface, "AF_NAME", "Ljava/lang/String;");
+	/*jfieldID AF_NAMEFID = (*env)->GetFieldID(env, NetworkInterface, "AF_NAME", "Ljava/lang/String;");*/
 
 	jobject jobj = (*env)->NewObject(env, NetworkInterface, NetworkInterfaceInit);
 
 	if(device_list->next != NULL) {
-		jobject NI = setNetIface(env, jdevice_list, List_addMID, device_list->next);
+		jobject NI = setNetIface(env, jdevice_list, List_addMID, device_list->next, jerrmsg);
 		if(NI == NULL) {
 			return NULL;
 		}
@@ -123,15 +153,9 @@ jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pc
 
 	if(device_list->name != NULL) {
 		jobject jstr = (*env)->NewStringUTF(env, device_list->name);
-		/*char *p = strtok (device_list->name,"_");
-		char *tmp[2];
-		int i;
-		while (p != NULL)
-		{
-			tmp[i++] = p;
-			p = strtok (NULL, "/");
-		}*/
-		char *m = get_mac_addr(device_list->name);
+		char *ifname = strtok(device_list->name, "_");
+		char *if_name = strtok(NULL, "_");
+		char *m = get_mac_addr(env, if_name, jerrmsg);
 		if(m != NULL) {
 			jobject jstr_mac = (*env)->NewStringUTF(env, m);
 			(*env)->SetObjectField(env, jobj, mac_addressFID, jstr_mac);
@@ -153,7 +177,7 @@ jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pc
 	}
 
 	pcap_addr_t *address;
-	char ip6str[128];
+	/*char ip6str[128];*/
 	for(address=device_list->addresses; address; address=address->next) {
 		switch(address->addr->sa_family) {
 			case AF_INET:
@@ -211,7 +235,7 @@ JNIEXPORT jobject JNICALL Java_com_jxpcap_util_Devices_nativeGetAllDevices
 	  }
 	  jclass List = (*env)->FindClass(env, "java/util/List");
 	  jmethodID List_addMID = (*env)->GetMethodID(env, List, "add", "(Ljava/lang/Object;)Z");
-	  jobject jobj = setNetIface(env, jdevice_list, List_addMID, device_list);
+	  jobject jobj = setNetIface(env, jdevice_list, List_addMID, device_list, jerrmsg);
 	  if(jobj == NULL) {
 		  return NULL;
 	  }

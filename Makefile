@@ -1,6 +1,6 @@
 
 # Specify where JAVA_HOHE directory is
-JAVA_HOME=/usr/lib/jvm/jdk-8-oracle-arm-vfp-hflt
+JAVA_HOME=/home/langkuy/app/jdk
 
 JAVAC=$(JAVA_HOME)/bin/javac
 JAVA=$(JAVA_HOME)/bin/java
@@ -21,6 +21,7 @@ PLATFORM=$(shell "uname")
 ifeq ($(PLATFORM), Linux)
 	JNI_INCLUDE_PLATFORM=$(JNI_INCLUDE)/linux
 	C_COMPILE_OPTION= -shared -fPIC -L.
+	C_WARNING_OPTION= -Wall -Werror -std=gnu11
 	SUFFIX=.so
 	INSTALL_DIR=/usr/lib
 else
@@ -54,7 +55,7 @@ C_FLAGS= $(C_COMPILE_OPTION) -I $(PCAP_INCLUDE) -I $(JNI_INCLUDE) -I $(JNI_INCLU
 
 all:
 	$(JAVAC) $(JAVA_FLAGS) $(JAVA_SRC) -h c/jni -d bin/java
-	$(GCC) $(C_FLAGS) $(C_SRC) -o libjxpcap$(SUFFIX) -lpcap
+	$(GCC) $(C_FLAGS) $(C_WARNING_OPTION) $(C_SRC) -o libjxpcap$(SUFFIX) -lpcap
 	cd bin/java/ && $(JAR) -cvf ../../$(JAVA_LIB_TARGET) $(JAVA_CLASS)
 	
 install:

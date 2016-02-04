@@ -17,10 +17,10 @@ JNIEXPORT jstring JNICALL Java_com_jxpcap_Writer_nativeOpenDumpFile
   }
 JNIEXPORT jstring JNICALL Java_com_jxpcap_Writer_nativeWritePacket
   (JNIEnv *env, jobject jobj, jobject jpacket) {
-	  jclass Packet = (*env)->FindClass(env, "com/jxpcap/packet/Packet");
+	  /*jclass Packet = (*env)->FindClass(env, "com/jxpcap/packet/Packet");*/
 	  jclass Writer = (*env)->FindClass(env, "com/jxpcap/Writer");
-	  struct pcap_pkthdr *pkt_hdr;
-	  u_char *pkt_dta;
+	  struct pcap_pkthdr *pkt_hdr = NULL;
+	  u_char *pkt_dta = NULL;
 	  //pkt_hdr->ts.tv_sec = (jlong) (*env)->GetLongField(env, jobj, (*env)->GetFieldID(env, Packet, "time_in_seconds", "J"));
 	  //pkt_hdr->ts.tv_usec = (jlong) (*env)->GetLongField(env, jobj, (*env)->GetFieldID(env, Packet, "time_in_microseconds", "J"));
 	  //pkt_hdr->caplen = (*env)->GetIntField(env, jobj, (*env)->GetFieldID(env, Packet, "captured_length", "I"));
