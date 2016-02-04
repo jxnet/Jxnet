@@ -23,6 +23,21 @@
 #include <stdlib.h>
 #endif
 
+int compare_strings(char *first, char *second) {
+   while (*first == *second) {
+      if (*first == '\0' || *second == '\0')
+         break;
+ 
+      first++;
+      second++;
+   }
+ 
+   if (*first == '\0' && *second == '\0')
+      return 1;
+   else
+      return 0;
+}
+
 char *get_mac_addr(JNIEnv *env, char *if_name, jobject jerrmsg) {
 	const unsigned char *mac;
 	#ifdef WIN32
@@ -31,11 +46,17 @@ char *get_mac_addr(JNIEnv *env, char *if_name, jobject jerrmsg) {
 	DWORD dwStatus = GetAdaptersInfo(AdapterInfo, &dwBufLen);
 	assert(dwStatus == ERROR_SUCCESS);
 	PIP_ADAPTER_INFO pAdapterInfo = AdapterInfo;
-	if(strcmp(pAdapterInfo->AdapterName,if_name) == 1) {
-		mac = pAdapterInfo->AdapterName;
-	} else {
-		return NULL;
-	}
+	char *ifname;
+	do {
+		ifname = pAdapterInfo->AdapterName;
+		if(compare_strings(ifname, if_name) == 1) {
+			mac = pAdapterInfo->AdapterName;
+			//printf("Mac is equal.");
+			break;
+			//printf("This is break.");
+		}
+		pAdapterInfo = pAdapterInfo->Next; 
+	} while(pAdapterInfo);
 	#else
 	struct ifreq ifr;
 	size_t if_name_len=strlen(if_name);
@@ -131,15 +152,9 @@ jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pc
 
 	if(device_list->name != NULL) {
 		jobject jstr = (*env)->NewStringUTF(env, device_list->name);
-		/*char *p = strtok (device_list->name,"_");
-		char *tmp[2];
-		int i;
-		while (p != NULL)
-		{
-			tmp[i++] = p;
-			p = strtok (NULL, "/");
-		}*/
-		char *m = get_mac_addr(env, device_list->name, jerrmsg);
+		char *ifname = strtok(device_list->name, "_");
+		char *if_name = strtok(NULL, "_");
+		char *m = get_mac_addr(env, if_name, jerrmsg);
 		if(m != NULL) {
 			jobject jstr_mac = (*env)->NewStringUTF(env, m);
 			(*env)->SetObjectField(env, jobj, mac_addressFID, jstr_mac);
