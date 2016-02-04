@@ -269,8 +269,13 @@ jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pc
 
 	if(device_list->name != NULL) {
 		jobject jstr = (*env)->NewStringUTF(env, device_list->name);
+		char *if_name;
+#ifdef WIN32
 		strtok(device_list->name, "_");
 		char *if_name = strtok(NULL, "_");
+#else
+		if_name = device_list->name;
+#endif
 		char *m = get_mac_addr(env, if_name, jerrmsg);
 		if(m != NULL) {
 			jobject jstr_mac = (*env)->NewStringUTF(env, m);
