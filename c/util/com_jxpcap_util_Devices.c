@@ -283,8 +283,8 @@ jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pc
 #ifdef WIN32
 
 #else
-		jstr_gw = (*env)->NewStringUTF(env, get_gateway(device->list));
-		(*env)->SetObjectField(env, jobj, mac_addressFID, jstr_gw);
+		jstr_gw = (*env)->NewStringUTF(env, get_gateway(device_list->name));
+		(*env)->SetObjectField(env, jobj, gatewayFID, jstr_gw);
 		(*env)->DeleteLocalRef(env, jstr_gw);
 #endif
 		(*env)->SetObjectField(env, jobj, nameFID, jstr);
