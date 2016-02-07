@@ -310,6 +310,7 @@ jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pc
 					gateway = pAdapter->GatewayList.IpAddress.String;
 				}
 				pAdapter = pAdapter->Next;
+			}
 		} else {
 					/*..............................*/
 		}
