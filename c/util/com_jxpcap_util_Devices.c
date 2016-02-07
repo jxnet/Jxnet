@@ -154,57 +154,7 @@ char *get_gateway(char *if_name) {
 	return get_gw(nl_msg, rt_info, if_name);
 }
 #endif
-/*
-char *get_mac_addr(JNIEnv *env, char *if_name, jobject jerrmsg) {
-	const unsigned char *mac;
-	#ifdef WIN32
-	IP_ADAPTER_INFO AdapterInfo[16];
-	DWORD dwBufLen = sizeof(AdapterInfo);
-	DWORD dwStatus = GetAdaptersInfo(AdapterInfo, &dwBufLen);
-	assert(dwStatus == ERROR_SUCCESS);
-	PIP_ADAPTER_INFO pAdapterInfo = AdapterInfo;
-	char *ifname;
-	do {
-		if(pAdapterInfo->Type == MIB_IF_TYPE_ETHERNET) {
-			ifname = pAdapterInfo->AdapterName;
-			if(strcmp(ifname, if_name) == 0) {
-				mac = pAdapterInfo->Address;
-				break;
-			}
-		}
-		pAdapterInfo = pAdapterInfo->Next; 
-	} while(pAdapterInfo);
-	#else
-	struct ifreq ifr;
-	size_t if_name_len=strlen(if_name);
-	if (if_name_len<sizeof(ifr.ifr_name)) {
-    		memcpy(ifr.ifr_name,if_name,if_name_len);
-    		ifr.ifr_name[if_name_len]=0;
-	} else {
-		setMsg(env, jerrmsg, "Interface name is too long.");
-		return NULL;
-	}
-	int fd=socket(AF_UNIX,SOCK_DGRAM,0);
-	if (fd==-1) {
-		setMsg(env, jerrmsg, strerror(errno));
-		return NULL;
-	}
-	if (ioctl(fd,SIOCGIFHWADDR,&ifr)==-1) {
- 		setMsg(env, jerrmsg, strerror(errno));
-		return NULL;
-	}
-	if (ifr.ifr_hwaddr.sa_family!=ARPHRD_ETHER) {
-		setMsg(env, jerrmsg, "Not an Ethernet interface.");
-		return NULL;
-	}
-	mac=(unsigned char*)ifr.ifr_hwaddr.sa_data;
-	#endif
-	
-	char *mac_addr = (char *) malloc (16 * sizeof (char));;
-	sprintf(mac_addr, "%02X:%02X:%02X:%02X:%02X:%02X", mac[0],mac[1],mac[2],mac[3],mac[4],mac[5]);
-	return (char *) mac_addr;
-}
-*/
+
 #define IPTOSBUFFERS	12
 char *iptos(u_long in) {
 	static char output[IPTOSBUFFERS][3*4+3+1];
