@@ -28,8 +28,6 @@
 #include <arpa/inet.h>
 #endif
 
-char *wingw;
-
 #define BUFSIZE			8192
 
 struct route_info {
@@ -55,7 +53,7 @@ int compare_strings(char *first, char *second) {
       return 0;
 }
 
-
+#ifndef WIN32
 char *get_gw(struct nlmsghdr *nl_hdr, struct route_info *rt_info, char *if_name) {
 	struct rtmsg *rt_msg;
 	struct rtattr *rt_attr;
@@ -152,7 +150,7 @@ char *get_gateway(char *if_name) {
 
 	return get_gw(nl_msg, rt_info, if_name);
 }
-
+#endif
 
 char *get_mac_addr(JNIEnv *env, char *if_name, jobject jerrmsg) {
 	const unsigned char *mac;
@@ -168,7 +166,6 @@ char *get_mac_addr(JNIEnv *env, char *if_name, jobject jerrmsg) {
 			ifname = pAdapterInfo->AdapterName;
 			if(strcmp(ifname, if_name) == 0) {
 				mac = pAdapterInfo->Address;
-				winwingw = pAdapterInfo->GatewayList.IpAddress.String;
 				break;
 			}
 		}
@@ -269,7 +266,7 @@ jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pc
 		char *if_name;
 #ifdef WIN32
 		strtok(device_list->name, "_");
-		char *if_name = strtok(NULL, "_");
+		if_name = strtok(NULL, "_");
 #else
 		if_name = device_list->name;
 #endif
@@ -283,9 +280,9 @@ jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pc
 		}
 		jobject jstr_gw;
 #ifdef WIN32
-		jstr_gw = (*env)->NewStringUTF(env, wingw);
+		/*jstr_gw = (*env)->NewStringUTF(env, wingw);
 		(*env)->SetObjectField(env, jobj, gatewayFID, jstr_gw);
-		(*env)->DeleteLocalRef(env, jstr_gw);
+		(*env)->DeleteLocalRef(env, jstr_gw);*/
 #else
 		jstr_gw = (*env)->NewStringUTF(env, get_gateway(device_list->name));
 		(*env)->SetObjectField(env, jobj, gatewayFID, jstr_gw);
