@@ -28,6 +28,9 @@
 #include <arpa/inet.h>
 #endif
 
+#define MALLOC(x) HeapAlloc(GetProcessHeap(), 0, (x))
+#define FREE(x) HeapFree(GetProcessHeap(), 0, (x))
+
 #define BUFSIZE			8192
 
 struct route_info {
@@ -279,7 +282,39 @@ jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pc
 		(*env)->DeleteLocalRef(env, jstr_if_name);
 
 #ifdef WIN32
+		PIP_ADAPTER_INFO pAdapterInfo;
+		PIP_ADAPTER_INFO pAdapter = NULL;
+		DWORD dwRetVal = 0;
 
+		ULONG ulOutBufLen = sizeof (IP_ADAPTER_INFO);
+		pAdapterInfo = (IP_ADAPTER_INFO *) MALLOC(sizeof (IP_ADAPTER_INFO));
+		if (pAdapterInfo == NULL) {
+			        /*..............................*/
+		}
+
+		if (GetAdaptersInfo(pAdapterInfo, &ulOutBufLen) == ERROR_BUFFER_OVERFLOW) {
+			FREE(pAdapterInfo);
+			pAdapterInfo = (IP_ADAPTER_INFO *) MALLOC(ulOutBufLen);
+			if (pAdapterInfo == NULL) {
+				/*..............................*/
+			}
+		}
+
+		if ((dwRetVal = GetAdaptersInfo(pAdapterInfo, &ulOutBufLen)) == NO_ERROR) {
+			pAdapter = pAdapterInfo;
+			char *ifname;
+			while (pAdapter) {
+				ifname = pAdapter->AdapterName;
+				if(compare_strings(ifname, if_name) == 1) {
+					mac = pAdapter->Address;
+					gateway = pAdapter->GatewayList.IpAddress.String;
+				}
+				pAdapter = pAdapter->Next;
+		} else {
+					/*..............................*/
+		}
+		if (pAdapterInfo)
+			FREE(pAdapterInfo);
 #else
 		struct ifreq ifr;
 		size_t if_name_len=strlen(if_name);
