@@ -1,6 +1,8 @@
 #include "jni/com_jxpcap_Jxpcap.h"
 #include <pcap.h>
 #include "util/util.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 JNIEXPORT jobject JNICALL Java_com_jxpcap_Jxpcap_nativeOpenLive
 	(JNIEnv *env, jclass jcls, jstring jdevice_name, jint jsnaplen, jint jpromisc, jint jtimeout, jobject jerrmsg) {
@@ -35,7 +37,7 @@ JNIEXPORT void JNICALL Java_com_jxpcap_Jxpcap_nativeClose
 JNIEXPORT jobject JNICALL Java_com_jxpcap_Jxpcap_nativeCreate
   (JNIEnv *env, jclass jcls, jstring jdevice_name, jobject jerrmsg) {
 	char errmsg[256];
-	const char device_name;
+	const char *device_name;
 	pcap_t *pcap;
 	jmethodID JxpcapInit;
 	jobject jobj;
