@@ -13,8 +13,12 @@ public class Devices extends DeviceList {
     
     private static native Devices nativeGetAllDevices(List<NetworkInterface> all_devs, Message errmsg);
     
-    public static Devices getAllDevices(DeviceList all_devs, Message errmsg) {
-        return nativeGetAllDevices(all_devs.all_devs , errmsg);
+    public static Devices getAllDevices(DeviceList all_devs, Message errmsg) throws JxpcapException {
+        Devices devs = nativeGetAllDevices(all_devs.all_devs , errmsg);
+        if(devs == null) {
+        	throw new JxpcapException(errmsg.getMessage());
+        }
+        return devs;
     }
     
     static {
