@@ -262,37 +262,60 @@ jobject setNetIface(JNIEnv *env, jobject jdevice_list, jmethodID List_addMID, pc
 	}
 
 	if(device_list->name != NULL) {
-		jobject jstr = (*env)->NewStringUTF(env, device_list->name);
 		char *if_name;
+		jobject jstr_if_name = (*env)->NewStringUTF(env, device_list->name);
+		const u_char *mac;
+		char *mac_addr = (char *) malloc(16 * sizeof(u_char));
+		jobject jstr_mac_addr;
+		char *gateway;
+		jobject jstr_gateway;
 #ifdef WIN32
 		strtok(device_list->name, "_");
 		if_name = strtok(NULL, "_");
 #else
 		if_name = device_list->name;
 #endif
-		char *m = get_mac_addr(env, if_name, jerrmsg);
-		if(m != NULL) {
-			jobject jstr_mac = (*env)->NewStringUTF(env, m);
-			(*env)->SetObjectField(env, jobj, mac_addressFID, jstr_mac);
-			(*env)->DeleteLocalRef(env, jstr_mac);
-		} else {
-			(*env)->SetObjectField(env, jobj, mac_addressFID, NULL);
-		}
-		jobject jstr_gw;
+		(*env)->SetObjectField(env, jobj, nameFID, jstr_if_name);
+		(*env)->DeleteLocalRef(env, jstr_if_name);
+
 #ifdef WIN32
-		/*jstr_gw = (*env)->NewStringUTF(env, wingw);
-		(*env)->SetObjectField(env, jobj, gatewayFID, jstr_gw);
-		(*env)->DeleteLocalRef(env, jstr_gw);*/
+
 #else
-		jstr_gw = (*env)->NewStringUTF(env, get_gateway(device_list->name));
-		(*env)->SetObjectField(env, jobj, gatewayFID, jstr_gw);
-		(*env)->DeleteLocalRef(env, jstr_gw);
+		struct ifreq ifr;
+		size_t if_name_len=strlen(if_name);
+		if (if_name_len<sizeof(ifr.ifr_name)) {
+		   		memcpy(ifr.ifr_name,if_name,if_name_len);
+		   		ifr.ifr_name[if_name_len]=0;
+		} else {
+			setMsg(env, jerrmsg, "Interface name is too long.");
+		}
+		int fd=socket(AF_UNIX,SOCK_DGRAM,0);
+		if (fd==-1) {
+			setMsg(env, jerrmsg, strerror(errno));
+		}
+		if (ioctl(fd,SIOCGIFHWADDR,&ifr)==-1) {
+			setMsg(env, jerrmsg, strerror(errno));
+		}
+		if (ifr.ifr_hwaddr.sa_family!=ARPHRD_ETHER) {
+			setMsg(env, jerrmsg, "Not an Ethernet interface.");
+		}
+		mac=(u_char*)ifr.ifr_hwaddr.sa_data;
+		gateway = get_gateway(if_name);
 #endif
-		(*env)->SetObjectField(env, jobj, nameFID, jstr);
-		(*env)->DeleteLocalRef(env, jstr);
+		sprintf(mac_addr, "%02X:%02X:%02X:%02X:%02X:%02X", mac[0],mac[1],mac[2],mac[3],mac[4],mac[5]);
+		jstr_mac_addr = (*env)->NewStringUTF(env, mac_addr);
+		jstr_gateway = (*env)->NewStringUTF(env, gateway);
+		(*env)->SetObjectField(env, jobj, mac_addressFID, jstr_mac_addr);
+		(*env)->SetObjectField(env, jobj, gatewayFID, jstr_gateway);
+		(*env)->DeleteLocalRef(env, jstr_mac_addr);
+		(*env)->DeleteLocalRef(env, jstr_gateway);
 	} else {
 		(*env)->SetObjectField(env, jobj, nameFID, NULL);
 	}
+
+
+
+
 	if(device_list->description != NULL) {
 		jobject jstr = (*env)->NewStringUTF(env, device_list->description);
 		(*env)->SetObjectField(env, jobj, descriptionFID, jstr);
