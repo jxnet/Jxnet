@@ -3,9 +3,9 @@
 
 void setMsg(JNIEnv *env, jobject jobj, const char *message);
 
-jlong to_jlong(void *ptr);
+jlong toJlong(void *ptr);
 
-void *toPtr(jlong lp);
+void *toPcap(jlong lp);
 
 pcap_t *getPcap(jlong lp);
 

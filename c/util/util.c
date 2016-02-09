@@ -12,7 +12,7 @@ jlong toJlong(void *ptr) {
     return lp;
 }
 
-void *toPtr(jlong lp) {
+void *toPcap(jlong lp) {
 #ifndef WIN32
     void *ptr = (void *) ((intptr_t) lp);
 #else
@@ -22,11 +22,11 @@ void *toPtr(jlong lp) {
 }
 
 pcap_t *getPcap(jlong lp) {
-    return ((pcap_t *) toPtr(lp));
+    return ((pcap_t *) toPcap(lp));
 }
 
 pcap_dumper_t *getPcapDumper(jlong lp) {
-	return ((pcap_dumper_t *) toPtr(lp));
+	return ((pcap_dumper_t *) toPcap(lp));
 }
 
 void setPcap(JNIEnv *env, jobject jobj, jfieldID FID, pcap_t *pcap) {
