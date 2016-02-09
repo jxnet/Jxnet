@@ -1,6 +1,7 @@
 
 # Specify where JAVA_HOHE directory is
-JAVA_HOME=/home/langkuy/app/jdk
+#JAVA_HOME=/home/langkuy/app/jdk
+JAVA_HOME=/usr/lib/jvm/jdk-8-oracle-arm-vfp-hflt
 
 JAVAC=$(JAVA_HOME)/bin/javac
 JAVA=$(JAVA_HOME)/bin/java
