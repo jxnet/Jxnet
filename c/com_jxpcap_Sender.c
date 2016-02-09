@@ -14,7 +14,7 @@ JNIEXPORT jstring JNICALL Java_com_jxpcap_Sender_nativeSendPacket__JLjava_nio_By
 	return (*env)->NewStringUTF(env, "Can't sending packet.");
 }
 
-JNIEXPORT jstring JNICALL Java_com_jxpcap_Sender_nativeSendPacket__I
+JNIEXPORT jstring JNICALL Java_com_jxpcap_Sender_nativeSendPacket__JII
 	(JNIEnv *env, jobject jobj, jlong jxpcap, jint jpacket, jint jlength) {
 	pcap_t *pcap;
 	u_char *packet; 
