@@ -43,9 +43,9 @@ public class Ethernet {
 	
 	
 	
-	public short hardware_type;
-	public byte[] dst;
-	public byte[] src;
+	private short hardware_type;
+	private byte[] dst;
+	private byte[] src;
 	
 	public void setPacket(byte[] dst, byte[] src, short hardware_type) {
 		this.dst = dst;
