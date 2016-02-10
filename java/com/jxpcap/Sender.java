@@ -19,4 +19,11 @@ public class Sender extends Jxpcap {
     public String sendPacket(final Jxpcap jxpcap, final int packet, final int length) {
     	return nativeSendPacket(jxpcap.jxpcap, packet, length);
     }
+    
+    public String sendPacket(final Jxpcap jxpcap, final ByteBuffer packet, final int length) {
+    	if(packet.isDirect()) {
+    		return nativeSendPacket(jxpcap.jxpcap, packet, length);
+    	}
+    	return null;
+    }
 }
