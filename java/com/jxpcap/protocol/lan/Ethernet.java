@@ -4,6 +4,9 @@ import java.nio.ByteBuffer;
 
 public class Ethernet {
 
+	
+	public static final int ETHER_LEN			= 14;
+	
 	/* http://www.scs.stanford.edu/histar/src/uinc/linux/if_ether.h */
 	
 	
@@ -42,7 +45,6 @@ public class Ethernet {
 	/* http://www.scs.stanford.edu/histar/src/uinc/linux/if_ether.h */
 	
 	
-	
 	private short hardware_type;
 	private byte[] dst;
 	private byte[] src;
@@ -54,7 +56,7 @@ public class Ethernet {
 	}
 	
 	public ByteBuffer getPacket() {
-		ByteBuffer buf = ByteBuffer.allocateDirect(14);
+		ByteBuffer buf = ByteBuffer.allocateDirect(Ethernet.ETHER_LEN);
 		buf.put(dst);
 		buf.put(src);
 		buf.putShort(hardware_type);

@@ -4,17 +4,19 @@ import java.nio.ByteBuffer;
 
 public class ARP {
 
-	public static final short	ARPHRD_ETHER		= 1;	/* ethernet hardware format */
-	public static final short	ARPHRD_FRELAY		= 15;	/* frame relay hardware format */
-	public static final short	ARPOP_REQUEST		= 1;	/* request to resolve address */
-	public static final short	ARPOP_REPLY			= 2;	/* response to previous request */
-	public static final short	ARPOP_REVREQUEST	= 3;	/* request protocol address given hardware */
-	public static final short	ARPOP_REVREPLY		= 4;	/* response giving protocol address */
-	public static final short	ARPOP_INVREQUEST	= 8;	/* request to identify peer */
-	public static final short	ARPOP_INVREPLY		= 9;	/* response identifying peer */
+	public static final int ARP_LEN				= 28;
+	
+	public static final short ARPHRD_ETHER		= 1;	/* ethernet hardware format */
+	public static final short ARPHRD_FRELAY		= 15;	/* frame relay hardware format */
+	public static final short ARPOP_REQUEST		= 1;	/* request to resolve address */
+	public static final short ARPOP_REPLY		= 2;	/* response to previous request */
+	public static final short ARPOP_REVREQUEST	= 3;	/* request protocol address given hardware */
+	public static final short ARPOP_REVREPLY	= 4;	/* response giving protocol address */
+	public static final short ARPOP_INVREQUEST	= 8;	/* request to identify peer */
+	public static final short ARPOP_INVREPLY	= 9;	/* response identifying peer */
 
-	public static final byte	LEN_4				= 4;
-	public static final byte	LEN_6				= 6;
+	public static final byte	LEN_4			= 4;
+	public static final byte	LEN_6			= 6;
 	
 	private short hardware_type;
 	private short protocol_type;
@@ -26,9 +28,9 @@ public class ARP {
 	private byte[] target_hardware_address;
 	private byte[] target_protocol_address;
 	
-	public void setPacket(short hardware_type, short protocol_type, byte hardware_length, byte protocol_length,
-			byte[] sender_hardware_address, byte[] sender_protocol_address, byte[] target_hardware_address, byte[] target_protocol_address) {
-		this.hardware_length			= hardware_length;
+	public void setPacket(final short hardware_type, final short protocol_type, final byte hardware_length, final byte protocol_length, final short operation,
+			final byte[] sender_hardware_address, final byte[] sender_protocol_address, final byte[] target_hardware_address, final byte[] target_protocol_address) {
+		this.hardware_type			= hardware_type;
 		this.protocol_type				= protocol_type;
 		this.hardware_length			= hardware_length;
 		this.protocol_length			= protocol_length;
@@ -40,7 +42,7 @@ public class ARP {
 	}
 	
 	public ByteBuffer getPacket() {
-		ByteBuffer buf = ByteBuffer.allocateDirect(28);
+		ByteBuffer buf = ByteBuffer.allocateDirect(ARP.ARP_LEN);
 		buf.putShort(hardware_type);
 		buf.putShort(protocol_type);
 		buf.put(hardware_length);
