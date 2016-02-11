@@ -26,6 +26,12 @@ public class Jxpcap {
 
     private static native Jxpcap nativeOpenLive(String device_name, int snaplen, int promisc, int timeout, Message errmsg);
     
+    private static native void nativeClose(long jxpcap);
+    
+    private static native Jxpcap nativeCreate(String device_name, Message errmsg);
+    
+    private static native int nativeActive(long jxpcap);
+    
     public static Jxpcap openLive(String device_name, int snaplen, boolean promisc, int timeout, Message errmsg) throws JxpcapException {
         Jxpcap pcap = nativeOpenLive(device_name, snaplen, (promisc ? 1 : 0), timeout, errmsg);
         if(pcap == null) {
@@ -33,7 +39,23 @@ public class Jxpcap {
         }
         return pcap;
     }
-        
+    
+    public static void close(long jxpcap) {
+    	 nativeClose(jxpcap);
+    }
+    
+    /*public static Jxpcap create(String device_name, Message errmsg) throws JxpcapException {
+    	Jxpcap pcap = nativeCreate(device_name, errmsg);
+    	if(pcap == null) {
+    		throw new JxpcapException(errmsg.getMessage());
+    	}
+    	return pcap;
+    }
+    
+    public static int active(long jxpcap) {
+    	return nativeActive(jxpcap);
+    }*/
+    
     static {
         System.loadLibrary("jxpcap");
     }

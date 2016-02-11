@@ -3,11 +3,17 @@
 
 void setMsg(JNIEnv *env, jobject jobj, const char *message);
 
-jlong to_jlong(void *ptr);
+jint toJint(void *ptr);
 
-void *toPtr(jlong lp);
+jlong toJlong(void *ptr);
+
+void *toPcap(jlong lp);
+
+void *toPacket(jint ip);
 
 pcap_t *getPcap(jlong lp);
+
+u_char *getPacket(jint ip);
 
 pcap_dumper_t *getPcapDumper(jlong lp);
 

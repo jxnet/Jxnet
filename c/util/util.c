@@ -3,6 +3,15 @@
 #include <unistd.h>
 #include "util.h"
 
+jint toJint(void *ptr) {
+#ifndef WIN32
+    jint ip = (intptr_t) ptr;
+#else
+    jint ip = (UINT_PTR) ptr;
+#endif
+    return ip;
+}
+
 jlong toJlong(void *ptr) {
 #ifndef WIN32
     jlong lp = (intptr_t) ptr;
@@ -12,7 +21,7 @@ jlong toJlong(void *ptr) {
     return lp;
 }
 
-void *toPtr(jlong lp) {
+void *toPcap(jlong lp) {
 #ifndef WIN32
     void *ptr = (void *) ((intptr_t) lp);
 #else
@@ -21,12 +30,25 @@ void *toPtr(jlong lp) {
     return ptr;
 }
 
+void *toPacket(jint ip) {
+#ifndef WIN32
+    void *ptr = (void *) ((intptr_t) ip);
+#else
+    void *ptr = (void *) ((UINT_PTR) ip);
+#endif
+    return ptr;
+}
+
 pcap_t *getPcap(jlong lp) {
-    return ((pcap_t *) toPtr(lp));
+    return ((pcap_t *) toPcap(lp));
+}
+
+u_char *getPacket(jint ip) {
+	return ((u_char *) toPacket(ip));
 }
 
 pcap_dumper_t *getPcapDumper(jlong lp) {
-	return ((pcap_dumper_t *) toPtr(lp));
+	return ((pcap_dumper_t *) toPcap(lp));
 }
 
 void setPcap(JNIEnv *env, jobject jobj, jfieldID FID, pcap_t *pcap) {

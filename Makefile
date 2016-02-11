@@ -1,6 +1,7 @@
 
 # Specify where JAVA_HOHE directory is
-JAVA_HOME=/home/langkuy/app/jdk
+#JAVA_HOME=/home/langkuy/app/jdk
+JAVA_HOME=/usr/lib/jvm/jdk-8-oracle-arm-vfp-hflt
 
 JAVAC=$(JAVA_HOME)/bin/javac
 JAVA=$(JAVA_HOME)/bin/java
@@ -21,7 +22,7 @@ PLATFORM=$(shell "uname")
 ifeq ($(PLATFORM), Linux)
 	JNI_INCLUDE_PLATFORM=$(JNI_INCLUDE)/linux
 	C_COMPILE_OPTION= -shared -fPIC -L.
-	C_WARNING_OPTION= -Wall -Werror -std=gnu11
+	C_WARNING_OPTION= -Wall -std=gnu11
 	SUFFIX=.so
 	INSTALL_DIR=/usr/lib
 else

@@ -15,6 +15,30 @@ extern "C" {
 JNIEXPORT jobject JNICALL Java_com_jxpcap_Jxpcap_nativeOpenLive
   (JNIEnv *, jclass, jstring, jint, jint, jint, jobject);
 
+/*
+ * Class:     com_jxpcap_Jxpcap
+ * Method:    nativeClose
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_com_jxpcap_Jxpcap_nativeClose
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     com_jxpcap_Jxpcap
+ * Method:    nativeCreate
+ * Signature: (Ljava/lang/String;Lcom/jxpcap/util/Message;)Lcom/jxpcap/Jxpcap;
+ */
+JNIEXPORT jobject JNICALL Java_com_jxpcap_Jxpcap_nativeCreate
+  (JNIEnv *, jclass, jstring, jobject);
+
+/*
+ * Class:     com_jxpcap_Jxpcap
+ * Method:    nativeActive
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_com_jxpcap_Jxpcap_nativeActive
+  (JNIEnv *, jclass, jlong);
+
 #ifdef __cplusplus
 }
 #endif
