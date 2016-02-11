@@ -1,69 +1,31 @@
-// Not supported on ARM proccessor
-
-
 package com.jxpcap.test;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.math.BigInteger;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 
-import com.jxpcap.*;
-import com.jxpcap.protocol.lan.Ethernet;
-import com.jxpcap.protocol.net.ARP;
-import com.jxpcap.util.*;
+import com.jxpcap.Jxpcap;
+import com.jxpcap.NetworkInterface;
+import com.jxpcap.Sender;
+import com.jxpcap.util.Addresses;
+import com.jxpcap.util.DeviceList;
+import com.jxpcap.util.Devices;
+import com.jxpcap.util.JxpcapException;
+import com.jxpcap.util.Message;
 
-class Converter {
-    public static String byteToStringMAC(byte[] b) {
-        if(b == null) { return null; }
-        StringBuilder sb = new StringBuilder();
-        boolean isFirst = true;
-        for (byte s : b) {
-            if (!isFirst) {
-                sb.append(":");
-            } else {
-                isFirst = false;
-            }
-            sb.append(String.format("%02x", s & 0xff));
-        }
-        return sb.toString();
-    }
-    public static byte[] stringToByteMAC(String s) {
-        String[] bytes = s.split(":");
-        byte[] b = new byte[bytes.length];
-        for (int i=0; i<bytes.length; i++) {
-            BigInteger temp = new BigInteger(bytes[i], 16);
-            byte[] raw = temp.toByteArray();
-            b[i] = raw[raw.length - 1];
-        }
-        return b;
-    }
-
-    public static String byteToStringIP(byte[] b) {
-        StringBuilder sb = new StringBuilder(15);
-        for(int i=0; i<b.length; i++) {
-            if(i>0) {
-                sb.append(".");
-            }
-            sb.append(b[i] & 0xFF);
-        }
-        return sb.toString();
-    }
-    public static InetAddress stringToByteIP(String s) {
-        InetAddress ip = null;
-        try {
-            ip = InetAddress.getByName(s);
-        } catch (UnknownHostException ex) {
-            System.out.println("Invalid IP Address.");
-        }
-        return ip;
-    }
-}
 
 public class Jxpcap_Sender {
+	
+	public static final int ARP_LEN = 42;
+	public static final short ETH_P_ARP			= 0x0806;
+	public static final short ETH_P_IP			= 0x0800;
+	public static final short ARPHRD_ETHER		= 1;
+	public static final short ARPOP_REQUEST		= 1;
+	
+	public static final byte LEN_4 = 4;
+	public static final byte LEN_6 = 6;
+	
 	public static void main(String[] args)  {
 		BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 		Message errmsg = new Message(null);
@@ -84,10 +46,10 @@ public class Jxpcap_Sender {
 			System.out.println("Device Gateway      : " + NI[i].getGateway());
 		}
 		
-		int in = 0;
+		int index_device = 0;
 		System.out.print("Masukan Index Interface: ");
 		try {
-			in = Integer.parseInt(input.readLine());
+			index_device = Integer.parseInt(input.readLine());
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -96,27 +58,33 @@ public class Jxpcap_Sender {
 		
 		Jxpcap pcap = null;
 		try {
-			pcap = Jxpcap.openLive(NI[in].getName(), 60000, true, 2000, errmsg);
+			pcap = Jxpcap.openLive(NI[index_device].getName(), 60000, true, 2000, errmsg);
 		} catch (JxpcapException e) {
 			e.printStackTrace();
 		}
 		
-		Ethernet ether_hdr = new Ethernet();
-		ether_hdr.setPacket(Converter.stringToByteMAC("FF:FF:FF:FF:FF:FF"), Converter.stringToByteMAC(NI[in].getMACAddress()), Ethernet.ETH_P_ARP);
+		ByteBuffer packet = ByteBuffer.allocateDirect(ARP_LEN);
+		packet.put(Addresses.stringToBytesMacAddr("FF:FF:FF:FF:FF:FF"));
+		packet.put(Addresses.stringToBytesMacAddr(NI[index_device].getMACAddress()));
+		packet.putShort(ETH_P_ARP);
+		packet.putShort(ARPHRD_ETHER);
+		packet.putShort(ETH_P_IP);
+		packet.put(LEN_6);
+		packet.put(LEN_4);
+		packet.put(Addresses.stringToBytesMacAddr(NI[index_device].getMACAddress()));
+		packet.put(Addresses.stringToBytesIPAddr(NI[index_device].getIPAddress()));
+		packet.put(Addresses.stringToBytesMacAddr("FF:FF:FF:FF:FF:FF"));
+		packet.put(Addresses.stringToBytesIPAddr("192.168.1.254"));
 		
-		ARP arp_hdr = new ARP();
-		arp_hdr.setPacket(ARP.ARPHRD_ETHER, Ethernet.ETH_P_IP, ARP.LEN_6, ARP.LEN_4, ARP.ARPOP_REQUEST,
-				Converter.stringToByteMAC(NI[in].getMACAddress()), Converter.stringToByteIP(NI[in].getIPAddress()).getAddress(),
-				Converter.stringToByteMAC("ff:ff:ff:ff:ff:ff"), Converter.stringToByteIP("192.168.1.254").getAddress());
+		try {
+			int packet_number = Integer.parseInt(input.readLine());
+		} catch (NumberFormatException | IOException e) {
+			e.printStackTrace();
+		}
 		
-		
-		ByteBuffer packet = ByteBuffer.allocateDirect(14+28);
-		packet.put(ether_hdr.getPacket());
-		packet.put(arp_hdr.getPacket());
-				
 		Sender sender = new Sender();
 		while(true) {
-			System.out.println(sender.sendPacket(pcap, arp_hdr.getPacket(), 42));
+			System.out.println(sender.sendPacket(pcap, packet, packet.capacity()));
 			try {
 			    Thread.sleep(1000);                 //1000 milliseconds is one second.
 			} catch(InterruptedException ex) {
