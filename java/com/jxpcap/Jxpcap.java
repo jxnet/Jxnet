@@ -44,7 +44,7 @@ public class Jxpcap {
     	 nativeClose(jxpcap);
     }
     
-    public static Jxpcap create(String device_name, Message errmsg) throws JxpcapException {
+    /*public static Jxpcap create(String device_name, Message errmsg) throws JxpcapException {
     	Jxpcap pcap = nativeCreate(device_name, errmsg);
     	if(pcap == null) {
     		throw new JxpcapException(errmsg.getMessage());
@@ -54,7 +54,7 @@ public class Jxpcap {
     
     public static int active(long jxpcap) {
     	return nativeActive(jxpcap);
-    }
+    }*/
     
     static {
         System.loadLibrary("jxpcap");

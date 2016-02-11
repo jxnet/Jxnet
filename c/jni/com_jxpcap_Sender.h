@@ -12,16 +12,8 @@ extern "C" {
  * Method:    nativeSendPacket
  * Signature: (JLjava/nio/ByteBuffer;I)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_com_jxpcap_Sender_nativeSendPacket__JLjava_nio_ByteBuffer_2I
+JNIEXPORT jstring JNICALL Java_com_jxpcap_Sender_nativeSendPacket
   (JNIEnv *, jobject, jlong, jobject, jint);
-
-/*
- * Class:     com_jxpcap_Sender
- * Method:    nativeSendPacket
- * Signature: (JII)Ljava/lang/String;
- */
-JNIEXPORT jstring JNICALL Java_com_jxpcap_Sender_nativeSendPacket__JII
-  (JNIEnv *, jobject, jlong, jint, jint);
 
 #ifdef __cplusplus
 }

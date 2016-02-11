@@ -34,7 +34,7 @@ JNIEXPORT void JNICALL Java_com_jxpcap_Jxpcap_nativeClose
 }
 
 
-JNIEXPORT jobject JNICALL Java_com_jxpcap_Jxpcap_nativeCreate
+/*JNIEXPORT jobject JNICALL Java_com_jxpcap_Jxpcap_nativeCreate
   (JNIEnv *env, jclass jcls, jstring jdevice_name, jobject jerrmsg) {
 	char errmsg[256];
 	const char *device_name;
@@ -63,4 +63,4 @@ JNIEXPORT jint JNICALL Java_com_jxpcap_Jxpcap_nativeActive
 	pcap_t *pcap;
 	pcap = getPcap(jxpcap);
 	return (jint) pcap_active(pcap);
-}
+}*/
