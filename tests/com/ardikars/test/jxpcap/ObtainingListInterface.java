@@ -8,32 +8,30 @@ import java.util.List;
 import com.ardikars.jxpcap.Jxpcap;
 import com.ardikars.jxpcap.JxpcapAddr;
 import com.ardikars.jxpcap.JxpcapIf;
+import com.ardikars.jxpcap.SockAddr;
 import com.ardikars.jxpcap.util.JxpcapAddrUtils;
 
 public class ObtainingListInterface {
 	public static void main(String[] args) {
 		
-		/*
+		String iface_name = null;
+		JxpcapAddr ip_addr = null;
+		
 		StringBuilder errbuf = new StringBuilder();
 
 		List<JxpcapIf> alldevsp = new ArrayList<JxpcapIf>();
 		int r = Jxpcap.findAllDevs(alldevsp, errbuf);
 		for(JxpcapIf iface : alldevsp) {
 			for(JxpcapAddr addr : iface.getAddresses()) {
-				
 				if(iface.getName().equals("eth0")) {
-					System.out.println(bytesToStringMacAddr(iface.getHwAddr()));
+					System.out.println(addr.addr.toString());
 				}
 			}
 			
 		}
  		System.out.println("\nresult = " +r );
- 		*/
-		
-		System.out.println(bytesToStringMacAddr(JxpcapAddrUtils.getHwAddr("eth0")));
-		System.out.println(bytesToStringIPAddr(JxpcapAddrUtils.getGwAddr("lo")));
-
 	}
+
 	
 	public static String bytesToStringIPAddr(byte[] bytes) {
         StringBuilder sb = new StringBuilder(15);

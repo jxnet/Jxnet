@@ -19,15 +19,14 @@ public class SockAddr {
 	@Override
 	public String toString() {
 		switch (sa_family) {
-		case AF_INET:
-			return u(data[0]) + "." +u(data[1]) + "." + u(data[2]) + "." + u(data[3]);
-		case AF_INET6:
-			return data[0] + "." + data[1] + "." + data[2] + "." + data[3];
-		default:
-			return "";
+			case AF_INET:
+				return u(data[0]) + "." +u(data[1]) + "." + u(data[2]) + "." + u(data[3]);
+			case AF_INET6:
+				return data[0] + "." + data[1] + "." + data[2] + "." + data[3];
+			default:
+				return null;
 		}
 	}
-	
 	static {
 		initIDs();
 	}
