@@ -10,24 +10,29 @@ import com.ardikars.jxpcap.JxpcapAddr;
 import com.ardikars.jxpcap.JxpcapIf;
 import com.ardikars.jxpcap.SockAddr;
 import com.ardikars.jxpcap.util.JxpcapAddrUtils;
+import com.sun.jndi.cosnaming.IiopUrl.Address;
 
 public class ObtainingListInterface {
 	public static void main(String[] args) {
 		
 		String iface_name = null;
-		JxpcapAddr ip_addr = null;
-		
+		List<SockAddr> ip = new ArrayList<SockAddr>();
+ 		
 		StringBuilder errbuf = new StringBuilder();
 
 		List<JxpcapIf> alldevsp = new ArrayList<JxpcapIf>();
 		int r = Jxpcap.findAllDevs(alldevsp, errbuf);
 		for(JxpcapIf iface : alldevsp) {
-			for(JxpcapAddr addr : iface.getAddresses()) {
-				if(iface.getName().equals("eth0")) {
-					System.out.println(addr.addr.toString());
+			if(iface.getName().equals("eth0")) {
+				for(JxpcapAddr addr : iface.getAddresses()) {
+					ip.add(addr.addr);
 				}
 			}
 			
+		}
+
+		for(int i=0; i<ip.size(); i++) {
+			System.out.println(i+": "+ip.get(i).toString());
 		}
  		System.out.println("\nresult = " +r );
 	}
