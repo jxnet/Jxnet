@@ -6,7 +6,7 @@
 #include "util/jxpcap_utils.h"
 #include "jxpcap_if.h"
 
-JNIEXPORT jint JNICALL Java_com_ardikars_jxpcap_Jxpcap_findAllDevs
+JNIEXPORT jint JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeFindAllDevs
   (JNIEnv *env, jobject obj, jobject jalldevsp, jstring jerrbuf) {
 
 	if(jalldevsp == NULL || jerrbuf == NULL) {
@@ -38,3 +38,8 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxpcap_Jxpcap_findAllDevs
 	pcap_freealldevs(alldevsp);
 	return result;
 }
+
+JNIEXPORT jint JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeSendPacket
+  (JNIEnv *env, jclass cls, jobject jxpcap, jobject jbuf, jint jsize) {
+ 	return -1; 
+ }

@@ -9,10 +9,18 @@ extern "C" {
 #endif
 /*
  * Class:     com_ardikars_jxpcap_Jxpcap
- * Method:    findAllDevs
+ * Method:    nativeSendPacket
+ * Signature: (Lcom/ardikars/jxpcap/Jxpcap;Ljava/nio/ByteBuffer;I)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeSendPacket
+  (JNIEnv *, jclass, jobject, jobject, jint);
+
+/*
+ * Class:     com_ardikars_jxpcap_Jxpcap
+ * Method:    nativeFindAllDevs
  * Signature: (Ljava/util/List;Ljava/lang/String;)I
  */
-JNIEXPORT jint JNICALL Java_com_ardikars_jxpcap_Jxpcap_findAllDevs
+JNIEXPORT jint JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeFindAllDevs
   (JNIEnv *, jclass, jobject, jstring);
 
 #ifdef __cplusplus

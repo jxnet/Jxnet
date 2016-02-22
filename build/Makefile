@@ -5,7 +5,8 @@ JAVA_HOME = /usr/lib/jvm/jdk-8-oracle-arm-vfp-hflt
 JAVA_FLAGS = -g -Xlint -verbose
 
 JAVA_SOURCE = \
-	../java/com/ardikars/jxpcap/*.java
+	../java/com/ardikars/jxpcap/*.java \
+	../tests/com/ardikars/test/jxpcap/*.java
 
 C_SOURCE = \
 	../c/*.c ../c/util/*.c
