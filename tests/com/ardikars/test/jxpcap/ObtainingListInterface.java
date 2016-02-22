@@ -31,7 +31,7 @@ public class ObtainingListInterface {
  		*/
 		
 		System.out.println(bytesToStringMacAddr(JxpcapAddrUtils.getHwAddr("eth0")));
-		
+		System.out.println(bytesToStringIPAddr(JxpcapAddrUtils.getGwAddr("lo")));
 
 	}
 	

@@ -15,6 +15,14 @@ extern "C" {
 JNIEXPORT jbyteArray JNICALL Java_com_ardikars_jxpcap_util_JxpcapAddrUtils_nativeGetHwAddr
   (JNIEnv *, jclass, jstring);
 
+/*
+ * Class:     com_ardikars_jxpcap_util_JxpcapAddrUtils
+ * Method:    nativeGetGwAddr
+ * Signature: (Ljava/lang/String;)[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_ardikars_jxpcap_util_JxpcapAddrUtils_nativeGetGwAddr
+  (JNIEnv *, jclass, jstring);
+
 #ifdef __cplusplus
 }
 #endif
