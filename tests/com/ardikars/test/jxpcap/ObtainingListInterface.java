@@ -16,7 +16,7 @@ public class ObtainingListInterface {
 	public static void main(String[] args) {
 		
 		String iface_name = null;
-		List<SockAddr> ip = new ArrayList<SockAddr>();
+		List<JxpcapAddr> ip = new ArrayList<JxpcapAddr>();
  		
 		StringBuilder errbuf = new StringBuilder();
 
@@ -25,15 +25,14 @@ public class ObtainingListInterface {
 		for(JxpcapIf iface : alldevsp) {
 			if(iface.getName().equals("eth0")) {
 				for(JxpcapAddr addr : iface.getAddresses()) {
-					ip.add(addr.addr);
+					if(addr.addr.sa_family == SockAddr.AF_INET) {
+						System.out.println(addr.addr.toString());
+					}
 				}
 			}
 			
 		}
 
-		for(int i=0; i<ip.size(); i++) {
-			System.out.println(i+": "+ip.get(i).toString());
-		}
  		System.out.println("\nresult = " +r );
 	}
 

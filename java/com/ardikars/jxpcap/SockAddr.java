@@ -20,11 +20,11 @@ public class SockAddr {
 	public String toString() {
 		switch (sa_family) {
 			case AF_INET:
-				return "["+AF_INET+": "+u(data[0]) + "." +u(data[1]) + "." + u(data[2]) + "." + u(data[3])+"]";
+				return u(data[0]) + "." +u(data[1]) + "." + u(data[2]) + "." + u(data[3]);
 			case AF_INET6:
-				return "["+AF_INET6+": "+data[0] + "." + data[1] + "." + data[2] + "." + data[3]+"]";
+				return data[0] + "." + data[1] + "." + data[2] + "." + data[3];
 			default:
-				return "["+sa_family+"]";
+				return "[ Family: "+sa_family+"]";
 		}
 	}
 	static {
