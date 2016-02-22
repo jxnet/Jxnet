@@ -15,9 +15,10 @@ import com.sun.jndi.cosnaming.IiopUrl.Address;
 public class ObtainingListInterface {
 	public static void main(String[] args) {
 		
-		String iface_name = null;
-		List<JxpcapAddr> ip = new ArrayList<JxpcapAddr>();
- 		
+		String ip = null;
+ 		String netmask = null;
+ 		String broadaddr = null;
+ 		String dstaddr = null;
 		StringBuilder errbuf = new StringBuilder();
 
 		List<JxpcapIf> alldevsp = new ArrayList<JxpcapIf>();
@@ -26,12 +27,15 @@ public class ObtainingListInterface {
 			if(iface.getName().equals("eth0")) {
 				for(JxpcapAddr addr : iface.getAddresses()) {
 					if(addr.addr.sa_family == SockAddr.AF_INET) {
-						System.out.println(addr.addr.toString());
+						ip = addr.addr.toString();
+						netmask = addr.netmask.toString();
+						broadaddr = addr.broadaddr.toString();
+						dstaddr = addr.dstaddr.toString();
 					}
 				}
 			}
-			
 		}
+		System.out.println(ip+" : "+netmask+" : "+" : "+broadaddr+" : "+dstaddr);
 
  		System.out.println("\nresult = " +r );
 	}

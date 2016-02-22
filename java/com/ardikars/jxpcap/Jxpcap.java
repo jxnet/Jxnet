@@ -5,10 +5,11 @@ import java.util.List;
 
 public class Jxpcap {
 	
-	//private native static void initIDs();
-	private long jxpcap;
+	private native static void initIDs();
 	
-	private native static int nativeOpenLive(String source, int snaplen, int promisc, int to_ms, StringBuilder errbuf);
+	private long pcap = 0;
+	
+	private native static Jxpcap nativeOpenLive(String source, int snaplen, int promisc, int to_ms, StringBuilder errbuf);
 	
 	private native static int nativeFindAllDevs(List<JxpcapIf> alldevsp, StringBuilder errbuf);
 	
@@ -21,8 +22,13 @@ public class Jxpcap {
 		return nativeFindAllDevs(alldevsp, errbuf);
 	}
 	
+	public static Jxpcap openLive(String source, int snaplen, boolean promisc, int to_ms, StringBuilder errbuf) {
+		return nativeOpenLive(source, snaplen, promisc ? 1 : 0, to_ms, errbuf);
+	}
+	
 	static {
 		System.loadLibrary("jxpcap");
+		initIDs();
 		try {
 			Class.forName("com.ardikars.jxpcap.JxpcapIf");
 		} catch (ClassNotFoundException e) {

@@ -1,6 +1,41 @@
 #include <jni.h>
 #include <pcap.h>
+#include <unistd.h>
+#include "jxpcap_ids.h"
 #include "jxpcap_exception.h"
+
+jlong TOJLONG(void *ptr) {
+#ifndef WIN32
+    jlong lp = (intptr_t) ptr;
+#else
+    jlong lp = (UINT_PTR) ptr;
+#endif
+    return lp;
+}
+
+void *TOPTR(jlong lp) {
+#ifndef WIN32
+    void *ptr = (void *) ((intptr_t) lp);
+#else
+    void *ptr = (void *) ((UINT_PTR) lp);
+#endif
+    return ptr;
+}
+
+void SetPcap(JNIEnv *env, jobject obj, pcap_t *pcap) {
+	(*env)->SetLongField(env, obj, JxpcapPcapFID, TOJLONG(pcap));
+}
+
+pcap_t *GetPcap(JNIEnv *env, jobject obj) {
+	jlong lp = (*env)->GetLongField(env, obj, JxpcapPcapFID);
+	if(lp == 0) {
+		if(ThrowNewException(env, JXPCAP_EXCEPTION, "Pcap is null (closed).") == 0) {
+			return NULL;
+		}
+	}
+	pcap_t *pcap = (pcap_t *) TOPTR(lp);
+	return pcap;
+}
 
 jmethodID GetJavaMethodID(JNIEnv *env, jobject obj, const char *field_name, const char *sig) {
 	if(obj == NULL) {

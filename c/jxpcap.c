@@ -4,6 +4,7 @@
 #include "jni/com_ardikars_jxpcap_Jxpcap.h"
 #include "util/jxpcap_exception.h"
 #include "util/jxpcap_utils.h"
+#include "util/jxpcap_ids.h"
 #include "jxpcap_if.h"
 
 JNIEXPORT jint JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeFindAllDevs
@@ -39,14 +40,17 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeFindAllDevs
 	return result;
 }
 
-JNIEXPORT jint JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeOpenLive
+JNIEXPORT jobject JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeOpenLive
   (JNIEnv *env, jclass cls, jstring jsource, jint jsnaplen, jint jpromisc, jint jto_ms, jobject jerrbuf) {
 	  char errbuf[PCAP_ERRBUF_SIZE]; errbuf[0] = '\0';
-	  pcap_t *pcap; char *source;
+	  pcap_t *pcap; const char *source;
+	  jobject obj;
 	  source = (*env)->GetStringUTFChars(env, jsource, 0);
 	  pcap = pcap_open_live(source, jsnaplen, jpromisc, jto_ms, errbuf);
 	  (*env)->ReleaseStringUTFChars(env, jsource, source);
-	  return pcap;	  
+	  obj = (*env)->NewObject(env, cls, JxpcapInitMID);
+	  SetPcap(env, obj, pcap);
+	  return obj;	  
  }
 
 JNIEXPORT jint JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeSendPacket

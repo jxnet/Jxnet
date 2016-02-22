@@ -25,6 +25,8 @@ jmethodID JxpcapIfInitMID;
 jmethodID JxpcapAddrInitMID;
 jmethodID SockAddrInitMID;
 
+jfieldID JxpcapPcapFID;
+
 jfieldID JxpcapIfNextFID;
 jfieldID JxpcapIfNameFID;
 jfieldID JxpcapIfDescriptionFID;
@@ -45,6 +47,35 @@ struct ifaddrs *ifa;
 
 jfieldID SockAddrSaFamilyFID;
 jfieldID SockAddrDataFID;
+
+JNIEXPORT void JNICALL Java_com_ardikars_jxpcap_Jxpcap_initIDs
+  (JNIEnv *env, jclass cls) {
+  	puts("InitIDs (Jxpcap)");
+  	jclass jcls;
+  	
+  	jcls = (*env)->FindClass(env, "com/ardikars/jxpcap/Jxpcap");
+  	
+  	JxpcapClass = jcls;
+  	
+  	if(JxpcapClass == NULL) {
+  		if((ThrowNewException(env, CLASS_NOT_FOUND_EXCEPTION,
+  			"Unable to initialize class com.ardikars.jxpcap.Jxpcap")) == 0) {
+  			return;
+  		}
+  	}
+  	if((JxpcapInitMID = (*env)->GetMethodID(env, jcls, "<init>", "()V")) == NULL) {
+  		if(ThrowNewException(env, NO_SUCH_METHOD_EXCEPTION, 
+  			"Unable to initialize constructor com.ardikars.jxpcap.Jxpcap()") == 0) {
+  			return;
+  		}
+  	}
+  	if((JxpcapPcapFID = (*env)->GetFieldID(env, jcls, "pcap", "J")) == NULL) {
+  		if(ThrowNewException(env, NO_SUCH_FIELD_EXCEPTION,
+  			"Unable to initialize field JxpcapIf.next:JxpcapIf") == 0) {
+  			return;
+  		}
+  	}
+}
 
 JNIEXPORT void JNICALL Java_com_ardikars_jxpcap_JxpcapIf_initIDs
   (JNIEnv *env, jclass cls) {

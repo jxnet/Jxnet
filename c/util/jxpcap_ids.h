@@ -18,6 +18,8 @@ extern jmethodID JxpcapIfInitMID;
 extern jmethodID JxpcapAddrInitMID;
 extern jmethodID SockAddrInitMID;
 
+extern jfieldID JxpcapPcapFID;
+
 extern jfieldID JxpcapIfNextFID;
 extern jfieldID JxpcapIfNameFID;
 extern jfieldID JxpcapIfDescriptionFID;

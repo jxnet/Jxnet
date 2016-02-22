@@ -9,6 +9,14 @@ extern "C" {
 #endif
 /*
  * Class:     com_ardikars_jxpcap_Jxpcap
+ * Method:    initIDs
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_ardikars_jxpcap_Jxpcap_initIDs
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_ardikars_jxpcap_Jxpcap
  * Method:    nativeOpenLive
  * Signature: (Ljava/lang/String;IIILjava/lang/StringBuilder;)I
  */
