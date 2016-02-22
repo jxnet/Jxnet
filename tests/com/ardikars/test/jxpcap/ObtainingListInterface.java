@@ -9,17 +9,18 @@ import com.ardikars.jxpcap.JxpcapIf;
 
 public class ObtainingListInterface {
 	public static void main(String[] args) {
-		String errbuf = new String();
+		StringBuilder errbuf = new StringBuilder();
 
 		List<JxpcapIf> alldevsp = new ArrayList<JxpcapIf>();
 		int r = Jxpcap.findAllDevs(alldevsp, errbuf);
 		for(JxpcapIf iface : alldevsp) {
-			System.out.println(iface.getName()+": ");
 			for(JxpcapAddr addr : iface.getAddresses()) {
-				System.out.print (addr.addr);
+				if(iface.getName().equals("lo")) {
+					System.out.println(addr.addr.toString());
+				}
 			}
 		}
- 		System.out.println("result = " +r );
+ 		System.out.println("\nresult = " +r );
 	}
 	
 	public static String bytesToStringIPAddr(byte[] bytes) {

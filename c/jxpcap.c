@@ -7,7 +7,7 @@
 #include "jxpcap_if.h"
 
 JNIEXPORT jint JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeFindAllDevs
-  (JNIEnv *env, jobject obj, jobject jalldevsp, jstring jerrbuf) {
+  (JNIEnv *env, jobject obj, jobject jalldevsp, jobject jerrbuf) {
 
 	if(jalldevsp == NULL || jerrbuf == NULL) {
 		if(ThrowNewException(env, NULL_PTR_EXCEPTION, "Jxpcap.findAllDevs(param can't be null.)") == 0) {
@@ -38,6 +38,16 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeFindAllDevs
 	pcap_freealldevs(alldevsp);
 	return result;
 }
+
+JNIEXPORT jint JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeOpenLive
+  (JNIEnv *env, jclass cls, jstring jsource, jint jsnaplen, jint jpromisc, jint jto_ms, jobject jerrbuf) {
+	  char errbuf[PCAP_ERRBUF_SIZE]; errbuf[0] = '\0';
+	  pcap_t *pcap; char *source;
+	  source = (*env)->GetStringUTFChars(env, jsource, 0);
+	  pcap = pcap_open_live(source, jsnaplen, jpromisc, jto_ms, errbuf);
+	  (*env)->ReleaseStringUTFChars(env, jsource, source);
+	  return pcap;	  
+ }
 
 JNIEXPORT jint JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeSendPacket
   (JNIEnv *env, jclass cls, jobject jxpcap, jobject jbuf, jint jsize) {

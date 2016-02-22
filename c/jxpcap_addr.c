@@ -7,7 +7,6 @@
 #include "sockaddr.h"
 #include "util/jxpcap_ids.h"
 
-
 jobject NewJxpcapAddr(JNIEnv *env, jobject jxpcap_addresses, jmethodID add_MID_Addr, jobject jerrbuf, pcap_addr_t *addresses) {
 	
 	jobject obj = (*env)->NewObject(env, JxpcapAddrClass, JxpcapAddrInitMID);
@@ -26,7 +25,7 @@ jobject NewJxpcapAddr(JNIEnv *env, jobject jxpcap_addresses, jmethodID add_MID_A
 	} else {
 		(*env)->SetObjectField(env, obj, JxpcapAddrNextFID, NULL);
 	}
-	
+
 	jobject jxpcap_sockaddr;
 	if(addresses->addr != NULL) {
 		if((jxpcap_sockaddr = NewSockAddr(env, addresses->addr)) == NULL) {
@@ -59,6 +58,6 @@ jobject NewJxpcapAddr(JNIEnv *env, jobject jxpcap_addresses, jmethodID add_MID_A
 		(*env)->SetObjectField(env, obj, JxpcapAddrDstAddrFID, jxpcap_sockaddr);
 	} else {
 		(*env)->SetObjectField(env, obj, JxpcapAddrDstAddrFID, jxpcap_sockaddr);
-	}	
+	}
 	return obj;
 }

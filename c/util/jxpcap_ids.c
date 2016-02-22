@@ -8,16 +8,21 @@
 #include "../jni/com_ardikars_jxpcap_JxpcapIf.h"
 #include "../jni/com_ardikars_jxpcap_SockAddr.h"
 
+#include "../include/ifaddrs.h"
+#ifdef WIN32
+
+#else
+#include <sys/socket.h>
+#endif
+
 jclass JxpcapClass;
 jclass JxpcapIfClass;
 jclass JxpcapAddrClass;
-jclass JxpcapNaddrClass; /* New */
 jclass SockAddrClass;
 
 jmethodID JxpcapInitMID;
 jmethodID JxpcapIfInitMID;
 jmethodID JxpcapAddrInitMID;
-jmethodID JxpcapNaddrInitMID; /* New */
 jmethodID SockAddrInitMID;
 
 jfieldID JxpcapIfNextFID;
@@ -33,13 +38,10 @@ jfieldID JxpcapAddrNetmaskFID;
 jfieldID JxpcapAddrBroadAddrFID;
 jfieldID JxpcapAddrDstAddrFID;
 
-
 /* Start New */
-jfieldID JxpcapNaddrAddrFID;
-jfieldID JxpcapNaddrNetmaskFID;
-jfieldID JxpcapNaddrBroadAddrFID;
-jfieldID JxpcapNaddrDstAddrFID;
-/* End New */
+struct ifaddrs *ifap;
+struct ifaddrs *ifa;
+/* End New*/
 
 jfieldID SockAddrSaFamilyFID;
 jfieldID SockAddrDataFID;
@@ -91,14 +93,7 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxpcap_JxpcapIf_initIDs
   			return;
   		}
   	}
-  	
-  	if((JxpcapIfNaddressesFID = (*env)->GetFieldID(env, jcls, "naddresses", "Lcom/ardikars/jxpcap/JxpcapNaddr;")) == NULL) {
-  		if(ThrowNewException(env, NO_SUCH_FIELD_EXCEPTION,
-  			"Unable to initialize field JxpcapIf.naddresses:JxpcapNaddr") == 0) {
-  			return;
-  		}
-  	}
-  	
+  	 	
   	if((JxpcapIfFlagsFID = (*env)->GetFieldID(env, jcls, "flags", "I")) == NULL) {
   		if((ThrowNewException(env, NO_SUCH_FIELD_EXCEPTION,
   			"Unable to initialize field JxpcapIf.flags:int")) == 0) {
@@ -189,52 +184,3 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxpcap_JxpcapAddr_initIDs
   		}
   	}
 }
-
-/* Start New */
-JNIEXPORT void JNICALL Java_com_ardikars_jxpcap_JxpcapNaddr_initIDs
-  (JNIEnv *env, jclass cls) {
-  	puts("InitIDs (JxpcapNaddr)");
- 	jclass jcls;
-  	
-  	jcls = (*env)->FindClass(env, "com/ardikars/jxpcap/JxpcapNaddr");
-  
-	JxpcapNaddrClass = jcls;
-	
-	if(JxpcapNaddrClass == NULL) {
-  		if((ThrowNewException(env, CLASS_NOT_FOUND_EXCEPTION,
-  			"Unable to initialize class com.ardikars.jxpcap.JxpcapNaddr")) == 0) {
-  			return;
-  		}
-  	}
-  	if((JxpcapNaddrInitMID = (*env)->GetMethodID(env, jcls, "<init>", "()V")) == NULL) {
-  		if(ThrowNewException(env, NO_SUCH_METHOD_EXCEPTION, 
-  			"Unable to initialize constructor com.ardikars.jxpcap.JxpcapNaddr()") == 0) {
-  			return;
-  		}
-  	}
-  	if((JxpcapNaddrAddrFID = (*env)->GetFieldID(env, jcls, "addr", "Lcom/ardikars/jxpcap/SockAddr;")) == NULL) {
-  		if(ThrowNewException(env, NO_SUCH_FIELD_EXCEPTION,
-  			"Unable to initialize field JxpcapNaddr.addr:SockAddr") == 0) {
-  			return;
-  		}
-  	}
-  	if((JxpcapNaddrNetmaskFID = (*env)->GetFieldID(env, jcls, "netmask", "Lcom/ardikars/jxpcap/SockAddr;")) == NULL) {
-  		if(ThrowNewException(env, NO_SUCH_FIELD_EXCEPTION,
-  			"Unable to initialize field JxpcapNaddr.netmask:SockAddr") == 0) {
-  			return;
-  		}
-  	}
-  	if((JxpcapNaddrBroadAddrFID = (*env)->GetFieldID(env, jcls, "broadaddr", "Lcom/ardikars/jxpcap/SockAddr;")) == NULL) {
-  		if(ThrowNewException(env, NO_SUCH_FIELD_EXCEPTION,
-  			"Unable to initialize field JxpcapNaddr.broadaddr:SockAddr") == 0) {
-  			return;
-  		}
-  	}
-  	if((JxpcapNaddrDstAddrFID = (*env)->GetFieldID(env, jcls, "dstaddr", "Lcom/ardikars/jxpcap/SockAddr;")) == NULL) {
-  		if(ThrowNewException(env, NO_SUCH_FIELD_EXCEPTION,
-  			"Unable to initialize field JxpcapNaddr.dstaddr:SockAddr") == 0) {
-  			return;
-  		}
-  	}
- }
-/* End New */

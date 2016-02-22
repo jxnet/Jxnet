@@ -3,7 +3,6 @@
 #include "util/jxpcap_utils.h"
 #include "util/jxpcap_ids.h"
 #include "jxpcap_addr.h"
-#include "jxpcap_naddr.h"
 
 jobject NewJxpcapIf(JNIEnv *env, jobject jalldevsp, jmethodID add_MID, jobject jerrbuf, pcap_if_t *alldevsp) {
 	
@@ -71,14 +70,6 @@ jobject NewJxpcapIf(JNIEnv *env, jobject jalldevsp, jmethodID add_MID, jobject j
 		}
 		(*env)->DeleteLocalRef(env, jxpcap_addresses);
 		(*env)->DeleteLocalRef(env, jxpcap_addr);
-		
-		/* Start New */
-		jobject jxpcap_naddresses = (*env)->GetObjectField(env, obj, JxpcapIfNaddressesFID);
-		if(jxpcap_naddresses == NULL) {
-			return NULL; // Exception already thrown
-		}
-		SetJxpcapNaddr(env, jxpcap_naddresses, jerrbuf, alldevsp->name);
-		/* End New */
 	}
 	
 	(*env)->SetIntField(env, obj, JxpcapIfFlagsFID, (jint) alldevsp->flags);

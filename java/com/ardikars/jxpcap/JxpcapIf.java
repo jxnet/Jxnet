@@ -16,9 +16,7 @@ public class JxpcapIf {
 	private String description;
 	
 	List<JxpcapAddr> addresses = new ArrayList<JxpcapAddr>();
-	
-	JxpcapNaddr naddresses = new JxpcapNaddr();
-	
+		
 	private int flags;
 	
 	public String getName() {
@@ -32,10 +30,6 @@ public class JxpcapIf {
 	public List<JxpcapAddr> getAddresses() {
 		return addresses;
 	}
-	
-	public JxpcapNaddr getNaddresses() {
-		return naddresses;
-	}
 		
 	public int getFlags() {
 		return flags;
@@ -43,7 +37,6 @@ public class JxpcapIf {
 	
 	static {
 		initIDs();
-		new JxpcapNaddr();
 		new JxpcapAddr();
 		/*try {
 			Class.forName("com.ardikars.jxpcap.JxpcapAddr");

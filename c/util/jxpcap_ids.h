@@ -1,23 +1,26 @@
 
 
 #include <jni.h>
+#include "../include/ifaddrs.h"
+#ifdef WIN32
+
+#else
+#include <sys/socket.h>
+#endif
 
 extern jclass JxpcapClass;
 extern jclass JxpcapIfClass;
 extern jclass JxpcapAddrClass;
-extern jclass JxpcapNaddrClass; /* New */
 extern jclass SockAddrClass;
 
 extern jmethodID JxpcapInitMID;
 extern jmethodID JxpcapIfInitMID;
 extern jmethodID JxpcapAddrInitMID;
-extern jmethodID JxpcapNaddrInitMID; /* New */
 extern jmethodID SockAddrInitMID;
 
 extern jfieldID JxpcapIfNextFID;
 extern jfieldID JxpcapIfNameFID;
 extern jfieldID JxpcapIfDescriptionFID;
-extern jfieldID JxpcapIfNaddressesFID; /* New */
 extern jfieldID JxpcapIfAddressesFID;
 extern jfieldID JxpcapIfFlagsFID;
 
@@ -28,11 +31,9 @@ extern jfieldID JxpcapAddrBroadAddrFID;
 extern jfieldID JxpcapAddrDstAddrFID;
 
 /* Start New */
-extern jfieldID JxpcapNaddrAddrFID;
-extern jfieldID JxpcapNaddrNetmaskFID;
-extern jfieldID JxpcapNaddrBroadAddrFID;
-extern jfieldID JxpcapNaddrDstAddrFID;
-/* End New */
+extern struct ifaddrs *ifap;
+extern struct ifaddrs *ifa;
+/* End New*/
 
 extern jfieldID SockAddrSaFamilyFID;
 extern jfieldID SockAddrDataFID;

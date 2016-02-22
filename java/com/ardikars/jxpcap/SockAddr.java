@@ -24,7 +24,7 @@ public class SockAddr {
 		case AF_INET6:
 			return data[0] + "." + data[1] + "." + data[2] + "." + data[3];
 		default:
-			return "(" + sa_family + ")";
+			return "";
 		}
 	}
 	
