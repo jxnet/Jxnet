@@ -8,6 +8,9 @@
 #include <sys/socket.h>
 #endif
 
+extern jclass StringBuilderClass;
+extern jclass ListClass;
+
 extern jclass JxpcapClass;
 extern jclass JxpcapIfClass;
 extern jclass JxpcapAddrClass;
@@ -17,6 +20,9 @@ extern jmethodID JxpcapInitMID;
 extern jmethodID JxpcapIfInitMID;
 extern jmethodID JxpcapAddrInitMID;
 extern jmethodID SockAddrInitMID;
+
+extern jmethodID StringBuilderAppendMID;
+extern jmethodID StringBuilderSetLengthMID;
 
 extern jfieldID JxpcapPcapFID;
 

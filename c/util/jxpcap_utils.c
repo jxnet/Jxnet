@@ -37,6 +37,15 @@ pcap_t *GetPcap(JNIEnv *env, jobject obj) {
 	return pcap;
 }
 
+void SetString(JNIEnv *env, jobject buf, const char *str) {
+	if (str == NULL) {
+		str = "";
+	}
+	jstring jstr = (*env)->NewStringUTF(env, str);
+	(*env)->CallVoidMethod(env, buf, StringBuilderSetLengthMID, 0);
+	(*env)->CallObjectMethod(env, buf, StringBuilderAppendMID, jstr);
+}
+
 jmethodID GetJavaMethodID(JNIEnv *env, jobject obj, const char *field_name, const char *sig) {
 	if(obj == NULL) {
 		if(ThrowNewException(env, NULL_PTR_EXCEPTION, "Jxpcap Error: GetJavaMethodID") == 0) {
@@ -59,6 +68,7 @@ jmethodID GetJavaMethodID(JNIEnv *env, jobject obj, const char *field_name, cons
 	}
 	return MID;
 }
+
 
 
 jobject NewJavaObject(JNIEnv *env, jclass class, const char *field_name, const char *sig) {

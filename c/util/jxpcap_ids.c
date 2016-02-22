@@ -15,6 +15,9 @@
 #include <sys/socket.h>
 #endif
 
+jclass StringBuilderClass;
+jclass ListClass;
+
 jclass JxpcapClass;
 jclass JxpcapIfClass;
 jclass JxpcapAddrClass;
@@ -24,6 +27,9 @@ jmethodID JxpcapInitMID;
 jmethodID JxpcapIfInitMID;
 jmethodID JxpcapAddrInitMID;
 jmethodID SockAddrInitMID;
+
+jmethodID StringBuilderAppendMID;
+jmethodID StringBuilderSetLengthMID;
 
 jfieldID JxpcapPcapFID;
 
@@ -51,15 +57,23 @@ jfieldID SockAddrDataFID;
 JNIEXPORT void JNICALL Java_com_ardikars_jxpcap_Jxpcap_initIDs
   (JNIEnv *env, jclass cls) {
   	puts("InitIDs (Jxpcap)");
-  	jclass jcls;
+  	jclass jcls; jclass jsbcls;
   	
   	jcls = (*env)->FindClass(env, "com/ardikars/jxpcap/Jxpcap");
+  	jsbcls = (*env)->FindClass(env, "java/lang/StringBuilder");
   	
   	JxpcapClass = jcls;
+  	StringBuilderClass = jsbcls;
   	
   	if(JxpcapClass == NULL) {
   		if((ThrowNewException(env, CLASS_NOT_FOUND_EXCEPTION,
   			"Unable to initialize class com.ardikars.jxpcap.Jxpcap")) == 0) {
+  			return;
+  		}
+  	}
+  	if(StringBuilderClass == NULL) {
+  		if((ThrowNewException(env, CLASS_NOT_FOUND_EXCEPTION,
+  			"Unable to initialize class java.lang.StringBuilder")) == 0) {
   			return;
   		}
   	}
@@ -72,6 +86,18 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxpcap_Jxpcap_initIDs
   	if((JxpcapPcapFID = (*env)->GetFieldID(env, jcls, "pcap", "J")) == NULL) {
   		if(ThrowNewException(env, NO_SUCH_FIELD_EXCEPTION,
   			"Unable to initialize field JxpcapIf.next:JxpcapIf") == 0) {
+  			return;
+  		}
+  	}
+  	if((StringBuilderSetLengthMID = (*env)->GetMethodID(env, StringBuilderClass, "setLength", "(I)V")) == NULL) {
+  		if(ThrowNewException(env, NO_SUCH_METHOD_EXCEPTION,
+  			"Unable to initialize method java.lang.StringBuilder.setLength(I)") == 0) {
+  			return;
+  		}
+  	}
+  	if((StringBuilderAppendMID = (*env)->GetMethodID(env, StringBuilderClass, "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;")) == NULL) {
+  		if(ThrowNewException(env, NO_SUCH_METHOD_EXCEPTION,
+  			"Unable to initialize method java.lang.StringBuilder.append(String)") == 0) {
   			return;
   		}
   	}
