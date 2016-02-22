@@ -6,7 +6,7 @@ import java.util.List;
 public class Jxpcap {
 	
 	//private native static void initIDs();
-	
+	private long jxpcap;
 	
 	private native static int nativeOpenLive(String source, int snaplen, int promisc, int to_ms, StringBuilder errbuf);
 	

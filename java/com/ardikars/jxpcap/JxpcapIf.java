@@ -3,6 +3,8 @@ package com.ardikars.jxpcap;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ardikars.jxpcap.util.JxpcapAddrUtils;
+
 public class JxpcapIf {
 	
 	private native static void initIDs();
