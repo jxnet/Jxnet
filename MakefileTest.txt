@@ -1,5 +1,0 @@
-& 'C:\Program Files\Java\jdk1.8.0_51\bin\javac.exe' -g -verbose -Werror -Xlint   java\com\jxpcap\util\*.java java\com\jxpcap\util\packet\*.java java\com\jxpcap\*.java java\com\jxpcap\packet\*.java -h c\jni -d bin\java
-
-C:\mingw-w64\mingw64\bin\gcc.exe -shared -L C:\Windows\System32 -I C:\WpdPack\Include -I "C:\Program Files\Java\jdk1.8.0_51\include" -I "C:\Program Files\Java\jdk1.8.0_51\include\win32" c\*.c c\util\*.c -o jxpcap.dll -lwpcap -liphlpapi
-
-cd bin\java && & 'C:\Program Files\Java\jdk1.8.0_51\bin\jar.exe' -cvf ..\..\jxpcap.jar com\jxpcap\util\*.class com\jxpcap\util\packet\*.class com\jxpcap\*.class com\jxpcap\packet\*.class
