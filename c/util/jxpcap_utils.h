@@ -8,3 +8,5 @@ jobject NewJavaObject(JNIEnv *env, jclass class, const char *field_name, const c
 void SetPcap(JNIEnv *env, jobject obj, pcap_t *pcap);
 
 pcap_t *GetPcap(JNIEnv *env, jobject obj);
+
+void SetString(JNIEnv *env, jobject buf, const char *str);

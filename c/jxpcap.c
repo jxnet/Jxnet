@@ -18,9 +18,10 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeFindAllDevs
 	
 	char errbuf[PCAP_ERRBUF_SIZE]; errbuf[0] = '\0';
 	int result; pcap_if_t *alldevsp;
-	
+	SetString(env, jerrbuf, NULL);
 	result = pcap_findalldevs(&alldevsp, errbuf);
 	if(result != 0) {
+		SetString(env, jerrbuf, errbuf);
 		return -1;
 	}
 	if(alldevsp != NULL) {
@@ -42,15 +43,21 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeFindAllDevs
 
 JNIEXPORT jobject JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeOpenLive
   (JNIEnv *env, jclass cls, jstring jsource, jint jsnaplen, jint jpromisc, jint jto_ms, jobject jerrbuf) {
-	  char errbuf[PCAP_ERRBUF_SIZE]; errbuf[0] = '\0';
-	  pcap_t *pcap; const char *source;
-	  jobject obj;
-	  source = (*env)->GetStringUTFChars(env, jsource, 0);
-	  pcap = pcap_open_live(source, jsnaplen, jpromisc, jto_ms, errbuf);
-	  (*env)->ReleaseStringUTFChars(env, jsource, source);
-	  obj = (*env)->NewObject(env, cls, JxpcapInitMID);
-	  SetPcap(env, obj, pcap);
-	  return obj;	  
+	char errbuf[PCAP_ERRBUF_SIZE]; errbuf[0] = '\0';
+	pcap_t *pcap; const char *source;
+	jobject obj;
+	SetString(env, jerrbuf, NULL);
+	source = (*env)->GetStringUTFChars(env, jsource, 0);
+	pcap = pcap_open_live(source, jsnaplen, jpromisc, jto_ms, errbuf);
+	if(pcap == NULL) {
+		(*env)->ReleaseStringUTFChars(env, jsource, source);
+		SetString(env, jerrbuf, NULL);
+		return NULL;
+	}
+	(*env)->ReleaseStringUTFChars(env, jsource, source);
+	obj = (*env)->NewObject(env, cls, JxpcapInitMID);
+	SetPcap(env, obj, pcap);
+	return obj;	  
  }
 
 JNIEXPORT jint JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeSendPacket
