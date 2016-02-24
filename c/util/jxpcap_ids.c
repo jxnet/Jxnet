@@ -15,8 +15,12 @@
 #include <sys/socket.h>
 #endif
 
+
+/* Start -> New */
 jclass StringBuilderClass;
 jclass ListClass;
+/* End*/
+
 
 jclass JxpcapClass;
 jclass JxpcapIfClass;
@@ -28,8 +32,12 @@ jmethodID JxpcapIfInitMID;
 jmethodID JxpcapAddrInitMID;
 jmethodID SockAddrInitMID;
 
+/* Start -> New */
 jmethodID StringBuilderAppendMID;
 jmethodID StringBuilderSetLengthMID;
+
+jmethodID ListAddMID;
+/* End */
 
 jfieldID JxpcapPcapFID;
 
@@ -46,11 +54,6 @@ jfieldID JxpcapAddrNetmaskFID;
 jfieldID JxpcapAddrBroadAddrFID;
 jfieldID JxpcapAddrDstAddrFID;
 
-/* Start New */
-struct ifaddrs *ifap;
-struct ifaddrs *ifa;
-/* End New*/
-
 jfieldID SockAddrSaFamilyFID;
 jfieldID SockAddrDataFID;
 
@@ -60,7 +63,10 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxpcap_Jxpcap_initIDs
   	jclass jcls; jclass jsbcls;
   	
   	jcls = (*env)->FindClass(env, "com/ardikars/jxpcap/Jxpcap");
+
+  	/* String New */
   	jsbcls = (*env)->FindClass(env, "java/lang/StringBuilder");
+  	/* End */
   	
   	JxpcapClass = jcls;
   	StringBuilderClass = jsbcls;

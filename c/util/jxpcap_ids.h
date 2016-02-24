@@ -8,8 +8,10 @@
 #include <sys/socket.h>
 #endif
 
+/* Start -> New */
 extern jclass StringBuilderClass;
 extern jclass ListClass;
+/* End */
 
 extern jclass JxpcapClass;
 extern jclass JxpcapIfClass;
@@ -21,8 +23,12 @@ extern jmethodID JxpcapIfInitMID;
 extern jmethodID JxpcapAddrInitMID;
 extern jmethodID SockAddrInitMID;
 
+/* Start -> New*/
 extern jmethodID StringBuilderAppendMID;
 extern jmethodID StringBuilderSetLengthMID;
+
+extern jmethodID ListAddMID;
+/* End */
 
 extern jfieldID JxpcapPcapFID;
 
@@ -37,11 +43,6 @@ extern jfieldID JxpcapAddrAddrFID;
 extern jfieldID JxpcapAddrNetmaskFID;
 extern jfieldID JxpcapAddrBroadAddrFID;
 extern jfieldID JxpcapAddrDstAddrFID;
-
-/* Start New */
-extern struct ifaddrs *ifap;
-extern struct ifaddrs *ifa;
-/* End New*/
 
 extern jfieldID SockAddrSaFamilyFID;
 extern jfieldID SockAddrDataFID;

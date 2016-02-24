@@ -18,9 +18,9 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxpcap_Jxpcap_initIDs
 /*
  * Class:     com_ardikars_jxpcap_Jxpcap
  * Method:    nativeOpenLive
- * Signature: (Ljava/lang/String;IIILjava/lang/StringBuilder;)I
+ * Signature: (Ljava/lang/String;IIILjava/lang/StringBuilder;)Lcom/ardikars/jxpcap/Jxpcap;
  */
-JNIEXPORT jint JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeOpenLive
+JNIEXPORT jobject JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeOpenLive
   (JNIEnv *, jclass, jstring, jint, jint, jint, jobject);
 
 /*
