@@ -22,6 +22,13 @@ public class Jxpcap {
 		return nativeFindAllDevs(alldevsp, errbuf);
 	}
 	
+	public static void JxpcapFreeAllDevs(List<JxpcapIf> alldevs, StringBuilder errbuf) {
+		if(alldevs == null)
+			throw new NullPointerException("alldevs already freed.");
+		alldevs.clear();
+		errbuf.setLength(0);
+	}
+	
 	public static Jxpcap openLive(String source, int snaplen, boolean promisc, int to_ms, StringBuilder errbuf) {
 		return nativeOpenLive(source, snaplen, promisc ? 1 : 0, to_ms, errbuf);
 	}
