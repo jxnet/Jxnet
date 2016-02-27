@@ -18,8 +18,6 @@ public class ObtainingListInterface {
 		
 		System.out.println(Jxpcap.lookupDev(errbuf));
 		
-		
-		
 		String ip = null;
  		String netmask = null;
  		String broadaddr = null;

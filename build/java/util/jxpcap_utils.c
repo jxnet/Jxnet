@@ -46,7 +46,7 @@ void SetString(JNIEnv *env, jobject buf, const char *str) {
 	(*env)->CallObjectMethod(env, buf, StringBuilderAppendMID, jstr);
 }
 
-
+/*
 jmethodID GetJavaMethodID(JNIEnv *env, jobject obj, const char *field_name, const char *sig) {
 	if(obj == NULL) {
 		if(ThrowNewException(env, NULL_PTR_EXCEPTION, "Jxpcap Error: GetJavaMethodID") == 0) {
@@ -81,4 +81,4 @@ jobject NewJavaObject(JNIEnv *env, jclass class, const char *field_name, const c
 	jobject new_obj = (*env)->NewObject(env, class, MID);
 	(*env)->DeleteLocalRef(env, class);
 	return new_obj;
-}
+}*/
