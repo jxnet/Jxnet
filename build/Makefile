@@ -20,5 +20,5 @@ C_FLAGS = -shared -fPIC -L. -I $(JAVA_HOME)/include/ -I $(JAVA_HOME)/include/lin
 all:
 	$(JAVAC) $(JAVA_FLAGS) $(JAVA_SOURCE) -h ../c/jni/ -d java/
 	gcc $(C_FLAGS) $(C_SOURCE) -o ../libjxpcap.so -lpcap
-	mv ../libjxpcap.so /usr/lib
+	sudo mv ../libjxpcap.so /usr/lib
 	rm -Rf ../*.log

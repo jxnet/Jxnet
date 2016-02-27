@@ -25,13 +25,12 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeFindAllDevs
 		return -1;
 	}
 	if(alldevsp != NULL) {
-		jmethodID add_MID; jobject jxpcap_if;
-		add_MID = GetJavaMethodID(env, jalldevsp, "add", "(Ljava/lang/Object;)Z");
-		jxpcap_if = NewJxpcapIf(env, jalldevsp, add_MID, jerrbuf, alldevsp);
+		jobject jxpcap_if;
+		jxpcap_if = NewJxpcapIf(env, jalldevsp, jerrbuf, alldevsp);
 		if(jxpcap_if == NULL) {
 			return -1;
 		}
-		if((*env)->CallBooleanMethod(env, jalldevsp, add_MID, jxpcap_if) == JNI_FALSE) {
+		if((*env)->CallBooleanMethod(env, jalldevsp, ListAddMID, jxpcap_if) == JNI_FALSE) {
 			(*env)->DeleteLocalRef(env, jxpcap_if);
 			return -1;
 		}
