@@ -60,16 +60,18 @@ jfieldID SockAddrDataFID;
 JNIEXPORT void JNICALL Java_com_ardikars_jxpcap_Jxpcap_initIDs
   (JNIEnv *env, jclass cls) {
   	puts("InitIDs (Jxpcap)");
-  	jclass jcls; jclass jsbcls;
+  	jclass jcls; jclass jsbcls, jlcls;
   	
   	jcls = (*env)->FindClass(env, "com/ardikars/jxpcap/Jxpcap");
 
   	/* String New */
   	jsbcls = (*env)->FindClass(env, "java/lang/StringBuilder");
+  	jlcls = (*env)->FindClass(env, "java/util/List");  	
   	/* End */
   	
   	JxpcapClass = jcls;
   	StringBuilderClass = jsbcls;
+  	ListClass = jlcls;
   	
   	if(JxpcapClass == NULL) {
   		if((ThrowNewException(env, CLASS_NOT_FOUND_EXCEPTION,
@@ -104,6 +106,12 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxpcap_Jxpcap_initIDs
   	if((StringBuilderAppendMID = (*env)->GetMethodID(env, StringBuilderClass, "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;")) == NULL) {
   		if(ThrowNewException(env, NO_SUCH_METHOD_EXCEPTION,
   			"Unable to initialize method java.lang.StringBuilder.append(String)") == 0) {
+  			return;
+  		}
+  	}
+  	if((ListAddMID = (*env)->GetMethodID(env, ListClass, "add", "(Ljava/lang/Object;)Z")) == NULL) {
+  		if(ThrowNewException(env, NO_SUCH_METHOD_EXCEPTION,
+  			"Unable to initialize method java.util.List(Object)") == 0) {
   			return;
   		}
   	}
