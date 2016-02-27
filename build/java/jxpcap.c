@@ -61,7 +61,25 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeOpenLive
 
 JNIEXPORT jint JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeSendPacket
   (JNIEnv *env, jclass cls, jobject jxpcap, jobject jbuf, jint jsize) {
- 	return -1; 
+	if (jbuf == NULL) {
+		if(ThrowNewException(env, NULL_PTR_EXCEPTION, "Buffer argument is null") == 0) {
+			return -1;
+		}
+	}
+	pcap_t *pcap; u_char *buf;
+	pcap = GetPcap(env, jxpcap);
+	if(pcap == NULL) {
+		if(ThrowNewException(env, JXPCAP_EXCEPTION, "Jxpcap argument is null") == 0) {
+			return -1;
+		}
+	}
+	buf = (u_char *) (*env)->GetDirectBufferAddress(env, jbuf);
+	if(buf == NULL) {
+		if(ThrowNewException(env, ILLEGAL_ARGUMENT_EXCEPTION, "Unable to retrieve physical address from ByteBuffer") == 0) {
+			return -1;
+		}
+	}
+	return pcap_sendpacket(pcap, buf, (int) jsize);
 }
  
  JNIEXPORT jstring JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeLookupDev
@@ -71,7 +89,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeSendPacket
 			return NULL;
 		}
 	}
-	char errbuf[PCAP_ERRBUF_SIZE]; errbuf[0] = '\0'; 
+	char errbuf[PCAP_ERRBUF_SIZE]; errbuf[0] = '\0';
 	char *device; jstring jdevice;
 	SetString(env, jerrbuf, NULL);
 	device = pcap_lookupdev(errbuf);
@@ -85,4 +103,9 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeSendPacket
 	jdevice = (*env)->NewStringUTF(env, device);
 	#endif
 	return jdevice;
+}
+
+JNIEXPORT jstring JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeGetErr
+  (JNIEnv *env, jclass csl, jobject jxpcap) {
+	return (*env)->NewStringUTF(env, pcap_geterr(GetPcap(env, jxpcap)));
 }

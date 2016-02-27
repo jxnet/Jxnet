@@ -11,7 +11,7 @@
 #define BUFFER_UNDERFLOW_EXCEPTION "java/nio/BufferUnderflowException"
 #define READ_ONLY_BUFFER_EXCETPION "java/nio/ReadOnlyBufferException"
 #define IO_EXCEPTION "java/io/IOException"
-
+#define ILLEGAL_ARGUMENT_EXCEPTION	"java/lang/IllegalArgumentException"
 #define JXPCAP_EXCEPTION "com/ardikars/jxpcap/util/JxpcapException"
 
 jint ThrowNewException(JNIEnv *env, const char *class_name, const char *message);

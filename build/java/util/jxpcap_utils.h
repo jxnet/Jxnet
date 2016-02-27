@@ -1,6 +1,9 @@
 #include <jni.h>
 #include <pcap.h>
 
+#define PCAP_SENDPACKET	0x093
+#define PCAP_INJECT     0x097
+
 /*
 jmethodID GetJavaMethodID(JNIEnv *env, jobject obj, const char *field_name, const char *sig);
 
