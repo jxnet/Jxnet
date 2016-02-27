@@ -15,6 +15,8 @@ public class Jxpcap {
 	
 	private native static int nativeSendPacket(Jxpcap jxpcap, ByteBuffer buf, int size);
 	
+	private native static String nativeLookupDev(StringBuilder errbuf);
+	
 	public static int sendPacket(Jxpcap jxpcap, ByteBuffer buf, int size) {
 		return nativeSendPacket(jxpcap, buf, size);
 	}
@@ -27,6 +29,10 @@ public class Jxpcap {
 			throw new NullPointerException("alldevs already freed.");
 		alldevs.clear();
 		errbuf.setLength(0);
+	}
+	
+	public static String lookupDev(StringBuilder errbuf) {
+		return nativeLookupDev(errbuf);
 	}
 	
 	public static Jxpcap openLive(String source, int snaplen, boolean promisc, int to_ms, StringBuilder errbuf) {

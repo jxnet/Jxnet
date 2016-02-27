@@ -39,6 +39,14 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeFindAllDevs
 JNIEXPORT jint JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeSendPacket
   (JNIEnv *, jclass, jobject, jobject, jint);
 
+/*
+ * Class:     com_ardikars_jxpcap_Jxpcap
+ * Method:    nativeLookupDev
+ * Signature: (Ljava/lang/StringBuilder;)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeLookupDev
+  (JNIEnv *, jclass, jobject);
+
 #ifdef __cplusplus
 }
 #endif

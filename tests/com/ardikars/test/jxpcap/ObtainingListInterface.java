@@ -14,12 +14,17 @@ import com.sun.jndi.cosnaming.IiopUrl.Address;
 
 public class ObtainingListInterface {
 	public static void main(String[] args) {
+		StringBuilder errbuf = new StringBuilder();
+		
+		System.out.println(Jxpcap.lookupDev(errbuf));
+		
+		
 		
 		String ip = null;
  		String netmask = null;
  		String broadaddr = null;
  		String dstaddr = null;
-		StringBuilder errbuf = new StringBuilder();
+		
 
 		List<JxpcapIf> alldevsp = new ArrayList<JxpcapIf>();
 		int r = Jxpcap.findAllDevs(alldevsp, errbuf);

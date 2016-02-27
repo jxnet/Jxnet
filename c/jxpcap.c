@@ -50,7 +50,7 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeOpenLive
 	pcap = pcap_open_live(source, jsnaplen, jpromisc, jto_ms, errbuf);
 	if(pcap == NULL) {
 		(*env)->ReleaseStringUTFChars(env, jsource, source);
-		SetString(env, jerrbuf, NULL);
+		SetString(env, jerrbuf, errbuf);
 		return NULL;
 	}
 	(*env)->ReleaseStringUTFChars(env, jsource, source);
@@ -62,4 +62,27 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeOpenLive
 JNIEXPORT jint JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeSendPacket
   (JNIEnv *env, jclass cls, jobject jxpcap, jobject jbuf, jint jsize) {
  	return -1; 
- }
+}
+ 
+ JNIEXPORT jstring JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeLookupDev
+  (JNIEnv *env, jclass cls, jobject jerrbuf) {
+	if(jerrbuf == NULL) {
+		if(ThrowNewException(env, NULL_PTR_EXCEPTION, "Jxpcap.lookupDev(param can't be null.)") == 0) {
+			return NULL;
+		}
+	}
+	char errbuf[PCAP_ERRBUF_SIZE]; errbuf[0] = '\0'; 
+	char *device; jstring jdevice;
+	SetString(env, jerrbuf, NULL);
+	device = pcap_lookupdev(errbuf);
+	if (device == NULL) {
+		SetString(env, jerrbuf, errbuf);
+		return NULL;
+	}
+	#ifdef WIN32
+	
+	#else
+	jdevice = (*env)->NewStringUTF(env, device);
+	#endif
+	return jdevice;
+}
