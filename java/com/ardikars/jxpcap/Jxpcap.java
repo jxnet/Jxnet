@@ -19,6 +19,8 @@ public class Jxpcap {
 	
 	private native static String nativeGetErr(Jxpcap pcap);
 	
+	private native static void nativeClose(Jxpcap jxpcap);
+	
 	public static int sendPacket(Jxpcap jxpcap, ByteBuffer buf, int size) {
 		return nativeSendPacket(jxpcap, buf, size);
 	}
@@ -40,9 +42,13 @@ public class Jxpcap {
 	public static Jxpcap openLive(String source, int snaplen, boolean promisc, int to_ms, StringBuilder errbuf) {
 		return nativeOpenLive(source, snaplen, promisc ? 1 : 0, to_ms, errbuf);
 	}
-	
+		
 	public static String getErr(Jxpcap pcap) {
 		return nativeGetErr(pcap);
+	}
+	
+	public static void close(Jxpcap jxpcap) {
+		nativeClose(jxpcap);
 	}
 	
 	static {

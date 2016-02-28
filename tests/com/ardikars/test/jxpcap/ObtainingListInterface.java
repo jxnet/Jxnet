@@ -16,7 +16,11 @@ public class ObtainingListInterface {
 	public static void main(String[] args) {
 		StringBuilder errbuf = new StringBuilder();
 		
-		System.out.println(Jxpcap.lookupDev(errbuf));
+		Jxpcap jxpcap = Jxpcap.openLive("eth0", 60000, true, 2000, errbuf);
+		if(jxpcap == null)
+			System.err.println(errbuf.toString());
+		Jxpcap.close(jxpcap);
+		/*System.out.println(Jxpcap.lookupDev(errbuf));
 		
 		String ip = null;
  		String netmask = null;
@@ -41,6 +45,7 @@ public class ObtainingListInterface {
 		System.out.println(ip+" : "+netmask+" : "+" : "+broadaddr+" : "+dstaddr);
 
  		System.out.println("\nresult = " +r );
+ 		*/
 	}
 
 	

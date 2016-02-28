@@ -105,6 +105,16 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeSendPacket
 	return jdevice;
 }
 
+JNIEXPORT void JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeClose
+  (JNIEnv *env, jclass cls, jobject jxpcap) {
+  	if(jxpcap == NULL) {
+  		if(ThrowNewException(env, NULL_PTR_EXCEPTION, "Jxpcap.close(Jxpcap) is null") == 0) {
+			return;
+		}
+  	}
+  	pcap_close(GetPcap(env, jxpcap));
+}
+  
 JNIEXPORT jstring JNICALL Java_com_ardikars_jxpcap_Jxpcap_nativeGetErr
   (JNIEnv *env, jclass csl, jobject jxpcap) {
 	return (*env)->NewStringUTF(env, pcap_geterr(GetPcap(env, jxpcap)));
