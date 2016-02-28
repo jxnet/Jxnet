@@ -10,7 +10,7 @@ JAVA_FLAGS = -g -Xlint -verbose
 JAVA_SOURCE = \
 	../java/com/ardikars/jxpcap/*.java \
 	../java/com/ardikars/jxpcap/util/*.java \
-	../tests/com/ardikars/test/jxpcap/*.java
+	../test/com/ardikars/test/jxpcap/*.java
 
 C_SOURCE = \
 	../c/*.c ../c/util/*.c
