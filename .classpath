@@ -3,7 +3,7 @@
 	<classpathentry kind="src" path="bin"/>
 	<classpathentry kind="src" path="java"/>
 	<classpathentry kind="src" path="c"/>
-	<classpathentry kind="src" path="tests"/>
+	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="src" path="lib"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="build/java"/>
