@@ -8,40 +8,31 @@
 
 #include "../include/jxnet/com_ardikars_jxnet_util_AddrUtils.h"
 
-#if defined(WIN32) || defined(__CYGWIN__)
-#include <winsock2.h>
-#include <iphlpapi.h>
-//#pragma comment(lib, "iphlpapi.lib")
-#elif defined(__linux__)
-#include <netinet/in.h>
-#include <net/if.h>
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/socket.h>
-#include <sys/ioctl.h>
-#include <linux/netlink.h>
-#include <linux/rtnetlink.h>
+
+#if defined(__linux__) || defined(__FreeBSD__)
 #include <sys/types.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#elif defined(__FreeBSD__)
-#include <sys/types.h>
-#include <sys/socket.h>
+#include <sys/socket.h> 
 #include <sys/ioctl.h>
-#include <sys/sysctl.h>
 #include <net/if.h>
-#include <net/if_dl.h>
 #include <netinet/in.h>
-#include <arpa/inet.h>
-#include <errno.h>
 #include <stdlib.h>
+#include <arpa/inet.h>
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
+#if defined(__FreeBSD__)
+#include <sys/sysctl.h>
+#include <net/if_dl.h>
+#elif defined(__linux__)
 #include <string.h>
+#include <unistd.h>
+#include <linux/netlink.h>
+#include <linux/rtnetlink.h>
+#elif defined(WIN32)
+#include <winsock2.h>
+#include <iphlpapi.h>
+#endif
 
 #include "../src/utils.h"
 
