@@ -12,7 +12,7 @@
 #include <winsock2.h>
 #include <iphlpapi.h>
 //#pragma comment(lib, "iphlpapi.lib")
-#else
+#elif defined(__linux__)
 #include <netinet/in.h>
 #include <net/if.h>
 #include <stdio.h>
@@ -26,6 +26,17 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#elif defined(__FreeBSD__)
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/ioctl.h>
+#include <sys/sysctl.h>
+#include <net/if.h>
+#include <net/if_dl.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <errno.h>
+#include <stdlib.h>
 #endif
 
 #include <stdio.h>
@@ -85,7 +96,7 @@ JNIEXPORT jbyteArray JNICALL Java_com_ardikars_jxnet_util_AddrUtils_GetMACAddres
 	}
 	if (pAdapterInfo)
 		free(pAdapterInfo);
-#else
+#elif defined(__linux__)
 	char mac_addr[6];
 	struct ifreq ifr;
 	int sd = socket(PF_INET, SOCK_DGRAM, 0);
@@ -104,6 +115,36 @@ JNIEXPORT jbyteArray JNICALL Java_com_ardikars_jxnet_util_AddrUtils_GetMACAddres
 	hw_addr = (*env)->NewByteArray(env, (jsize) 6);
 	(*env)->SetByteArrayRegion(env, hw_addr,0 , 6, (jbyte *) mac_addr);
 	close(sd);
+#elif defined(__FreeBSD__)
+	int			mib[6];
+	size_t			len;
+	char			*mac_buf;
+	unsigned char		*ptr;
+	struct if_msghdr	*ifm;
+	struct sockaddr_dl	*sdl;
+	mib[0] = CTL_NET;
+	mib[1] = AF_ROUTE;
+	mib[2] = 0;
+	mib[3] = AF_LINK;
+	mib[4] = NET_RT_IFLIST;
+	if((mib[5] = if_nametoindex(buf)) == 0) {
+		// error
+	}
+	if(sysctl(mib, 6, NULL, &len, NULL, 0) < 0) {
+		//error
+	}
+	if((mac_buf = malloc(len)) == NULL) {
+		//error
+	}
+	if(sysctl(mib, 6, mac_buf, &len, NULL, 0) < 0) {
+		//error
+	}
+	ifm = (struct if_msghdr *) mac_buf;
+	sdl = (struct sockaddr_dl *) (ifm + 1);
+	free(mac_buf);
+	ptr = (unsigned char *) LLADDR(sdl);
+	hw_addr = (*env)->NewByteArray(env, (jsize) 6);
+	(*env)->SetByteArrayRegion(env, hw_addr, 0, 6, (jbyte *) ptr);
 #endif
 	(*env)->ReleaseStringUTFChars(env, jdev_name, buf);
   	return 	hw_addr;
@@ -111,7 +152,7 @@ JNIEXPORT jbyteArray JNICALL Java_com_ardikars_jxnet_util_AddrUtils_GetMACAddres
 
 // Get Gateway Address
 
-#if !defined(WIN32)
+#if defined(__linux__)
 #define BUFSIZE 8192
 char gateway[255];
 
@@ -269,7 +310,7 @@ JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_util_AddrUtils_GetGatewayAddre
 	}
 	if (pAdapterInfo)
 		free(pAdapterInfo);
-#else
+#elif defined(__linux__)
 	struct nlmsghdr *nlMsg = NULL;
 	struct rtmsg *rtMsg = NULL;
 	struct route_info *rtInfo = NULL;

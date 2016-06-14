@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 NOW=$(date +"%d-%m-%Y %T %Z")
 

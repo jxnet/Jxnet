@@ -20,6 +20,9 @@ case "$host_os" in
 *linux*)
 	CFLAGS="$CFLAGS -I$JAVA_HOME/include -I$JAVA_HOME/include/linux"
 	;;
+*freebsd*)
+	CFLAGS="$CFLAGS -I$JAVA_HOME/include -I$JVA_HOME/include/freebsd"
+	;;
 *)
 	CFLAGS="$CFLAGS -I$JAVA_HOME/include -I$JAVA_HOME/include/win32"
 	;;
@@ -28,6 +31,13 @@ else
 case "$host_os" in
 *linux*)
 	#AC_MSG_CHECKING([[linux]])
+	AX_JNI_INCLUDE_DIR
+	for JNI_INCLUDE_DIR in $JNI_INCLUDE_DIRS
+	do
+		CFLAGS="$CFLAGS -I$JNI_INCLUDE_DIR"
+	done
+	;;
+*freebsd*)
 	AX_JNI_INCLUDE_DIR
 	for JNI_INCLUDE_DIR in $JNI_INCLUDE_DIRS
 	do
