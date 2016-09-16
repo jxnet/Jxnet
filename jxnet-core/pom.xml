@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.ardikars.jxnet</groupId>
+    <artifactId>jxnet</artifactId>
+    <version>1.0.0</version>
+  </parent>
+
+  <groupId>com.ardikars.jxnet</groupId>
+  <artifactId>jxnet-core</artifactId>
+  <version>1.0.0</version>
+  <name>jxnet-core</name>
+  <url>http://jxnet.ardikars.com</url>
+  <description>The core module of Jxnet.</description>
+  <packaging>jar</packaging>
+
+  <licenses>
+    <license>
+      <name>GNU Lesser General Public License Version 3</name>
+      <url>https://www.gnu.org/licenses/lgpl-3.0.en.html</url>
+      <distribution>repo</distribution>  
+    </license>
+  </licenses>
+  
+  <developers>
+    <developer>
+      <id>ardikars</id>
+      <name>Ardika Rommy Sanjaya</name>
+      <email>contact@ardikars.com</email>
+    </developer>
+  </developers>
+  
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <build>
+    <sourceDirectory>java/src</sourceDirectory>
+    <resources>
+      <resource>
+        <directory>java</directory>
+        <includes>
+          <include>lib/**/*</include>
+        </includes>
+      </resource>
+    </resources>    
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.7</version>
+        <executions>
+          <execution>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <exportAntProperties>true</exportAntProperties>
+              <target>
+                <property name="runtime_classpath" refid="maven.compile.classpath"/>
+                <exec executable="javah">
+                  <arg value="-cp"/>
+                  <arg value="${runtime_classpath}"/>
+                  <arg value="-d"/>
+                  <arg value="${project.build.directory}/include/jxnet"/>
+                  <arg value="com.ardikars.jxnet.Jxnet"/>
+                  <arg value="com.ardikars.jxnet.BpfProgram"/>
+                  <arg value="com.ardikars.jxnet.util.AddrUtils"/>
+                </exec>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
