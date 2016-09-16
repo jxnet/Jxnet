@@ -6,6 +6,7 @@
 *.o
 *.status
 *.deb
+*.rpm
 *.tgz
 *.lo
 *.la
