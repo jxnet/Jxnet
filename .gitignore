@@ -1,0 +1,15 @@
+/src/.deps
+/src/.libs
+/autom4te.cache/
+Makefile
+config.log
+config.status
+libtool
+*.lo
+*.o
+*.la
+*.so
+*.a
+*.dll
+*.lib
+*~*
