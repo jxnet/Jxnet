@@ -10,6 +10,17 @@ package com.ardikars.jxnet.util;
 
 public class FormatUtils {
 
+    public static byte[] toBytes(String hexStr) {
+        String src = hexStr.replaceAll("\\s+", "").trim();
+        int len = src.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(src.charAt(i), 16) << 4)
+                                 + Character.digit(src.charAt(i+1), 16));
+        }
+        return data;
+    }
+    
 	public static String toHexString(byte[] data, int offset, int length) {
 		StringBuilder sb = new StringBuilder();
 		int l;
@@ -30,5 +41,14 @@ public class FormatUtils {
 			return ("0" + s);
 		return (s);
 	}
+    
+    public static String toAscii(String hexStr) {
+        StringBuilder sb = new StringBuilder("");
+        for (int i = 0; i < hexStr.length(); i += 2) {
+            String str = hexStr.substring(i, i + 2);
+            sb.append((char) Integer.parseInt(str, 16));
+        }
+        return sb.toString();
+   }
 
 }
