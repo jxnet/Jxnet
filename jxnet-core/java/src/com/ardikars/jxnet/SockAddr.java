@@ -12,11 +12,11 @@ public final class SockAddr {
 
 	public final static int AF_INET = 2;
 	
-	public final static int AF_INET6 = 23;
+	public final static int AF_INET6 = 10;
 	
-	private volatile short sa_family;
+	private short sa_family;
 	
-	private volatile byte[] data;
+	private byte[] data;
 	
 	public short getSaFamily() {
 		return sa_family;
@@ -34,7 +34,7 @@ public final class SockAddr {
 			case AF_INET6:
 				return Inet6Address.valueOf(data).toString();
 			default:
-				return "Family : "+ sa_family;
+				return "Unknown Family : "+ sa_family;
 		}
 	}
 	

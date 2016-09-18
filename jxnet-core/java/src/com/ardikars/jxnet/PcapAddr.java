@@ -11,15 +11,15 @@ package com.ardikars.jxnet;
 public final class PcapAddr {
 
 	@SuppressWarnings("unused")
-	private volatile PcapAddr next;
+	private PcapAddr next;
 	
-	private volatile SockAddr addr;
+	private SockAddr addr;
 	
-	private volatile SockAddr netmask;
+	private SockAddr netmask;
 	
-	private volatile SockAddr broadaddr;
+	private SockAddr broadaddr;
 	
-	private volatile SockAddr dstaddr;
+	private SockAddr dstaddr;
 	
 	public SockAddr getAddr() {
 		return addr;

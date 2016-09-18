@@ -31,23 +31,43 @@ public final class Inet6Address implements InetAddress {
 	}
 
 	public String toString() {
-		StringBuilder buf = new StringBuilder(39);
-		boolean lastWasNumber = false;
-		for (int i = 0; i < address.length; i++) {
-			boolean thisIsNumber = address[i] >= 0;
-			if (thisIsNumber) {
-				if (lastWasNumber) {
-					buf.append(':');
-				}
-				buf.append(Integer.toHexString(address[i]));
-			} else {
-				if (i == 0 || lastWasNumber) {
-					buf.append("::");
-				}
-			}
-			lastWasNumber = thisIsNumber;
-	    }
-		return buf.toString();
+        int cmprHextet = -1;
+        int cmprSize = 0;
+        for(int hextet = 0; hextet <7;) {
+            int curByte = hextet * 2;
+            int size = 0;
+            while(curByte < address.length && address[curByte] == 0
+                    && address[curByte + 1] == 0) {
+                curByte += 2;
+                size++;
+            }
+            if(size > cmprSize) {
+                cmprHextet = hextet;
+                cmprSize = size;
+            }
+            hextet = (curByte / 2) + 1;
+        }
+        
+        StringBuilder sb = new StringBuilder(39);
+        if(cmprHextet == -1 || cmprSize < 2) {
+            ipv6toStr(sb, address, 0, 8);
+            return sb.toString();
+        }
+        ipv6toStr(sb, address, 0, cmprHextet);
+        sb.append(new char[] {':',':'});
+        ipv6toStr(sb, address, cmprHextet + cmprSize, 8);
+        return sb.toString();
 	}
+    
+    private static final void ipv6toStr(StringBuilder sb, byte[] src,
+        int fromHextet, int toHextet) {
+        for (int i = fromHextet; i < toHextet; i++) {
+            sb.append(Integer.toHexString(((src[i << 1] << 8) & 0xff00)
+                    | (src[(i << 1) + 1] & 0xff)));
+            if (i < toHextet - 1) {
+                sb.append(':');
+            }
+        }
+    }
 
 }

@@ -45,5 +45,10 @@ public final class PcapIf {
 	public byte[] getHardwareAddress() {
 		return AddrUtils.getHardwareAddress(name);
 	}
-	
+
+    @Override
+    public String toString() {
+        return name;
+    }
+    
 }

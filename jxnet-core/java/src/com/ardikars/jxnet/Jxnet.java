@@ -464,7 +464,7 @@ public final class Jxnet {
 	}
 	
 	public static void main(String[] args) {
-		JOptionPane.showMessageDialog(null, "Jxnet is a network library for java.");
+		System.out.println("Jxnet is a network library for java.");
 	}
 	
 	static {
