@@ -701,19 +701,33 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_Socket
   	return socket((int) jfa, (int) jtype, (int) jprotocol);
   }
   
-JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_SendTo
-  (JNIEnv *env, jclass jcls, jint jsocket, jobject jbuf, jint jlen, jint jflags, jobject jsockaddr, jint to_len) {
-  	const u_char *buf = (u_char *) (*env)->GetDirectBufferAddress(env, jbuf);
-  	if(buf == NULL) {
-  		ThrowNew(env, NULL_PTR_EXCEPTION, "Unable to retrive address from ByteBuffer");
-  		return (jint) -1;
-  	}
-  	SetSockAddrIDs(env);
-  	struct sockaddr sock;
-  	sock.sa_family = (*env)->GetIntField(env, jsockaddr, SockAddrSaFamilyFID);
-  	//sock.sa_data = (*env)->Get
-  	return sendto((int) jsocket, buf, (int) jlen, (int) jflags, &sock, sizeof(sock));
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_RecvFrom
+  (JNIEnv *env, jclass jcls, jint jsocket, jobject jbuf, jint len, jobject jsrc_addr, jint addrlen) {
+// ssize_t recvfrom(int sockfd, void *buf, size_t len, int flags, struct sockaddr *from, socklen_t *fromlen);
+	return -1;	
   }
+
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_Recv
+  (JNIEnv *env, jclass jcls, jint jsocket, jobject jbuf, jint len, jint jflags) {
+// ssize_t recv(int sockfd, void *buf, size_t len, int flags);
+	return -1;
+  }
+
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_RecvMsg
+  (JNIEnv *env, jclass jcls, jint jsocket, jobject jmsghdr, jint jflags) {
+// ssize_t recvmsg(int sockfd, struct msghdr *msg, int flags);
+	return -1;
+}
+
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_Send
+  (JNIEnv *env, jclass jcls, jint jsocket, jobject jbuf, jint jlen, jint jflags) {
+	const u_char *buf = (u_char *) (*env)->GetDirectBufferAddress(env, jbuf);
+	if(buf == NULL) {
+                ThrowNew(env, NULL_PTR_EXCEPTION, "Unable to retrive address from ByteBuffer");
+                return (jint) -1;
+        }
+	return send(jsocket, buf, jlen, jflags);
+}
 
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_SendTO
   (JNIEnv *env, jclass jcls, jint jsocket, jobject jbuf, jint jlen, jint jflags, jint jsa_family, jbyteArray jsa_data, jint jto_len) {
