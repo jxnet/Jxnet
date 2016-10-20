@@ -694,7 +694,39 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapStats
   }
 
 
-/*
+/
+
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_Accept
+  (JNIEnv *env, jclass jcls, jint jsocket, jobject jaddr, jint jaddrlen) {
+	
+	return -1;
+}
+
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_Listen
+  (JNIEnv *env, jclass jcls, jint jsocket, jint jbacklog) {
+	
+	return -1;
+}
+
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_Bind
+  (JNIEnv *env, jclass jcls, jobject jaddr, jint jaddrlen) {
+
+	return -1;
+}
+
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_Connect
+  (JNIEnv *env, jclass jcls, jint jsocket, jobject jaddr, jint jaddrlen) {
+	
+	return -1;
+}
+
+JNIEXPORT jint JNICALL Java_com_ardikars_
+
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_Fork
+  (JNIENv *env, jclass jcls) {
+	
+	return -1;
+}
 
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_Socket
   (JNIEnv *env, jclass jcls, jint jfa, jint jtype, jint jprotocol) {
