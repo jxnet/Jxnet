@@ -1,0 +1,18 @@
+
+apply plugin: 'java'
+
+repositories {
+    jcenter()
+}
+
+sourceSets {
+	main {
+		java {
+			srcDir 'java/src'
+		}
+		resources {
+			srcDirs 'java'
+			include 'lib/**/*'
+		}
+	}
+}
