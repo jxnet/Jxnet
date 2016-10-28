@@ -1,10 +1,6 @@
 
 apply plugin: 'java'
 
-repositories {
-    jcenter()
-}
-
 sourceSets {
 	main {
 		java {
@@ -16,3 +12,10 @@ sourceSets {
 		}
 	}
 }
+
+task generateJNIHeaders(type: Exec) {
+	def classpath = sourceSets.main.output.classesDir
+	commandLine 'javah', '-jni', '-d', 'build/include', '-classpath', classpath, 'com.ardikars.jxnet.Jxnet', 'com.ardikars.jxnet.BpfProgram', 'com.ardikars.jxnet.util.AddrUtils'
+	dependsOn classes
+}
+
