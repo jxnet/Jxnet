@@ -8,6 +8,7 @@
 
 #include <jni.h>
 #include <pcap.h>
+#include <stdint.h>
 
 #define CLASS_NOT_FOUND_EXCEPTION "java/lang/ClassNotFoundException"
 #define NO_SUCH_METHOD_EXCEPTION "java.lang.NoSuchMethodException"
@@ -30,6 +31,8 @@ typedef struct pcap_user_data_t {
 		jfieldID PcapPktHdrTvSecFID;
 		jfieldID PcapPktHdrTvUsecFID;*/
 } pcap_user_data_t;
+
+void swap_order_uint32(uint32_t *value);
 
 jlong PointerToJlong(void *pointer);
 

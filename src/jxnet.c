@@ -10,7 +10,6 @@
 
 #include <pcap.h>
 #include <string.h>
-#include <stdlib.h>
 
 #include "../src/ids.h"
 #include "../src/utils.h"
@@ -694,7 +693,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapStats
   }
 
 
-/
+/*
 
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_Accept
   (JNIEnv *env, jclass jcls, jint jsocket, jobject jaddr, jint jaddrlen) {
@@ -794,6 +793,8 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapLookupNet
 	int r = pcap_lookupnet(device, &netp, &maskp, errbuf);
 	(*env)->ReleaseStringUTFChars(env, jdevice, device);
 	SetStringBuilder(env, jerrbuf, errbuf);
+	swap_order_uint32(&netp);
+	swap_order_uint32(&maskp);
 	jobject netp_jobj = (*env)->CallStaticObjectMethod(env, Inet4AddressClass, Inet4AddressValueOfMID, (int) netp);
 	jobject maskp_jobj = (*env)->CallStaticObjectMethod(env, Inet4AddressClass, Inet4AddressValueOfMID, (int) maskp);
 	(*env)->CallVoidMethod(env, jnetp, Inet4AddressUpdateMID, netp_jobj);
