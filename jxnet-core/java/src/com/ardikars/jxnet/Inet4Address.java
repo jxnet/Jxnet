@@ -65,10 +65,6 @@ public final class Inet4Address implements InetAddress {
 		return Arrays.copyOf(this.address, this.address.length);
 	}
 	
-	public short getSaFamily() {
-		return 2;
-	}
-	
 	public String toString() {
 		return (address[0] & 0xFF) + "." + (address[1] & 0xFF) + "." + (address[2] & 0xFF) + "." + (address[3] & 0xFF);
 	}

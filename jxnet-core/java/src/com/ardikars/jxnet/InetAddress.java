@@ -12,8 +12,6 @@ public interface InetAddress {
 	
 	byte[] toBytes();
 	
-	short getSaFamily();
-	
 	String toString();
 	
 }

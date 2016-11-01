@@ -4,12 +4,20 @@ Jxnet
 	Jxnet is a Java library for capturing and sending custom network packet buffers with no copies. Jxnet wraps a native packet capture library (libpcap/winpcap) via JNI (Java Native Interface).
 
 
-Bugs Report
------------
+Contact
+-------
 
 Email: contact@ardikars.com
 
 PGP key ID: 4096R/C87AA967
 
 PGP fingerprint: 669C DA6D 58B2 02F2 985C 28EE 6451 3300 C87A A967
+
+
+Issues
+------
+
+Have a bug? Please create an issue here on GitHub!
+
+https://github.com/ardikars/Jxnet/issues
 
