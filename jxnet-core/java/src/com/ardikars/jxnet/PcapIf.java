@@ -18,13 +18,13 @@ public final class PcapIf {
 	@SuppressWarnings("unused")
 	private PcapIf next;
 	
-	private String name;
+	private volatile String name;
 	
-	private String description;
+	private volatile String description;
 	
-	private List<PcapAddr> addresses = new ArrayList<PcapAddr>();
+	private volatile List<PcapAddr> addresses = new ArrayList<PcapAddr>();
 	
-	private int flags;
+	private volatile int flags;
 	
 	public String getName() {
 		return name;
@@ -42,7 +42,7 @@ public final class PcapIf {
 		return addresses;
 	}
 	
-	public byte[] getHardwareAddress() {
+	public MacAddress getHardwareAddress() {
 		return AddrUtils.getHardwareAddress(name);
 	}
 

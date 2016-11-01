@@ -71,7 +71,7 @@ public final class MacAddress {
         }
         return (this.address[0] & 0x01) != 0;
     }
-	
+    
 	@Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();

@@ -10,7 +10,7 @@ package com.ardikars.jxnet;
 
 public interface InetAddress {
 	
-	byte[] toByteArray();
+	byte[] toBytes();
 	
 	short getSaFamily();
 	

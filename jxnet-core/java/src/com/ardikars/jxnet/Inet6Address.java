@@ -22,7 +22,7 @@ public final class Inet6Address implements InetAddress {
 		return new Inet6Address(address);
 	}
 
-	public byte[] toByteArray() {
+	public byte[] toBytes() {
 		return address;
 	}
 

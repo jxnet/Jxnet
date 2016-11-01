@@ -49,7 +49,7 @@ public final class Inet4Address implements InetAddress {
 	}
 	
 	public void update(Inet4Address address) {
-		this.address = address.toByteArray();
+		this.address = address.toBytes();
 	}
 
 	public int toInt() {
@@ -61,7 +61,7 @@ public final class Inet4Address implements InetAddress {
         return ip;
     }
 	
-	public byte[] toByteArray() {
+	public byte[] toBytes() {
 		return Arrays.copyOf(this.address, this.address.length);
 	}
 	

@@ -13,13 +13,13 @@ public final class PcapAddr {
 	@SuppressWarnings("unused")
 	private PcapAddr next;
 	
-	private SockAddr addr;
+	private volatile SockAddr addr;
 	
-	private SockAddr netmask;
+	private volatile SockAddr netmask;
 	
-	private SockAddr broadaddr;
+	private volatile SockAddr broadaddr;
 	
-	private SockAddr dstaddr;
+	private volatile SockAddr dstaddr;
 	
 	public SockAddr getAddr() {
 		return addr;
