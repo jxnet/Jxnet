@@ -5,12 +5,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.ardikars.jxnet</groupId>
+    <groupId>com.ardikars</groupId>
     <artifactId>jxnet</artifactId>
     <version>1.0.0</version>
   </parent>
 
-  <groupId>com.ardikars.jxnet</groupId>
+  <groupId>com.ardikars</groupId>
   <artifactId>jxnet-core</artifactId>
   <version>1.0.0</version>
   <name>jxnet-core</name>
@@ -80,4 +80,11 @@
     </plugins>
   </build>
 
+  <dependencies>
+  	<dependency>
+  		<groupId>junit</groupId>
+  		<artifactId>junit</artifactId>
+  		<version>4.12</version>
+  	</dependency>
+  </dependencies>
 </project>
