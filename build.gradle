@@ -1,3 +1,12 @@
 
 apply plugin: 'java'
 
+subprojects.each { subproject -> evaluationDependsOn(subproject.path) }
+jar.dependsOn subprojects.tasks["classes"]
+
+jar {
+    subprojects.each { subproject ->
+        from subproject.sourceSets.main.output.classesDir
+        from subproject.sourceSets.main.output.resourcesDir
+    }
+}

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Jxnet.iml" filepath="$PROJECT_DIR$/.idea/modules/Jxnet.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Jxnet_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Jxnet_main.iml" group="Jxnet" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Jxnet_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Jxnet_test.iml" group="Jxnet" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jxnet-common/jxnet-common.iml" filepath="$PROJECT_DIR$/.idea/modules/jxnet-common/jxnet-common.iml" group="jxnet-common" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jxnet-common/jxnet-common_main.iml" filepath="$PROJECT_DIR$/.idea/modules/jxnet-common/jxnet-common_main.iml" group="jxnet-common" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jxnet-common/jxnet-common_test.iml" filepath="$PROJECT_DIR$/.idea/modules/jxnet-common/jxnet-common_test.iml" group="jxnet-common" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jxnet-core/jxnet-core.iml" filepath="$PROJECT_DIR$/.idea/modules/jxnet-core/jxnet-core.iml" group="jxnet-core" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jxnet-core/jxnet-core_main.iml" filepath="$PROJECT_DIR$/.idea/modules/jxnet-core/jxnet-core_main.iml" group="jxnet-core" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jxnet-core/jxnet-core_test.iml" filepath="$PROJECT_DIR$/.idea/modules/jxnet-core/jxnet-core_test.iml" group="jxnet-core" />
+    </modules>
+  </component>
+</project>

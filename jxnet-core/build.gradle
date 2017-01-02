@@ -19,3 +19,6 @@ task generateJNIHeaders(type: Exec) {
 	dependsOn classes
 }
 
+dependencies {
+	compile project(":jxnet-common")
+}
