@@ -26,3 +26,6 @@ Makefile
 /jxnet-common/build
 /jxnet-common/target
 /target
+/.idea
+/classes
+

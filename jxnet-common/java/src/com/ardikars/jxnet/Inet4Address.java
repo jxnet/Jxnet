@@ -10,7 +10,7 @@ package com.ardikars.jxnet;
 
 import java.util.Arrays;
 
-public final class Inet4Address implements InetAddress {
+public final class Inet4Address extends InetAddress {
 
 	public static final int IPV4_ADDRESS_LENGTH = 4;
 

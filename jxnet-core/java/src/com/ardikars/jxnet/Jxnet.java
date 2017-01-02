@@ -23,7 +23,7 @@ import javax.swing.JOptionPane;
 import com.ardikars.jxnet.exception.JxnetException;
 
 public final class Jxnet {
-
+	
 	private static Logger logger = Logger.getLogger(Jxnet.class.getName());
 
 	public static final int OK = 0;

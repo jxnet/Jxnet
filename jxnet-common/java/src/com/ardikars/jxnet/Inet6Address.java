@@ -8,7 +8,7 @@
 
 package com.ardikars.jxnet;
 
-public final class Inet6Address implements InetAddress {
+public final class Inet6Address extends InetAddress {
 
 	public static final short IPV6_ADDRESS_LENGTH = 16;
 

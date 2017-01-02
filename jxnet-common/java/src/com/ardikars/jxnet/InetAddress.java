@@ -8,10 +8,10 @@
 
 package com.ardikars.jxnet;
 
-public interface InetAddress {
+public abstract class InetAddress {
 
-	byte[] toBytes();
-
-	String toString();
+	public abstract byte[] toBytes();
+	
+	public abstract String toString();
 
 }
