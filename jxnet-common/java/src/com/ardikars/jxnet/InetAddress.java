@@ -9,9 +9,9 @@
 package com.ardikars.jxnet;
 
 public interface InetAddress {
-	
+
 	byte[] toBytes();
-	
+
 	String toString();
-	
+
 }

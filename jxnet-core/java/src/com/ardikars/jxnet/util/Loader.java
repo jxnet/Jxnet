@@ -17,7 +17,7 @@ import java.io.OutputStream;
 import java.util.regex.Pattern;
 
 public class Loader {
-	
+
 	public static void load(String[] path) {
 		for(String lib : path) {
 			System.load(lib);
@@ -29,46 +29,46 @@ public class Loader {
 			System.loadLibrary(lib);
 		}
 	}
-	
+
 	public static void loadFromJar(String[] path) {
 		for(String lib : path) {
 			loadLibrary(lib);
 		}
 	}
-	
+
 	public static void loadLibrary() {
 		if(load()) {
 			return;
 		}
 		switch (Platform.getNAME().getType()) {
-		case 1:
-			if(Platform.isARM()) {
-				if(Platform.getVersion().equals("v7")) {
-					loadLibrary("/lib/armeabi-v7l/libjxnet-linux.so");
-				}
-			} else {
-				if(Platform.is64Bit()) {
-					loadLibrary("/lib/x86_64/libjxnet-linux.so");
+			case 1:
+				if(Platform.isARM()) {
+					if(Platform.getVersion().equals("v7")) {
+						loadLibrary("/lib/armeabi-v7l/libjxnet-linux.so");
+					}
 				} else {
-					loadLibrary("/lib/x86/libjxnet-linux.so");
+					if(Platform.is64Bit()) {
+						loadLibrary("/lib/x86_64/libjxnet-linux.so");
+					} else {
+						loadLibrary("/lib/x86/libjxnet-linux.so");
+					}
 				}
-			}
-			break;
-		case 2:
-			if(Platform.is64Bit()) {
-				loadLibrary("/lib/x86_64/jxnet.dll");
-			} else {
-				loadLibrary("/lib/x86/jxnet.dll");
-			}
-			break;
-		case 3:
-			System.loadLibrary("jxnet");
-			break;
-		default:
-			break;
+				break;
+			case 2:
+				if(Platform.is64Bit()) {
+					loadLibrary("/lib/x86_64/jxnet.dll");
+				} else {
+					loadLibrary("/lib/x86/jxnet.dll");
+				}
+				break;
+			case 3:
+				System.loadLibrary("jxnet");
+				break;
+			default:
+				break;
 		}
 	}
-	
+
 	private static boolean load() {
 		try {
 			System.loadLibrary("jxnet");
@@ -77,15 +77,15 @@ public class Loader {
 			return false;
 		}
 	}
-	
+
 	private static boolean loadLibrary(String path) {
 		if (!path.startsWith("/")) {
 			throw new IllegalArgumentException("The path has to be absolute (start with '/').");
-        }
+		}
 		String[] parts = Pattern.compile("/").split(path);
 		if(parts != null && parts.length > 1) {
 			parts = Pattern.compile("\\.").split(parts[parts.length - 1]);
-		} 
+		}
 		File temp = null;
 		try {
 			temp = File.createTempFile(parts[0], "."+parts[1]);
@@ -117,5 +117,5 @@ public class Loader {
 		System.load(temp.getAbsolutePath());
 		return false;
 	}
-	
+
 }

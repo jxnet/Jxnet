@@ -9,7 +9,7 @@
 package com.ardikars.jxnet.exception;
 
 public final class JxnetException extends Exception {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	public JxnetException() {
@@ -27,5 +27,5 @@ public final class JxnetException extends Exception {
 	public JxnetException(Throwable cause) {
 		super(cause);
 	}
-	
+
 }

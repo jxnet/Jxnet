@@ -13,19 +13,19 @@ public final class PcapDumperCloseException extends Exception {
     private static final long serialVersionUID = 1L;
 
     public PcapDumperCloseException() {
-            super();
+        super();
     }
 
     public PcapDumperCloseException(String message) {
-            super(message);
+        super(message);
     }
-    
+
     public PcapDumperCloseException(String message, Throwable cause) {
-    	super(message, cause);
+        super(message, cause);
     }
-    
+
     public PcapDumperCloseException(Throwable cause) {
-    	super(cause);
+        super(cause);
     }
 
 }

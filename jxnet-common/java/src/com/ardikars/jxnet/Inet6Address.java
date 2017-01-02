@@ -9,15 +9,15 @@
 package com.ardikars.jxnet;
 
 public final class Inet6Address implements InetAddress {
-	
+
 	public static final short IPV6_ADDRESS_LENGTH = 16;
-	
+
 	private byte[] address = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
 
 	private Inet6Address(byte[] address) {
 		this.address = address;
 	}
-	
+
 	public static Inet6Address valueOf(byte[] address) {
 		return new Inet6Address(address);
 	}
@@ -55,10 +55,10 @@ public final class Inet6Address implements InetAddress {
 	}
 
 	private static final void ipv6toStr(StringBuilder sb, byte[] src,
-			int fromHextet, int toHextet) {
+										int fromHextet, int toHextet) {
 		for (int i = fromHextet; i < toHextet; i++) {
 			sb.append(Integer.toHexString(((src[i << 1] << 8) & 0xff00)
-			| (src[(i << 1) + 1] & 0xff)));
+					| (src[(i << 1) + 1] & 0xff)));
 			if (i < toHextet - 1) {
 				sb.append(':');
 			}

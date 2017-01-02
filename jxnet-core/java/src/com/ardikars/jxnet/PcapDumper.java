@@ -12,23 +12,23 @@ package com.ardikars.jxnet;
 import com.ardikars.jxnet.util.Pointer;
 
 public final class PcapDumper {
-	
+
 	private Pointer pointer;
-	
+
 	public Pointer getPointer() {
 		return pointer;
 	}
-	
+
 	public boolean isClosed() {
 		if(pointer.getAddress() == 0) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	@Override
 	public String toString() {
-		return pointer.toString();	
+		return pointer.toString();
 	}
-	
+
 }

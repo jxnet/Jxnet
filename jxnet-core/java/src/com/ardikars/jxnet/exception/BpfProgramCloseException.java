@@ -10,22 +10,22 @@ package com.ardikars.jxnet.exception;
 
 public final class BpfProgramCloseException extends Exception {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     public BpfProgramCloseException() {
-            super();
+        super();
     }
 
     public BpfProgramCloseException(String message) {
-            super(message);
+        super(message);
     }
-    
+
     public BpfProgramCloseException(String message, Throwable cause) {
-    	super(message, cause);
+        super(message, cause);
     }
-    
+
     public BpfProgramCloseException(Throwable cause) {
-    	super(cause);
+        super(cause);
     }
-    
+
 }

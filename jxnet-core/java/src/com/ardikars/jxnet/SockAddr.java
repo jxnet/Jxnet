@@ -9,16 +9,16 @@
 package com.ardikars.jxnet;
 
 public final class SockAddr {
-    
-    public enum Family { 
-        
+
+    public enum Family {
+
         AF_INET((short) 2, "AF_INET"),
         AF_INET6((short) 10, "AF_INET6"),
         ;
-        
+
         private short family;
         private String description;
-        
+
         private Family(short family, String description) {
             this.family = family;
             this.description = description;
@@ -31,25 +31,25 @@ public final class SockAddr {
         public String getDescription() {
             return description;
         }
-        
+
         public static Family valueOf(short family) {
             for(Family f : values()) {
                 if(f.getFamily() == family) {
                     return f;
                 }
             }
-            
+
             return null;
         }
-        
+
     }
 
-	private short sa_family;
-	
-	private byte[] data;
-	
-	public Family getSaFamily() {
-		switch(sa_family) {
+    private short sa_family;
+
+    private byte[] data;
+
+    public Family getSaFamily() {
+        switch(sa_family) {
             case 2:
                 return Family.AF_INET;
             case 10:
@@ -57,14 +57,14 @@ public final class SockAddr {
             default:
         }
         return null;
-	}
-	
+    }
+
     public byte[] getData() {
         return data;
     }
-    
-	@Override
-	public String toString() {
+
+    @Override
+    public String toString() {
         switch(getSaFamily()) {
             case AF_INET:
                 return Inet4Address.valueOf(data).toString();
@@ -73,6 +73,6 @@ public final class SockAddr {
             default:
                 return "Unknown Family : "+ sa_family;
         }
-	}
+    }
 
 }

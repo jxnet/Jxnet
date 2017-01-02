@@ -19,14 +19,14 @@ public final class File extends java.io.File{
 	public Pointer getPointer() {
 		return pointer;
 	}
-	
+
 	private File(String pathname) {
 		super(pathname);
 	}
-	
+
 	@Override
 	public String toString() {
 		return super.toString();
 	}
-	
+
 }
