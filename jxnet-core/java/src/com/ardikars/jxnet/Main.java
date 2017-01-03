@@ -57,7 +57,7 @@ public class Main {
 			byte[] data = new byte[b.capacity()];
 			b.get(data);
 			Ethernet ethernet = Ethernet.wrap(data);
-			System.out.println(ethernet);
+			//System.out.println(ethernet);
 			if (ethernet.getChild() instanceof IPv4) {
 				IPv4 ipv4 = (IPv4) ethernet.getChild();
 				System.out.println(ipv4);

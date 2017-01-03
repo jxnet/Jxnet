@@ -147,7 +147,7 @@ public class Ethernet extends Packet {
 			ethernet.vlanIdentifier = (short) 0xffff;
 		}
 		ethernet.etherType = etherType;
-		if (etherType == EtherType.VLAN)
+		if (ethernet.vlanIdentifier != (short) 0xffff)
 			ethernet.setData(Arrays.copyOfRange(bytes, (ETHERNET_HEADER_LENGTH + 4), bytes.length));
 		else
 			ethernet.setData(Arrays.copyOfRange(bytes, ETHERNET_HEADER_LENGTH, bytes.length));
@@ -158,7 +158,7 @@ public class Ethernet extends Packet {
 	public byte[] toBytes() {
 		int headerLength = ETHERNET_HEADER_LENGTH +
 				((etherType == EtherType.VLAN) ? 4 : 0) +
-				((data == null) ? 0 : data.length);
+				((this.data == null) ? 0 : this.data.length);
 		if (padding && headerLength < 60) {
 			headerLength = 60;
 		}
@@ -206,7 +206,7 @@ public class Ethernet extends Packet {
 					.append(", Vlan Identifier: " + vlanIdentifier)
 					.append(")");
 		}
-		return sb.append(", Ethernet type: " + ((etherType == null) ? "UNKNOWN" : etherType))
+		return sb.append(", Ethernet Type: " + ((etherType == null) ? "UNKNOWN" : etherType))
 				.append("]").toString();
 	}
 	
