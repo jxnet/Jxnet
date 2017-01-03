@@ -198,7 +198,7 @@ public class IPv4 extends IP {
 	public byte[] toBytes() {
 		byte[] data = new byte[IPV4_HEADER_LENGTH +
 				((this.data == null) ? 0 : this.data.length) +
-				((headerLength > 5) ? options.length : 0)];
+				((headerLength > 5) ? options.length * 5: 0)];
 		ByteBuffer buffer = ByteBuffer.wrap(data);
 		buffer.put((byte) ((version & 0xf) << 4 | headerLength & 0xf));
 		buffer.put((byte) (((diffServ << 2) & 0x3f) | expCon & 0x3));

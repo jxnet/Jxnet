@@ -10,8 +10,8 @@ public class TCP extends Packet {
 	
 	public static int TCP_HEADER_LENGTH = 20;
 	
-	private int sourcePort;
-	private int destinationPort;
+	private short sourcePort;
+	private short destinationPort;
 	private int sequence;
 	private int acknowledge;
 	private byte dataOffset; // 4 bit + 3 bit
@@ -27,16 +27,16 @@ public class TCP extends Packet {
 		return (sourcePort & 0xffff);
 	}
 	
-	public void setSourcePort(int sourcePort) {
-		this.sourcePort = (sourcePort & 0xffff);
+	public void setSourcePort(short sourcePort) {
+		this.sourcePort = sourcePort;
 	}
 	
 	public int getDestinationPort() {
-		return (destinationPort & 0xffff);
+		return (int) destinationPort;
 	}
 	
-	public void setDestinationPort(int destinationPort) {
-		this.destinationPort = (destinationPort & 0xffff);
+	public void setDestinationPort(short destinationPort) {
+		this.destinationPort = destinationPort;
 	}
 	
 	public int getSequence() {
@@ -110,8 +110,8 @@ public class TCP extends Packet {
 	public static TCP wrap(byte[] bytes, int offset, int length) {
 		TCP tcp = new TCP();
 		ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
-		tcp.sourcePort = (buffer.getShort() & 0xffff);
-		tcp.destinationPort = (buffer.getShort() & 0xffff);
+		tcp.sourcePort = buffer.getShort();
+		tcp.destinationPort = buffer.getShort();
 		tcp.sequence = buffer.getInt();
 		tcp.acknowledge = buffer.getInt();
 		tcp.flags = buffer.getShort();
@@ -144,8 +144,8 @@ public class TCP extends Packet {
 	public byte[] toBytes() {
 		byte[] data = new byte[TCP_HEADER_LENGTH + ((options == null) ? 0 : options.length)];
 		ByteBuffer buffer = ByteBuffer.wrap(data);
-		buffer.putShort((short) (sourcePort & 0xffff));
-		buffer.putShort((short) (destinationPort & 0xffff));
+		buffer.putShort(sourcePort);
+		buffer.putShort(destinationPort);
 		buffer.putInt(sequence);
 		buffer.putInt(acknowledge);
 		buffer.putShort((short) ((flags & 0x1ff) | (dataOffset & 0xf) << 12));
@@ -172,8 +172,8 @@ public class TCP extends Packet {
 	public String toString() {
 		return new StringBuilder()
 				.append("[")
-				.append("Source port: " + sourcePort)
-				.append(", Destination port: " + destinationPort)
+				.append("Source port: " + (sourcePort & 0xffff))
+				.append(", Destination port: " + (destinationPort & 0xffff))
 				.append(", Sequence number: " + sequence)
 				.append(", Acknowledgment number: " + acknowledge)
 				.append(", Data offset: " + dataOffset)

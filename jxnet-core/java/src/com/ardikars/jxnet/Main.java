@@ -9,7 +9,6 @@ import java.nio.ByteBuffer;
 
 public class Main {
 
-	/*
 	public static void main(String[] args) {
 		
 		StringBuilder errbuf = new StringBuilder();
@@ -38,11 +37,11 @@ public class Main {
 				
 			}
 		};
-		Jxnet.pcapLoop(pcap, -1, callback, "");
+		Jxnet.pcapLoop(pcap, 50, callback, "");
 		
 	}
-	*/
 	
+	/*
 	public static void main(String[] args) {
 		
 		StringBuilder errbuf = new StringBuilder();
@@ -65,6 +64,7 @@ public class Main {
 		}
 		Jxnet.pcapClose(pcap);
 	}
+	*/
 	
 	static {
 		Loader.loadLibrary();
