@@ -4,13 +4,19 @@
     
   <modelVersion>4.0.0</modelVersion>
 
+  <parent>
+    <groupId>com.ardikars</groupId>
+    <artifactId>jxnet</artifactId>
+    <version>1.0.0</version>
+  </parent>
+
   <groupId>com.ardikars</groupId>
-  <artifactId>jxnet</artifactId>
+  <artifactId>jxnet-common</artifactId>
   <version>1.0.0</version>
-  <name>jxnet</name>
+  <name>jxnet-common</name>
   <url>http://jxnet.ardikars.com</url>
-  <description>The core module of Jxnet.</description>
-  <packaging>pom</packaging>
+  <description>The common module of Jxnet.</description>
+  <packaging>jar</packaging>
 
   <licenses>
     <license>
@@ -32,9 +38,15 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
-  <modules>
-    <module>jxnet-common</module>
-    <module>jxnet-core</module>
-  </modules>
-  
+  <build>
+    <sourceDirectory>java/src</sourceDirectory> 
+  </build>
+
+  <dependencies>
+  	<dependency>
+  		<groupId>junit</groupId>
+  		<artifactId>junit</artifactId>
+  		<version>4.12</version>
+  	</dependency>
+  </dependencies>
 </project>

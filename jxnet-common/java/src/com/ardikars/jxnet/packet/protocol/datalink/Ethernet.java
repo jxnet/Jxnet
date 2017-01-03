@@ -164,8 +164,8 @@ public class Ethernet extends Packet {
 		}
 		byte[] data = new byte[headerLength];
 		ByteBuffer buffer = ByteBuffer.wrap(data);
-		buffer.put(destinationMacAddress.toByteArray());
-		buffer.put(sourceMacAddress.toByteArray());
+		buffer.put(destinationMacAddress.toBytes());
+		buffer.put(sourceMacAddress.toBytes());
 		if (vlanIdentifier != (short) 0xffff) {
 			buffer.putShort(EtherType.VLAN.getType());
 			buffer.putShort((short) (((priorityCodePoint << 13) & 0x07)

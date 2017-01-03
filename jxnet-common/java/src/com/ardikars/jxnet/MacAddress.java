@@ -52,7 +52,7 @@ public final class MacAddress {
 		return new MacAddress(address);
 	}
 
-	public byte[] toByteArray() {
+	public byte[] toBytes() {
 		return Arrays.copyOf(this.address, this.address.length);
 	}
 
