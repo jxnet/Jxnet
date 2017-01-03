@@ -48,11 +48,17 @@ public class Ethernet extends Packet {
 	
 	private MacAddress destinationMacAddress;
 	private MacAddress sourceMacAddress;
-	private byte priorityCode;
-	private short vlanID;
+	private byte priorityCodePoint;
+	private byte canonicalFormatIndicator;
+	private short vlanIdentifier;
 	private EtherType etherType;
+	private boolean padding;
 	
 	private byte[] data;
+	
+	public Ethernet() {
+		this.vlanIdentifier = (short) 0xffff;
+	}
 	
 	public MacAddress getDestinationMacAddress() {
 		return destinationMacAddress;
@@ -70,20 +76,28 @@ public class Ethernet extends Packet {
 		this.sourceMacAddress = sourceMacAddress;
 	}
 	
-	public byte getPriorityCode() {
-		return priorityCode;
+	public byte getPriorityCodePoint() {
+		return priorityCodePoint;
 	}
 	
-	public void setPriorityCode(byte priorityCode) {
-		this.priorityCode = priorityCode;
+	public void setPriorityCodePoint(byte priorityCodePoint) {
+		this.priorityCodePoint = priorityCodePoint;
 	}
 	
-	public short getVlanID() {
-		return vlanID;
+	public byte getCanonicalFormatIndicator() {
+		return canonicalFormatIndicator;
 	}
 	
-	public void setVlanID(short vlanID) {
-		this.vlanID = vlanID;
+	public void setCanonicalFormatIndicator(byte canonicalFormatIndicator) {
+		this.canonicalFormatIndicator = canonicalFormatIndicator;
+	}
+	
+	public short getVlanIdentifier() {
+		return vlanIdentifier;
+	}
+	
+	public void setVlanIdentifier(short vlanIdentifier) {
+		this.vlanIdentifier = vlanIdentifier;
 	}
 	
 	public EtherType getEtherType() {
@@ -92,6 +106,14 @@ public class Ethernet extends Packet {
 	
 	public void setEtherType(EtherType etherType) {
 		this.etherType = etherType;
+	}
+	
+	public boolean isPadding() {
+		return padding;
+	}
+	
+	public void setPadding(boolean padding) {
+		this.padding = padding;
 	}
 	
 	public byte[] getData() {
@@ -111,19 +133,20 @@ public class Ethernet extends Packet {
 		ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
 		byte[] MACBuffer = new byte[6];
 		buffer.get(MACBuffer);
-		ethernet.setDestinationMacAddress(MacAddress.valueOf(MACBuffer));
+		ethernet.destinationMacAddress = MacAddress.valueOf(MACBuffer);
 		buffer.get(MACBuffer);
-		ethernet.setSourceMacAddress(MacAddress.valueOf(MACBuffer));
+		ethernet.sourceMacAddress = MacAddress.valueOf(MACBuffer);
 		EtherType etherType = EtherType.getEtherType(buffer.getShort());
 		if (etherType == EtherType.VLAN) {
 			short tci = buffer.getShort();
-			ethernet.setPriorityCode((byte) (tci >> 13 & 0x07));
-			ethernet.setVlanID((short) (tci & 0x0fff));
+			ethernet.priorityCodePoint = (byte) (tci >> 13 & 0x07);
+			ethernet.canonicalFormatIndicator = (byte) (tci >> 14 & 0x01);
+			ethernet.vlanIdentifier = (short) (tci & 0x0fff);
 			etherType = EtherType.getEtherType(buffer.getShort());
 		} else {
-			ethernet.setVlanID((short) 0xffff);
+			ethernet.vlanIdentifier = (short) 0xffff;
 		}
-		ethernet.setEtherType(etherType);
+		ethernet.etherType = etherType;
 		if (etherType == EtherType.VLAN)
 			ethernet.setData(Arrays.copyOfRange(bytes, (ETHERNET_HEADER_LENGTH + 4), bytes.length));
 		else
@@ -132,6 +155,31 @@ public class Ethernet extends Packet {
 		return ethernet;
 	}
 	
+	public byte[] toBytes() {
+		int headerLength = ETHERNET_HEADER_LENGTH +
+				((etherType == EtherType.VLAN) ? 4 : 0) +
+				((data == null) ? 0 : data.length);
+		if (padding && headerLength < 60) {
+			headerLength = 60;
+		}
+		byte[] data = new byte[headerLength];
+		ByteBuffer buffer = ByteBuffer.wrap(data);
+		buffer.put(destinationMacAddress.toByteArray());
+		buffer.put(sourceMacAddress.toByteArray());
+		if (vlanIdentifier != (short) 0xffff) {
+			buffer.putShort(EtherType.VLAN.getType());
+			buffer.putShort((short) (((priorityCodePoint << 13) & 0x07)
+					| ((canonicalFormatIndicator << 14) & 0x01) | (vlanIdentifier & 0x0fff)));
+		}
+		buffer.putShort(etherType.getType());
+		if (data != null) {
+			buffer.put(data);
+		}
+		if (padding && headerLength < 60) {
+			Arrays.fill(data, buffer.position(), data.length, (byte) 0x0);
+		}
+		return data;
+	}
 	
 	@Override
 	public Packet getParent() {
@@ -144,6 +192,22 @@ public class Ethernet extends Packet {
 			return IPv4.wrap(data);
 		}
 		return null;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder()
+				.append("[")
+				.append("Destination: " + destinationMacAddress)
+				.append(", Source: " + sourceMacAddress);
+		if (vlanIdentifier != 0xffff) {
+			sb.append(", Tag Control Information (Priority Code Point: " + priorityCodePoint)
+					.append(", Canonical Format Indicator: " + canonicalFormatIndicator)
+					.append(", Vlan Identifier: " + vlanIdentifier)
+					.append(")");
+		}
+		return sb.append(", Ethernet type: " + ((etherType == null) ? "UNKNOWN" : etherType))
+				.append("]").toString();
 	}
 	
 }

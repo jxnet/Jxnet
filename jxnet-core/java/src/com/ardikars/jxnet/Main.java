@@ -2,12 +2,14 @@ package com.ardikars.jxnet;
 
 import com.ardikars.jxnet.packet.protocol.datalink.Ethernet;
 import com.ardikars.jxnet.packet.protocol.network.IPv4;
+import com.ardikars.jxnet.packet.protocol.transport.TCP;
 import com.ardikars.jxnet.util.Loader;
 
 import java.nio.ByteBuffer;
 
 public class Main {
 
+	/*
 	public static void main(String[] args) {
 		
 		StringBuilder errbuf = new StringBuilder();
@@ -23,33 +25,45 @@ public class Main {
 				byte[] bytes = new byte[buffer.capacity()];
 				buffer.get(bytes);
 				Ethernet ether = Ethernet.wrap(bytes);
-				System.out.println("======================");
-				System.out.println("Destionation MacAddr : "+ether.getDestinationMacAddress());
-				System.out.println("Source MacAddr       : "+ether.getSourceMacAddress());
-				System.out.println("Ethernet Type        : "+ether.getEtherType());
 				if (ether.getChild() instanceof IPv4) {
 					IPv4 ipv4 = (IPv4) ether.getChild();
-					System.out.println("=====================");
-					System.out.println("Version             : "+ipv4.getVersion());
-					System.out.println("Header Length       : "+ipv4.getHeaderLength());
-					System.out.println("DiffServ            : "+ipv4.getDiffServ());
-					System.out.println("Total Length        : "+ipv4.getTotalLength());
-					System.out.println("Identification      : "+ipv4.getIdentification());
-					System.out.println("Flag                : "+ipv4.getFlag());
-					System.out.println("Fragment Offset     : "+ipv4.getFragmentOffset());
-					System.out.println("Ttl                 : "+ipv4.getTtl());
-					System.out.println("Protocol            : "+ipv4.getProtocol());
-					System.out.println("Checksum            : "+ipv4.getChecksum());
-					System.out.println("Source Address      : "+ipv4.getSourceAddress());
-					System.out.println("Destination Address : "+ipv4.getDestinationAddress());
-					System.out.println("Option              : "+ipv4.getOption());
-					System.out.println("Data                : "+ipv4.getData());
+					if (ipv4.getChild() instanceof TCP) {
+						TCP tcp = (TCP) ipv4.getChild();
+						System.out.println(ether);
+						System.out.println(ipv4);
+						System.out.println(tcp);
+						System.out.println("============================================");
+					}
 				}
-			
+				
 			}
 		};
 		Jxnet.pcapLoop(pcap, -1, callback, "");
 		
+	}
+	*/
+	
+	public static void main(String[] args) {
+		
+		StringBuilder errbuf = new StringBuilder();
+		Pcap pcap = Jxnet.pcapOpenOffline("/home/pi/Downloads/vlan.cap", errbuf);
+		if(pcap == null) {
+			System.err.println(errbuf.toString());
+			return;
+		}
+		PcapPktHdr h = new PcapPktHdr();
+		ByteBuffer b = null;
+		while((b = Jxnet.pcapNext(pcap, h)) != null) {
+			byte[] data = new byte[b.capacity()];
+			b.get(data);
+			Ethernet ethernet = Ethernet.wrap(data);
+			System.out.println(ethernet);
+			if (ethernet.getChild() instanceof IPv4) {
+				IPv4 ipv4 = (IPv4) ethernet.getChild();
+				System.out.println(ipv4);
+			}
+		}
+		Jxnet.pcapClose(pcap);
 	}
 	
 	static {
