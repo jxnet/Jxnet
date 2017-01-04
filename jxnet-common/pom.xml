@@ -42,16 +42,4 @@
     <sourceDirectory>java/src</sourceDirectory> 
   </build>
 
-  <dependencies>
-  	<dependency>
-  		<groupId>junit</groupId>
-  		<artifactId>junit</artifactId>
-  		<version>4.12</version>
-  	</dependency>
-    <dependency>
-      <groupId>com.ardikars</groupId>
-      <artifactId>jxnet-core</artifactId>
-      <version>1.0.0</version>
-    </dependency>
-  </dependencies>
 </project>
