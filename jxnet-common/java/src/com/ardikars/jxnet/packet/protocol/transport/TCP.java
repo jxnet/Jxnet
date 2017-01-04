@@ -128,14 +128,20 @@ public class TCP extends Packet {
 			try {
 				tcp.options = new byte[optionLength];
 				buffer.get(tcp.options, 0, optionLength);
-				tcp.data = Arrays.copyOfRange(bytes,
-						(TCP_HEADER_LENGTH + optionLength), bytes.length);
+				tcp.data = new byte[(bytes.length - (TCP_HEADER_LENGTH + optionLength))];
+				System.arraycopy(bytes, (TCP_HEADER_LENGTH + optionLength), tcp.data,
+						0,
+						(bytes.length - (TCP_HEADER_LENGTH + optionLength)));
 			} catch (IndexOutOfBoundsException e) {
 				tcp.options = null;
-				tcp.data = Arrays.copyOfRange(bytes, (TCP_HEADER_LENGTH), bytes.length);
+				tcp.data = new byte[(bytes.length - TCP_HEADER_LENGTH )];
+				System.arraycopy(bytes, (TCP_HEADER_LENGTH), tcp.data, 0,
+						(bytes.length - TCP_HEADER_LENGTH));
 			}
 		} else {
-			tcp.data = Arrays.copyOfRange(bytes, (TCP_HEADER_LENGTH), bytes.length);
+			tcp.data = new byte[(bytes.length - TCP_HEADER_LENGTH )];
+			System.arraycopy(bytes, (TCP_HEADER_LENGTH), tcp.data, 0,
+					(bytes.length - TCP_HEADER_LENGTH));
 		}
 		tcp.rawPacket = bytes;
 		return tcp;

@@ -56,10 +56,15 @@ public class Main {
 			byte[] data = new byte[b.capacity()];
 			b.get(data);
 			Ethernet ethernet = Ethernet.wrap(data);
-			//System.out.println(ethernet);
 			if (ethernet.getChild() instanceof IPv4) {
 				IPv4 ipv4 = (IPv4) ethernet.getChild();
-				System.out.println(ipv4);
+				if (ipv4.getChild() instanceof TCP) {
+					TCP tcp = (TCP) ipv4.getChild();
+					System.out.println("====================");
+					System.out.println(ethernet);
+					System.out.println(ipv4);
+					System.out.println(tcp);
+				}
 			}
 		}
 		Jxnet.pcapClose(pcap);

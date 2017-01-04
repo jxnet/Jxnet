@@ -187,9 +187,13 @@ public class IPv4 extends IP {
 			int optionsLength = (ipv4.headerLength - 5) * 4;
 			ipv4.options = new byte[optionsLength];
 			buffer.get(ipv4.options);
-			ipv4.data = Arrays.copyOfRange(bytes, (IPV4_HEADER_LENGTH + optionsLength), bytes.length);
+			ipv4.data = new byte[(bytes.length - (optionsLength + IPV4_HEADER_LENGTH))];
+			System.arraycopy(bytes, (IPV4_HEADER_LENGTH + optionsLength), ipv4.data,
+					0, (bytes.length - (optionsLength + IPV4_HEADER_LENGTH)));
 		} else {
-			ipv4.data = Arrays.copyOfRange(bytes, IPV4_HEADER_LENGTH, bytes.length);
+			ipv4.data = new byte[(bytes.length - (IPV4_HEADER_LENGTH))];
+			System.arraycopy(bytes, (IPV4_HEADER_LENGTH), ipv4.data,
+					0, (bytes.length - IPV4_HEADER_LENGTH));
 		}
 		ipv4.rawPacket = bytes;
 		return ipv4;

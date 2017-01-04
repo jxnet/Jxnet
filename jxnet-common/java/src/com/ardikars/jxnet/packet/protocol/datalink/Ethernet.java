@@ -77,27 +77,27 @@ public class Ethernet extends Packet {
 	}
 	
 	public byte getPriorityCodePoint() {
-		return priorityCodePoint;
+		return (byte) (priorityCodePoint & 0x07);
 	}
 	
 	public void setPriorityCodePoint(byte priorityCodePoint) {
-		this.priorityCodePoint = priorityCodePoint;
+		this.priorityCodePoint = (byte) (priorityCodePoint & 0x07);
 	}
 	
 	public byte getCanonicalFormatIndicator() {
-		return canonicalFormatIndicator;
+		return (byte) (canonicalFormatIndicator & 0x01);
 	}
 	
 	public void setCanonicalFormatIndicator(byte canonicalFormatIndicator) {
-		this.canonicalFormatIndicator = canonicalFormatIndicator;
+		this.canonicalFormatIndicator = (byte) (canonicalFormatIndicator & 0x01);
 	}
 	
 	public short getVlanIdentifier() {
-		return vlanIdentifier;
+		return (short) (vlanIdentifier & 0x0fff);
 	}
 	
 	public void setVlanIdentifier(short vlanIdentifier) {
-		this.vlanIdentifier = vlanIdentifier;
+		this.vlanIdentifier = (short) (vlanIdentifier & 0x0fff);
 	}
 	
 	public EtherType getEtherType() {
@@ -147,10 +147,15 @@ public class Ethernet extends Packet {
 			ethernet.vlanIdentifier = (short) 0xffff;
 		}
 		ethernet.etherType = etherType;
-		if (ethernet.vlanIdentifier != (short) 0xffff)
-			ethernet.setData(Arrays.copyOfRange(bytes, (ETHERNET_HEADER_LENGTH + 4), bytes.length));
-		else
-			ethernet.setData(Arrays.copyOfRange(bytes, ETHERNET_HEADER_LENGTH, bytes.length));
+		if (ethernet.vlanIdentifier != (short) 0xffff) {
+			ethernet.data = new byte[(bytes.length - (ETHERNET_HEADER_LENGTH + 4))];
+			System.arraycopy(bytes, (ETHERNET_HEADER_LENGTH + 4), ethernet.data,
+					0, (bytes.length - (ETHERNET_HEADER_LENGTH + 4)));
+		} else{
+			ethernet.data = new byte[(bytes.length - ETHERNET_HEADER_LENGTH)];
+			System.arraycopy(bytes, (ETHERNET_HEADER_LENGTH), ethernet.data,
+					0, (bytes.length - (ETHERNET_HEADER_LENGTH)));
+		}
 		ethernet.rawPacket = bytes;
 		return ethernet;
 	}
