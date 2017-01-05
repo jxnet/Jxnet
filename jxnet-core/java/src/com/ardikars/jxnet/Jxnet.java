@@ -18,17 +18,26 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-import javax.swing.JOptionPane;
-
 import com.ardikars.jxnet.exception.JxnetException;
 import com.ardikars.jxnet.packet.Packet;
 import com.ardikars.jxnet.packet.protocol.datalink.Ethernet;
+import com.ardikars.jxnet.util.Loader;
 
 public final class Jxnet {
 	
 	private static Logger logger = Logger.getLogger(Jxnet.class.getName());
 
 	public static final int OK = 0;
+	
+	private static boolean isLoaded = false;
+	
+	public static boolean IS_LOGGED = false;
+	
+	public static java.io.File loggerConfigFile = null;
+	
+	private Jxnet() {
+		//prevent to create jxnet instance
+	}
 
 	private static native int PcapFindAllDevs(List<PcapIf> alldevsp, StringBuilder errbuf);
 
@@ -484,24 +493,30 @@ public final class Jxnet {
 		return r;
 	}
 
-	public static void main(String[] args) {
-		System.out.println("Jxnet is a network library for java.");
-	}
-
 	static {
-		try {
-			LogManager.getLogManager()
-					.readConfiguration(new FileInputStream("./settings/logging.properties"));
-			logger.addHandler(new FileHandler());
-		} catch (SecurityException e) {
-			logger.setLevel(Level.OFF);
-			logger.log(Level.WARNING, e.toString(), new JxnetException(e.toString()));
-		} catch (FileNotFoundException e) {
-			logger.setLevel(Level.OFF);
-			logger.log(Level.WARNING, e.toString(), new JxnetException(e.toString()));
-		} catch (IOException e) {
-			logger.setLevel(Level.OFF);
-			logger.log(Level.WARNING, e.toString(), new JxnetException(e.toString()));
+		if (!Jxnet.isLoaded) {
+			try {
+				Loader.loadLibrary();
+				Jxnet.isLoaded = true;
+			} catch (Exception e) {
+				Jxnet.isLoaded = false;
+			}
+		}
+		if (Jxnet.IS_LOGGED && (Jxnet.loggerConfigFile != null)) {
+			try {
+				LogManager.getLogManager()
+						.readConfiguration(new FileInputStream(Jxnet.loggerConfigFile));
+				logger.addHandler(new FileHandler());
+			} catch (SecurityException e) {
+				logger.setLevel(Level.OFF);
+				logger.log(Level.WARNING, e.toString(), new JxnetException(e.toString()));
+			} catch (FileNotFoundException e) {
+				logger.setLevel(Level.OFF);
+				logger.log(Level.WARNING, e.toString(), new JxnetException(e.toString()));
+			} catch (IOException e) {
+				logger.setLevel(Level.OFF);
+				logger.log(Level.WARNING, e.toString(), new JxnetException(e.toString()));
+			}
 		}
 	}
 

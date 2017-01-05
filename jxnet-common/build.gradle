@@ -1,6 +1,8 @@
 
 apply plugin: 'java'
 
+version="${common_version}"
+
 sourceSets {
 	main {
 		java {
