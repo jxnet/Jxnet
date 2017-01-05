@@ -21,6 +21,8 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 import com.ardikars.jxnet.exception.JxnetException;
+import com.ardikars.jxnet.packet.Packet;
+import com.ardikars.jxnet.packet.protocol.datalink.Ethernet;
 
 public final class Jxnet {
 	
@@ -151,6 +153,25 @@ public final class Jxnet {
 			logger.info("OK");
 		} else {
 			logger.warning("pcapLopp(Pcap, int, PcapHandler<T>, T): Failed ("+r+")");
+		}
+		return r;
+	}
+	
+	public static <T> int  pcapLoop(Pcap pcap, int cnt, PacketHandler<T> callback, T t) {
+		PcapHandler<PacketHandler<T>> pcapHandler = new PcapHandler<PacketHandler<T>>() {
+			public void nextPacket(PacketHandler<T> packetHandler, PcapPktHdr h, ByteBuffer bytes) {
+				byte[] buffer = new byte[bytes.capacity()];
+				bytes.get(buffer);
+				Packet ethernet = Ethernet.wrap(buffer);
+				packetHandler.recievedPacket(packetHandler.user, h, ethernet);
+			}
+		};
+		callback.user = t;
+		int r = PcapLoop(pcap, cnt, pcapHandler, callback);
+		if(r == OK) {
+			logger.info("OK");
+		} else {
+			logger.warning("pcapLopp(Pcap, int, PacketHandler<T>, T): Failed ("+r+")");
 		}
 		return r;
 	}
