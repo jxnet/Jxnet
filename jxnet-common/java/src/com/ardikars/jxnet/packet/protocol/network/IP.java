@@ -1,3 +1,11 @@
+
+/*
+ * Author	: Ardika Rommy Sanjaya
+ * Website	: http://ardikars.com
+ * Contact	: contact@ardikars.com
+ * License	: Lesser GNU Public License Version 3
+ */
+
 package com.ardikars.jxnet.packet.protocol.network;
 
 import com.ardikars.jxnet.packet.Packet;
@@ -7,8 +15,7 @@ public abstract class IP extends Packet {
 	public enum Protocol {
 		ICMP((byte) 0x1, "ICMP"),
 		TCP((byte) 0x6, "TCP"),
-		UDP((byte) 0x11, "UDP")
-		;
+		UDP((byte) 0x11, "UDP");
 		
 		private byte type;
 		private String description;

@@ -1,10 +1,17 @@
+
+/*
+ * Author	: Ardika Rommy Sanjaya
+ * Website	: http://ardikars.com
+ * Contact	: contact@ardikars.com
+ * License	: Lesser GNU Public License Version 3
+ */
+
 package com.ardikars.jxnet.packet.protocol.transport;
 
 import com.ardikars.jxnet.packet.Packet;
 import com.ardikars.jxnet.packet.protocol.datalink.Ethernet;
 
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 
 public class TCP extends Packet {
 	
@@ -134,12 +141,12 @@ public class TCP extends Packet {
 						(bytes.length - (TCP_HEADER_LENGTH + optionLength)));
 			} catch (IndexOutOfBoundsException e) {
 				tcp.options = null;
-				tcp.data = new byte[(bytes.length - TCP_HEADER_LENGTH )];
+				tcp.data = new byte[(bytes.length - TCP_HEADER_LENGTH)];
 				System.arraycopy(bytes, (TCP_HEADER_LENGTH), tcp.data, 0,
 						(bytes.length - TCP_HEADER_LENGTH));
 			}
 		} else {
-			tcp.data = new byte[(bytes.length - TCP_HEADER_LENGTH )];
+			tcp.data = new byte[(bytes.length - TCP_HEADER_LENGTH)];
 			System.arraycopy(bytes, (TCP_HEADER_LENGTH), tcp.data, 0,
 					(bytes.length - TCP_HEADER_LENGTH));
 		}

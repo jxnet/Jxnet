@@ -1,3 +1,11 @@
+
+/*
+ * Author	: Ardika Rommy Sanjaya
+ * Website	: http://ardikars.com
+ * Contact	: contact@ardikars.com
+ * License	: Lesser GNU Public License Version 3
+ */
+
 package com.ardikars.jxnet.packet.protocol.network;
 
 import com.ardikars.jxnet.Inet4Address;
@@ -6,7 +14,6 @@ import com.ardikars.jxnet.packet.protocol.datalink.Ethernet;
 import com.ardikars.jxnet.packet.protocol.transport.TCP;
 
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 
 public class IPv4 extends IP {
 	
@@ -202,7 +209,7 @@ public class IPv4 extends IP {
 	public byte[] toBytes() {
 		byte[] data = new byte[IPV4_HEADER_LENGTH +
 				((this.data == null) ? 0 : this.data.length) +
-				((headerLength > 5) ? options.length * 5: 0)];
+				((headerLength > 5) ? options.length * 5 : 0)];
 		ByteBuffer buffer = ByteBuffer.wrap(data);
 		buffer.put((byte) ((version & 0xf) << 4 | headerLength & 0xf));
 		buffer.put((byte) (((diffServ << 2) & 0x3f) | expCon & 0x3));

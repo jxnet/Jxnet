@@ -9,7 +9,7 @@
 package com.ardikars.jxnet.util;
 
 public class FormatUtils {
-
+	
 	public static byte[] toBytes(String hexStr) {
 		String src = hexStr.replaceAll("\\s+", "").trim();
 		int len = src.length();
@@ -20,7 +20,7 @@ public class FormatUtils {
 		}
 		return data;
 	}
-
+	
 	public static String toHexString(byte[] data, int offset, int length) {
 		StringBuilder sb = new StringBuilder();
 		int l;
@@ -34,14 +34,14 @@ public class FormatUtils {
 		}
 		return sb.toString();
 	}
-
+	
 	public static String toHexString(byte b) {
 		String s = Integer.toHexString((b) & 0xFF);
 		if (s.length() == 1)
 			return ("0" + s);
 		return (s);
 	}
-
+	
 	public static String toAscii(String hexStr) {
 		StringBuilder sb = new StringBuilder("");
 		for (int i = 0; i < hexStr.length(); i += 2) {
@@ -50,5 +50,5 @@ public class FormatUtils {
 		}
 		return sb.toString();
 	}
-
+	
 }

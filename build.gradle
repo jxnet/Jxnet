@@ -11,3 +11,10 @@ jar {
         from subproject.sourceSets.main.output.resourcesDir
     }
 }
+
+buildscript {
+    ext {
+        common_version="1.0.0"
+        core_version="1.0.0"
+    }
+}

@@ -8,6 +8,7 @@ public abstract class PacketHandler<T> {
 	
 	protected void recievedPacket(T user, PcapPktHdr pktHdr, Packet packet) {
 		if (pktHdr == null || packet == null) return;
-	};
+	}
+	
 	
 }

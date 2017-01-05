@@ -9,34 +9,34 @@
 package com.ardikars.jxnet;
 
 public final class PcapAddr {
-
+	
 	@SuppressWarnings("unused")
 	private PcapAddr next;
-
+	
 	private volatile SockAddr addr;
-
+	
 	private volatile SockAddr netmask;
-
+	
 	private volatile SockAddr broadaddr;
-
+	
 	private volatile SockAddr dstaddr;
-
+	
 	public SockAddr getAddr() {
 		return addr;
 	}
-
+	
 	public SockAddr getNetmask() {
 		return netmask;
 	}
-
+	
 	public SockAddr getBroadAddr() {
 		return broadaddr;
 	}
-
+	
 	public SockAddr getDstAddr() {
 		return dstaddr;
 	}
-
+	
 	@Override
 	public String toString() {
 		StringBuilder out = new StringBuilder();
@@ -46,5 +46,5 @@ public final class PcapAddr {
 		out.append(String.valueOf(dstaddr));
 		return out.toString();
 	}
-
+	
 }

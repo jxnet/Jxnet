@@ -1,3 +1,11 @@
+
+/*
+ * Author	: Ardika Rommy Sanjaya
+ * Website	: http://ardikars.com
+ * Contact	: contact@ardikars.com
+ * License	: Lesser GNU Public License Version 3
+ */
+
 package com.ardikars.jxnet.packet.protocol.datalink;
 
 import com.ardikars.jxnet.MacAddress;
@@ -14,8 +22,7 @@ public class Ethernet extends Packet {
 	 */
 	public enum EtherType {
 		IPv4((short) 0x0800, null),
-		VLAN((short) 0x8100, null)
-		;
+		VLAN((short) 0x8100, null);
 		
 		private short type;
 		private String description;
@@ -151,7 +158,7 @@ public class Ethernet extends Packet {
 			ethernet.data = new byte[(bytes.length - (ETHERNET_HEADER_LENGTH + 4))];
 			System.arraycopy(bytes, (ETHERNET_HEADER_LENGTH + 4), ethernet.data,
 					0, (bytes.length - (ETHERNET_HEADER_LENGTH + 4)));
-		} else{
+		} else {
 			ethernet.data = new byte[(bytes.length - ETHERNET_HEADER_LENGTH)];
 			System.arraycopy(bytes, (ETHERNET_HEADER_LENGTH), ethernet.data,
 					0, (bytes.length - (ETHERNET_HEADER_LENGTH)));
@@ -193,7 +200,7 @@ public class Ethernet extends Packet {
 	
 	@Override
 	public Packet getChild() {
-		if (etherType == EtherType.IPv4){
+		if (etherType == EtherType.IPv4) {
 			return IPv4.wrap(data);
 		}
 		return null;
