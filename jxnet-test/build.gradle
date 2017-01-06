@@ -1,0 +1,8 @@
+
+apply plugin: 'java'
+
+
+dependencies {
+    compile project(":jxnet-common")
+    compile project(":jxnet-core")
+}

@@ -30,6 +30,8 @@ public class Main {
 		System.out.println(pcap);
 		Jxnet.pcapLoop(pcap, 3, callback, pcap);
 		Jxnet.pcapClose(pcap);
+		
+		
 	}
 	
 	static {

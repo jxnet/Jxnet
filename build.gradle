@@ -5,7 +5,7 @@ subprojects.each { subproject -> evaluationDependsOn(subproject.path) }
 jar.dependsOn subprojects.tasks["classes"]
 
 jar {
-    version = "${version}"
+    version="${jxnet_version}"
     subprojects.each { subproject ->
         from subproject.sourceSets.main.output.classesDir
         from subproject.sourceSets.main.output.resourcesDir
@@ -14,7 +14,9 @@ jar {
 
 buildscript {
     ext {
-        common_version="1.0.0"
-        core_version="1.0.0"
+        release="-SNAPSHOT"
+        common_version="1.0.0"+release
+        core_version="1.0.0"+release
+        jxnet_version="1.1.0"+release
     }
 }
