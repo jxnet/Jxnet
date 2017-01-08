@@ -13,7 +13,7 @@ public class PcapOpenOffline {
 	@Test
 	public void run() throws PcapCloseException {
 		StringBuilder errbuf = new StringBuilder();
-        Pcap handler = Jxnet.pcapOpenOffline("../resources/dump.pcapng", errbuf);
+        Pcap handler = Jxnet.pcapOpenOffline("dump.pcapng", errbuf);
         if(handler == null) {
             throw new PcapCloseException(errbuf.toString());
         } else {
@@ -22,9 +22,5 @@ public class PcapOpenOffline {
         }
         Assert.assertNotEquals(null, handler);
 	}
-	
-	static {
-		Loader.loadLibrary();
-	}
-	
+		
 }

@@ -1,5 +1,3 @@
-*.pcap
-*.pcapng
 *.log
 *~
 *swp
@@ -25,6 +23,9 @@ Makefile
 /jxnet-common/.gradle
 /jxnet-common/build
 /jxnet-common/target
+/jxnet-test/.gradle
+/jxnet-test/build
+/jxnet-test/target
 /target
 /.idea
 /classes

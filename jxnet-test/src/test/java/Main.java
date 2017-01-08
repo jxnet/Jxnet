@@ -34,8 +34,4 @@ public class Main {
 		
 	}
 	
-	static {
-		Loader.loadLibrary();
-	}
-	
 }

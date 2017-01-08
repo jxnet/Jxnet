@@ -13,12 +13,6 @@ import java.util.regex.Pattern;
 
 public class Loader {
 	
-	public static void loadLibrary(String[] name) {
-		for (String lib : name) {
-			System.loadLibrary(lib);
-		}
-	}
-	
 	public static void loadFromInnerJar(String[] path) throws
 			IllegalArgumentException, IOException, FileNotFoundException {
 		for (String lib : path) {
@@ -28,7 +22,9 @@ public class Loader {
 	
 	public static void loadLibrary() throws
 			UnsatisfiedLinkError, IOException, FileNotFoundException, IllegalArgumentException {
-		load();
+		if (load()) {
+			return;
+		}
 		switch (Platform.getNAME().getType()) {
 			case 1:
 				if (Platform.isARM()) {
@@ -58,50 +54,16 @@ public class Loader {
 		}
 	}
 	
-	private static void load() throws UnsatisfiedLinkError {
-		System.loadLibrary("jxnet");
+	private static boolean load() {
+		boolean success = false;
+		try {
+			System.loadLibrary("jxnet");
+			success = true;
+		} catch (UnsatisfiedLinkError e) {
+			success = false;
+		}
+		return success;
 	}
-	
-	/*private static boolean loadLibrary(String path) {
-		if (!path.startsWith("/")) {
-			throw new IllegalArgumentException("The path has to be absolute (start with '/').");
-		}
-		String[] parts = Pattern.compile("/").split(path);
-		if (parts != null && parts.length > 1) {
-			parts = Pattern.compile("\\.").split(parts[parts.length - 1]);
-		}
-		File temp = null;
-		try {
-			temp = File.createTempFile(parts[0], "." + parts[1]);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		temp.deleteOnExit();
-		byte[] buffer = new byte[1024];
-		int readBytes;
-		InputStream is = Loader.class.getResourceAsStream(path);
-		if (is == null) {
-			System.err.println(path + " not found.");
-		}
-		OutputStream os = null;
-		try {
-			os = new FileOutputStream(temp);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		try {
-			while ((readBytes = is.read(buffer)) != -1) {
-				os.write(buffer, 0, readBytes);
-			}
-			is.close();
-			os.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.load(temp.getAbsolutePath());
-		return false;
-	}*/
-	
 	
 	private static void loadLibrary(String path) throws IllegalArgumentException, IOException, FileNotFoundException {
 		if (!path.startsWith("/")) {

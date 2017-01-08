@@ -258,16 +258,12 @@ public final class Jxnet {
 		return PcapNext(pcap, h);
 	}
 
-	public static int pcapNextEx(Pcap pcap, PcapPktHdr pkt_header, ByteBuffer pkt_data) {
-		if(pkt_data.capacity() >= 65535) {
-			return PcapNextEx(pcap, pkt_header, pkt_data);
-		}
-		try {
-			throw new Exception("Please allocate ByteBuffer to maximum packet size (65535)");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return -1;
+	public static int pcapNextEx(Pcap pcap, PcapPktHdr pkt_header, ByteBuffer pkt_data) throws JxnetException {
+		if (pkt_header == null)
+			throw new JxnetException(pkt_header.getClass().getName() + "is null");
+		if (pkt_data == null)
+			throw new JxnetException(pkt_data.getClass().getName() + "is null");
+		return PcapNextEx(pcap, pkt_header, pkt_data);
 	}
 
 	public static void pcapClose(Pcap pcap) {
@@ -505,7 +501,9 @@ public final class Jxnet {
 			try {
 				Loader.loadLibrary();
 				Jxnet.isLoaded = true;
+				System.out.println("Load native library");
 			} catch (Exception e) {
+				System.err.println(e.getMessage());
 				Jxnet.isLoaded = false;
 			}
 		}

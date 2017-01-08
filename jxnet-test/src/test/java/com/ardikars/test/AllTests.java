@@ -8,5 +8,5 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({ PcapDumpOpen.class, PcapFindAllDevs.class, PcapLookupDev.class, PcapLookupNet.class, PcapLoop.class,
 		PcapNext.class, PcapOpenDead.class, PcapOpenLive.class, PcapOpenOffline.class })
 public class AllTests {
-
+	public static final String deviceName = "eth0";
 }
