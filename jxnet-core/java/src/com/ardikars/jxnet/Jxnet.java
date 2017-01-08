@@ -501,7 +501,6 @@ public final class Jxnet {
 			try {
 				Loader.loadLibrary();
 				Jxnet.isLoaded = true;
-				System.out.println("Load native library");
 			} catch (Exception e) {
 				System.err.println(e.getMessage());
 				Jxnet.isLoaded = false;

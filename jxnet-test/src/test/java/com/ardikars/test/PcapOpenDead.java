@@ -12,7 +12,7 @@ public class PcapOpenDead {
 	public void run() throws PcapCloseException {
 		StringBuilder errbuf = new StringBuilder();
 		String dev = AllTests.deviceName;
-		Pcap handler = Jxnet.pcapOpenDead(1, 1500);
+		Pcap handler = Jxnet.pcapOpenDead(1, AllTests.snaplen);
 		if (handler == null) {
 			throw new PcapCloseException(errbuf.toString());
 		} else {

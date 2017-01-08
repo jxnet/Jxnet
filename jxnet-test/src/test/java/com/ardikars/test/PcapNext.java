@@ -15,20 +15,22 @@ public class PcapNext {
 	public void run() throws PcapCloseException {
 		StringBuilder errbuf = new StringBuilder();
 		String dev = AllTests.deviceName;
-		Pcap handler = Jxnet.pcapOpenLive(dev, 1500, 1, 2000, errbuf);
+		Pcap handler = Jxnet.pcapOpenLive(dev, AllTests.snaplen, AllTests.promisc, AllTests.to_ms, errbuf);
 		if (handler == null) {
 			throw new PcapCloseException(errbuf.toString());
 		}
 		
 		Assert.assertNotEquals(null, handler);
-		
+		boolean err = false;
 		PcapPktHdr pkthdr = new PcapPktHdr();
 		for (int i = 0; i < 10; i++) {
 			ByteBuffer buf = Jxnet.pcapNext(handler, pkthdr);
 			System.out.println(buf);
-			Assert.assertNotEquals(null, buf);
-			Assert.assertNotEquals(null, pkthdr);
+			if (buf == null || pkthdr == null) {
+				err = true;
+			}
 		}
+		Assert.assertFalse(err);
 		Jxnet.pcapClose(handler);
 	}
 	

@@ -16,7 +16,7 @@ public class PcapLoop {
 	public void run() throws PcapCloseException {
 		StringBuilder errbuf = new StringBuilder();
 		String dev = AllTests.deviceName;
-		Pcap handler = Jxnet.pcapOpenLive(dev, 1500, 1, 2000, errbuf);
+		Pcap handler = Jxnet.pcapOpenLive(dev, AllTests.snaplen, AllTests.promisc, AllTests.to_ms, errbuf);
 		if (handler == null) {
 			throw new PcapCloseException(errbuf.toString());
 		}
