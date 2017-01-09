@@ -30,8 +30,8 @@ public class PcapNext {
 				err = true;
 			}
 		}
-		Assert.assertFalse(err);
 		Jxnet.pcapClose(handler);
+		Assert.assertFalse(err);
 	}
 	
 }

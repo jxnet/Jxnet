@@ -31,6 +31,4 @@ Makefile
 /classes
 *.iml
 *.setting
-/gradle/
-gradlew
-gradlew.bat
+
