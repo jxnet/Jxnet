@@ -12,10 +12,15 @@ LOCAL_SRC_FILES := \
 	src/addr_utils.c
 
 LOCAL_C_INCLUDES := \
+	$(LOCAL_PATH)/libdnet-stripped/src \
+	$(LOCAL_PATH)/libdnet-stripped/include \
 	$(LOCAL_PATH)/libpcap
 
-LOCAL_STATIC_LIBRARIES := libpcap
+LOCAL_STATIC_LIBRARIES := libdnet libpcap
 
 include $(BUILD_SHARED_LIBRARY)
 
-include $(LOCAL_PATH)/libpcap/Android.mk
+include $(LOCAL_PATH)/libdnet-stripped/Android.mk 
+
+include $(LOCAL_PATH)/../libpcap/Android.mk 
+

@@ -10,7 +10,7 @@
 
 #include <pcap.h>
 #include <string.h>
-
+#include <dnet.h>
 #include "../src/ids.h"
 #include "../src/utils.h"
 
