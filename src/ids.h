@@ -19,7 +19,7 @@ extern jfieldID AddrAddrTypeFID;
 extern jfieldID AddrAddrBitsFID;
 extern jfieldID AddrAddrDataFID;
 
-void SetAddrIDs(JNIEnv *env) {
+void SetAddrIDs(JNIEnv *env);
  
 extern jclass ListClass;
 extern jmethodID ListAddMID;
