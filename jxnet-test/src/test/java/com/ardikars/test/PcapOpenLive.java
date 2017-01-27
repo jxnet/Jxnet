@@ -1,6 +1,6 @@
 package com.ardikars.test;
 
-import com.ardikars.jxnet.Jxnet;
+import static com.ardikars.jxnet.Jxnet.*;
 import com.ardikars.jxnet.Pcap;
 import com.ardikars.jxnet.exception.PcapCloseException;
 import org.junit.Assert;
@@ -12,12 +12,12 @@ public class PcapOpenLive {
 	public void run() throws PcapCloseException {
 		StringBuilder errbuf = new StringBuilder();
 		String dev = AllTests.deviceName;
-		Pcap handler = Jxnet.pcapOpenLive(dev, AllTests.snaplen, AllTests.promisc, AllTests.to_ms, errbuf);
+		Pcap handler = PcapOpenLive(dev, AllTests.snaplen, AllTests.promisc, AllTests.to_ms, errbuf);
 		if (handler == null) {
 			throw new PcapCloseException(errbuf.toString());
 		} else {
 			System.out.println("OK");
-			Jxnet.pcapClose(handler);
+			PcapClose(handler);
 		}
 		Assert.assertNotEquals(null, handler);
 	}

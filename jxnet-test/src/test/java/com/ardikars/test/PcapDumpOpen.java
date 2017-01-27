@@ -1,6 +1,6 @@
 package com.ardikars.test;
 
-import com.ardikars.jxnet.Jxnet;
+import static com.ardikars.jxnet.Jxnet.*;
 import com.ardikars.jxnet.Pcap;
 import com.ardikars.jxnet.PcapDumper;
 import com.ardikars.jxnet.exception.PcapCloseException;
@@ -14,19 +14,19 @@ public class PcapDumpOpen {
 		boolean error = false;
 		StringBuilder errbuf = new StringBuilder();
 		String dev = AllTests.deviceName;
-		Pcap handler = Jxnet.pcapOpenLive(dev, AllTests.snaplen, AllTests.promisc, AllTests.to_ms, errbuf);
+		Pcap handler = PcapOpenLive(dev, AllTests.snaplen, AllTests.promisc, AllTests.to_ms, errbuf);
 		if (handler == null) {
 			throw new PcapCloseException(errbuf.toString());
 		}
-		PcapDumper dumper = Jxnet.pcapDumpOpen(handler, "dump.pcapng");
+		PcapDumper dumper = PcapDumpOpen(handler, "dump.pcapng");
 		if (dumper == null) {
-			System.err.println(Jxnet.pcapGetErr(handler));
+			System.err.println(PcapGetErr(handler));
 			error = true;
-			Jxnet.pcapClose(handler);
+			PcapClose(handler);
 		} else {
 			System.out.println("OK");
-			Jxnet.pcapDumpClose(dumper);
-			Jxnet.pcapClose(handler);
+			PcapDumpClose(dumper);
+			PcapClose(handler);
 		}
 		Assert.assertFalse(error);
 		Assert.assertNotEquals(null, dumper);

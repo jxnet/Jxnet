@@ -1,9 +1,7 @@
 package com.ardikars.test;
 
-import com.ardikars.jxnet.Jxnet;
-import com.ardikars.jxnet.PcapAddr;
+import static com.ardikars.jxnet.Jxnet.*;
 import com.ardikars.jxnet.PcapIf;
-import com.ardikars.jxnet.SockAddr;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,7 +14,7 @@ public class PcapFindAllDevs {
 	public void run() {
 		StringBuilder errbuf = new StringBuilder();
 		List<PcapIf> alldevsp = new ArrayList<PcapIf>();
-		Jxnet.pcapFindAllDevs(alldevsp, errbuf);
+		PcapFindAllDevs(alldevsp, errbuf);
 		for (PcapIf dev : alldevsp) {
 			System.out.println("================================================\n\n");
 			System.out.println("Name                  = " + dev.getName());
