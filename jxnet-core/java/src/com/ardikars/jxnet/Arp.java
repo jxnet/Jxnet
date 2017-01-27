@@ -10,7 +10,7 @@ package com.ardikars.jxnet;
 
 import com.ardikars.jxnet.util.Pointer;
 
-public class ARP {
+public class Arp {
 
     private Pointer pointer;
 

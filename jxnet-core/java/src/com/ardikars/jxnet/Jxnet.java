@@ -105,17 +105,17 @@ public final class Jxnet {
 
 	public static native void PcapPError(Pcap pcap, String prefix);
 
-	public static native ARP ARPOpen();
+	public static native Arp ArpOpen();
 
-	public static native <T> int ARPLoop(ARP arp, ARPHandler<T> callback,T arg);
+	public static native <T> int ArpLoop(Arp arp, ArpHandler<T> callback, T arg);
 
-	public static native int ARPAdd(ARP arp, ARPEntry arpEntry);
+	public static native int ArpAdd(Arp arp, ArpEntry arpEntry);
 
-	public static native int ARPDelete(ARP arp, byte[] arp_pa);
+	public static native int ArpDelete(Arp arp, byte[] arp_pa);
 
-	public static native int ARPGet(ARP arp, ARPEntry arpEntry);
+	public static native int ArpGet(Arp arp, ArpEntry arpEntry);
 
-	public static native ARP ARPClose(ARP arp);
+	public static native Arp ArpClose(Arp arp);
 
 	//public static native int Socket(int af, int type, int protocol);
 	//private static native int SendTo(int socket, ByteBuffer buf, int len, int flags, SockAddr to, int toLen);
