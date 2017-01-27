@@ -849,11 +849,11 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDumpFOpen
 */
 
 /*
- *  * Class:     com_ardikars_jxnet_Jxnet
- *   * Method:    ARPOpen
- *    * Signature: ()Lcom/ardikars/jxnet/Arp;
- *     */
-JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_ARPOpen
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    ArpOpen
+ * Signature: ()Lcom/ardikars/jxnet/Arp;
+ */
+JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_ArpOpen
   (JNIEnv *env, jclass jclass) {
   	SetPointerIDs(env);
   	SetArpIDs(env);
@@ -869,10 +869,10 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_ARPOpen
 
 /*
  * Class:     com_ardikars_jxnet_Jxnet
- * Method:    ARPClose
+ * Method:    ArpClose
  * Signature: (Lcom/ardikars/jxnet/Arp;)Lcom/ardikars/jxnet/Arp;
  */
-JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_ARPClose
+JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_ArpClose
   (JNIEnv *env, jclass jclass, jobject jarp) {
     if(jarp == NULL) {
   		ThrowNew(env, NULL_PTR_EXCEPTION, "");

@@ -339,50 +339,50 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxnet_Jxnet_PcapPError
 
 /*
  * Class:     com_ardikars_jxnet_Jxnet
- * Method:    ARPOpen
+ * Method:    ArpOpen
  * Signature: ()Lcom/ardikars/jxnet/Arp;
  */
-JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_ARPOpen
+JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_ArpOpen
   (JNIEnv *, jclass);
 
 /*
  * Class:     com_ardikars_jxnet_Jxnet
- * Method:    ARPLoop
+ * Method:    ArpLoop
  * Signature: (Lcom/ardikars/jxnet/Arp;Lcom/ardikars/jxnet/ArpHandler;Ljava/lang/Object;)I
  */
-JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ARPLoop
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ArpLoop
   (JNIEnv *, jclass, jobject, jobject, jobject);
 
 /*
  * Class:     com_ardikars_jxnet_Jxnet
- * Method:    ARPAdd
+ * Method:    ArpAdd
  * Signature: (Lcom/ardikars/jxnet/Arp;Lcom/ardikars/jxnet/ArpEntry;)I
  */
-JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ARPAdd
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ArpAdd
   (JNIEnv *, jclass, jobject, jobject);
 
 /*
  * Class:     com_ardikars_jxnet_Jxnet
- * Method:    ARPDelete
+ * Method:    ArpDelete
  * Signature: (Lcom/ardikars/jxnet/Arp;[B)I
  */
-JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ARPDelete
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ArpDelete
   (JNIEnv *, jclass, jobject, jbyteArray);
 
 /*
  * Class:     com_ardikars_jxnet_Jxnet
- * Method:    ARPGet
+ * Method:    ArpGet
  * Signature: (Lcom/ardikars/jxnet/Arp;Lcom/ardikars/jxnet/ArpEntry;)I
  */
-JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ARPGet
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ArpGet
   (JNIEnv *, jclass, jobject, jobject);
 
 /*
  * Class:     com_ardikars_jxnet_Jxnet
- * Method:    ARPClose
+ * Method:    ArpClose
  * Signature: (Lcom/ardikars/jxnet/Arp;)Lcom/ardikars/jxnet/Arp;
  */
-JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_ARPClose
+JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_ArpClose
   (JNIEnv *, jclass, jobject);
 
 #ifdef __cplusplus
