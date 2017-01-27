@@ -20,7 +20,3 @@ task generateJNIHeaders(type: Exec) {
 	commandLine 'javah', '-jni', '-d', 'build/include/jxnet', '-classpath', classpath, 'com.ardikars.jxnet.Jxnet', 'com.ardikars.jxnet.BpfProgram', 'com.ardikars.jxnet.util.AddrUtils'
 	dependsOn classes
 }
-
-dependencies {
-	compile project(":jxnet-common")
-}

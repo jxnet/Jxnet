@@ -19,8 +19,6 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import com.ardikars.jxnet.exception.JxnetException;
-import com.ardikars.jxnet.packet.Packet;
-import com.ardikars.jxnet.packet.protocol.datalink.Ethernet;
 import com.ardikars.jxnet.util.Loader;
 
 public final class Jxnet {
@@ -166,32 +164,6 @@ public final class Jxnet {
 		return r;
 	}
 	
-	public static <T> int  pcapLoop(Pcap pcap, int cnt, PacketHandler<T> callback, T t) {
-		PcapHandler<PacketHandler<T>> pcapHandler = new PcapHandler<PacketHandler<T>>() {
-			public void nextPacket(PacketHandler<T> packetHandler, PcapPktHdr h, ByteBuffer bytes) {
-				byte[] buffer = new byte[bytes.capacity()];
-				bytes.get(buffer);
-				switch (Jxnet.pcapDatalink(packetHandler.handler)) {
-					case 1:
-						Packet ethernet = Ethernet.wrap(buffer);
-						packetHandler.recievedPacket(packetHandler.user, h, ethernet);
-					break;
-					default:
-						packetHandler.recievedPacket(packetHandler.user, h, null);
-				}
-			}
-		};
-		callback.user = t;
-		callback.handler = pcap;
-		int r = PcapLoop(pcap, cnt, pcapHandler, callback);
-		if(r == OK) {
-			logger.info("OK");
-		} else {
-			logger.warning("pcapLopp(Pcap, int, PacketHandler<T>, T): Failed ("+r+")");
-		}
-		return r;
-	}
-
 	public static <T> int pcapDispatch(Pcap pcap, int cnt, PcapHandler<T> callback, T user) {
 		int r = PcapDispatch(pcap, cnt, callback, user);
 		if(r == OK) {

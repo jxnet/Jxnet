@@ -6,7 +6,6 @@ repositories {
 }
 
 dependencies {
-    compile project(":jxnet-common")
     compile project(":jxnet-core")
     testCompile "junit:junit:4.12"
 }
