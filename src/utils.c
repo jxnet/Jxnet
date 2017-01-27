@@ -112,7 +112,7 @@ jobject SetPcap(JNIEnv *env, pcap_t *pcap) {
 
 jobject SetArp(JNIEnv *env, arp_t *arp) {
 	SetPointerIDs(env);
-	jobject pointer = NewObject(env, ArpClass, "<init>", "()V");
+	jobject pointer = NewObject(env, PointerClass, "<init>", "()V");
 	if(arp == NULL) {
 		(*env)->SetLongField(env, pointer, PointerAddressFID, (jlong) 0);
 	} else {
