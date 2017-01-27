@@ -11,6 +11,7 @@
 #include <jni.h>
 
 #include <pcap.h>
+#include <dnet.h>
 #include <sys/time.h>
 
 #include "../src/ids.h"
@@ -109,6 +110,17 @@ jobject SetPcap(JNIEnv *env, pcap_t *pcap) {
 	return pointer;
 }
 
+jobject SetArp(JNIEnv *env, arp_t *arp) {
+	SetPointerIDs(env);
+	jobject pointer = NewObject(env, ArpClass, "<init>", "()V");
+	if(arp == NULL) {
+		(*env)->SetLongField(env, pointer, PointerAddressFID, (jlong) 0);
+	} else {
+		(*env)->SetLongField(env, pointer, PointerAddressFID, PointerToJlong(arp));
+	}
+	return pointer;
+}
+
 pcap_t *GetPcap(JNIEnv *env, jobject jpcap) {
 	SetPointerIDs(env);
 	jobject pointer = (*env)->GetObjectField(env, jpcap, PcapPointerFID);
@@ -117,6 +129,16 @@ pcap_t *GetPcap(JNIEnv *env, jobject jpcap) {
 		ThrowNew(env, PCAP_CLOSE_EXCEPTION, "");
 	}
 	return JlongToPointer(pcap);
+}
+
+arp_t *GetArp(JNIEnv *env, jobject jarp) {
+	SetPointerIDs(env);
+	jobject pointer = (*env)->GetObjectField(env, jarp, ArpPointerFID);
+	jlong arp = 0;
+	if((arp = (*env)->GetLongField(env, pointer, PointerAddressFID)) == 0) {
+		ThrowNew(env, JXNET_EXCEPTION, "ARP CLOSE EXCEPTION");
+	}
+	return JlongToPointer(arp);
 }
 
 jobject SetFile(JNIEnv *env, FILE *file) {

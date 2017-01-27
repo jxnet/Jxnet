@@ -847,3 +847,46 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDumpFOpen
 	return obj;
 }
 */
+
+/*
+ *  * Class:     com_ardikars_jxnet_Jxnet
+ *   * Method:    ARPOpen
+ *    * Signature: ()Lcom/ardikars/jxnet/Arp;
+ *     */
+JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_ARPOpen
+  (JNIEnv *env, jclass jclass) {
+  	SetPointerIDs(env);
+  	SetArpIDs(env);
+    arp_t *arp;
+    if ((arp = arp_open()) == NULL) {
+        return NULL;
+    }
+    jobject obj = NewObject(env, ArpClass, "<init>", "()V");
+  	(*env)->SetObjectField(env, obj, ArpPointerFID, SetArp(env, arp));
+  	return obj;
+ 
+  }
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    ARPClose
+ * Signature: (Lcom/ardikars/jxnet/Arp;)Lcom/ardikars/jxnet/Arp;
+ */
+JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_ARPClose
+  (JNIEnv *env, jclass jclass, jobject jarp) {
+    if(jarp == NULL) {
+  		ThrowNew(env, NULL_PTR_EXCEPTION, "");
+  		return;
+  	}
+  	SetPointerIDs(env);
+  	SetArpIDs(env);
+  	arp_t *arp = GetArp(env, jarp); // Exception already thrown  	
+    if(arp == NULL) {
+        (*env)->SetObjectField(env, jarp, ArpPointerFID, SetArp(env, NULL));
+        return jarp;
+    }
+  	arp_close(arp);
+  	(*env)->SetObjectField(env, jarp, PcapPointerFID, SetArp(env, arp));
+    return jarp;
+  }
+
