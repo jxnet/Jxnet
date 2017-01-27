@@ -876,7 +876,7 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_ARPClose
   (JNIEnv *env, jclass jclass, jobject jarp) {
     if(jarp == NULL) {
   		ThrowNew(env, NULL_PTR_EXCEPTION, "");
-  		return;
+  		return NULL;
   	}
   	SetPointerIDs(env);
   	SetArpIDs(env);
