@@ -18,6 +18,7 @@ extern jclass AddrClass;
 extern jfieldID AddrAddrTypeFID;
 extern jfieldID AddrAddrBitsFID;
 extern jfieldID AddrAddrDataFID;
+extern jmethodID AddrInitializeMID;
 
 void SetAddrIDs(JNIEnv *env);
  
@@ -73,6 +74,7 @@ void SetArpIDs(JNIEnv *env);
 extern jclass ArpEntryClass;
 extern jfieldID ArpEntryArpPaFID;
 extern jfieldID ArpEntryArpHaFID;
+extern jmethodID ArpEntryInitializeMID;
 
 void SetArpEntryIDs(JNIEnv *env);
 

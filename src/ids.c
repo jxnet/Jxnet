@@ -36,6 +36,7 @@ jclass AddrClass = NULL;
 jfieldID AddrAddrTypeFID = NULL;
 jfieldID AddrAddrBitsFID = NULL;
 jfieldID AddrAddrDataFID = NULL;
+jmethodID AddrInitializeMID = NULL;
 
 void SetAddrIDs(JNIEnv *env) {
     AddrClass = (*env)->FindClass(env, "com/ardikars/jxnet/Addr");
@@ -58,6 +59,11 @@ void SetAddrIDs(JNIEnv *env) {
 		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field Addr.data:byte[]");
 		return;
 	}
+    AddrInitializeMID = (*env)->GetStaticMethodID(env, AddrClass, "initialize", "(Lcom/ardikars/jxnet/Addr;)SS");
+    if (AddrInitializeMID == NULL) {
+        ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method Addr.initialize(short,short)");
+		return;
+    }
 }
 
 jclass ListClass = NULL;
@@ -235,6 +241,7 @@ void SetArpIDs(JNIEnv *env) {
 jclass ArpEntryClass = NULL;
 jfieldID ArpEntryArpPaFID = NULL;
 jfieldID ArpEntryArpHaFID = NULL;
+jmethodID ArpEntryInitializeMID = NULL;
 
 void SetArpEntryIDs(JNIEnv *env) {
     ArpEntryClass = (*env)->FindClass(env, "com/ardikars/jxnet/ArpEntry");
@@ -250,6 +257,12 @@ void SetArpEntryIDs(JNIEnv *env) {
 	ArpEntryArpHaFID = (*env)->GetFieldID(env, ArpEntryClass, "arp_ha", "Lcom/ardikars/jxnet/Addr;");
 	if(ArpEntryArpHaFID == NULL) {
 		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field ArpEntry.arp_ha:Addr");
+		return;
+	}
+    ArpEntryInitializeMID = (*env)->GetStaticMethodID(env, ArpEntryClass, "initialize",
+            "(Lcom/ardikars/jxnet/ArpEntry;)Lcom/ardikars/jxnet/Addr;Lcom/ardikars/jxnet/Addr;");
+    if(ArpEntryInitializeMID == NULL) {
+		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method ArpEntry.initialize(Addr,Addr)");
 		return;
 	}
 }
