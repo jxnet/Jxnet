@@ -111,7 +111,7 @@ public final class Jxnet {
 
 	public static native int ArpAdd(Arp arp, ArpEntry arpEntry);
 
-	public static native int ArpDelete(Arp arp, byte[] arp_pa);
+	public static native int ArpDelete(Arp arp, ArpEntry arp_pa);
 
 	public static native int ArpGet(Arp arp, ArpEntry arpEntry);
 
