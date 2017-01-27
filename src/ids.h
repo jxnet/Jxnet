@@ -14,6 +14,13 @@ extern jmethodID StringBuilderAppendMID;
 
 void SetStringBuilderIDs(JNIEnv *env);
 
+extern jclass AddrClass;
+extern jfieldID AddrAddrTypeFID;
+extern jfieldID AddrAddrBitsFID;
+extern jfieldID AddrAddrDataFID;
+
+void SetAddrIDs(JNIEnv *env) {
+ 
 extern jclass ListClass;
 extern jmethodID ListAddMID;
 
@@ -57,6 +64,17 @@ extern jclass PcapClass;
 extern jfieldID PcapPointerFID;
 
 void SetPcapIDs(JNIEnv *env);
+
+extern jclass ArpClass;
+extern jfieldID ArpPointerFID;
+
+void SetArpIDs(JNIEnv *env);
+
+extern jclass ArpEntryClass;
+extern jfieldID ArpEntryArpPaFID;
+extern jfieldID ArpEntryArpHaFID;
+
+void SetArpEntryIDs(JNIEnv *env);
 
 extern jclass PcapPktHdrClass;
 extern jfieldID PcapPktHdrCaplenFID;

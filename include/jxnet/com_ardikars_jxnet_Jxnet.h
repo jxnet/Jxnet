@@ -315,30 +315,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapStats
 
 /*
  * Class:     com_ardikars_jxnet_Jxnet
- * Method:    Socket
- * Signature: (III)I
- */
-JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_Socket
-  (JNIEnv *, jclass, jint, jint, jint);
-
-/*
- * Class:     com_ardikars_jxnet_Jxnet
- * Method:    SendTo
- * Signature: (ILjava/nio/ByteBuffer;IILcom/ardikars/jxnet/SockAddr;I)I
- */
-JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_SendTo
-  (JNIEnv *, jclass, jint, jobject, jint, jint, jobject, jint);
-
-/*
- * Class:     com_ardikars_jxnet_Jxnet
- * Method:    SendTO
- * Signature: (ILjava/nio/ByteBuffer;III[BI)I
- */
-JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_SendTO
-  (JNIEnv *, jclass, jint, jobject, jint, jint, jint, jbyteArray, jint);
-
-/*
- * Class:     com_ardikars_jxnet_Jxnet
  * Method:    PcapLookupNet
  * Signature: (Ljava/lang/String;Lcom/ardikars/jxnet/InetAddress;Lcom/ardikars/jxnet/InetAddress;Ljava/lang/StringBuilder;)I
  */
@@ -360,6 +336,54 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCompileNoPcap
  */
 JNIEXPORT void JNICALL Java_com_ardikars_jxnet_Jxnet_PcapPError
   (JNIEnv *, jclass, jobject, jstring);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    ARPOpen
+ * Signature: ()Lcom/ardikars/jxnet/Arp;
+ */
+JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_ARPOpen
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    ARPLoop
+ * Signature: (Lcom/ardikars/jxnet/Arp;Lcom/ardikars/jxnet/ArpHandler;Ljava/lang/Object;)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ARPLoop
+  (JNIEnv *, jclass, jobject, jobject, jobject);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    ARPAdd
+ * Signature: (Lcom/ardikars/jxnet/Arp;Lcom/ardikars/jxnet/ArpEntry;)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ARPAdd
+  (JNIEnv *, jclass, jobject, jobject);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    ARPDelete
+ * Signature: (Lcom/ardikars/jxnet/Arp;[B)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ARPDelete
+  (JNIEnv *, jclass, jobject, jbyteArray);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    ARPGet
+ * Signature: (Lcom/ardikars/jxnet/Arp;Lcom/ardikars/jxnet/ArpEntry;)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ARPGet
+  (JNIEnv *, jclass, jobject, jobject);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    ARPClose
+ * Signature: (Lcom/ardikars/jxnet/Arp;)Lcom/ardikars/jxnet/Arp;
+ */
+JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_ARPClose
+  (JNIEnv *, jclass, jobject);
 
 #ifdef __cplusplus
 }

@@ -32,6 +32,34 @@ void SetStringBuilderIDs(JNIEnv *env) {
   	}
 }
 
+jclass AddrClass = NULL;
+jfieldID AddrAddrTypeFID = NULL;
+jfieldID AddrAddrBitsFID = NULL;
+jfieldID AddrAddrDataFID = NULL;
+
+void SetAddrIDs(JNIEnv *env) {
+    AddrClass = (*env)->FindClass(env, "com/ardikars/jxnet/Addr");
+    if(AddrClass == NULL) {
+        ThrowNew(env, CLASS_NOT_FOUND_EXCEPTION, "Unable to initialize class com.ardikars.jxnet.Addr");
+   		return;
+    } 
+    AddrAddrTypeFID = (*env)->GetFieldID(env, AddrClass, "addr_type", "S");
+  	if(AddrAddrTypeFID == NULL) {
+		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field Addr.addr_type:short");
+		return;
+	}
+    AddrAddrBitsFID = (*env)->GetFieldID(env, AddrClass, "addr_bits", "S");
+  	if(AddrAddrBitsFID == NULL) {
+		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field Addr.addr_bits:short");
+		return;
+	}
+    AddrAddrDataFID = (*env)->GetFieldID(env, AddrClass, "data", "[B");
+  	if(AddrAddrDataFID == NULL) {
+		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field Addr.data:byte[]");
+		return;
+	}
+}
+
 jclass ListClass = NULL;
 jmethodID ListAddMID = NULL;
 
@@ -186,6 +214,46 @@ void SetPcapIDs(JNIEnv *env) {
 		return;
 	}
 }
+
+jclass ArpClass = NULL;
+jfieldID ArpPointerFID = NULL;
+
+void SetArpIDs(JNIEnv *env) {
+
+  	ArpClass = (*env)->FindClass(env, "com/ardikars/jxnet/Arp");
+  	if(ArpClass == NULL) {
+		ThrowNew(env, CLASS_NOT_FOUND_EXCEPTION, "Unable to initialize class com.ardikars.jxnet.Arp");
+		return;
+	}
+	ArpPointerFID = (*env)->GetFieldID(env, ArpClass, "pointer", "Lcom/ardikars/jxnet/util/Pointer;");
+	if(ArpPointerFID == NULL) {
+		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field Pcap.pointer:Pointer");
+		return;
+	}
+}
+
+jclass ArpEntryClass = NULL;
+jfieldID ArpEntryArpPaFID = NULL;
+jfieldID ArpEntryArpHaFID = NULL;
+
+void SetArpEntryIDs(JNIEnv *env) {
+    ArpEntryClass = (*env)->FindClass(env, "com/ardikars/jxnet/ArpEntry");
+	if(ArpEntryClass == NULL) {
+		ThrowNew(env, CLASS_NOT_FOUND_EXCEPTION, "Unable to initialize class com.ardikars.jxnet.ArpEntry");
+		return;
+	}
+	ArpEntryArpPaFID = (*env)->GetFieldID(env, ArpEntryClass, "arp_pa", "Lcom/ardikars/jxnet/Addr;");
+	if(ArpEntryArpPaFID == NULL) {
+		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field ArpEntry.arp_pa:Addr");
+		return;
+	}
+	ArpEntryArpHaFID = (*env)->GetFieldID(env, ArpEntryClass, "arp_ha", "Lcom/ardikars/jxnet/Addr;");
+	if(ArpEntryArpHaFID == NULL) {
+		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field ArpEntry.arp_ha:Addr");
+		return;
+	}
+}
+
 
 jclass FileClass = NULL;
 jfieldID FilePointerFID = NULL;
