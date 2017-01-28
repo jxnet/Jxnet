@@ -923,10 +923,11 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ArpLoop
   }
 
 /*
- *  * Class:     com_ardikars_jxnet_Jxnet
- *   * Method:    ArpAdd
- *    * Signature: (Lcom/ardikars/jxnet/Arp;Lcom/ardikars/jxnet/ArpEntry;)I
- *     */
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    ArpAdd
+ * Signature: (Lcom/ardikars/jxnet/Arp;Lcom/ardikars/jxnet/ArpEntry;)I    
+ */
+
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ArpAdd
   (JNIEnv *env, jclass jclass, jobject jarp, jobject jarp_entry) {
     SetPointerIDs(env);
@@ -942,11 +943,15 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ArpAdd
     jobject arp_pa = (*env)->GetObjectField(env, jarp_entry, ArpEntryArpPaFID);
     short pa_addr_type = (short) (*env)->GetShortField(env, arp_pa, AddrAddrTypeFID);
     short pa_addr_bits = (short) (*env)->GetShortField(env, arp_pa, AddrAddrBitsFID);
-    u_char *pa_data;
+    jobject pa_tmp = (*env)->GetObjectField(env, arp_pa, AddrAddrDataFID);
+    jbyteArray *pa_tmp_data = (jbyteArray *)(&pa_tmp);
+    u_char *pa_data = (u_char*) (*env)->GetByteArrayElements(env, *pa_tmp_data, NULL);
+
     jobject arp_ha = (*env)->GetObjectField(env, jarp_entry, ArpEntryArpHaFID);
     short ha_addr_type = (short) (*env)->GetShortField(env, arp_ha, AddrAddrTypeFID);
     short ha_addr_bits = (short) (*env)->GetShortField(env, arp_ha, AddrAddrBitsFID);
-    u_char *ha_data;
- 
+    jobject ha_tmp = (*env)->GetObjectField(env, arp_ha, AddrAddrDataFID);
+    jbyteArray *ha_tmp_data = (jbyteArray *)(&ha_tmp);
+    u_char *ha_data = (u_char *) (*env)->GetByteArrayElements(env, *ha_tmp_data, NULL);
     return 0; 
   }
