@@ -921,3 +921,32 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ArpLoop
 			user_data.ArpHandlerClass, "nextArpEntry", "(Lcom/ardikars/jxnet/ArpEntry;Ljava/lang/Object;)I");
   	return arp_loop(arp, arp_callback, (void *) &user_data);
   }
+
+/*
+ *  * Class:     com_ardikars_jxnet_Jxnet
+ *   * Method:    ArpAdd
+ *    * Signature: (Lcom/ardikars/jxnet/Arp;Lcom/ardikars/jxnet/ArpEntry;)I
+ *     */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ArpAdd
+  (JNIEnv *env, jclass jclass, jobject jarp, jobject jarp_entry) {
+    SetPointerIDs(env);
+ 	SetArpIDs(env);
+	SetArpEntryIDs(env);
+	SetAddrIDs(env);
+    arp_t *arp = GetArp(env, jarp); // Exception already thrown
+ 	if(arp == NULL) {
+		ThrowNew(env, NULL_PTR_EXCEPTION, "Arp is closed.");
+ 		return -1;
+ 	}
+    struct arp_entry *entry;
+    jobject arp_pa = (*env)->GetObjectField(env, jarp_entry, ArpEntryArpPaFID);
+    short pa_addr_type = (short) (*env)->GetShortField(env, arp_pa, AddrAddrTypeFID);
+    short pa_addr_bits = (short) (*env)->GetShortField(env, arp_pa, AddrAddrBitsFID);
+    u_char *pa_data;
+    jobject arp_ha = (*env)->GetObjectField(env, jarp_entry, ArpEntryArpHaFID);
+    short ha_addr_type = (short) (*env)->GetShortField(env, arp_ha, AddrAddrTypeFID);
+    short ha_addr_bits = (short) (*env)->GetShortField(env, arp_ha, AddrAddrBitsFID);
+    u_char *ha_data;
+ 
+    return 0; 
+  }
