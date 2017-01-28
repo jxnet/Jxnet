@@ -2,6 +2,6 @@ package com.ardikars.jxnet;
 
 public interface ArpHandler<T> {
 
-    void nextARPEntry(ArpEntry arpEntry, T arg);
+    int nextArpEntry(ArpEntry arpEntry, T arg);
 
 }

@@ -9,7 +9,7 @@
 package com.ardikars.jxnet;
 
 public class ArpEntry {
-cd
+
     private volatile Addr arp_pa;
     private volatile Addr arp_ha;
 
@@ -44,6 +44,12 @@ cd
 
     public Addr getArpHardwareAddress() {
         return arp_ha;
+    }
+
+    @Override
+    public String toString() {
+        return Inet4Address.valueOf(arp_pa.getData()).toString() + " is at "
+                + MacAddress.valueOf(arp_ha.getData());
     }
 
 }
