@@ -202,15 +202,51 @@ void pcap_callback(u_char *user, const struct pcap_pkthdr *pkt_header, const u_c
 	JNIEnv *env = user_data->env;
 	jobject pkt_hdr = NewObject(env, PcapPktHdrClass, "<init>", "()V");
 	(*env)->SetIntField(env, pkt_hdr, PcapPktHdrCaplenFID, (jint) pkt_header->caplen);
-    (*env)->SetIntField(env, pkt_hdr, PcapPktHdrLenFID, (jint) pkt_header->len);
-    (*env)->SetIntField(env, pkt_hdr, PcapPktHdrTvSecFID, (jint) pkt_header->ts.tv_sec);
-    (*env)->SetLongField(env, pkt_hdr, PcapPktHdrTvUsecFID, (jlong) pkt_header->ts.tv_usec);
-    (*env)->CallNonvirtualVoidMethod(env,
-    		user_data->callback,
+	(*env)->SetIntField(env, pkt_hdr, PcapPktHdrLenFID, (jint) pkt_header->len);
+	(*env)->SetIntField(env, pkt_hdr, PcapPktHdrTvSecFID, (jint) pkt_header->ts.tv_sec);
+	(*env)->SetLongField(env, pkt_hdr, PcapPktHdrTvUsecFID, (jlong) pkt_header->ts.tv_usec);
+	(*env)->CallNonvirtualVoidMethod(env,
+    			user_data->callback,
 			user_data->PcapHandlerClass,
 			user_data->PcapHandlerNextPacketMID,
 			user_data->user,
 			pkt_hdr,
 			(*env)->NewDirectByteBuffer(env, (void *) pkt_data, (jint) pkt_header->caplen));
 	(*env)->DeleteLocalRef(env, pkt_hdr);
+}
+
+int arp_callback(const struct arp_entry *entry, void *arg) {
+	jbyteArray jb = NULL;
+	arp_user_data_t *user_data = (arp_user_data_t *) arg;
+	JNIEnv *env = user_data->env;
+
+	jb = (*env)->NewByteArray(env, 4);
+	(*env)->SetByteArrayRegion(env, jb, 0, 4, (jbyte *) addr_ntoa(&entry->arp_pa));
+	jobject addr_pa = (*env)->CallStaticObjectMethod(env, AddrClass, AddrInitializeMID,
+			 entry->arp_pa.addr_type, entry->arp_pa.addr_bits, jb);
+	if (addr_pa == NULL) {
+		return -1;
+	}
+	jb = (*env)->NewByteArray(env, 6);
+	(*env)->SetByteArrayRegion(env, jb, 0, 6, (jbyte *) addr_ntoa(&entry->arp_ha));
+	jobject addr_ha = (*env)->CallStaticObjectMethod(env, AddrClass, AddrInitializeMID,
+			 entry->arp_ha.addr_type, entry->arp_ha.addr_bits, jb);
+	if (addr_ha == NULL) {
+		return -1;
+	}
+	jobject arp_entry = (*env)->CallStaticObjectMethod(env, ArpEntryClass, ArpEntryInitializeMID,
+			addr_pa, addr_ha);
+	if (arp_entry == NULL) {
+		return -1;
+	}
+	int res = (*env)->CallNonvirtualIntMethod(env,
+			user_data->callback,
+			user_data->ArpHandlerClass,
+			user_data->ArpHandlerNextArpEntryMID,
+			arp_entry,
+			user_data->user);
+	(*env)->DeleteLocalRef(env, addr_pa);
+	(*env)->DeleteLocalRef(env, addr_ha);
+	(*env)->DeleteLocalRef(env, arp_entry);
+	return res;
 }

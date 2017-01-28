@@ -33,6 +33,14 @@ typedef struct pcap_user_data_t {
 		jfieldID PcapPktHdrTvUsecFID;*/
 } pcap_user_data_t;
 
+typedef struct arp_user_data_t {
+        JNIEnv *env;
+        jobject callback;
+        jobject user;
+        jclass ArpHandlerClass;
+        jmethodID ArpHandlerNextArpEntryMID;
+} arp_user_data_t;
+
 void swap_order_uint32(uint32_t *value);
 
 jlong PointerToJlong(void *pointer);
@@ -68,3 +76,5 @@ pcap_dumper_t *GetPcapDumper(JNIEnv *env, jobject jpcap_dumper);
 struct bpf_program *GetBpfProgram(JNIEnv *env, jobject jbpf_program);
 
 void pcap_callback(u_char *user, const struct pcap_pkthdr *pkt_header, const u_char *pkt_data);
+
+int arp_callback(const struct arp_entry *entry, void *arg);

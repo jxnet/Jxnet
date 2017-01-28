@@ -891,3 +891,34 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_ArpClose
   	return jarp;
   }
 
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    ArpLoop
+ * Signature: (Lcom/ardikars/jxnet/Arp;Lcom/ardikars/jxnet/ArpHandler;Ljava/lang/Object;)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ArpLoop
+  (JNIEnv *env, jclass jclass, jobject jarp, jobject jcallback, jobject jarg) {
+	if(jarp == NULL || jcallback == NULL) {
+		ThrowNew(env, NULL_PTR_EXCEPTION, "");
+		return -1;
+	}
+	SetPointerIDs(env);
+ 	SetArpIDs(env);
+	SetArpEntryIDs(env);
+	SetAddrIDs(env);
+	
+ 	arp_t *arp = GetArp(env, jarp); // Exception already thrown
+ 	if(arp == NULL) {
+		ThrowNew(env, NULL_PTR_EXCEPTION, "Arp is closed.");
+ 		return -1;
+ 	}
+ 	arp_user_data_t user_data;
+ 	memset(&user_data, 0, sizeof(user_data));
+ 	user_data.env = env;
+ 	user_data.callback = jcallback;
+ 	user_data.user = jarg;
+ 	user_data.ArpHandlerClass = (*env)->GetObjectClass(env, jcallback);
+ 	user_data.ArpHandlerNextArpEntryMID = (*env)->GetMethodID(env,
+			user_data.ArpHandlerClass, "nextArpEntry", "(Lcom/ardikars/jxnet/ArpEntry;Ljava/lang/Object;)I");
+  	return arp_loop(arp, arp_callback, (void *) &user_data);
+  }
