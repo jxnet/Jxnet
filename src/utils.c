@@ -219,16 +219,19 @@ int arp_callback(const struct arp_entry *entry, void *arg) {
 	jbyteArray jb = NULL;
 	arp_user_data_t *user_data = (arp_user_data_t *) arg;
 	JNIEnv *env = user_data->env;
+   
+    //printf("HASIL : %s at %s\n", addr_ntoa(&entry->arp_pa), 
+    //                   addr_ntoa(&entry->arp_ha));
 
 	jb = (*env)->NewByteArray(env, 4);
-	(*env)->SetByteArrayRegion(env, jb, 0, 4, (jbyte *) addr_ntoa(&entry->arp_pa));
+	(*env)->SetByteArrayRegion(env, jb, 0, 4, (jbyte *) &entry->arp_pa.addr_data8);
 	jobject addr_pa = (*env)->CallStaticObjectMethod(env, AddrClass, AddrInitializeMID,
 			 entry->arp_pa.addr_type, entry->arp_pa.addr_bits, jb);
 	if (addr_pa == NULL) {
 		return -1;
 	}
 	jb = (*env)->NewByteArray(env, 6);
-	(*env)->SetByteArrayRegion(env, jb, 0, 6, (jbyte *) addr_ntoa(&entry->arp_ha));
+	(*env)->SetByteArrayRegion(env, jb, 0, 6, (jbyte *) &entry->arp_ha.addr_data8);
 	jobject addr_ha = (*env)->CallStaticObjectMethod(env, AddrClass, AddrInitializeMID,
 			 entry->arp_ha.addr_type, entry->arp_ha.addr_bits, jb);
 	if (addr_ha == NULL) {

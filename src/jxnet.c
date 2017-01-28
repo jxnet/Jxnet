@@ -906,13 +906,12 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ArpLoop
  	SetArpIDs(env);
 	SetArpEntryIDs(env);
 	SetAddrIDs(env);
-	
  	arp_t *arp = GetArp(env, jarp); // Exception already thrown
  	if(arp == NULL) {
 		ThrowNew(env, NULL_PTR_EXCEPTION, "Arp is closed.");
  		return -1;
  	}
- 	arp_user_data_t user_data;
+    arp_user_data_t user_data;
  	memset(&user_data, 0, sizeof(user_data));
  	user_data.env = env;
  	user_data.callback = jcallback;

@@ -59,9 +59,9 @@ void SetAddrIDs(JNIEnv *env) {
 		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field Addr.data:byte[]");
 		return;
 	}
-    AddrInitializeMID = (*env)->GetStaticMethodID(env, AddrClass, "initialize", "(Lcom/ardikars/jxnet/Addr;)SS");
+    AddrInitializeMID = (*env)->GetStaticMethodID(env, AddrClass, "initialize", "(SS[B)Lcom/ardikars/jxnet/Addr;");
     if (AddrInitializeMID == NULL) {
-        ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method Addr.initialize(short,short)");
+        ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize static method Addr.initialize(short,short)");
 		return;
     }
 }
@@ -259,10 +259,9 @@ void SetArpEntryIDs(JNIEnv *env) {
 		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field ArpEntry.arp_ha:Addr");
 		return;
 	}
-    ArpEntryInitializeMID = (*env)->GetStaticMethodID(env, ArpEntryClass, "initialize",
-            "(Lcom/ardikars/jxnet/ArpEntry;)Lcom/ardikars/jxnet/Addr;Lcom/ardikars/jxnet/Addr;");
+    ArpEntryInitializeMID = (*env)->GetStaticMethodID(env, ArpEntryClass, "initialize", "(Lcom/ardikars/jxnet/Addr;Lcom/ardikars/jxnet/Addr;)Lcom/ardikars/jxnet/ArpEntry;");
     if(ArpEntryInitializeMID == NULL) {
-		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method ArpEntry.initialize(Addr,Addr)");
+		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize static method ArpEntry.initialize(Addr,Addr)");
 		return;
 	}
 }
