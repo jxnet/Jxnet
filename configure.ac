@@ -1,7 +1,7 @@
 
 AC_PREREQ(2.69)
 
-AC_INIT([jxnet], [0.0.1], [contact@ardikars.com])
+AC_INIT([jxnet], [1.1.0], [contact@ardikars.com])
 AM_INIT_AUTOMAKE
 LT_INIT()
 AC_PROG_LIBTOOL(libtool)
