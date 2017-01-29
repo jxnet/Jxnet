@@ -1,0 +1,20 @@
+
+
+HOW TO BUILD
+------------
+
+./bootstrap.sh
+./configure
+make
+make install
+
+
+BUILD FOR ANDROID
+-----------------
+
+ndk-build
+
+
+BUILD FOR WINDOWS
+-----------------
+
