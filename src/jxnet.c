@@ -927,7 +927,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ArpLoop
  * Method:    ArpAdd
  * Signature: (Lcom/ardikars/jxnet/Arp;Lcom/ardikars/jxnet/ArpEntry;)I    
  */
-
+#include <err.h>
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ArpAdd
   (JNIEnv *env, jclass jclass, jobject jarp, jobject jarp_entry) {
     SetPointerIDs(env);
@@ -938,29 +938,22 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ArpAdd
  	if(arp == NULL) {
 		ThrowNew(env, NULL_PTR_EXCEPTION, "Arp is closed.");
  		return -1;
- 	}
+ 	} 
     jobject arp_pa = (*env)->GetObjectField(env, jarp_entry, ArpEntryArpPaFID);
-    short pa_addr_type = (short) (*env)->GetShortField(env, arp_pa, AddrAddrTypeFID);
-    short pa_addr_bits = (short) (*env)->GetShortField(env, arp_pa, AddrAddrBitsFID);
-    jobject pa_tmp = (*env)->GetObjectField(env, arp_pa, AddrAddrDataFID);
-    jbyteArray *pa_tmp_data = (jbyteArray *)(&pa_tmp);
-    u_char *pa_data = (u_char*) (*env)->GetByteArrayElements(env, *pa_tmp_data, NULL);
-
     jobject arp_ha = (*env)->GetObjectField(env, jarp_entry, ArpEntryArpHaFID);
-    short ha_addr_type = (short) (*env)->GetShortField(env, arp_ha, AddrAddrTypeFID);
-    short ha_addr_bits = (short) (*env)->GetShortField(env, arp_ha, AddrAddrBitsFID);
-    jobject ha_tmp = (*env)->GetObjectField(env, arp_ha, AddrAddrDataFID);
-    jbyteArray *ha_tmp_data = (jbyteArray *)(&ha_tmp);
-    u_char *ha_data = (u_char *) (*env)->GetByteArrayElements(env, *ha_tmp_data, NULL);
-
     struct arp_entry entry;
-    //entry.arp_pa.addr_type = pa_addr_type;
-    //entry.arp_pa.addr_bits = pa_addr_bits;
-    addr_pton(pa_data, &entry.arp_pa);
-    addr_pton(ha_data, &entry.arp_ha);
-    if (arp_add(arp, &entry) < 0) {
-        return -1;
+    jstring pa = (*env)->CallObjectMethod(env, arp_pa, AddrGetStringAddressMID);
+    jstring ha = (*env)->CallObjectMethod(env, arp_ha, AddrGetStringAddressMID);
+    const char *str_pa = (*env)->GetStringUTFChars(env, pa, 0);
+    const char *str_ha = (*env)->GetStringUTFChars(env, ha, 0);
+    int r;
+    //printf("%s is at %s\n", str_pa, str_ha);
+    if (addr_pton(str_pa, &entry.arp_pa) < 0 || addr_pton(str_ha, &entry.arp_ha) < 0) {
+        r = -1;
     }
-    return 0; 
+    (*env)->ReleaseStringUTFChars(env, pa, str_pa);
+    (*env)->ReleaseStringUTFChars(env, ha, str_ha);
+    r = arp_add(arp, &entry);
+    return r;
   }
 

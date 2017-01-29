@@ -17,8 +17,9 @@ void SetStringBuilderIDs(JNIEnv *env);
 extern jclass AddrClass;
 extern jfieldID AddrAddrTypeFID;
 extern jfieldID AddrAddrBitsFID;
-extern jfieldID AddrAddrDataFID;
+extern jfieldID AddrDataFID;
 extern jmethodID AddrInitializeMID;
+extern jmethodID AddrGetStringAddressMID;
 
 void SetAddrIDs(JNIEnv *env);
  
