@@ -1,11 +1,13 @@
 
 apply plugin: 'java'
+apply plugin: 'maven-publish'
+
+version = '1.1.0-SNAPSHOT'
 
 subprojects.each { subproject -> evaluationDependsOn(subproject.path) }
 jar.dependsOn subprojects.tasks["classes"]
 
 jar {
-    version="${jxnet_version}"
     subprojects.each { subproject ->
         from subproject.sourceSets.main.output.classesDir
         from subproject.sourceSets.main.output.resourcesDir
@@ -14,8 +16,7 @@ jar {
 
 buildscript {
     ext {
-        release="-SNAPSHOT"
-        core_version="1.1.0"+release
-        jxnet_version="1.1.0"+release
+        core_version="1.1.0-SNAPSHOT"
     }
 }
+

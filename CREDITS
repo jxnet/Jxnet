@@ -15,6 +15,12 @@ Eclipse
 Netbeans
 [W] https://netbeans.org
 
+Idea
+[W] https://www.jetbrains.com/idea
+
+Vim
+[W] http://www.vim.org
+
 Gradle
 [W] https://gradle.org
 
@@ -26,4 +32,7 @@ Libpcap
 
 Winpcap
 [W] https://www.winpcap.org
+
+Libdnet
+[W] http://libdnet.sourceforge.net
 

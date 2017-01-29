@@ -10,6 +10,12 @@ Native Code (JNI)
 https://github.com/ardikars/Jxnet/tree/jni
 
 
+HOW TO BUILD
+------------
+
+./gradlew build -x test
+
+
 Contact
 -------
 
