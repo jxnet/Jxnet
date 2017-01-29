@@ -940,20 +940,139 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ArpAdd
  		return -1;
  	} 
     jobject arp_pa = (*env)->GetObjectField(env, jarp_entry, ArpEntryArpPaFID);
+    if (arp_pa == NULL) {
+        ThrowNew(env, NULL_PTR_EXCEPTION, "ArpEntry.arp_pa is null.");
+        return -1;
+    }
     jobject arp_ha = (*env)->GetObjectField(env, jarp_entry, ArpEntryArpHaFID);
+    if (arp_ha == NULL) {
+        ThrowNew(env, NULL_PTR_EXCEPTION, "ArpEntry.arp_ha is null..");
+        return -1;
+    }
     struct arp_entry entry;
     jstring pa = (*env)->CallObjectMethod(env, arp_pa, AddrGetStringAddressMID);
+    if (pa == NULL) {
+        ThrowNew(env, NULL_PTR_EXCEPTION, "ArpEntry.arp_pa.data is null.");
+        return -1;
+    }
     jstring ha = (*env)->CallObjectMethod(env, arp_ha, AddrGetStringAddressMID);
+    if (ha == NULL) {
+        ThrowNew(env, NULL_PTR_EXCEPTION, "ArpEntry.arp_ha.data is null.");
+        return -1;
+    }
     const char *str_pa = (*env)->GetStringUTFChars(env, pa, 0);
     const char *str_ha = (*env)->GetStringUTFChars(env, ha, 0);
-    int r;
     //printf("%s is at %s\n", str_pa, str_ha);
     if (addr_pton(str_pa, &entry.arp_pa) < 0 || addr_pton(str_ha, &entry.arp_ha) < 0) {
-        r = -1;
+        (*env)->ReleaseStringUTFChars(env, pa, str_pa);
+        (*env)->ReleaseStringUTFChars(env, ha, str_ha);
+        (*env)->DeleteLocalRef(env, arp_pa);
+        (*env)->DeleteLocalRef(env, arp_ha);
+        (*env)->DeleteLocalRef(env, pa);
+        (*env)->DeleteLocalRef(env, ha);
+        return -1;
     }
     (*env)->ReleaseStringUTFChars(env, pa, str_pa);
     (*env)->ReleaseStringUTFChars(env, ha, str_ha);
-    r = arp_add(arp, &entry);
-    return r;
+    (*env)->DeleteLocalRef(env, arp_pa);
+    (*env)->DeleteLocalRef(env, arp_ha);
+    (*env)->DeleteLocalRef(env, pa);
+    (*env)->DeleteLocalRef(env, ha);
+
+    return arp_add(arp, &entry);
   }
 
+/*
+ *  * Class:     com_ardikars_jxnet_Jxnet
+ *   * Method:    ArpDelete
+ *    * Signature: (Lcom/ardikars/jxnet/Arp;Lcom/ardikars/jxnet/ArpEntry;)I
+ *     */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ArpDelete
+  (JNIEnv *env, jclass jclass, jobject jarp, jobject jarp_entry) {
+    SetPointerIDs(env);
+ 	SetArpIDs(env);
+	SetArpEntryIDs(env);
+	SetAddrIDs(env);
+    arp_t *arp = GetArp(env, jarp); // Exception already thrown
+ 	if(arp == NULL) {
+		ThrowNew(env, NULL_PTR_EXCEPTION, "Arp is closed.");
+ 		return -1;
+ 	} 
+    jobject arp_pa = (*env)->GetObjectField(env, jarp_entry, ArpEntryArpPaFID);
+    if (arp_pa == NULL) {
+        ThrowNew(env, NULL_PTR_EXCEPTION, "ArpEntry.arp_pa is null.");
+        return -1;
+    }
+    struct arp_entry entry;
+    jstring pa = (*env)->CallObjectMethod(env, arp_pa, AddrGetStringAddressMID);
+    if (pa == NULL) {
+        ThrowNew(env, NULL_PTR_EXCEPTION, "ArpEntry.arp_pa.data is null.");
+        return -1;
+    }
+    const char *str_pa = (*env)->GetStringUTFChars(env, pa, 0);
+    if (addr_pton(str_pa, &entry.arp_pa) < 0) {
+        (*env)->ReleaseStringUTFChars(env, pa, str_pa);
+        (*env)->DeleteLocalRef(env, arp_pa);
+        (*env)->DeleteLocalRef(env, pa);
+        return -1;
+    }
+    (*env)->ReleaseStringUTFChars(env, pa, str_pa);
+    (*env)->DeleteLocalRef(env, arp_pa);
+    (*env)->DeleteLocalRef(env, pa);
+    return arp_delete(arp, &entry);
+  }
+
+/*
+ *  * Class:     com_ardikars_jxnet_Jxnet
+ *   * Method:    ArpGet
+ *    * Signature: (Lcom/ardikars/jxnet/Arp;Lcom/ardikars/jxnet/ArpEntry;)I
+ *     */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ArpGet
+  (JNIEnv *env, jclass jclass, jobject jarp, jobject jarp_entry) {
+    SetPointerIDs(env);
+ 	SetArpIDs(env);
+	SetArpEntryIDs(env);
+	SetAddrIDs(env);
+    arp_t *arp = GetArp(env, jarp); // Exception already thrown
+ 	if(arp == NULL) {
+		ThrowNew(env, NULL_PTR_EXCEPTION, "Arp is closed.");
+ 		return -1;
+ 	} 
+    jobject arp_pa = (*env)->GetObjectField(env, jarp_entry, ArpEntryArpPaFID);
+    if (arp_pa == NULL) {
+        ThrowNew(env, NULL_PTR_EXCEPTION, "ArpEntry.arp_pa is null.");
+        return -1;
+    }
+    struct arp_entry entry;
+    jstring pa = (*env)->CallObjectMethod(env, arp_pa, AddrGetStringAddressMID);
+    if (pa == NULL) {
+        ThrowNew(env, NULL_PTR_EXCEPTION, "ArpEntry.arp_pa.data is null.");
+        return -1;
+    }
+    const char *str_pa = (*env)->GetStringUTFChars(env, pa, 0);
+    //printf("ip : %s\n", str_pa);
+    if (addr_pton(str_pa, &entry.arp_pa) < 0) {
+        //(*env)->CallStaticObjectMethod(env, ArpEntryClass, ArpEntryInitializeMID, NULL, NULL, NULL);
+        (*env)->ReleaseStringUTFChars(env, pa, str_pa);     
+        return -1;
+    }
+    int r = arp_get(arp, &entry);
+    jobject arp_ha;
+    jbyteArray jb = (*env)->NewByteArray(env, 4);
+    (*env)->SetByteArrayRegion(env, jb, 0, 4, (jbyte *) &entry.arp_pa.addr_data8);
+    arp_pa = (*env)->CallStaticObjectMethod(env, AddrClass, AddrInitializeMID,
+            entry.arp_pa.addr_type, entry.arp_pa.addr_bits, jb);
+    jb = (*env)->NewByteArray(env, 6);
+    (*env)->SetByteArrayRegion(env, jb, 0, 6, (jbyte *) &entry.arp_ha.addr_data8);
+    arp_ha = (*env)->CallStaticObjectMethod(env, AddrClass, AddrInitializeMID,
+            entry.arp_ha.addr_type, entry.arp_ha.addr_bits, jb);
+    
+    (*env)->SetObjectField(env, jarp_entry, ArpEntryArpPaFID, arp_pa);
+    (*env)->SetObjectField(env, jarp_entry, ArpEntryArpHaFID, arp_ha);
+    
+    (*env)->ReleaseStringUTFChars(env, pa, str_pa);
+    (*env)->DeleteLocalRef(env, arp_pa);
+    (*env)->DeleteLocalRef(env, arp_ha);
+    (*env)->DeleteLocalRef(env, pa);
+    return r;
+  }

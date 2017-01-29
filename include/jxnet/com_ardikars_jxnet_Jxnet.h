@@ -364,10 +364,10 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ArpAdd
 /*
  * Class:     com_ardikars_jxnet_Jxnet
  * Method:    ArpDelete
- * Signature: (Lcom/ardikars/jxnet/Arp;[B)I
+ * Signature: (Lcom/ardikars/jxnet/Arp;Lcom/ardikars/jxnet/ArpEntry;)I
  */
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ArpDelete
-  (JNIEnv *, jclass, jobject, jbyteArray);
+  (JNIEnv *, jclass, jobject, jobject);
 
 /*
  * Class:     com_ardikars_jxnet_Jxnet
