@@ -44,4 +44,26 @@ public class Addr {
         return data;
     }
 
+    public String getStringAddress() {
+        switch (addr_type) {
+            case 2:
+                return Inet4Address.valueOf(data).toString();
+            case 10:
+                return Inet6Address.valueOf(data).toString();
+            default:
+                return MacAddress.valueOf(data).toString();
+        }
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder()
+                .append("[Addr Type: ")
+                .append(addr_type)
+                .append(", Addr Bits: ")
+                .append(addr_bits)
+                .append(", Data: ")
+                .append(data)
+                .append("]").toString();
+    }
 }

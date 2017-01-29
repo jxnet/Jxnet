@@ -15,7 +15,8 @@ public class ArpLoop {
         ArpHandler<String> callback = new ArpHandler<String>() {
             @Override
             public int nextArpEntry(ArpEntry arpEntry, String arg) {
-                System.out.println(arpEntry);
+                System.out.println(arpEntry.getArpPa());
+                System.out.println(arpEntry.getArpHa());
                 return 0;
             }
         };
