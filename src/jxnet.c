@@ -939,7 +939,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ArpAdd
 		ThrowNew(env, NULL_PTR_EXCEPTION, "Arp is closed.");
  		return -1;
  	}
-    struct arp_entry *entry;
     jobject arp_pa = (*env)->GetObjectField(env, jarp_entry, ArpEntryArpPaFID);
     short pa_addr_type = (short) (*env)->GetShortField(env, arp_pa, AddrAddrTypeFID);
     short pa_addr_bits = (short) (*env)->GetShortField(env, arp_pa, AddrAddrBitsFID);
@@ -953,5 +952,15 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ArpAdd
     jobject ha_tmp = (*env)->GetObjectField(env, arp_ha, AddrAddrDataFID);
     jbyteArray *ha_tmp_data = (jbyteArray *)(&ha_tmp);
     u_char *ha_data = (u_char *) (*env)->GetByteArrayElements(env, *ha_tmp_data, NULL);
+
+    struct arp_entry entry;
+    //entry.arp_pa.addr_type = pa_addr_type;
+    //entry.arp_pa.addr_bits = pa_addr_bits;
+    addr_pton(pa_data, &entry.arp_pa);
+    addr_pton(ha_data, &entry.arp_ha);
+    if (arp_add(arp, &entry) < 0) {
+        return -1;
+    }
     return 0; 
   }
+

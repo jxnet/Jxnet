@@ -12909,7 +12909,7 @@ $as_echo "$ac_cv_lib_dnet_main" >&6; }
 if test "x$ac_cv_lib_dnet_main" = xyes; then :
   LDFLAGS+=-ldnet
 else
-  CLAGS="$CFLAGS -L../libdnet-stripped" LDFLAGS+="-ldnet "
+  CLAGS="$CFLAGS -L../libdnet" LDFLAGS+="-ldnet "
 
 fi
 
@@ -13032,7 +13032,7 @@ _ACEOF
 $as_echo "#define HAVE_DNET_H 1" >>confdefs.h
 
 else
-  CFLAGS="$CFLAGS -I../libdnet-stripped/src -I../libdnet-stripped/include"
+  CFLAGS="$CFLAGS -I../libdnet/src -I../libdnet/include"
 
 fi
 
