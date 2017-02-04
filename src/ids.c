@@ -357,7 +357,7 @@ void SetPcapDumperIDs(JNIEnv *env) {
 		ThrowNew(env, CLASS_NOT_FOUND_EXCEPTION, "Unable to initialize class com.ardikars.jxnet.PcapDumper");
 		return;
 	}
-	PcapDumperPointerFID = (*env)->GetFieldID(env, PcapClass, "pointer", "Lcom/ardikars/jxnet/util/Pointer;");
+	PcapDumperPointerFID = (*env)->GetFieldID(env, PcapDumperClass, "pointer", "Lcom/ardikars/jxnet/util/Pointer;");
 	if(PcapPointerFID == NULL) {
 		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field PcapDumper.pointer:Pointer");
 		return;
