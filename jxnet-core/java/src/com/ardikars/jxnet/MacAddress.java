@@ -1,9 +1,18 @@
-
-/*
- * Author	: Ardika Rommy Sanjaya
- * Website	: http://ardikars.com
- * Contact	: contact@ardikars.com
- * License	: Lesser GNU Public License Version 3
+/**
+ * Copyright (C) 2017  Ardika Rommy Sanjaya
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.ardikars.jxnet;
@@ -51,9 +60,33 @@ public final class MacAddress {
 		}
 		return new MacAddress(address);
 	}
+
+	public static MacAddress valueOf(final long address) {
+		final byte[] bytes = new byte[] {
+				(byte) (address >> 40 & 0xff),
+				(byte) (address >> 32 & 0xff),
+				(byte) (address >> 24 & 0xff),
+				(byte) (address >> 16 & 0xff),
+				(byte) (address >> 8 & 0xff),
+				(byte) (address >> 0 & 0xff)};
+		return new MacAddress(bytes);
+	}
+
+	public int length() {
+		return this.address.length;
+	}
 	
 	public byte[] toBytes() {
 		return Arrays.copyOf(this.address, this.address.length);
+	}
+
+	public long toLong() {
+		long addr = 0;
+		for (int i=0; i<MAC_ADDRESS_LENGTH; i++) {
+			long tmp = (this.address[i] & 0xffL) << (5 - i) *8;
+			addr |= tmp;
+		}
+		return addr;
 	}
 	
 	public boolean isBroadcast() {
@@ -71,7 +104,26 @@ public final class MacAddress {
 		}
 		return (this.address[0] & 0x01) != 0;
 	}
-	
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this)
+			return true;
+		if (obj.getClass() != getClass())
+			return false;
+		if (obj instanceof MacAddress) {
+			final MacAddress addr = (MacAddress) obj;
+			return Arrays.equals(this.address, addr.toBytes());
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return Long.hashCode(toLong());
+	}
+
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();

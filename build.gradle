@@ -1,6 +1,6 @@
-
 apply plugin: 'java'
-apply plugin: 'maven-publish'
+
+group='com.ardikars.jxnet'
 
 version = '1.1.0-SNAPSHOT'
 
@@ -19,4 +19,3 @@ buildscript {
         core_version="1.1.0-SNAPSHOT"
     }
 }
-

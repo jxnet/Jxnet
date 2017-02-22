@@ -14,6 +14,7 @@
 description-pak
 Makefile
 /.gradle
+/out
 /build
 /logs
 /bin
