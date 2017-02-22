@@ -1,7 +1,5 @@
 apply plugin: 'java'
 
-group='com.ardikars.jxnet'
-
 version="${core_version}"
 
 sourceSets {
