@@ -20,7 +20,7 @@ buildscript {
     }
 }
 
-task javadoc-all(type: Javadoc) {
+task generateJavadoc(type: Javadoc) {
     doFirst {
         subprojects.each { project ->
             project.sourceSets.main.output.each { dir ->
