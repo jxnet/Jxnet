@@ -19,10 +19,19 @@ package com.ardikars.jxnet;
 
 import com.ardikars.jxnet.util.Pointer;
 
+/**
+ * @author Ardika Rommy Sanjaya
+ * @since 1.0.0
+ * @version 1.0.0
+ */
 public final class Pcap {
 	
 	private Pointer pointer;
-	
+
+	/**
+	 * Return Pcap pointer.
+	 * @return Pcap pointer;
+	 */
 	public Pointer getPointer() {
 		return pointer;
 	}

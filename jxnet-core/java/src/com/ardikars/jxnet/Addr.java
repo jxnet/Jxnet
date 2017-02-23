@@ -17,6 +17,11 @@
 
 package com.ardikars.jxnet;
 
+/**
+ * @author Ardika Rommy Sanjaya
+ * @since 1.1.0
+ * @version 1.1.0
+ */
 public class Addr {
 
     private short addr_type;

@@ -17,6 +17,11 @@
 
 package com.ardikars.jxnet.util;
 
+/**
+ * @author Ardika Rommy Sanjaya
+ * @since 1.0.0
+ * @version 1.0.0
+ */
 public class Platform {
 	
 	public enum OS_NAME {
@@ -108,7 +113,7 @@ public class Platform {
 		String osName = System.getProperty("os.name");
 		String osArch = System.getProperty("os.arch");
 		if (osName.startsWith("Linux")) {
-			if ("dalvik".equals(System.getProperty("java.vm.name").toLowerCase())) {
+			if (new String("dalvik").equals(System.getProperty("java.vm.name").toLowerCase())) {
 				NAME = OS_NAME.ANDROID;
 			} else {
 				NAME = OS_NAME.LINUX;

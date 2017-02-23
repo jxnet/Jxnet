@@ -20,6 +20,11 @@ package com.ardikars.jxnet;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
+/**
+ * @author Ardika Rommy Sanjaya
+ * @since 1.0.0
+ * @version 1.1.0
+ */
 public final class Inet4Address extends InetAddress {
 	
 	public static final int IPV4_ADDRESS_LENGTH = 4;
@@ -29,7 +34,12 @@ public final class Inet4Address extends InetAddress {
 	private Inet4Address(final byte[] address) {
 		this.address = address;
 	}
-	
+
+	/**
+	 * Create Inet4Address object.
+	 * @param inet4Address ipv4 string address.
+	 * @return Inet4Address object.
+	 */
 	public static Inet4Address valueOf(String inet4Address) {
 		if (!inet4Address.matches("^([0-9.])+$") || inet4Address == null) {
 			throw new IllegalArgumentException("");
@@ -57,7 +67,12 @@ public final class Inet4Address extends InetAddress {
 		}
 		return Inet4Address.valueOf(result);
 	}
-	
+
+	/**
+	 * Create IPv4Address object.
+	 * @param address ipv4 bytes address.
+	 * @return IPv4Address object.
+	 */
 	public static Inet4Address valueOf(byte[] address) {
 		if (address == null || address.length != Inet4Address.IPV4_ADDRESS_LENGTH ||
 				address[0] == 0x0) {
@@ -66,13 +81,22 @@ public final class Inet4Address extends InetAddress {
 		}
 		return new Inet4Address(address);
 	}
-	
+
+	/**
+	 * Create Inet4Address object.
+	 * @param address ipv4 int address.
+	 * @return Inet4Address object.
+	 */
 	public static Inet4Address valueOf(int address) {
 		return new Inet4Address(new byte[]{(byte) (address >>> 24),
 				(byte) (address >>> 16), (byte) (address >>> 8),
 				(byte) address});
 	}
 
+	/**
+	 * Returning int address of Inet4Address.
+	 * @return int ipv4 address.
+	 */
 	public int toInt() {
 		int ip = 0;
 		for (int i = 0; i < Inet4Address.IPV4_ADDRESS_LENGTH; i++) {
@@ -87,7 +111,11 @@ public final class Inet4Address extends InetAddress {
 		bb.put(this.address);
 		return bb.getLong();
 	}
-	
+
+	/**
+	 * Returning bytes address of Inet4Address.
+	 * @return bytes ipv4 address.
+	 */
 	public byte[] toBytes() {
 		return Arrays.copyOf(this.address, this.address.length);
 	}

@@ -20,6 +20,11 @@ package com.ardikars.jxnet.util;
 import com.ardikars.jxnet.Inet4Address;
 import com.ardikars.jxnet.MacAddress;
 
+/**
+ * @author Ardika Rommy Sanjaya
+ * @since 1.0.0
+ * @version 1.1.0
+ */
 public final class AddrUtils {
 	
 	private static native byte[] GetMACAddress(String dev_name);

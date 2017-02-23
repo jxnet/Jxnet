@@ -19,8 +19,19 @@ package com.ardikars.jxnet;
 
 import java.nio.ByteBuffer;
 
+/**
+ * @author Ardika Rommy Sanjaya
+ * @since 1.0.0
+ * @version 1.0.0
+ */
 public interface PcapHandler<T> {
-	
+
+	/**
+	 * Next available packet.
+	 * @param user arg.
+	 * @param h PcapPktHdr.
+	 * @param bytes packet buffer.
+	 */
 	void nextPacket(T user, PcapPktHdr h, ByteBuffer bytes);
 	
 }

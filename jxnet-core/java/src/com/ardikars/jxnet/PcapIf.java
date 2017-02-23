@@ -18,10 +18,16 @@
 package com.ardikars.jxnet;
 
 import com.ardikars.jxnet.util.AddrUtils;
+import com.ardikars.jxnet.util.FormatUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Ardika Rommy Sanjaya
+ * @since 1.0.0
+ * @version 1.0.0
+ */
 public final class PcapIf {
 	
 	@SuppressWarnings("unused")
@@ -34,27 +40,67 @@ public final class PcapIf {
 	private volatile List<PcapAddr> addresses = new ArrayList<PcapAddr>();
 	
 	private volatile int flags;
-	
+
+	/**
+	 * Returning interface name.
+	 * @return interface name.
+	 */
 	public String getName() {
 		return name;
 	}
-	
+
+	/**
+	 * Returning interface description.
+	 * @return interface description.
+	 */
 	public String getDescription() {
 		return description;
 	}
-	
+
+	/**
+	 * Returning interface flags.
+	 * @return interface flags.
+	 */
 	public int getFlags() {
 		return flags;
 	}
-	
+
+	/**
+	 * Returning interface addresses.
+	 * @return interface addresses.
+	 */
 	public List<PcapAddr> getAddresses() {
 		return addresses;
 	}
-	
+
+	/**
+	 * Returning interface MAC Address.
+	 * @return interface MAC Address.
+	 */
 	public MacAddress getHardwareAddress() {
 		return AddrUtils.getHardwareAddress(name);
 	}
-	
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) return true;
+		if (obj.getClass() != getClass()) return false;
+		if (!(obj instanceof PcapIf)) return false;
+		PcapIf pcapIf = (PcapIf) obj;
+		if (name.equals(pcapIf.getName()) &&
+				description.equals(pcapIf.getDescription()) &&
+				flags == pcapIf.getFlags())
+			return true;
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return Long.hashCode(FormatUtils.toLong(
+				toString().getBytes()
+		));
+	}
+
 	@Override
 	public String toString() {
 		return name;

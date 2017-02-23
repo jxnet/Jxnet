@@ -17,10 +17,20 @@
 
 package com.ardikars.jxnet;
 
+/**
+ * @author Ardika Rommy Sanjaya
+ * @since 1.0.0
+ * @version 1.1.0
+ */
 public abstract class InetAddress {
 
 	public abstract byte[] toBytes();
 
+	/**
+	 * Create instance of Inet4Address or Inet6Address/
+	 * @param ipString ipv4 or ipv6 string address.
+	 * @return Inet4Address or Inet6Address.
+	 */
 	public static InetAddress valueOf(String ipString) {
 		if (ipString.contains(":")) {
 			try {
@@ -37,6 +47,11 @@ public abstract class InetAddress {
 		}
 	}
 
+	/**
+	 * Validate ipv4 or ipv6 address.
+	 * @param ipString ipv4 or ipv6 string address.
+	 * @return true is valid, false otherwise.
+	 */
 	public static boolean isValidAddress(String ipString) {
 		try {
 			return (valueOf(ipString) == null) ? false : true;

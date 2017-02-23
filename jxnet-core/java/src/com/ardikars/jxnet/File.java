@@ -19,16 +19,29 @@ package com.ardikars.jxnet;
 
 import com.ardikars.jxnet.util.Pointer;
 
+/**
+ * @author Ardika Rommy Sanjaya
+ * @since 1.0.0
+ * @version 1.0.0
+ */
 public final class File extends java.io.File {
 	
 	private static final long serialVersionUID = -7925210130734414457L;
 	
 	private Pointer pointer;
-	
+
+	/**
+	 * Pointer of File.
+	 * @return pointer of File.
+	 */
 	public Pointer getPointer() {
 		return pointer;
 	}
-	
+
+	/**
+	 * Create instance of File.
+	 * @param pathname absolute path.
+	 */
 	private File(String pathname) {
 		super(pathname);
 	}

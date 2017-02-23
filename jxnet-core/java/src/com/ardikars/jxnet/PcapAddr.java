@@ -17,6 +17,13 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.jxnet.util.FormatUtils;
+
+/**
+ * @author Ardika Rommy Sanjaya
+ * @since 1.0.0
+ * @version 1.0.0
+ */
 public final class PcapAddr {
 	
 	@SuppressWarnings("unused")
@@ -29,23 +36,60 @@ public final class PcapAddr {
 	private volatile SockAddr broadaddr;
 	
 	private volatile SockAddr dstaddr;
-	
+
+	/**
+	 * Returning interface address.
+	 * @return interface address.
+	 */
 	public SockAddr getAddr() {
 		return addr;
 	}
-	
+
+	/**
+	 * Returning interface netmask.
+	 * @return interface netmask.
+	 */
 	public SockAddr getNetmask() {
 		return netmask;
 	}
-	
+
+	/**
+	 * Returning interface broadcast address.
+	 * @return interface broadcast address.
+	 */
 	public SockAddr getBroadAddr() {
 		return broadaddr;
 	}
-	
+
+	/**
+	 * Returning interface destination address.
+	 * @return interface destination address.
+	 */
 	public SockAddr getDstAddr() {
 		return dstaddr;
 	}
-	
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) return true;
+		if (obj.getClass() != getClass()) return false;
+		if (!(obj instanceof PcapAddr)) return false;
+		PcapAddr pcapAddr = (PcapAddr) obj;
+		if (addr.equals(pcapAddr.getAddr()) &&
+				netmask.equals(pcapAddr.getNetmask()) &&
+				broadaddr.equals(pcapAddr.getBroadAddr()) &&
+				dstaddr.equals(pcapAddr.getDstAddr()))
+			return true;
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return Long.hashCode(FormatUtils.toLong(
+				toString().getBytes()
+		));
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder out = new StringBuilder();

@@ -17,6 +17,11 @@
 
 package com.ardikars.jxnet;
 
+/**
+ * @author Ardika Rommy Sanjaya
+ * @since 1.0.0
+ * @version 1.1.0
+ */
 public final class PcapStat {
 	
 	private long ps_recv;
@@ -24,17 +29,41 @@ public final class PcapStat {
 	private long ps_drop;
 	
 	private long ps_ifdrop;
-	
+
+	/**
+	 * Returning recieved packets.
+	 * @return recieved packets.
+	 */
 	public long getPsRecv() {
 		return ps_recv;
 	}
-	
+
+	/**
+	 * Returning dropped packets.
+	 * @return dropped packets.
+	 */
 	public long getPsDrop() {
 		return ps_drop;
 	}
-	
+
+	/**
+	 * Returning dropped packets by interface.
+	 * @return dropped packets by interface.
+	 */
 	public long getPsIfdrop() {
 		return ps_ifdrop;
 	}
-	
+
+	@Override
+	public String toString() {
+		return new StringBuilder()
+				.append("[ Recieved: ")
+				.append(ps_recv)
+				.append(", Dropped: ")
+				.append(ps_drop)
+				.append(", Dropped by interface: ")
+				.append(ps_ifdrop)
+				.append(" ]").toString();
+	}
+
 }

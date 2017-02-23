@@ -20,24 +20,64 @@ package com.ardikars.jxnet.util;
 import java.io.*;
 import java.util.regex.Pattern;
 
+/**
+ * @author Ardika Rommy Sanjaya
+ * @since 1.0.0
+ * @version 1.1.0
+ */
 public class Loader {
-	
+
+	/**
+	 * Load library from jar /lib.
+	 * @param path library path.
+	 */
 	public static void loadFromInnerJar(String[] path) throws
 			IllegalArgumentException, IOException, FileNotFoundException {
 		for (String lib : path) {
 			loadLibrary(lib);
 		}
 	}
-	
+
+	/**
+	 * Load library.
+	 */
 	public static void loadLibrary() throws
 			UnsatisfiedLinkError, IOException, FileNotFoundException, IllegalArgumentException {
 		if (load()) {
 			return;
 		}
-		switch (Platform.getNAME().getType()) {
+		switch (Platform.getNAME()) {
+			case LINUX:
+				if (Platform.isARM()) {
+					if (Platform.getVersion().equals("v7") || Platform.getVersion().equals("v6")) {
+						loadLibrary("/lib/armeabi-v7l/libjxnet-linux.so");
+					}
+				} else {
+					if (Platform.is64Bit()) {
+						loadLibrary("/lib/x86_64/libjxnet-linux.so");
+					} else {
+						loadLibrary("/lib/x86/libjxnet-linux.so");
+					}
+				}
+				break;
+			case WINDOWS:
+				if (Platform.is64Bit()) {
+					loadLibrary("/lib/x86_64/jxnet.dll");
+				} else {
+					loadLibrary("/lib/x86/jxnet.dll");
+				}
+				break;
+			case ANDROID:
+				System.loadLibrary("jxnet");
+				break;
+			default:
+				System.err.println("Not supported.");
+
+		}
+		/*switch (Platform.getNAME().getType()) {
 			case 1:
 				if (Platform.isARM()) {
-					if (Platform.getVersion().equals("v7")) {
+					if (Platform.getVersion().equals("v7") || Platform.getVersion().equals("v6")) {
 						loadLibrary("/lib/armeabi-v7l/libjxnet-linux.so");
 					}
 				} else {
@@ -60,7 +100,7 @@ public class Loader {
 				break;
 			default:
 				break;
-		}
+		}*/
 	}
 	
 	private static boolean load() {
@@ -98,6 +138,5 @@ public class Loader {
 		os.close();
 		System.load(temp.getAbsolutePath());
 	}
-	
-	
+
 }

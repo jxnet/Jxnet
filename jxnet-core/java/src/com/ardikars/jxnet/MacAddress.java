@@ -21,12 +21,23 @@ import com.ardikars.jxnet.util.FormatUtils;
 
 import java.util.Arrays;
 
+/**
+ * @author Ardika Rommy Sanjaya
+ * @since 1.0.0
+ * @version 1.1.0
+ */
 public final class MacAddress {
 	
 	public static final int MAC_ADDRESS_LENGTH = 6;
-	
+
+	/**
+	 * Zero MAC Address (00:00:00:00:00:00).
+	 */
 	public static final MacAddress ZERO = valueOf("00:00:00:00:00:00");
-	
+
+	/**
+	 * Broadcast MAC Address (ff:ff:ff:ff:ff:ff).
+	 */
 	public static final MacAddress BROADCAST = valueOf("ff:ff:ff:ff:ff:ff");
 	
 	public static final MacAddress IPV4_MULTICAST = valueOf("01:00:5e:00:00:00");
@@ -38,7 +49,12 @@ public final class MacAddress {
 	private MacAddress(final byte[] address) {
 		this.address = Arrays.copyOf(address, MacAddress.MAC_ADDRESS_LENGTH);
 	}
-	
+
+	/**
+	 * Create MacAddress object.
+	 * @param address string MAC Address.
+	 * @return MacAddress object.
+	 */
 	public static MacAddress valueOf(final String address) {
 		final String[] elements = address.split(":");
 		if (elements.length != MacAddress.MAC_ADDRESS_LENGTH) {
@@ -52,7 +68,12 @@ public final class MacAddress {
 		}
 		return new MacAddress(b);
 	}
-	
+
+	/**
+	 * Create MacAddress object.
+	 * @param address bytes MAC Address.
+	 * @return MacAddress object.
+	 */
 	public static MacAddress valueOf(final byte[] address) {
 		if (address.length != MacAddress.MAC_ADDRESS_LENGTH) {
 			throw new IllegalArgumentException("the length is not "
@@ -61,6 +82,11 @@ public final class MacAddress {
 		return new MacAddress(address);
 	}
 
+	/**
+	 * Create MacAddress object.
+	 * @param address long MAC Address.
+	 * @return MacAddress object.
+	 */
 	public static MacAddress valueOf(final long address) {
 		final byte[] bytes = new byte[] {
 				(byte) (address >> 40 & 0xff),
@@ -72,14 +98,26 @@ public final class MacAddress {
 		return new MacAddress(bytes);
 	}
 
+	/**
+	 * Reuturning length of MAC Address.
+	 * @return MAC Address length.
+	 */
 	public int length() {
 		return this.address.length;
 	}
-	
+
+	/**
+	 * Returning bytes MAC Address.
+	 * @return bytes MAC Address.
+	 */
 	public byte[] toBytes() {
 		return Arrays.copyOf(this.address, this.address.length);
 	}
 
+	/**
+	 * Returning long MAC Address.
+	 * @return long MAC Address.
+	 */
 	public long toLong() {
 		long addr = 0;
 		for (int i=0; i<MAC_ADDRESS_LENGTH; i++) {
@@ -88,7 +126,11 @@ public final class MacAddress {
 		}
 		return addr;
 	}
-	
+
+	/**
+	 * Return true if Broadcast MAC Address.
+	 * @return true if Broadcast MAC Address, false otherwise.
+	 */
 	public boolean isBroadcast() {
 		for (final byte b : this.address) {
 			if (b != -1) {
@@ -97,14 +139,17 @@ public final class MacAddress {
 		}
 		return true;
 	}
-	
+
+	/**
+	 * Return true if Multicast MAC Address.
+	 * @return true if Multicast MAC Address, false otherwise.
+	 */
 	public boolean isMulticast() {
 		if (this.isBroadcast()) {
 			return false;
 		}
 		return (this.address[0] & 0x01) != 0;
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {

@@ -19,3 +19,20 @@ buildscript {
         core_version="1.1.0-SNAPSHOT"
     }
 }
+
+task javadoc-all(type: Javadoc) {
+    doFirst {
+        subprojects.each { project ->
+            project.sourceSets.main.output.each { dir ->
+                dir.mkdirs()
+            }
+        }
+    }
+    source subprojects.collect { project ->
+        project.sourceSets.main.allJava
+    }
+    classpath = files(subprojects.collect { project ->
+        project.sourceSets.main.compileClasspath
+    })
+    destinationDir file("$project.buildDir/docs/javadoc/")
+}

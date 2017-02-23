@@ -19,14 +19,27 @@ package com.ardikars.jxnet;
 
 import com.ardikars.jxnet.util.Pointer;
 
+/**
+ * @author Ardika Rommy Sanjaya
+ * @since 1.0.0
+ * @version 1.0.0
+ */
 public final class PcapDumper {
 	
 	private Pointer pointer;
-	
+
+	/**
+	 * Returning pointer of PcapDumper.
+	 * @return pointer of PcapDumper.
+	 */
 	public Pointer getPointer() {
 		return pointer;
 	}
-	
+
+	/**
+	 * Return true if PcapDumper is closed.
+	 * @return true if PcapDumper is closed, false otherwise.
+	 */
 	public boolean isClosed() {
 		if (pointer.getAddress() == 0) {
 			return true;

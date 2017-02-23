@@ -17,6 +17,13 @@
 
 package com.ardikars.jxnet.util;
 
+import java.nio.ByteBuffer;
+
+/**
+ * @author Ardika Rommy Sanjaya
+ * @since 1.0.0
+ * @version 1.1.0
+ */
 public class FormatUtils {
 	
 	public static byte[] toBytes(String hexStr) {
@@ -29,6 +36,13 @@ public class FormatUtils {
 		}
 		return data;
 	}
+
+	public static long toLong(byte[] bytes) {
+		ByteBuffer bb = ByteBuffer.allocate(bytes.length);
+		bb.put(bytes);
+		return bb.getLong();
+	}
+
 	
 	public static String toHexString(byte[] data, int offset, int length) {
 		StringBuilder sb = new StringBuilder();

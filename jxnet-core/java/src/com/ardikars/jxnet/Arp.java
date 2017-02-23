@@ -19,6 +19,11 @@ package com.ardikars.jxnet;
 
 import com.ardikars.jxnet.util.Pointer;
 
+/**
+ * @author Ardika Rommy Sanjaya
+ * @since 1.1.0
+ * @version 1.1.0
+ */
 public class Arp {
 
     private Pointer pointer;

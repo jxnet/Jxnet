@@ -17,6 +17,15 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.jxnet.util.FormatUtils;
+
+import java.util.Arrays;
+
+/**
+ * @author Ardika Rommy Sanjaya
+ * @since 1.0.0
+ * @version 1.1.0
+ */
 public final class SockAddr {
     
     public enum Family {
@@ -32,15 +41,28 @@ public final class SockAddr {
             this.family = family;
             this.description = description;
         }
-        
+
+        /**
+         * Returning address family.
+         * @return address family.
+         */
         public short getFamily() {
             return family;
         }
-        
+
+        /**
+         * Returning address family description.
+         * @return address family description.
+         */
         public String getDescription() {
             return description;
         }
-        
+
+        /**
+         * Getting family type.
+         * @param family address family type.
+         * @return family type.
+         */
         public static Family valueOf(short family) {
             for(Family f : values()) {
                 if(f.getFamily() == family) {
@@ -56,7 +78,11 @@ public final class SockAddr {
     private short sa_family;
     
     private byte[] data;
-    
+
+    /**
+     * Returning address family type.
+     * @return address family type.
+     */
     public Family getSaFamily() {
         switch(sa_family) {
             case 2:
@@ -67,17 +93,46 @@ public final class SockAddr {
                 return null;
         }
     }
-    
+
+    /**
+     * Returning bytes address
+     * @return bytes address.
+     */
     public byte[] getData() {
         return data;
     }
 
+    /**
+     * Create Inet4Address or Inet6Address from SockAddr.
+     * @return Inet4Address or Inet6Address.
+     */
     public InetAddress toInetAddress() {
         switch (getSaFamily()) {
             case AF_INET: return Inet4Address.valueOf(data);
             case AF_INET6: return Inet6Address.valueOf(data);
             default: return null;
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this)
+            return true;
+        if (obj.getClass() != getClass())
+            return false;
+        if (obj instanceof Inet4Address) {
+            final Inet4Address addr = (Inet4Address) obj;
+            return Arrays.equals(this.data, addr.toBytes());
+        } else if (obj instanceof Inet6Address) {
+            final Inet6Address addr = (Inet6Address) obj;
+            return Arrays.equals(this.data, addr.toBytes());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(FormatUtils.toLong(this.data));
     }
 
     @Override

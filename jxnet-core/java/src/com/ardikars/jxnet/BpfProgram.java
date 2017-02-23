@@ -19,16 +19,28 @@ package com.ardikars.jxnet;
 
 import com.ardikars.jxnet.util.Pointer;
 
+/**
+ * @author Ardika Rommy Sanjaya
+ * @since 1.0.0
+ * @version 1.0.0
+ */
 public final class BpfProgram {
 	
 	private native void initBpfProgram();
 	
 	private Pointer pointer;
-	
+
+	/**
+	 * Create instance ob BpfProgram and initialize it.
+	 */
 	public BpfProgram() {
 		initBpfProgram();
 	}
-	
+
+	/**
+	 * Pointer of BpfProgram.
+	 * @return pointer of BpfProgram.
+	 */
 	public Pointer getPointer() {
 		return pointer;
 	}

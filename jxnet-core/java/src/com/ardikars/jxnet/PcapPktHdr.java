@@ -17,6 +17,11 @@
 
 package com.ardikars.jxnet;
 
+/**
+ * @author Ardika Rommy Sanjaya
+ * @since 1.0.0
+ * @version 1.0.0
+ */
 public final class PcapPktHdr {
 	
 	private int caplen;
@@ -31,19 +36,35 @@ public final class PcapPktHdr {
 		this.tv_sec = 0;
 		this.tv_usec = 0;
 	}
-	
+
+	/**
+	 * Returning capture length.
+	 * @return capture length.
+	 */
 	public int getCapLen() {
 		return caplen;
 	}
-	
+
+	/**
+	 * Returning packet length.
+	 * @return packet length.
+	 */
 	public int getLen() {
 		return len;
 	}
-	
+
+	/**
+	 * Returning tv_sec.
+	 * @return tv_sec.
+	 */
 	public int getTvSec() {
 		return tv_sec;
 	}
-	
+
+	/**
+	 * Returning tv_usec.
+	 * @return tv_usec.
+	 */
 	public long getTvUsec() {
 		return tv_usec;
 	}

@@ -22,6 +22,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * @author Ardika Rommy Sanjaya
+ * @since 1.0.0
+ * @version 1.1.0
+ */
 public final class Inet6Address extends InetAddress {
 	
 	public static final short IPV6_ADDRESS_LENGTH = 16;
@@ -31,11 +36,21 @@ public final class Inet6Address extends InetAddress {
 	private Inet6Address(byte[] address) {
 		this.address = address;
 	}
-	
+
+	/**
+	 * Create Inet6Address object.
+	 * @param address ipv6 bytes address.
+	 * @return Inet6Address object.
+	 */
 	public static Inet6Address valueOf(byte[] address) {
 		return new Inet6Address(address);
 	}
 
+	/**
+	 * Create Inet6Address object.
+	 * @param inet6Address ipv6 string address.
+	 * @return Inet6Address object.
+	 */
 	public static Inet6Address valueOf(String inet6Address) {
 		final int IPV6_MAX_HEX_GROUPS = 8;
 		final int IPV6_MAX_HEX_DIGITS_PER_GROUP = 4;
@@ -145,6 +160,10 @@ public final class Inet6Address extends InetAddress {
 		return new Inet6Address(rawBytes.array());
 	}
 
+	/**
+	 * Returning bytes address of Inet6Address.
+	 * @return bytes ipv6 address.
+	 */
 	public byte[] toBytes() {
 		return address;
 	}
