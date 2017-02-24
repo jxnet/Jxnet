@@ -1,8 +1,10 @@
 
 
-HOW TO BUILD
-------------
 
+BUILD FOR LINUX
+---------------
+
+sudo apt-get install libpcap0.8 libpcap0.8-dev libdnet libdnet-dev automake autoconf libtool build-essential
 ./bootstrap.sh
 ./configure
 make
