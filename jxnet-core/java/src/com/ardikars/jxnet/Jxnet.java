@@ -353,7 +353,7 @@ public final class Jxnet {
 	 * @return -1 on error, 0 otherwise.
 	 */
 	@Deprecated
-	public static native int PcapLookupNet(String device, InetAddress netp, InetAddress maskp, StringBuilder errbuf);
+	public static native int PcapLookupNet(String device, Inet4Address netp, Inet4Address maskp, StringBuilder errbuf);
 
 	/**
 	 * Compile a packet filter without the need of opening an adapter.

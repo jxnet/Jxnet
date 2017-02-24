@@ -11,7 +11,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		PcapOpenOffline.class })
 public class AllTests
 {
-	public static final String deviceName = "wlan0";
+	public static final String deviceName = "eth0";
 	public static final int snaplen = 1500;
 	public static final int promisc = 1;
 	public static final int to_ms = 2000;

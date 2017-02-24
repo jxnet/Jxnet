@@ -12,8 +12,8 @@ public class PcapLookupNet {
 	public void run() {
 		StringBuilder errbuf = new StringBuilder();
 		String source = AllTests.deviceName;
-		InetAddress netp = Inet4Address.valueOf(0);
-		InetAddress nmask = Inet4Address.valueOf(0);
+		Inet4Address netp = Inet4Address.valueOf(0);
+		Inet4Address nmask = Inet4Address.valueOf(0);
 		int res = PcapLookupNet(source, netp, nmask, errbuf);
 		if (res != OK) {
 			System.err.println(errbuf.toString());

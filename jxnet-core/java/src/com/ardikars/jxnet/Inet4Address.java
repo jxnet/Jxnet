@@ -120,6 +120,10 @@ public final class Inet4Address extends InetAddress {
 		return Arrays.copyOf(this.address, this.address.length);
 	}
 
+	public void update(Inet4Address inet4address) {
+		this.address = inet4address.toBytes();
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == this)

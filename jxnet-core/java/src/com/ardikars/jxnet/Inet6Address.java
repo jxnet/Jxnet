@@ -182,6 +182,10 @@ public final class Inet6Address extends InetAddress {
 		return (short) hextet;
 	}
 
+	public void update(Inet6Address inet6address) {
+		this.address = inet6address.toBytes();
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == this)
