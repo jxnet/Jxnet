@@ -4,11 +4,12 @@
 BUILD FOR LINUX
 ---------------
 
-sudo apt-get install libpcap0.8 libpcap0.8-dev libdnet libdnet-dev automake autoconf libtool build-essential
+sudo apt-get install libpcap0.8 libpcap0.8-dev libdnet libdnet-dev \
+automake autoconf libtool build-essential
 ./bootstrap.sh
-./configure
+./configure --prefix=/usr
 make
-make install
+sudo make install
 
 
 BUILD FOR ANDROID
