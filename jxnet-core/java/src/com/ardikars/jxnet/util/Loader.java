@@ -17,6 +17,8 @@
 
 package com.ardikars.jxnet.util;
 
+import com.ardikars.jxnet.exception.NotSupportedPlatformException;
+
 import java.io.*;
 import java.util.regex.Pattern;
 import static com.ardikars.jxnet.util.Preconditions.CheckNotNull;
@@ -73,36 +75,9 @@ public class Loader {
 				System.loadLibrary("jxnet");
 				break;
 			default:
-				System.err.println("Not supported.");
+				throw new NotSupportedPlatformException();
 
 		}
-		/*switch (Platform.getNAME().getType()) {
-			case 1:
-				if (Platform.isARM()) {
-					if (Platform.getVersion().equals("v7") || Platform.getVersion().equals("v6")) {
-						loadLibrary("/lib/armeabi-v7l/libjxnet-linux.so");
-					}
-				} else {
-					if (Platform.is64Bit()) {
-						loadLibrary("/lib/x86_64/libjxnet-linux.so");
-					} else {
-						loadLibrary("/lib/x86/libjxnet-linux.so");
-					}
-				}
-				break;
-			case 2:
-				if (Platform.is64Bit()) {
-					loadLibrary("/lib/x86_64/jxnet.dll");
-				} else {
-					loadLibrary("/lib/x86/jxnet.dll");
-				}
-				break;
-			case 3:
-				System.loadLibrary("jxnet");
-				break;
-			default:
-				break;
-		}*/
 	}
 	
 	private static boolean load() {

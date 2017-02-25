@@ -19,27 +19,27 @@ package com.ardikars.jxnet.exception;
 
 /**
  * @author Ardika Rommy Sanjaya
- * @since 1.0.0
- * @version 1.0.0
+ * @since 1.1.0
+ * @version 1.1.0
  */
-public final class JxnetException extends RuntimeException {
-	
-	private static final long serialVersionUID = 1L;
-	
-	public JxnetException() {
-		super();
-	}
-	
-	public JxnetException(String message) {
-		super(message);
-	}
-	
-	public JxnetException(String message, Throwable cause) {
-		super(message, cause);
-	}
-	
-	public JxnetException(Throwable cause) {
-		super(cause);
-	}
-	
+public class NotSupportedPlatformException extends RuntimeException {
+
+    private static final long serialVersionUID = 1L;
+
+    public NotSupportedPlatformException() {
+        super();
+    }
+
+    public NotSupportedPlatformException(String message) {
+        super(message);
+    }
+
+    public NotSupportedPlatformException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public NotSupportedPlatformException(Throwable cause) {
+        super(cause);
+    }
+
 }

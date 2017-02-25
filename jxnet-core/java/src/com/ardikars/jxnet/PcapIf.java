@@ -73,14 +73,6 @@ public final class PcapIf {
 		return addresses;
 	}
 
-	/**
-	 * Returning interface MAC Address.
-	 * @return interface MAC Address.
-	 */
-	public MacAddress getHardwareAddress() {
-		return AddrUtils.getHardwareAddress(name);
-	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == this) return true;
