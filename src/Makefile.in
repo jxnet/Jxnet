@@ -85,7 +85,7 @@ DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
-	$(top_srcdir)/m4/ltversion.m4 \
+	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
 	$(top_srcdir)/m4/ax_jni_include_dir.m4 \
 	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
@@ -123,7 +123,8 @@ am__uninstall_files_from_dir = { \
 am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(includedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libjxnet_la_LIBADD =
-am_libjxnet_la_OBJECTS = addr_utils.lo ids.lo jxnet.lo utils.lo bpf.lo
+am_libjxnet_la_OBJECTS = addr_utils.lo ids.lo jxnet.lo utils.lo bpf.lo \
+	preconditions.lo
 libjxnet_la_OBJECTS = $(am_libjxnet_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -313,9 +314,9 @@ top_srcdir = @top_srcdir@
 #noinst_LIBRARIES = libjxnet.a
 lib_LTLIBRARIES = libjxnet.la
 #lib_include = 
-include_HEADERS = ids.h utils.h #iwlib.h wireless.h 
+include_HEADERS = ids.h utils.h preconditions.h #iwlib.h wireless.h 
 #libjxnet_a_SOURCES = 
-libjxnet_la_SOURCES = addr_utils.c ids.c jxnet.c utils.c bpf.c #wlan_utils.c iwlib.c
+libjxnet_la_SOURCES = addr_utils.c ids.c jxnet.c utils.c bpf.c preconditions.c #wlan_utils.c iwlib.c
 libjxnet_la_LDFLAGS = -avoid-version
 all: all-am
 
@@ -330,9 +331,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign src/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu src/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign src/Makefile
+	  $(AUTOMAKE) --gnu src/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -400,6 +401,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bpf.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ids.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jxnet.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/preconditions.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utils.Plo@am__quote@
 
 .c.o:

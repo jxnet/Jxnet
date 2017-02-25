@@ -21,13 +21,15 @@
 #include <stdint.h>
 
 #define CLASS_NOT_FOUND_EXCEPTION "java/lang/ClassNotFoundException"
-#define NO_SUCH_METHOD_EXCEPTION "java.lang.NoSuchMethodException"
+#define NO_SUCH_METHOD_EXCEPTION "java/lang/NoSuchMethodException"
 #define NO_SUCH_FIELD_EXCEPTION "java/lang/NoSuchFieldException"
 #define NULL_PTR_EXCEPTION "java/lang/NullPointerException"
 #define PCAP_CLOSE_EXCEPTION "com/ardikars/jxnet/exception/PcapCloseException"
 #define BPF_PROGRAM_CLOSE_EXCEPTION "com/ardikars/jxnet/exception/BpfProgramCloseException"
 #define PCAP_DUMPER_CLOSE_EXCEPTION "com/ardikars/jxnet/exception/PcapDumperCloseException"
 #define JXNET_EXCEPTION "com/ardikars/jxnet/exception/JxnetException"
+#define ILLEGAL_STATE_EXCEPTION "java/lang/IllegalStateException"
+#define ILLEGAL_ARGUMENT_EXCEPTION "java/lang/IllegalArgumentException"
 
 typedef struct pcap_user_data_t {
         JNIEnv *env;
