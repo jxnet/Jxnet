@@ -5,6 +5,7 @@ Makefile
 config.log
 config.status
 libtool
+*.swp
 *.lo
 *.o
 *.la

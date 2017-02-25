@@ -122,10 +122,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapFindAllDevs
  */
 JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapOpenLive
   (JNIEnv *env, jclass jcls, jstring jsource, jint jsnaplen, jint jpromisc, jint jto_ms, jobject jerrbuf) {
-  	/*if(jsource == NULL || jerrbuf == NULL) {
-  		ThrowNew(env, NULL_PTR_EXCEPTION, "");
-		return NULL;
-  	}*/
 	CheckNotNull(env, jsource, "");
 	CheckArgument(env, (jsnaplen > 0 && jsnaplen < 65536 && (jpromisc == 0 || jpromisc == 1) &&
 			jto_ms > 0), "");
@@ -154,10 +150,6 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapOpenLive
  */
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapLoop
   (JNIEnv *env, jclass jcls, jobject jpcap, jint jcnt, jobject jcallback, jobject juser) {
- 	/*if(jpcap == NULL || jcallback == NULL) {
-		ThrowNew(env, NULL_PTR_EXCEPTION, "");
-		return -1;
-	}*/
 	CheckNotNull(env, jpcap,"");
 	CheckNotNull(env, jcallback, "");
 	CheckNotNull(env, juser, "");
@@ -177,21 +169,18 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapLoop
  	user_data.user = juser;
  	user_data.PcapHandlerClass = (*env)->GetObjectClass(env, jcallback);
  	user_data.PcapHandlerNextPacketMID = (*env)->GetMethodID(env,
-			user_data.PcapHandlerClass, "nextPacket", "(Ljava/lang/Object;Lcom/ardikars/jxnet/PcapPktHdr;Ljava/nio/ByteBuffer;)V");
-	/*user_data.PcapPktHdrClass = PcapPktHdrClass;
-	user_data.PcapPktHdrCaplenFID = PcapPktHdrCaplenFID;
-	user_data.PcapPktHdrLenFID = PcapPktHdrLenFID;
-	user_data.PcapPktHdrTvSecFID = PcapPktHdrTvSecFID;
-	user_data.PcapPktHdrTvUsecFID = PcapPktHdrTvUsecFID;*/
+			user_data.PcapHandlerClass, "nextPacket",
+			"(Ljava/lang/Object;Lcom/ardikars/jxnet/PcapPktHdr;Ljava/nio/ByteBuffer;)V");
   	return pcap_loop(pcap, (int) jcnt, pcap_callback, (u_char *) &user_data);
   }
   
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapDispatch
+ * Signature: (Lcom/ardikars/jxnet/Pcap;ILcom/ardikars/jxnet/PcapHandler;Ljava/lang/Object;)I
+ */
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDispatch
   (JNIEnv *env, jclass jcls, jobject jpcap, jint jcnt, jobject jcallback, jobject juser) {
- 	/*if(jpcap == NULL || jcallback == NULL) {
-		ThrowNew(env, NULL_PTR_EXCEPTION, "");
-		return (jint) -1;
-	}*/
 	CheckNotNull(env, jpcap, "");
 	CheckNotNull(env, jcallback, "");
 	CheckNotNull(env, juser, "");
@@ -214,13 +203,14 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDispatch
 			user_data.PcapHandlerClass, "nextPacket", "(Ljava/lang/Object;Lcom/ardikars/jxnet/PcapPktHdr;Ljava/nio/ByteBuffer;)V");
 	return pcap_dispatch(pcap, (int) jcnt, pcap_callback, (u_char *) &user_data);
   }
-  
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapDumpOpen
+ * Signature: (Lcom/ardikars/jxnet/Pcap;Ljava/lang/String;)Lcom/ardikars/jxnet/PcapDumper;
+ */
 JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDumpOpen
   (JNIEnv *env, jclass jcls, jobject jpcap, jstring jfname) {
-  	/*if(jpcap == NULL || jfname == NULL) {
-  		ThrowNew(env, NULL_PTR_EXCEPTION, "");
-		return NULL;
-  	}*/
 	CheckNotNull(env, jpcap, "");
 	CheckNotNull(env, jfname, "");
 
@@ -242,13 +232,14 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDumpOpen
   	(*env)->SetObjectField(env, obj, PcapDumperPointerFID, SetPcapDumper(env, pcap_dumper));
   	return obj;
   }
-  
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapDump
+ * Signature: (Lcom/ardikars/jxnet/PcapDumper;Lcom/ardikars/jxnet/PcapPktHdr;Ljava/nio/ByteBuffer;)V
+ */
 JNIEXPORT void JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDump
   (JNIEnv *env, jclass jcls, jobject jpcap_dumper, jobject jh, jobject jsp) {
-  	/*if(jpcap_dumper == NULL || jh == NULL || jsp == NULL) {
-  		ThrowNew(env, NULL_PTR_EXCEPTION, "");
-  		return;
-  	}*/
   	//SetPcapDumperIDs(env);
   	//SetPcapPktHdrIDs(env);
 	CheckNotNull(env, jpcap_dumper, "");
@@ -268,13 +259,14 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDump
   	u_char *sp = (u_char *) (*env)->GetDirectBufferAddress(env, jsp);
   	pcap_dump((u_char *) pcap_dumper, &hdr, sp);
   }
-  
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapOpenOffline
+ * Signature: (Ljava/lang/String;Ljava/lang/StringBuilder;)Lcom/ardikars/jxnet/Pcap;
+ */
 JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapOpenOffline
   (JNIEnv *env, jclass jcls, jstring jfname, jobject jerrbuf) {
-  	/*if(jfname == NULL || jerrbuf == NULL) {
-  		ThrowNew(env, NULL_PTR_EXCEPTION, "");
-  		return NULL;
-  	}*/
 	CheckNotNull(env, jfname, "");
 	CheckNotNull(env, jerrbuf, "");
 
@@ -294,33 +286,13 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapOpenOffline
   	return obj;
   }
 
-/*JNIEXPORT void JNICALL Java_com_ardikars_jxnet_BpfProgram_initBpfProgram
-  (JNIEnv *env, jobject jobj) {
-  	if (jobj == NULL) {
-  		ThrowNew(env, NULL_PTR_EXCEPTION, "");
-  		return;
-  	}
-  	SetPointerIDs(env);
-  	SetBpfProgramIDs(env);
-  	jobject pointer = NewObject(env, PointerClass, "<init>", "()V");
-  	struct bpf_program *fp = (struct bpf_program *) malloc(sizeof(struct bpf_program));
-	if(fp == NULL) {
-		ThrowNew(env, BPF_PROGRAM_CLOSE_EXCEPTION, "BpfProgram out of memory");
-  		return;
-	}
-	fp->bf_insns = NULL;
-	fp->bf_len = 0;
-	(*env)->SetLongField(env, pointer, PointerAddressFID, PointerToJlong(fp));
-	(*env)->SetObjectField(env, jobj, BpfProgramPointerFID, pointer);
-	(*env)->DeleteLocalRef(env, pointer);
-  }*/
-  
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapCompile
+ * Signature: (Lcom/ardikars/jxnet/Pcap;Lcom/ardikars/jxnet/BpfProgram;Ljava/lang/String;II)I
+ */
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCompile
   (JNIEnv *env, jclass jcls, jobject jpcap, jobject jfp, jstring jstr, jint joptimize, jint jnetmask) {
-  	/*if (jpcap == NULL || jfp == NULL || jstr == NULL) {
-  		ThrowNew(env, NULL_PTR_EXCEPTION, "");
-  		return (jint) -1;
-  	}*/
 	CheckNotNull(env, jpcap, "");
 	CheckNotNull(env, jfp, "");
 	CheckNotNull(env, jstr, "");
@@ -344,12 +316,13 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCompile
   	return r;
   }
   
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapSetFilter
+ * Signature: (Lcom/ardikars/jxnet/Pcap;Lcom/ardikars/jxnet/BpfProgram;)I
+ */
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetFilter
   (JNIEnv *env, jclass jcls, jobject jpcap, jobject jfp) {
-  	/*if(jpcap == NULL || jfp == NULL) {
-  		ThrowNew(env, NULL_PTR_EXCEPTION, "");
-  		return (jint) -1;
-  	}*/
 	CheckNotNull(env, jpcap, "");
 	CheckNotNull(env, jfp, "");
 
@@ -368,13 +341,13 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetFilter
   	return (jint) pcap_setfilter(pcap, fp);
   }
   
-  
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapSendPacket
+ * Signature: (Lcom/ardikars/jxnet/Pcap;Ljava/nio/ByteBuffer;I)I
+ */
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSendPacket
   (JNIEnv *env, jclass jcls, jobject jpcap, jobject jbuf, jint jsize) {
-  	/*if(jpcap == NULL || jbuf == NULL) {
-  		ThrowNew(env, NULL_PTR_EXCEPTION, "");
-  		return (jint) -1;
-  	}*/
 	CheckNotNull(env, jpcap, "");
 	CheckNotNull(env, jbuf, "");
 	CheckArgument(env, (jsize > 0), "");
@@ -390,13 +363,14 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSendPacket
   	}
   	return (jint) pcap_sendpacket(pcap, buf + (int) 0, (int) jsize);
   }
-  
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapNext
+ * Signature: (Lcom/ardikars/jxnet/Pcap;Lcom/ardikars/jxnet/PcapPktHdr;)Ljava/nio/ByteBuffer;
+ */ 
 JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapNext
   (JNIEnv *env, jclass jcls, jobject jpcap, jobject jh) {
-  	/*if(jpcap == NULL || jh == NULL) {
-  		ThrowNew(env, NULL_PTR_EXCEPTION, "");
-  		return NULL;
-  	}*/
 	CheckNotNull(env, jpcap, "");
 	CheckNotNull(env, jh, "");
 
@@ -419,13 +393,14 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapNext
   		return NULL;
   	}
   }
-  
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapNextEx
+ * Signature: (Lcom/ardikars/jxnet/Pcap;Lcom/ardikars/jxnet/PcapPktHdr;Ljava/nio/ByteBuffer;)I
+ */
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapNextEx
   (JNIEnv *env, jclass jcls, jobject jpcap, jobject jpkt_header, jobject jpkt_data) {
-  	/*if(jpcap == NULL || jpkt_header == NULL) {
-  		ThrowNew(env, NULL_PTR_EXCEPTION, "");
-  		return -1;
-  	}*/
 	CheckNotNull(env, jpcap, "");
 	CheckNotNull(env, jpkt_header, "");
 	CheckNotNull(env, jpkt_data, "");
@@ -454,12 +429,13 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapNextEx
   	return r;
   }
 
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapClose
+ * Signature: (Lcom/ardikars/jxnet/Pcap;)V
+ */
 JNIEXPORT void JNICALL Java_com_ardikars_jxnet_Jxnet_PcapClose
   (JNIEnv *env, jclass jcls, jobject jpcap) {
-  	/*if(jpcap == NULL) {
-  		ThrowNew(env, NULL_PTR_EXCEPTION, "");
-  		return;
-  	}*/
 	CheckNotNull(env, jpcap, "");
 
   	SetPointerIDs(env);
@@ -471,26 +447,28 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxnet_Jxnet_PcapClose
   	pcap_close(pcap);
   	(*env)->SetObjectField(env, jpcap, PcapPointerFID, SetPcap(env, NULL));
   }
-  
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapDumpFlush
+ * Signature: (Lcom/ardikars/jxnet/PcapDumper;)I
+ */  
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDumpFlush
   (JNIEnv *env, jclass jcls, jobject jpcap_dumper) {
-  	/*if(jpcap_dumper == NULL) {
-  		ThrowNew(env, NULL_PTR_EXCEPTION, "");
-  		return (jint) -1;
-  	}*/
 	CheckNotNull(env, jpcap_dumper, "");
 
   	SetPointerIDs(env);
   	SetPcapDumperIDs(env);
   	return (jint) pcap_dump_flush(GetPcapDumper(env, jpcap_dumper));
   }
-  
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapDumpClose
+ * Signature: (Lcom/ardikars/jxnet/PcapDumper;)V
+ */  
 JNIEXPORT void JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDumpClose
   (JNIEnv *env, jclass jcls, jobject jpcap_dumper) {
-  	/*if(jpcap_dumper == NULL) {
-  		ThrowNew(env, NULL_PTR_EXCEPTION, "");
-  		return;
-  	}*/
 	CheckNotNull(env, jpcap_dumper, "");
 
   	SetPointerIDs(env);
@@ -502,6 +480,11 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDumpClose
 	(*env)->DeleteLocalRef(env, pointer);
   }
   
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapDatalink
+ * Signature: (Lcom/ardikars/jxnet/Pcap;)I
+ */
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDatalink
   (JNIEnv *env, jclass jcls, jobject jpcap) {
 	CheckNotNull(env, jpcap, "");
@@ -514,7 +497,12 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDatalink
   	}
   	return (jint) pcap_datalink(pcap);
   }
-  
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapSetDatalink
+ * Signature: (Lcom/ardikars/jxnet/Pcap;I)I
+ */
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetDatalink
   (JNIEnv *env, jclass jcls, jobject jpcap, jint jdtl) {
 	CheckNotNull(env, jpcap, "");
@@ -528,7 +516,12 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetDatalink
   	}
   	return (jint) pcap_set_datalink(pcap, (int) jdtl);
   }
-  
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapBreakLoop
+ * Signature: (Lcom/ardikars/jxnet/Pcap;)V
+ */  
 JNIEXPORT void JNICALL Java_com_ardikars_jxnet_Jxnet_PcapBreakLoop
   (JNIEnv *env, jclass jcls, jobject jpcap) {
 	CheckNotNull(env, jpcap, "");
@@ -540,7 +533,12 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxnet_Jxnet_PcapBreakLoop
   	}
   	pcap_breakloop(pcap);
   }
-  
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapLookupDev
+ * Signature: (Ljava/lang/StringBuilder;)Ljava/lang/String;
+ */  
 JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_Jxnet_PcapLookupDev
   (JNIEnv *env, jclass jcls, jobject jerrbuf) {
 	CheckNotNull(env, jerrbuf, "");
@@ -560,7 +558,12 @@ JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_Jxnet_PcapLookupDev
 #endif
 	return (*env)->NewStringUTF(env, r);
   }
-  
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapGetErr
+ * Signature: (Lcom/ardikars/jxnet/Pcap;)Ljava/lang/String;
+ */
 JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_Jxnet_PcapGetErr
   (JNIEnv *env, jclass jcls, jobject jpcap) {
 	CheckNotNull(env, jpcap, "");
@@ -573,12 +576,22 @@ JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_Jxnet_PcapGetErr
   	}
 	return (jstring) (*env)->NewStringUTF(env, pcap_geterr(pcap));
   }
-  
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapLibVersion
+ * Signature: ()Ljava/lang/String;
+ */
 JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_Jxnet_PcapLibVersion
   (JNIEnv *env, jclass cls) {
   	return (*env)->NewStringUTF(env, pcap_lib_version());
   }
-  
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapIsSwapped
+ * Signature: (Lcom/ardikars/jxnet/Pcap;)I
+ */  
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapIsSwapped
   (JNIEnv *env, jclass jcls, jobject jpcap) {
 	CheckNotNull(env, jpcap, "");
@@ -591,7 +604,12 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapIsSwapped
   	}
   	return (jint) pcap_is_swapped(pcap);
   }
-  
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapSnapshot
+ * Signature: (Lcom/ardikars/jxnet/Pcap;)I
+ */  
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSnapshot
   (JNIEnv *env, jclass jcls, jobject jpcap) {
 	CheckNotNull(env, jpcap, "");
@@ -604,13 +622,23 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSnapshot
   	}
   	return (jint) pcap_snapshot(pcap);
   }
-  
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapStrError
+ * Signature: (I)Ljava/lang/String;
+ */  
 JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_Jxnet_PcapStrError
   (JNIEnv *env, jclass jcls, jint jerror) {
 	CheckArgument(env, (jerror < 0), "");
   	return (*env)->NewStringUTF(env, pcap_strerror((int) jerror));
   }
-  
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapMajorVersion
+ * Signature: (Lcom/ardikars/jxnet/Pcap;)I
+ */  
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapMajorVersion
   (JNIEnv *env, jclass jcls, jobject jpcap) {
 	CheckNotNull(env, jpcap, "");
@@ -623,7 +651,12 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapMajorVersion
   	}
   	return (jint) pcap_major_version(pcap);
   }
-  
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapMinorVersion
+ * Signature: (Lcom/ardikars/jxnet/Pcap;)I
+ */  
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapMinorVersion
   (JNIEnv *env, jclass jcls, jobject jpcap) {
 	CheckNotNull(env, jpcap, "");
@@ -636,21 +669,36 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapMinorVersion
   	}
   	return (jint) pcap_minor_version(pcap);
   }
-  
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapDatalinkValToName
+ * Signature: (I)Ljava/lang/String;
+ */  
 JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDatalinkValToName
   (JNIEnv *env, jclass jcls, jint jdtl) {
 	CheckArgument(env, (jdtl < 1), "");
 
   	return (*env)->NewStringUTF(env, (char *) pcap_datalink_val_to_name((jint) jdtl));
   }
-  
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapDatalinkValToDescription
+ * Signature: (I)Ljava/lang/String;
+ */  
 JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDatalinkValToDescription
   (JNIEnv *env, jclass jcls, jint jdtl) {
 	CheckArgument(env, (jdtl < 1), "");
 
   	return (*env)->NewStringUTF(env, (char *) pcap_datalink_val_to_description((jint) jdtl));
   }
-  
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapDatalinkNameToVal
+ * Signature: (Ljava/lang/String;)I
+ */  
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDatalinkNameToVal
   (JNIEnv *env, jclass jcls, jstring jname) {
 	CheckNotNull(env, jname, "");
@@ -660,7 +708,12 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDatalinkNameToVal
   	(*env)->ReleaseStringUTFChars(env, jname, name);
   	return r;
   }
-  
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapSetNonBlock
+ * Signature: (Lcom/ardikars/jxnet/Pcap;ILjava/lang/StringBuilder;)I
+ */  
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetNonBlock
   (JNIEnv *env, jclass jcls, jobject jpcap, jint jnonblock, jobject jerrbuf) {
 	CheckNotNull(env, jpcap, "");
@@ -679,7 +732,12 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetNonBlock
   	SetStringBuilder(env, jerrbuf, errbuf);
   	return (jint) r;
   }
-  
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapGetNonBlock
+ * Signature: (Lcom/ardikars/jxnet/Pcap;Ljava/lang/StringBuilder;)I
+ */  
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapGetNonBlock
   (JNIEnv *env, jclass jcls, jobject jpcap, jobject jerrbuf) {
 	CheckNotNull(env, jpcap, "");
@@ -696,7 +754,12 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapGetNonBlock
   	int r = pcap_getnonblock(pcap, errbuf);
   	return (jint) r;
   }
-  
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapOpenDead
+ * Signature: (II)Lcom/ardikars/jxnet/Pcap;
+ */  
 JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapOpenDead
   (JNIEnv *env, jclass jcls, jint jlinktype, jint jsnaplen) {
 	CheckArgument(env, (jlinktype < 1), "");
@@ -710,11 +773,13 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapOpenDead
   	return obj;
   }
 
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapDumpFTell
+ * Signature: (Lcom/ardikars/jxnet/PcapDumper;)J
+ */
 JNIEXPORT jlong JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDumpFTell
   (JNIEnv *env, jclass jcls, jobject jpcap_dumper) {
-	/*if(jpcap_dumper == NULL) {
-		ThrowNew(env, NULL_PTR_EXCEPTION, "");
-	}*/
 	CheckNotNull(env, jpcap_dumper, "");
 
 	SetPointerIDs(env);
@@ -722,12 +787,13 @@ JNIEXPORT jlong JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDumpFTell
 	return (jlong) pcap_dump_ftell (GetPcapDumper(env, jpcap_dumper));
   }
 
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapFreeCode
+ * Signature: (Lcom/ardikars/jxnet/BpfProgram;)V
+ */
 JNIEXPORT void JNICALL Java_com_ardikars_jxnet_Jxnet_PcapFreeCode
   (JNIEnv *env, jclass jcls, jobject jfp) {
-	/*if(jfp == NULL) {
-		ThrowNew(env, NULL_PTR_EXCEPTION, "");
-		return;
-	}*/
 	CheckNotNull(env, jfp, "");
 
 	SetPointerIDs(env);
@@ -741,12 +807,13 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxnet_Jxnet_PcapFreeCode
 	pcap_freecode(fp);
   }
 
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapFile
+ * Signature: (Lcom/ardikars/jxnet/Pcap;)Lcom/ardikars/jxnet/File;
+ */
 JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapFile
   (JNIEnv *env, jclass jcls, jobject jpcap) {
-	/*if(jpcap == NULL) {
-		ThrowNew(env, NULL_PTR_EXCEPTION, "");
-		return NULL;
-	}*/
 	CheckNotNull(env, jpcap, "");
 
 	SetPointerIDs(env);
@@ -761,12 +828,13 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapFile
 	return obj;
   }
 
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapDumpFile
+ * Signature: (Lcom/ardikars/jxnet/PcapDumper;)Lcom/ardikars/jxnet/File;
+ */
 JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDumpFile
   (JNIEnv *env, jclass jcls, jobject jpcap_dumper) {
-	/*if(jpcap_dumper == NULL) {
-		ThrowNew(env, NULL_PTR_EXCEPTION, "");
-		return NULL;
-	}*/
 	CheckNotNull(env, jpcap_dumper, "");
 
 	SetPointerIDs(env);
@@ -778,12 +846,13 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDumpFile
 	return obj;
   }
 
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapDumpFile
+ * Signature: (Lcom/ardikars/jxnet/PcapDumper;)Lcom/ardikars/jxnet/File;
+ */
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapStats
   (JNIEnv *env, jclass jcls, jobject jpcap, jobject jpcap_stat) {
-	/*if(jpcap == NULL || jpcap_stat == NULL) {
-		ThrowNew(env, NULL_PTR_EXCEPTION, "");
-		return -1;
-	}*/
 	CheckNotNull(env, jpcap, "");
 	CheckNotNull(env, jpcap_stat, "");
 
@@ -801,96 +870,11 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapStats
 	return r;
   }
 
-
 /*
-
-JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_Accept
-  (JNIEnv *env, jclass jcls, jint jsocket, jobject jaddr, jint jaddrlen) {
-	
-	return -1;
-}
-
-JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_Listen
-  (JNIEnv *env, jclass jcls, jint jsocket, jint jbacklog) {
-	
-	return -1;
-}
-
-JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_Bind
-  (JNIEnv *env, jclass jcls, jobject jaddr, jint jaddrlen) {
-
-	return -1;
-}
-
-JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_Connect
-  (JNIEnv *env, jclass jcls, jint jsocket, jobject jaddr, jint jaddrlen) {
-	
-	return -1;
-}
-
-JNIEXPORT jint JNICALL Java_com_ardikars_
-
-JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_Fork
-  (JNIENv *env, jclass jcls) {
-	
-	return -1;
-}
-
-JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_Socket
-  (JNIEnv *env, jclass jcls, jint jfa, jint jtype, jint jprotocol) {
-  	return socket((int) jfa, (int) jtype, (int) jprotocol);
-  }
-  
-JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_RecvFrom
-  (JNIEnv *env, jclass jcls, jint jsocket, jobject jbuf, jint len, jobject jsrc_addr, jint addrlen) {
-// ssize_t recvfrom(int sockfd, void *buf, size_t len, int flags, struct sockaddr *from, socklen_t *fromlen);
-	return -1;	
-  }
-
-JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_Recv
-  (JNIEnv *env, jclass jcls, jint jsocket, jobject jbuf, jint len, jint jflags) {
-// ssize_t recv(int sockfd, void *buf, size_t len, int flags);
-	return -1;
-  }
-
-JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_RecvMsg
-  (JNIEnv *env, jclass jcls, jint jsocket, jobject jmsghdr, jint jflags) {
-// ssize_t recvmsg(int sockfd, struct msghdr *msg, int flags);
-	return -1;
-}
-
-JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_Send
-  (JNIEnv *env, jclass jcls, jint jsocket, jobject jbuf, jint jlen, jint jflags) {
-	const u_char *buf = (u_char *) (*env)->GetDirectBufferAddress(env, jbuf);
-	if(buf == NULL) {
-                ThrowNew(env, NULL_PTR_EXCEPTION, "Unable to retrive address from ByteBuffer");
-                return (jint) -1;
-        }
-	return send(jsocket, buf, jlen, jflags);
-}
-
-JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_SendTO
-  (JNIEnv *env, jclass jcls, jint jsocket, jobject jbuf, jint jlen, jint jflags, jint jsa_family, jbyteArray jsa_data, jint jto_len) {
-  	const u_char *buf = (u_char *) (*env)->GetDirectBufferAddress(env, jbuf);
-  	if(buf == NULL) {
-  		ThrowNew(env, NULL_PTR_EXCEPTION, "Unable to retrive address from ByteBuffer");
-  		return (jint) -1;
-  	}
-	if(jsa_data == NULL) {
-		return -1;
-	}
-  	struct sockaddr sock;
-  	jbyte *sa_data = (*env)->GetByteArrayElements(env, jsa_data, NULL);
- 
-  	sock.sa_family = jsa_family;
-  	strcpy(sock.sa_data, (char *) sa_data);
-  	int r = sendto((int) jsocket, buf, (int) jlen, (int) jflags, &sock, sizeof(sock));
-  	(*env)->ReleaseByteArrayElements(env, jsa_data, sa_data, JNI_ABORT);
-  	return r;
-  }
-
-*/
-
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapLookupNet
+ * Signature: (Ljava/lang/String;Lcom/ardikars/jxnet/Inet4Address;Lcom/ardikars/jxnet/Inet4Address;Ljava/lang/StringBuilder;)I
+ */
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapLookupNet
   (JNIEnv *env, jclass jclass, jstring jdevice, jobject jnetp, jobject jmaskp, jobject jerrbuf) {
 	CheckNotNull(env, jdevice, "");
@@ -916,6 +900,11 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapLookupNet
 	return r;
   }
 
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapCompileNoPcap
+ * Signature: (IILcom/ardikars/jxnet/BpfProgram;Ljava/lang/String;II)I
+ */
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCompileNoPcap
   (JNIEnv *env, jclass jclass, jint jsnaplen_arg, jint jlinktype_arg, jobject jprogram, jstring jbuf, jint joptimize, jint jmask) {
 	CheckArgument(env, (jsnaplen_arg > 0 && jsnaplen_arg < 65535), "");
@@ -937,6 +926,11 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCompileNoPcap
 	return r;
   }
 
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapPError
+ * Signature: (Lcom/ardikars/jxnet/Pcap;Ljava/lang/String;)V
+ */
 JNIEXPORT void JNICALL Java_com_ardikars_jxnet_Jxnet_PcapPError
   (JNIEnv *env, jclass jclass, jobject jpcap, jstring jprefix) {
 	CheckNotNull(env, jpcap, "");
@@ -948,36 +942,12 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxnet_Jxnet_PcapPError
 	pcap_perror(GetPcap(env, jpcap), (char *) prefix);
 	(*env)->ReleaseStringUTFChars(env, jprefix, prefix);
   }
-/*
-// Not supported in WinPcap
-JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDumpFOpen
-  (JNIEnv *env, jclass jcls, jobject jpcap, jobject jf) {
-	if(jpcap == NULL || jf == NULL) {
-		ThrowNew(env, NULL_PTR_EXCEPTION, "");
-		return NULL;
-	}
-	SetPointerIDs(env);
-	SetPcapIDs(env);
-	SetFileIDs(env);
-	SetPcapDumperIDs(env);
-	pcap_dumper_t *pcap_dumper = pcap_dump_fopen(GetPcap(env, jpcap), GetFile(env, jf));
-	if(pcap_dumper == NULL) {
-		ThrowNew(env, PCAP_DUMPER_CLOSE_EXCEPTION, pcap_geterr(GetPcap(env, jpcap)));
-		return NULL;
-	}
-	jobject obj = NewObject(env, PcapDumperClass, "<init>", "()V");
-	(*env)->SetObjectField(env, obj, PcapDumperPointerFID, SetPcapDumper(env, pcap_dumper));
-	return obj;
-}
-*/
-
-
 
 /*
- *  * Class:     com_ardikars_jxnet_Jxnet
- *   * Method:    ArpOpen
- *    * Signature: ()Lcom/ardikars/jxnet/Arp;
- *     */
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    ArpOpen
+ * Signature: ()Lcom/ardikars/jxnet/Arp;
+ */
 JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_ArpOpen
   (JNIEnv *env, jclass jclass) {
 	SetPointerIDs(env);
@@ -1115,10 +1085,10 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ArpAdd
   }
 
 /*
- *  * Class:     com_ardikars_jxnet_Jxnet
- *   * Method:    ArpDelete
- *    * Signature: (Lcom/ardikars/jxnet/Arp;Lcom/ardikars/jxnet/ArpEntry;)I
- *     */
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    ArpDelete
+ * Signature: (Lcom/ardikars/jxnet/Arp;Lcom/ardikars/jxnet/ArpEntry;)I
+ */
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ArpDelete
   (JNIEnv *env, jclass jclass, jobject jarp, jobject jarp_entry) {
 	CheckNotNull(env, jarp, "");
@@ -1158,10 +1128,10 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ArpDelete
   }
 
 /*
- *  * Class:     com_ardikars_jxnet_Jxnet
- *   * Method:    ArpGet
- *    * Signature: (Lcom/ardikars/jxnet/Arp;Lcom/ardikars/jxnet/ArpEntry;)I
- *     */
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    ArpGet
+ * Signature: (Lcom/ardikars/jxnet/Arp;Lcom/ardikars/jxnet/ArpEntry;)I
+ */
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ArpGet
   (JNIEnv *env, jclass jclass, jobject jarp, jobject jarp_entry) {
 	CheckNotNull(env, jarp, "");
@@ -1214,3 +1184,4 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ArpGet
     (*env)->DeleteLocalRef(env, pa);
     return r;
   }
+
