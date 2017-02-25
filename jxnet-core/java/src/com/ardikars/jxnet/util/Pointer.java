@@ -25,7 +25,11 @@ package com.ardikars.jxnet.util;
 public final class Pointer {
 	
 	private long address;
-	
+
+	/**
+	 * Get pointer address.
+	 * @return pointer address.
+	 */
 	public long getAddress() {
 		return address;
 	}

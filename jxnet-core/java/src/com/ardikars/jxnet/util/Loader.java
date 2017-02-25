@@ -19,6 +19,7 @@ package com.ardikars.jxnet.util;
 
 import java.io.*;
 import java.util.regex.Pattern;
+import static com.ardikars.jxnet.util.Preconditions.CheckNotNull;
 
 /**
  * @author Ardika Rommy Sanjaya
@@ -33,6 +34,7 @@ public class Loader {
 	 */
 	public static void loadFromInnerJar(String[] path) throws
 			IllegalArgumentException, IOException, FileNotFoundException {
+		//checkNotNull(path);
 		for (String lib : path) {
 			loadLibrary(lib);
 		}
@@ -115,6 +117,7 @@ public class Loader {
 	}
 	
 	private static void loadLibrary(String path) throws IllegalArgumentException, IOException, FileNotFoundException {
+		//CheckNotNull(path);
 		if (!path.startsWith("/")) {
 			throw new IllegalArgumentException("The path has to be absolute (start with '/').");
 		}

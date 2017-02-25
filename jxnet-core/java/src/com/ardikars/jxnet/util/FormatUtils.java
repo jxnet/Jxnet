@@ -18,6 +18,8 @@
 package com.ardikars.jxnet.util;
 
 import java.nio.ByteBuffer;
+import static com.ardikars.jxnet.util.Preconditions.CheckNotNull;
+import static com.ardikars.jxnet.util.Preconditions.CheckArgument;
 
 /**
  * @author Ardika Rommy Sanjaya
@@ -27,6 +29,7 @@ import java.nio.ByteBuffer;
 public class FormatUtils {
 	
 	public static byte[] toBytes(String hexStr) {
+		//CheckNotNull(hexStr);
 		String src = hexStr.replaceAll("\\s+", "").trim();
 		int len = src.length();
 		byte[] data = new byte[len / 2];
@@ -38,6 +41,7 @@ public class FormatUtils {
 	}
 
 	public static long toLong(byte[] bytes) {
+		//CheckNotNull(bytes);
 		ByteBuffer bb = ByteBuffer.allocate(bytes.length);
 		bb.put(bytes);
 		return bb.getLong();
@@ -45,6 +49,8 @@ public class FormatUtils {
 
 	
 	public static String toHexString(byte[] data, int offset, int length) {
+		//CheckNotNull(data);
+		//checkArgument(offset > 0 && length > 0);
 		StringBuilder sb = new StringBuilder();
 		int l;
 		if(data.length != length) {
@@ -59,6 +65,7 @@ public class FormatUtils {
 	}
 	
 	public static String toHexString(byte b) {
+		//CheckNotNull(b);
 		String s = Integer.toHexString((b) & 0xFF);
 		if (s.length() == 1)
 			return ("0" + s);
@@ -66,6 +73,7 @@ public class FormatUtils {
 	}
 	
 	public static String toAscii(String hexStr) {
+		//CheckNotNull(hexStr);
 		StringBuilder sb = new StringBuilder("");
 		for (int i = 0; i < hexStr.length(); i += 2) {
 			String str = hexStr.substring(i, i + 2);

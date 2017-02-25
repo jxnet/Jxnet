@@ -52,7 +52,7 @@ public final class Jxnet {
 	 * Open a live capture from the network.
 	 * @param source interface name.
 	 * @param snaplen snapshot length (16 bit)
-	 * @param promisc 1 to enable promiscuosu mode, o otherwise.
+	 * @param promisc 1 to enable promiscuosu mode, 0 otherwise.
 	 * @param to_ms timeout.
 	 * @param errbuf error buffer.
 	 * @return null on error.

@@ -17,7 +17,7 @@
 
 package com.ardikars.jxnet.exception;
 
-public final class PcapDumperCloseException extends Exception {
+public final class PcapDumperCloseException extends RuntimeException {
 	
 	private static final long serialVersionUID = 1L;
 	

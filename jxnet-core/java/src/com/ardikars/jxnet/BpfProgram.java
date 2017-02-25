@@ -44,6 +44,13 @@ public final class BpfProgram {
 	public Pointer getPointer() {
 		return pointer;
 	}
+
+	public boolean isClosed() {
+		if (pointer.getAddress() == 0 || pointer == null) {
+			return true;
+		}
+		return false;
+	}
 	
 	@Override
 	public String toString() {
