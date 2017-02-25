@@ -15,6 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef _Included_com_ardikars_jxnet_util_Preconditions
+#define _Included_com_ardikars_jxnet_util_Preconditions
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <jni.h>
 
 #include "../src/utils.h"
@@ -78,3 +84,7 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_util_Preconditions_CheckNotNul
 	return jobj;
 }
 
+#ifdef __cplusplus
+}
+#endif
+#endif

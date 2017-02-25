@@ -15,6 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef _Included_com_ardikars_jxnet_util_AddrUtils
+#define _Included_com_ardikars_jxnet_util_AddrUtils
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "../include/jxnet/com_ardikars_jxnet_util_AddrUtils.h"
 
 #include <stdio.h>
@@ -356,3 +362,8 @@ JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_util_AddrUtils_GetGatewayAddre
 	(*env)->ReleaseStringUTFChars(env, jdev_name, buf);
   	return NULL;
   }
+
+#ifdef __cplusplus
+}
+#endif
+#endif

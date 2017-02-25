@@ -15,6 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef _Included_com_ardikars_jxnet_Jxnet
+#define _Included_com_ardikars_jxnet_Jxnet
+#ifdef __cplusplus
+extern "C" {
+#endif
+#undef com_ardikars_jxnet_Jxnet_OK
+#define com_ardikars_jxnet_Jxnet_OK 0L
+
 #include "../include/jxnet/com_ardikars_jxnet_Jxnet.h"
 
 #include <pcap.h>
@@ -1185,3 +1193,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_ArpGet
     return r;
   }
 
+#ifdef __cplusplus
+}
+#endif
+#endif

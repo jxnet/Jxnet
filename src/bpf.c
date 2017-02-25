@@ -15,6 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef _Included_com_ardikars_jxnet_BpfProgram
+#define _Included_com_ardikars_jxnet_BpfProgram
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <pcap.h>
 #include <stdlib.h>
 
@@ -22,6 +28,11 @@
 #include "../src/utils.h"
 #include "../include/jxnet/com_ardikars_jxnet_BpfProgram.h"
 
+/*
+ * Class:     com_ardikars_jxnet_BpfProgram
+ * Method:    initBpfProgram
+ * Signature: ()V
+ */
 JNIEXPORT void JNICALL Java_com_ardikars_jxnet_BpfProgram_initBpfProgram
   (JNIEnv *env, jobject jobj) {
         if(jobj == NULL) {
@@ -43,3 +54,7 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxnet_BpfProgram_initBpfProgram
         (*env)->DeleteLocalRef(env, pointer);
   }
 
+#ifdef __cplusplus
+}
+#endif
+#endif
