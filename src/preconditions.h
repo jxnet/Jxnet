@@ -15,9 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-void CheckArgument(JNIEnv *env, int expression, const char *error_message);
+int CheckArgument(JNIEnv *env, int expression, const char *error_message);
 
-void CheckState(JNIEnv *env, int expression, const char *error_message);
+int CheckState(JNIEnv *env, int expression, const char *error_message);
 
 jobject CheckNotNull(JNIEnv *env, jobject jobj, const char *error_message);
 

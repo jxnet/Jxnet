@@ -27,16 +27,20 @@ extern "C" {
 #include <stdio.h>
 
 
-void CheckArgument(JNIEnv *env, int expression, const char *error_message) {
-        if (expression != 1) {
+int CheckArgument(JNIEnv *env, int expression, const char *error_message) {
+        if (!expression) {
                 ThrowNew(env, ILLEGAL_ARGUMENT_EXCEPTION, error_message);
+		return !expression;
         }
+	return expression;
 }
 
-void CheckState(JNIEnv *env, int expression, const char *error_message) {
-        if (expression != 1) {
+int CheckState(JNIEnv *env, int expression, const char *error_message) {
+        if (!expression) {
                 ThrowNew(env, ILLEGAL_STATE_EXCEPTION, error_message);
+		return !expression;
         }
+	return expression;
 }
 
 jobject CheckNotNull(JNIEnv *env, jobject jobj, const char *error_message) {
