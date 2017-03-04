@@ -1,6 +1,6 @@
 package com.ardikars.test;
 
-import static com.ardikars.jxnet.Jxnet.*;
+import static com.ardikars.jxnet.Arp.*;
 
 import com.ardikars.jxnet.*;
 import org.junit.Test;

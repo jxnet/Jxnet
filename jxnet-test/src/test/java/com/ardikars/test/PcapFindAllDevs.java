@@ -1,7 +1,10 @@
 package com.ardikars.test;
 
 import static com.ardikars.jxnet.Jxnet.*;
+
+import com.ardikars.jxnet.PcapAddr;
 import com.ardikars.jxnet.PcapIf;
+import com.ardikars.jxnet.SockAddr;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -21,25 +24,25 @@ public class PcapFindAllDevs {
 			System.out.println("Description           = " + dev.getDescription());
 			System.out.println("Flags                 = " + dev.getFlags());
 			
-			/*for (PcapAddr addr : dev.getAddresses()) {
+			for (PcapAddr addr : dev.getAddresses()) {
 				if (addr.getAddr().getSaFamily() == SockAddr.Family.AF_INET) {
 					System.out.println("------------------------------------------------");
 					System.out.println("IPv4");
-					System.out.println("Addr                   = " + addr.getAddr());
-					System.out.println("Netmask                = " + addr.getNetmask());
-					System.out.println("BroadAddr              = " + addr.getBroadAddr());
-					System.out.println("DstAddr                = " + addr.getDstAddr());
+					System.out.println("Addr                   = " + addr.getAddr().toString());
+					System.out.println("Netmask                = " + addr.getNetmask().toString());
+//					System.out.println("BroadAddr              = " + addr.getBroadAddr().toString());
+//					System.out.println("DstAddr                = " + addr.getDstAddr().toString());
 					System.out.println("------------------------------------------------");
 				} else if (addr.getAddr().getSaFamily() == SockAddr.Family.AF_INET6) {
 					System.out.println("------------------------------------------------");
 					System.out.println("IPv6");
-					System.out.println("Addr                   = " + addr.getAddr());
-					System.out.println("Netmask                = " + addr.getNetmask());
-					System.out.println("BroadAddr              = " + addr.getBroadAddr());
-					System.out.println("DstAddr                = " + addr.getDstAddr());
+					System.out.println("Addr                   = " + addr.getAddr().toString());
+					System.out.println("Netmask                = " + addr.getNetmask().toString());
+//					System.out.println("BroadAddr              = " + addr.getBroadAddr().toString());
+//					System.out.println("DstAddr                = " + addr.getDstAddr().toString());
 					System.out.println("------------------------------------------------");
 				}
-			}*/
+			}
 			
 			Assert.assertNotEquals(null, dev.getName());
 			System.out.println("================================================\n\n");

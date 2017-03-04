@@ -2,7 +2,7 @@ package com.ardikars.test;
 
 import org.junit.Test;
 
-import static com.ardikars.jxnet.Jxnet.*;
+import static com.ardikars.jxnet.Arp.*;
 import com.ardikars.jxnet.*;
 
 /**

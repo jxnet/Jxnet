@@ -43,4 +43,26 @@ public class Arp {
         return pointer.toString();
     }
 
+    // static
+
+    public static native Arp ArpOpen();
+
+    public static native <T> int ArpLoop(Arp arp, ArpHandler<T> callback, T arg);
+
+    public static native int ArpAdd(Arp arp, ArpEntry arpEntry);
+
+    public static native int ArpDelete(Arp arp, ArpEntry arp_pa);
+
+    public static native int ArpGet(Arp arp, ArpEntry arpEntry);
+
+    public static native Arp ArpClose(Arp arp);
+
+    static {
+        try {
+            Class.forName("com.ardikars.jxnet.Jxnet");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

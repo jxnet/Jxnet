@@ -2,9 +2,9 @@ package com.ardikars.test;
 
 import com.ardikars.jxnet.Arp;
 import org.junit.Test;
-import static  com.ardikars.jxnet.Jxnet.*;
 
-import static com.ardikars.jxnet.Jxnet.ArpClose;
+import static  com.ardikars.jxnet.Jxnet.*;
+import static com.ardikars.jxnet.Arp.*;
 
 public class ArpOpen {
 

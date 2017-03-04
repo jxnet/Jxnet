@@ -17,6 +17,8 @@
 
 package com.ardikars.jxnet;
 
+import java.util.Arrays;
+
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
@@ -76,7 +78,7 @@ public class Addr {
                 .append(", Addr Bits: ")
                 .append(addr_bits)
                 .append(", Data: ")
-                .append(data)
+                .append(Arrays.toString(data))
                 .append("]").toString();
     }
 

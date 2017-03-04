@@ -26,7 +26,7 @@ import com.ardikars.jxnet.util.FormatUtils;
 public final class PcapAddr {
 
 	@SuppressWarnings("unused")
-	private PcapAddr next;
+	private volatile PcapAddr next;
 	
 	private volatile SockAddr addr;
 	

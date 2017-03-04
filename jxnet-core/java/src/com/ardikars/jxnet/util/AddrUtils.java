@@ -17,8 +17,12 @@
 
 package com.ardikars.jxnet.util;
 
-import com.ardikars.jxnet.Inet4Address;
-import com.ardikars.jxnet.MacAddress;
+import com.ardikars.jxnet.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.ardikars.jxnet.Jxnet.PcapFindAllDevs;
 import static com.ardikars.jxnet.util.Preconditions.CheckNotNull;
 
 /**
@@ -48,6 +52,19 @@ public final class AddrUtils {
 		CheckNotNull(dev_name, "");
 		String gwAddr = GetGatewayAddress(dev_name);
 		return (gwAddr == null ? null : Inet4Address.valueOf(gwAddr));
+	}
+
+	public static String LookupDev(StringBuilder errbuf) {
+		List<PcapIf> alldevsp = new ArrayList<PcapIf>();
+		PcapFindAllDevs(alldevsp, errbuf);
+		for (PcapIf dev : alldevsp) {
+			for (PcapAddr addr : dev.getAddresses()) {
+				if (addr.getAddr().getSaFamily() == SockAddr.Family.AF_INET) {
+					return dev.getName();
+				}
+			}
+		}
+		return null;
 	}
 
 	static {

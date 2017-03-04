@@ -375,24 +375,6 @@ public final class Jxnet {
 	 */
 	public static native void PcapPError(Pcap pcap, String prefix);
 
-	@Deprecated
-	public static native Arp ArpOpen();
-
-	@Deprecated
-	public static native <T> int ArpLoop(Arp arp, ArpHandler<T> callback, T arg);
-
-	@Deprecated
-	public static native int ArpAdd(Arp arp, ArpEntry arpEntry);
-
-	@Deprecated
-	public static native int ArpDelete(Arp arp, ArpEntry arp_pa);
-
-	@Deprecated
-	public static native int ArpGet(Arp arp, ArpEntry arpEntry);
-
-	@Deprecated
-	public static native Arp ArpClose(Arp arp);
-
 	//public static native int Socket(int af, int type, int protocol);
 	//private static native int SendTo(int socket, ByteBuffer buf, int len, int flags, SockAddr to, int toLen);
 	//private static native int SendTO(int socket, ByteBuffer buf, int len, int flags, int sa_family, byte[] sa_data, int toLen);

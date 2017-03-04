@@ -1,0 +1,20 @@
+
+apply plugin: 'java'
+
+sourceSets {
+    main {
+        java {
+            srcDir 'java/src'
+        }
+    }
+}
+
+dependencies {
+    compile project(":jxnet-core")
+}
+
+task generateJNIHeaders(type: Exec, dependsOn: classes) {
+    def classpath = sourceSets.main.output.classesDir
+    commandLine 'javah', '-jni', '-d', 'build/include/jxnet', '-classpath', classpath,
+            'com.ardikars.jxnet.Arp'
+}

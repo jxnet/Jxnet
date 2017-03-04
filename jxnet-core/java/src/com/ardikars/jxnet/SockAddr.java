@@ -74,9 +74,9 @@ public final class SockAddr {
         
     }
     
-    private short sa_family;
+    private volatile short sa_family;
     
-    private byte[] data;
+    private volatile byte[] data;
 
     /**
      * Returning address family type.
