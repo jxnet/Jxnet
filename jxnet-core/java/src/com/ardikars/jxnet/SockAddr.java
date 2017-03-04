@@ -24,12 +24,9 @@ import java.util.Arrays;
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
- * @version 1.1.0
  */
 public final class SockAddr {
 
-    private static native void initIDs();
-    
     public enum Family {
         
         AF_INET((short) 2, "AF_INET"),
@@ -142,12 +139,4 @@ public final class SockAddr {
         return toInetAddress().toString();
     }
 
-    static {
-        try {
-            Class.forName("com.ardikars.jxnet.Jxnet");
-            initIDs();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
 }

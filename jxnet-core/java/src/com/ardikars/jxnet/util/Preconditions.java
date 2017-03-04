@@ -28,10 +28,15 @@ import com.ardikars.jxnet.exception.PcapDumperCloseException;
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
- * @version 1.1.0
  */
 public final class Preconditions {
-
+	
+	/**
+     * Check argument.
+     * @param expression false will show error message.
+     */
+	public static native void CheckArgument(boolean expression);
+	
     /**
      * Check argument.
      * @param expression false will show error message.
@@ -42,19 +47,56 @@ public final class Preconditions {
     /**
      * Check state
      * @param expression false will show error message.
+     */
+    public static native void CheckState(boolean expression);
+    
+    /**
+     * Check state
+     * @param expression false will show error message.
      * @param errorMessage error message.
      */
     public static native void CheckState(boolean expression, String errorMessage);
+
+	/**
+     * Check not null.
+     * @param reference false will show error message.
+     * @param <T> object type.
+     * @return same object.
+     */
+    public static native <T> T CheckNotNull(T reference);
 
     /**
      * Check not null.
      * @param reference false will show error message.
      * @param errorMessage error message.
      * @param <T> object type.
-     * @return same object object.
+     * @return same object.
      */
     public static native <T> T CheckNotNull(T reference, String errorMessage);
 
+	public static <T> T CheckNotClosed(T obj) {
+        T o = CheckNotNull(obj, "");
+        if (o instanceof Pcap) {
+            Pcap pcap = (Pcap) o;
+            if (pcap.isClosed()) {
+                throw new PcapCloseException();
+            }
+        } else if (o instanceof PcapDumper) {
+            PcapDumper pcapDumper = (PcapDumper) o;
+            if (pcapDumper.isClosed()) {
+                throw new PcapDumperCloseException();
+            }
+        } else if (o instanceof BpfProgram) {
+            BpfProgram bpfProgram = (BpfProgram) o;
+            if (bpfProgram.isClosed()) {
+                throw new BpfProgramCloseException();
+            }
+        } else {
+            throw new NotValidObjectException();
+        }
+        return o;
+    }
+    
     public static <T> T CheckNotClosed(T obj, String errorMesssage) {
         T o = CheckNotNull(obj, "");
         if (o instanceof Pcap) {

@@ -20,11 +20,8 @@ package com.ardikars.jxnet;
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
- * @version 1.1.0
  */
 public class Addr {
-
-    private static native void initIDs();
 
     private short addr_type;
     private short addr_bits;
@@ -81,15 +78,6 @@ public class Addr {
                 .append(", Data: ")
                 .append(data)
                 .append("]").toString();
-    }
-
-    static {
-        try {
-            Class.forName("com.ardikars.jxnet.Jxnet");
-            initIDs();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
 }

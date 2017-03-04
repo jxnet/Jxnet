@@ -20,11 +20,8 @@ package com.ardikars.jxnet.util;
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
- * @version 1.0.0
  */
 public final class Pointer {
-
-	private static native void initIDs();
 	
 	private long address;
 
@@ -39,15 +36,6 @@ public final class Pointer {
 	@Override
 	public String toString() {
 		return String.valueOf(address);
-	}
-
-	static {
-		try {
-			Class.forName("com.ardikars.jxnet.Jxnet");
-			initIDs();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
 	}
 
 }

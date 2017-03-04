@@ -20,11 +20,8 @@ package com.ardikars.jxnet.exception;
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
- * @version 1.1.0
  */
 public class NotSupportedPlatformException extends RuntimeException {
-
-    private static final long serialVersionUID = 1L;
 
     public NotSupportedPlatformException() {
         super();

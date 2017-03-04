@@ -23,12 +23,9 @@ import java.util.Arrays;
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
- * @version 1.1.0
  */
 public final class Inet4Address extends InetAddress {
 
-	private static native void initIDs();
-	
 	public static final int IPV4_ADDRESS_LENGTH = 4;
 	
 	private byte[] address = new byte[Inet4Address.IPV4_ADDRESS_LENGTH];
@@ -145,16 +142,11 @@ public final class Inet4Address extends InetAddress {
 	}
 
 	public String toString() {
-		return (address[0] & 0xFF) + "." + (address[1] & 0xFF) + "." + (address[2] & 0xFF) + "." + (address[3] & 0xFF);
-	}
-
-	static {
-		try {
-			Class.forName("com.ardikars.jxnet.Jxnet");
-			initIDs();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		return new StringBuilder()
+				.append(address[0] & 0xFF).append(".")
+				.append(address[1] & 0xFF).append(".")
+				.append(address[2] & 0xFF).append(".")
+				.append(address[3] & 0xFF).toString();
 	}
 
 }

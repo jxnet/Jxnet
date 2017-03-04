@@ -24,7 +24,6 @@ import static com.ardikars.jxnet.util.Preconditions.CheckNotNull;
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
- * @version 1.1.0
  */
 public final class AddrUtils {
 
@@ -39,14 +38,14 @@ public final class AddrUtils {
 
 	@Deprecated
 	public static MacAddress getHardwareAddress(String dev_name) {
-		//CheckNotNull(dev_name);
+		CheckNotNull(dev_name, "");
 		byte[] macAddr = GetMACAddress(dev_name);
 		return (macAddr == null ? null : MacAddress.valueOf(macAddr));
 	}
 
 	@Deprecated
 	public static Inet4Address getGatewayAddress(String dev_name) {
-		//CheckNotNull(dev_name);
+		CheckNotNull(dev_name, "");
 		String gwAddr = GetGatewayAddress(dev_name);
 		return (gwAddr == null ? null : Inet4Address.valueOf(gwAddr));
 	}
@@ -58,4 +57,5 @@ public final class AddrUtils {
 			e.printStackTrace();
 		}
 	}
+
 }

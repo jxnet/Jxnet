@@ -20,11 +20,8 @@ package com.ardikars.jxnet;
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
- * @version 1.0.0
  */
 public final class PcapPktHdr {
-
-	private static native void initIDs();
 	
 	private int caplen;
 	private int len;
@@ -73,17 +70,12 @@ public final class PcapPktHdr {
 	
 	@Override
 	public String toString() {
-		return "caplen = " + caplen + ", len = " + len +
-				", tv_sec = " + tv_sec + ", tv_usec = " + tv_usec;
-	}
-
-	static {
-		try {
-			Class.forName("com.ardikars.jxnet.Jxnet");
-			initIDs();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		return new StringBuilder()
+				.append("[Capture Length: ").append(caplen)
+				.append(", Length: ").append(len)
+				.append(", TvSec: ").append(tv_sec)
+				.append(", TvUSec: ").append(tv_usec)
+				.append("]").toString();
 	}
 	
 }

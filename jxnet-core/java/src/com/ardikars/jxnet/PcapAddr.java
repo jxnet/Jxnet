@@ -22,11 +22,8 @@ import com.ardikars.jxnet.util.FormatUtils;
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
- * @version 1.0.0
  */
 public final class PcapAddr {
-
-	private static native void initIDs();
 
 	@SuppressWarnings("unused")
 	private PcapAddr next;
@@ -94,21 +91,12 @@ public final class PcapAddr {
 
 	@Override
 	public String toString() {
-		StringBuilder out = new StringBuilder();
-		out.append(String.valueOf(addr));
-		out.append(String.valueOf(netmask));
-		out.append(String.valueOf(broadaddr));
-		out.append(String.valueOf(dstaddr));
-		return out.toString();
-	}
-
-	static {
-		try {
-			Class.forName("com.ardikars.jxnet.Jxnet");
-			initIDs();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		return new StringBuilder()
+				.append("[Addr: ").append(addr.toString())
+				.append(", Netmask: ").append(netmask.toString())
+				.append(", Broadcast Addr: ").append(broadaddr.toString())
+				.append(", Destiantion Addr: ").append(dstaddr.toString())
+				.toString();
 	}
 	
 }

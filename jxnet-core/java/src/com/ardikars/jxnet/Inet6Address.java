@@ -25,11 +25,8 @@ import java.util.List;
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
- * @version 1.1.0
  */
 public final class Inet6Address extends InetAddress {
-
-	private static native void initIDs();
 	
 	public static final short IPV6_ADDRESS_LENGTH = 16;
 	
@@ -242,15 +239,6 @@ public final class Inet6Address extends InetAddress {
 			if (i < toHextet - 1) {
 				sb.append(':');
 			}
-		}
-	}
-
-	static {
-		try {
-			Class.forName("com.ardikars.jxnet.Jxnet");
-			initIDs();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		}
 	}
 

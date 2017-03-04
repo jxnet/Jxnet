@@ -22,7 +22,6 @@ import com.ardikars.jxnet.util.Pointer;
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
- * @version 1.0.0
  */
 public final class BpfProgram {
 	
@@ -55,15 +54,6 @@ public final class BpfProgram {
 	@Override
 	public String toString() {
 		return pointer.toString();
-	}
-
-	static {
-		try {
-			Class.forName("com.ardikars.jxnet.Jxnet");
-			//initIDs();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
 	}
 
 }

@@ -24,11 +24,8 @@ import java.util.Arrays;
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
- * @version 1.1.0
  */
 public final class MacAddress {
-
-	private static native void initIDs();
 	
 	public static final int MAC_ADDRESS_LENGTH = 6;
 
@@ -181,15 +178,6 @@ public final class MacAddress {
 			sb.append(FormatUtils.toHexString(b));
 		}
 		return sb.toString();
-	}
-
-	static {
-		try {
-			Class.forName("com.ardikars.jxnet.Jxnet");
-			initIDs();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
 	}
 	
 }

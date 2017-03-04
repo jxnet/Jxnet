@@ -20,11 +20,8 @@ package com.ardikars.jxnet;
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
- * @version 1.1.0
  */
 public final class PcapStat {
-
-	private static native void initIDs();
 
 	private long ps_recv;
 	
@@ -59,22 +56,13 @@ public final class PcapStat {
 	@Override
 	public String toString() {
 		return new StringBuilder()
-				.append("[ Recieved: ")
+				.append("[Recieved: ")
 				.append(ps_recv)
 				.append(", Dropped: ")
 				.append(ps_drop)
-				.append(", Dropped by interface: ")
+				.append(", Dropped by Interface: ")
 				.append(ps_ifdrop)
-				.append(" ]").toString();
-	}
-
-	static {
-		try {
-			Class.forName("com.ardikars.jxnet.Jxnet");
-			initIDs();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+				.append("]").toString();
 	}
 
 }

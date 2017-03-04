@@ -26,7 +26,6 @@ import static com.ardikars.jxnet.util.Preconditions.CheckNotNull;
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
- * @version 1.1.0
  */
 public class Loader {
 

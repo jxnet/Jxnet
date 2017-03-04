@@ -20,11 +20,8 @@ package com.ardikars.jxnet;
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
- * @version 1.1.0
  */
 public class ArpEntry {
-
-    private static native void initIDs();
 
     private volatile Addr arp_pa;
     private volatile Addr arp_ha;
@@ -64,17 +61,11 @@ public class ArpEntry {
 
     @Override
     public String toString() {
-        return Inet4Address.valueOf(arp_pa.getData()).toString() + " is at "
-                + MacAddress.valueOf(arp_ha.getData());
-    }
-
-    static {
-        try {
-            Class.forName("com.ardikars.jxnet.Jxnet");
-            initIDs();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        return new StringBuilder().append("[")
+                .append(Inet4Address.valueOf(arp_pa.getData()).toString())
+                .append(" is at ")
+                .append(MacAddress.valueOf(arp_ha.getData()))
+                .append("]").toString();
     }
 
 }

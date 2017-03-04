@@ -22,11 +22,8 @@ import com.ardikars.jxnet.util.Pointer;
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
- * @version 1.1.0
  */
 public class Arp {
-
-    private static native void initIDs();
 
     private Pointer pointer;
 
@@ -44,15 +41,6 @@ public class Arp {
     @Override
     public String toString() {
         return pointer.toString();
-    }
-
-    static {
-        try {
-            Class.forName("com.ardikars.jxnet.Jxnet");
-            initIDs();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
 }

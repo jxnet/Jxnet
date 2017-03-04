@@ -20,11 +20,8 @@ package com.ardikars.jxnet.exception;
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
- * @version 1.1.0
  */
 public class NotValidObjectException extends RuntimeException {
-
-    private static final long serialVersionUID = 1L;
 
     public NotValidObjectException() {
         super();

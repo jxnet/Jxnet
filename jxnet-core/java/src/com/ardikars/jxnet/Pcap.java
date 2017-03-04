@@ -22,11 +22,8 @@ import com.ardikars.jxnet.util.Pointer;
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
- * @version 1.0.0
  */
 public final class Pcap {
-
-	private static native void initIDs();
 	
 	private Pointer pointer;
 
@@ -48,15 +45,6 @@ public final class Pcap {
 	@Override
 	public String toString() {
 		return pointer.toString();
-	}
-
-	static {
-		try {
-			Class.forName("com.ardikars.jxnet.Jxnet");
-			initIDs();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
 	}
 
 }
