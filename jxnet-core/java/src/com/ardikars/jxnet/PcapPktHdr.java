@@ -23,6 +23,8 @@ package com.ardikars.jxnet;
  * @version 1.0.0
  */
 public final class PcapPktHdr {
+
+	private static native void initIDs();
 	
 	private int caplen;
 	private int len;
@@ -73,6 +75,15 @@ public final class PcapPktHdr {
 	public String toString() {
 		return "caplen = " + caplen + ", len = " + len +
 				", tv_sec = " + tv_sec + ", tv_usec = " + tv_usec;
+	}
+
+	static {
+		try {
+			Class.forName("com.ardikars.jxnet.Jxnet");
+			initIDs();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

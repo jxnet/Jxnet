@@ -25,7 +25,9 @@ import com.ardikars.jxnet.util.FormatUtils;
  * @version 1.0.0
  */
 public final class PcapAddr {
-	
+
+	private static native void initIDs();
+
 	@SuppressWarnings("unused")
 	private PcapAddr next;
 	
@@ -98,6 +100,15 @@ public final class PcapAddr {
 		out.append(String.valueOf(broadaddr));
 		out.append(String.valueOf(dstaddr));
 		return out.toString();
+	}
+
+	static {
+		try {
+			Class.forName("com.ardikars.jxnet.Jxnet");
+			initIDs();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

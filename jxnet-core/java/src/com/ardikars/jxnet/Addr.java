@@ -24,6 +24,8 @@ package com.ardikars.jxnet;
  */
 public class Addr {
 
+    private static native void initIDs();
+
     private short addr_type;
     private short addr_bits;
     private byte[] data;
@@ -80,4 +82,14 @@ public class Addr {
                 .append(data)
                 .append("]").toString();
     }
+
+    static {
+        try {
+            Class.forName("com.ardikars.jxnet.Jxnet");
+            initIDs();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

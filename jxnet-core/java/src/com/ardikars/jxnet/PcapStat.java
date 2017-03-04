@@ -23,7 +23,9 @@ package com.ardikars.jxnet;
  * @version 1.1.0
  */
 public final class PcapStat {
-	
+
+	private static native void initIDs();
+
 	private long ps_recv;
 	
 	private long ps_drop;
@@ -64,6 +66,15 @@ public final class PcapStat {
 				.append(", Dropped by interface: ")
 				.append(ps_ifdrop)
 				.append(" ]").toString();
+	}
+
+	static {
+		try {
+			Class.forName("com.ardikars.jxnet.Jxnet");
+			initIDs();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

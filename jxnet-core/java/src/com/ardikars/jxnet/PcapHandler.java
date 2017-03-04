@@ -24,6 +24,7 @@ import java.nio.ByteBuffer;
  * @since 1.0.0
  * @version 1.0.0
  */
+@FunctionalInterface
 public interface PcapHandler<T> {
 
 	/**

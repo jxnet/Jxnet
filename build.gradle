@@ -1,8 +1,31 @@
-apply plugin: 'java'
 
-group='com.ardikars.jxnet'
+allprojects {
 
-version = '1.1.0-SNAPSHOT'
+    apply plugin: 'java'
+
+    group = 'com.ardikars.jxnet'
+    version = '1.1.1-SHAPSHOT'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+    javadoc {
+        def currentYear = "2017"
+        options.with {
+            encoding 'UTF-8'
+            charSet 'UTF-8'
+            author true
+            windowTitle "Jxnet ${project.version}"
+            header "Jxnet ${project.version}"
+            docTitle "Jxnet ${project.version} API Documentation"
+            footer 'https://github.com/ardikars/Jxnet'
+            bottom "Copyright &copy: 2015 - ${currentYear} Jxnet. All rights reserved."
+        }
+    }
+
+}
 
 subprojects.each { subproject -> evaluationDependsOn(subproject.path) }
 jar.dependsOn subprojects.tasks["classes"]
@@ -14,25 +37,11 @@ jar {
     }
 }
 
-buildscript {
-    ext {
-        core_version="1.1.0-SNAPSHOT"
+javadoc {
+    def srcDirs = []
+    subprojects.each { project ->
+        srcDirs.addAll project.sourceSets.main.java.srcDirs
     }
+    source srcDirs
 }
 
-task generateJavadoc(type: Javadoc) {
-    doFirst {
-        subprojects.each { project ->
-            project.sourceSets.main.output.each { dir ->
-                dir.mkdirs()
-            }
-        }
-    }
-    source subprojects.collect { project ->
-        project.sourceSets.main.allJava
-    }
-    classpath = files(subprojects.collect { project ->
-        project.sourceSets.main.compileClasspath
-    })
-    destinationDir file("$project.buildDir/docs/javadoc/")
-}

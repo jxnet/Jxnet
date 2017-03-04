@@ -56,5 +56,14 @@ public final class BpfProgram {
 	public String toString() {
 		return pointer.toString();
 	}
-	
+
+	static {
+		try {
+			Class.forName("com.ardikars.jxnet.Jxnet");
+			//initIDs();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
 }

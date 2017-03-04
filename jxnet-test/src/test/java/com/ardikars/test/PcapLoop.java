@@ -24,20 +24,16 @@ public class PcapLoop {
 			throw new PcapCloseException(errbuf.toString());
 		}
 		
-		Assert.assertNotEquals(null, handler);
-		
-		PcapHandler callback = new PcapHandler() {
-			public void nextPacket(Object t, PcapPktHdr pph, ByteBuffer bb) {
-				System.out.println("User   : " + t);
+		PcapHandler<String> callback = new PcapHandler<String>() {
+			public void nextPacket(String t, PcapPktHdr pph, ByteBuffer bb) {
+				//System.out.println("User   : " + t);
 				System.out.println("PktHdr : " + pph);
 				System.out.println("Data   : " + bb);
-				Assert.assertNotEquals(null, pph);
-				Assert.assertNotEquals(null, bb);
 			}
 		};
 		
 		if (PcapLoop(handler, 10, callback, null) != OK) {
-			PcapClose(handler);
+			System.err.println("GAGAL");
 		}
 		PcapClose(handler);
 	}

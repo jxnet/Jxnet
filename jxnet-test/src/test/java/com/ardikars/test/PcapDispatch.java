@@ -24,15 +24,11 @@ public class PcapDispatch {
             throw new PcapCloseException(errbuf.toString());
         }
 
-        Assert.assertNotEquals(null, handler);
-
         PcapHandler callback = new PcapHandler() {
             public void nextPacket(Object t, PcapPktHdr pph, ByteBuffer bb) {
                 System.out.println("User   : " + t);
                 System.out.println("PktHdr : " + pph);
                 System.out.println("Data   : " + bb);
-                Assert.assertNotEquals(null, pph);
-                Assert.assertNotEquals(null, bb);
             }
         };
 

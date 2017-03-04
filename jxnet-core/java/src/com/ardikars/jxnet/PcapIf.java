@@ -29,6 +29,8 @@ import java.util.List;
  * @version 1.0.0
  */
 public final class PcapIf {
+
+	private static native void initIDs();
 	
 	@SuppressWarnings("unused")
 	private PcapIf next;
@@ -96,6 +98,15 @@ public final class PcapIf {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	static {
+		try {
+			Class.forName("com.ardikars.jxnet.Jxnet");
+			initIDs();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

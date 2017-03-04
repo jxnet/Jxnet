@@ -22,6 +22,7 @@ package com.ardikars.jxnet;
  * @since 1.1.0
  * @version 1.1.0
  */
+@FunctionalInterface
 public interface ArpHandler<T> {
 
     int nextArpEntry(ArpEntry arpEntry, T arg);

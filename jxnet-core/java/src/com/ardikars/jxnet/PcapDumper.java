@@ -25,6 +25,8 @@ import com.ardikars.jxnet.util.Pointer;
  * @version 1.0.0
  */
 public final class PcapDumper {
+
+	private static native void initIDs();
 	
 	private Pointer pointer;
 
@@ -51,5 +53,14 @@ public final class PcapDumper {
 	public String toString() {
 		return pointer.toString();
 	}
-	
+
+	static {
+		try {
+			Class.forName("com.ardikars.jxnet.Jxnet");
+			initIDs();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
 }

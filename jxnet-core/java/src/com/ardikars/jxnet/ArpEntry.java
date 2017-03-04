@@ -24,6 +24,8 @@ package com.ardikars.jxnet;
  */
 public class ArpEntry {
 
+    private static native void initIDs();
+
     private volatile Addr arp_pa;
     private volatile Addr arp_ha;
 
@@ -64,6 +66,15 @@ public class ArpEntry {
     public String toString() {
         return Inet4Address.valueOf(arp_pa.getData()).toString() + " is at "
                 + MacAddress.valueOf(arp_ha.getData());
+    }
+
+    static {
+        try {
+            Class.forName("com.ardikars.jxnet.Jxnet");
+            initIDs();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -26,6 +26,8 @@ import com.ardikars.jxnet.util.Pointer;
  */
 public class Arp {
 
+    private static native void initIDs();
+
     private Pointer pointer;
 
     public Pointer getPointer() {
@@ -42,6 +44,15 @@ public class Arp {
     @Override
     public String toString() {
         return pointer.toString();
+    }
+
+    static {
+        try {
+            Class.forName("com.ardikars.jxnet.Jxnet");
+            initIDs();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
 }

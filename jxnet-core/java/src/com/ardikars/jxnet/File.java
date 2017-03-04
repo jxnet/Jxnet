@@ -25,6 +25,8 @@ import com.ardikars.jxnet.util.Pointer;
  * @version 1.0.0
  */
 public final class File extends java.io.File {
+
+	private static native void initIDs();
 	
 	private static final long serialVersionUID = -7925210130734414457L;
 	
@@ -49,6 +51,15 @@ public final class File extends java.io.File {
 	@Override
 	public String toString() {
 		return super.toString();
+	}
+
+	static {
+		try {
+			Class.forName("com.ardikars.jxnet.Jxnet");
+			initIDs();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }
