@@ -9,7 +9,16 @@ allprojects {
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
-    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+	[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+	sourceSets {
+		main.java.srcDir 'src/main/java'
+		test.java.srcDir 'src/test/java'
+	}
+	
+	repositories {
+		mavenCentral()
+	}
 
     javadoc {
         def currentYear = "2017"

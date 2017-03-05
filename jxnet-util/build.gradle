@@ -1,16 +1,7 @@
 
-apply plugin: 'java'
-
-sourceSets {
-    main {
-        java {
-            srcDir 'java/src'
-        }
-    }
-}
-
 dependencies {
     compile project(":jxnet-core")
+    testCompile 'junit:junit:4.12'
 }
 
 task generateJNIHeaders(type: Exec, dependsOn: classes) {
@@ -18,3 +9,4 @@ task generateJNIHeaders(type: Exec, dependsOn: classes) {
     commandLine 'javah', '-jni', '-d', 'build/include/jxnet', '-classpath', classpath,
             'com.ardikars.jxnet.Arp'
 }
+

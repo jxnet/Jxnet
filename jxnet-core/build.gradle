@@ -1,16 +1,15 @@
 
-apply plugin: 'java'
-
 sourceSets {
 	main {
-		java {
-			srcDir 'java/src'
-		}
 		resources {
-			srcDirs 'java'
+			srcDir 'src/main/resources'
 			include 'lib/**/*'
 		}
 	}
+}
+
+dependencies {
+	testCompile 'junit:junit:4.12'
 }
 
 task generateJNIHeaders(type: Exec, dependsOn: classes) {
@@ -21,3 +20,4 @@ task generateJNIHeaders(type: Exec, dependsOn: classes) {
 			'com.ardikars.jxnet.util.Preconditions',
 			'com.ardikars.jxnet.BpfProgram'
 }
+
