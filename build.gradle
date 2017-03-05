@@ -26,9 +26,6 @@ allprojects {
             encoding 'UTF-8'
             charSet 'UTF-8'
             author true
-            windowTitle "Jxnet ${project.version}"
-            header "Jxnet ${project.version}"
-            docTitle "Jxnet ${project.version} API Documentation"
             footer 'https://github.com/ardikars/Jxnet'
             bottom "Copyright &copy: 2015 - ${currentYear} Jxnet. All rights reserved."
         }
