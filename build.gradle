@@ -11,11 +11,6 @@ allprojects {
 
 	[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-	sourceSets {
-		main.java.srcDir 'src/main/java'
-		test.java.srcDir 'src/test/java'
-	}
-	
 	repositories {
 		mavenCentral()
 	}
@@ -50,4 +45,3 @@ javadoc {
     }
     source srcDirs
 }
-
