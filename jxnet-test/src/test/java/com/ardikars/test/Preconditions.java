@@ -7,11 +7,11 @@ public class Preconditions {
     @org.junit.Test
     public void run() {
         CheckArgument(true, "Check Argument True");
-        //CheckArgument(false, "Check Argument False");
+        CheckArgument(true);
         CheckState(true, "Check State True");
-        //CheckState(false, "Check State False");
+        CheckState(true);
         CheckNotNull("", "Check Not Null Yes");
-        //CheckNotNull(null, "Check Not Null No");
+        CheckNotNull("");
     }
 
 }
