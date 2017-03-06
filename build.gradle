@@ -27,11 +27,3 @@ jar {
     }
 }
 
-javadoc {
-    def srcDirs = []
-    subprojects.each { project ->
-        srcDirs.addAll project.sourceSets.main.java.srcDirs
-    }
-    source srcDirs
-}
-
