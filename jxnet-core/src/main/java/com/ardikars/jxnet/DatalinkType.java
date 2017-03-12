@@ -15,47 +15,43 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet.util;
+package com.ardikars.jxnet;
 
 /**
  * @author Ardika Rommy Sanjaya
- * @since 1.0.0
+ * @since 1.1.0
  */
-public final class Pointer {
-	
-	private long address;
+public enum DatalinkType {
+    /**
+     * Ethernet (10Mb, 100Mb, 1000Mb, and up): 1
+     */
+    EN10MB((short) 1, "Ethernet")
+    ;
 
-	/**
-	 * Get pointer address.
-	 * @return pointer address.
-	 */
-	public long getAddress() {
-		return address;
-	}
+    private short value;
+    private String name;
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == this)
-			return true;
-		if (obj.getClass() != getClass())
-			return false;
-		if (obj instanceof Pointer) {
-			Pointer pointer = (Pointer) obj;
-			return address == pointer.getAddress();
-		}
-		return false;
-	}
+    private DatalinkType(short value, String name) {
+        this.value = value;
+        this.name = name;
+    }
 
-	@Override
-	public int hashCode() {
-		return 17 * 37 +
-				((int) (address ^ (address >> 32))) + super.hashCode();
-	}
+    public short getValue() {
+        return value;
+    }
 
-	@Override
-	public String toString() {
-		return new StringBuilder().append("[Address: ")
-				.append(address).append("]").toString();
-	}
+    public String getName() {
+        return name;
+    }
+
+
+    public static DatalinkType valueOf(short DatalinkType) {
+        for(DatalinkType f : values()) {
+            if(f.getValue() == DatalinkType) {
+                return f;
+            }
+        }
+        return null;
+    }
 
 }

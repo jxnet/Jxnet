@@ -4,12 +4,23 @@ import com.ardikars.jxnet.util.Preconditions;
 
 import java.lang.reflect.Field;
 
-public class Test {
+
+class MYOBJ {
+    public String val;
+}
+
+public class    Test {
 
     public static void main(String[] args) {
-        String test = "BOOM";
-        System.out.println(Preconditions.CheckNotNull(test, "MY NM"));
+        MYOBJ obj = new MYOBJ();
+        obj.val = "HAHAHA";
+        xxx(obj);
+        System.out.println(obj.val);
+    }
 
+
+    private static void xxx(MYOBJ obj) {
+        obj.val = "HIHI";
     }
 
 

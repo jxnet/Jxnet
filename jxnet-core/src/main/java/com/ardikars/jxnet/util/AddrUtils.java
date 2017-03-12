@@ -67,6 +67,25 @@ public final class AddrUtils {
 		return null;
 	}
 
+	public static int LookupNet(String source, Inet4Address netp, Inet4Address maskp, StringBuilder errbuf) {
+		List<PcapIf> alldevsp = new ArrayList<PcapIf>();
+		PcapFindAllDevs(alldevsp, errbuf);
+		for (PcapIf dev : alldevsp) {
+			if (dev.getName().equals(source)) {
+				for (PcapAddr addr : dev.getAddresses()) {
+					if (addr.getAddr().getSaFamily() == SockAddr.Family.AF_INET) {
+						if (addr.getAddr().getData() != null && addr.getNetmask().getData() != null) {
+							netp.update((Inet4Address) addr.getAddr().toInetAddress());
+							maskp.update((Inet4Address) addr.getNetmask().toInetAddress());
+							return 0;
+						}
+					}
+				}
+			}
+		}
+		return -1;
+	}
+
 	static {
 		try {
 			Class.forName("com.ardikars.jxnet.Jxnet");

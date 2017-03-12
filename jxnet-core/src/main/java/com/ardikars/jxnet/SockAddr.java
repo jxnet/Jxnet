@@ -28,59 +28,58 @@ import java.util.Arrays;
 public final class SockAddr {
 
     public enum Family {
-        
+
         AF_INET((short) 2, "AF_INET"),
         AF_INET6((short) 10, "AF_INET6"),
         ;
-        
-        private short family;
-        private String description;
-        
-        private Family(short family, String description) {
-            this.family = family;
-            this.description = description;
+
+        private short value;
+        private String name;
+
+        private Family(short value, String name) {
+            this.value = value;
+            this.name = name;
         }
 
         /**
-         * Returning address family.
-         * @return address family.
+         * Returning address value.
+         * @return address value.
          */
-        public short getFamily() {
-            return family;
+        public short getValue() {
+            return value;
         }
 
         /**
-         * Returning address family description.
-         * @return address family description.
+         * Returning address value name.
+         * @return address value name.
          */
-        public String getDescription() {
-            return description;
+        public String getName() {
+            return name;
         }
 
         /**
-         * Getting family type.
-         * @param family address family type.
-         * @return family type.
+         * Getting value type.
+         * @param family address value type.
+         * @return value type.
          */
         public static Family valueOf(short family) {
             for(Family f : values()) {
-                if(f.getFamily() == family) {
+                if(f.getValue() == family) {
                     return f;
                 }
             }
-            
             return null;
         }
-        
+
     }
-    
+
     private volatile short sa_family;
-    
+
     private volatile byte[] data;
 
     /**
-     * Returning address family type.
-     * @return address family type.
+     * Returning address value type.
+     * @return address value type.
      */
     public Family getSaFamily() {
         switch(sa_family) {

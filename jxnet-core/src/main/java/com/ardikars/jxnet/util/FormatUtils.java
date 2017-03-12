@@ -26,9 +26,35 @@ import static com.ardikars.jxnet.util.Preconditions.CheckArgument;
  * @since 1.0.0
  */
 public class FormatUtils {
+
+	public static ByteBuffer toDirectBuffer(ByteBuffer byteBuffer) {
+		CheckNotNull(byteBuffer);
+		if (byteBuffer.isDirect())
+			return byteBuffer;
+		ByteBuffer buffer = ByteBuffer.
+				allocateDirect(byteBuffer.capacity());
+		return buffer.put(byteBuffer);
+	}
 	
+	public static ByteBuffer toDirectBuffer(byte[] bytes) {
+		CheckNotNull(bytes);
+		ByteBuffer buffer = ByteBuffer.
+				allocateDirect(bytes.length);
+		return buffer.put(bytes);
+	}
+
+	public static byte[] toBytes(ByteBuffer byteBuffer) {
+		CheckNotNull(byteBuffer);
+		if (!byteBuffer.hasRemaining()) {
+			byteBuffer.flip();
+		}
+		byte[] buffer = new byte[byteBuffer.remaining()];
+		byteBuffer.get(buffer);
+		return buffer;
+	}
+
 	public static byte[] toBytes(String hexStr) {
-		CheckNotNull(hexStr, "Null parameter.");
+		CheckNotNull(hexStr);
 		String src = hexStr.replaceAll("\\s+", "").trim();
 		int len = src.length();
 		byte[] data = new byte[len / 2];
@@ -40,7 +66,7 @@ public class FormatUtils {
 	}
 
 	public static long toLong(byte[] bytes) {
-		CheckNotNull(bytes, "Null parameter.");
+		CheckNotNull(bytes);
 		ByteBuffer bb = ByteBuffer.allocate(bytes.length);
 		bb.put(bytes);
 		return bb.getLong();
@@ -48,8 +74,8 @@ public class FormatUtils {
 
 	
 	public static String toHexString(byte[] data, int offset, int length) {
-		CheckNotNull(data, "Null parameter.");
-		CheckArgument(offset > 0 && length > 0, "");
+		CheckNotNull(data);
+		CheckArgument(offset > 0 && length > 0);
 		StringBuilder sb = new StringBuilder();
 		int l;
 		if(data.length != length) {
@@ -64,7 +90,7 @@ public class FormatUtils {
 	}
 	
 	public static String toHexString(byte b) {
-		CheckNotNull(b, "Null parameter.");
+		CheckNotNull(b);
 		String s = Integer.toHexString((b) & 0xFF);
 		if (s.length() == 1)
 			return ("0" + s);
@@ -72,7 +98,7 @@ public class FormatUtils {
 	}
 	
 	public static String toAscii(String hexStr) {
-		CheckNotNull(hexStr, "Null parameter.");
+		CheckNotNull(hexStr);
 		StringBuilder sb = new StringBuilder("");
 		for (int i = 0; i < hexStr.length(); i += 2) {
 			String str = hexStr.substring(i, i + 2);

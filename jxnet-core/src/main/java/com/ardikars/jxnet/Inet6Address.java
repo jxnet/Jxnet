@@ -31,7 +31,10 @@ public final class Inet6Address extends InetAddress {
 	public static final short IPV6_ADDRESS_LENGTH = 16;
 	
 	private byte[] address = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
-	
+
+	public Inet6Address() {
+	}
+
 	private Inet6Address(byte[] address) {
 		this.address = address;
 	}
@@ -200,7 +203,11 @@ public final class Inet6Address extends InetAddress {
 
 	@Override
 	public int hashCode() {
-		return Long.hashCode(toLong());
+		int hashCode = 17 * 3;
+		for (int i=0; i<address.length; i++) {
+			hashCode = hashCode * 3 + address[i];
+		}
+		return hashCode + super.hashCode();
 	}
 
 	public String toString() {

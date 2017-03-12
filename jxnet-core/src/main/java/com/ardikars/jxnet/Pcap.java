@@ -41,10 +41,30 @@ public final class Pcap {
 		}
 		return false;
 	}
-	
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (getClass() != obj.getClass())
+			return false;
+		if (obj instanceof Pcap) {
+			Pcap pcap = (Pcap) obj;
+			return pointer.equals(pcap.getPointer());
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return 17 * 37 + super.hashCode();
+	}
+
 	@Override
 	public String toString() {
-		return pointer.toString();
+		return new StringBuilder().append("[Pointer Address: ")
+				.append(getPointer().getAddress())
+				.append("]").toString();
 	}
 
 }

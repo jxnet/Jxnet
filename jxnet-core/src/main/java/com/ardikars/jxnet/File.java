@@ -25,10 +25,6 @@ import com.ardikars.jxnet.util.Pointer;
  */
 public final class File extends java.io.File {
 
-	private static native void initIDs();
-	
-	private static final long serialVersionUID = -7925210130734414457L;
-	
 	private Pointer pointer;
 
 	/**
@@ -46,10 +42,30 @@ public final class File extends java.io.File {
 	private File(String pathname) {
 		super(pathname);
 	}
-	
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (getClass() != obj.getClass())
+			return false;
+		if (obj instanceof BpfProgram) {
+			BpfProgram bpf = (BpfProgram) obj;
+			return pointer.equals(bpf.getPointer());
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return 17 * 37 + super.hashCode();
+	}
+
 	@Override
 	public String toString() {
-		return super.toString();
+		return new StringBuilder().append("[Pointer Address: ")
+				.append(getPointer().getAddress())
+				.append("]").toString();
 	}
-	
+
 }

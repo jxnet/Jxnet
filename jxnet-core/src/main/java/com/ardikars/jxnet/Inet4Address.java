@@ -29,7 +29,11 @@ public final class Inet4Address extends InetAddress {
 	public static final int IPV4_ADDRESS_LENGTH = 4;
 	
 	private byte[] address = new byte[Inet4Address.IPV4_ADDRESS_LENGTH];
-	
+
+	public Inet4Address() {
+
+	}
+
 	private Inet4Address(final byte[] address) {
 		this.address = address;
 	}
@@ -138,7 +142,7 @@ public final class Inet4Address extends InetAddress {
 
 	@Override
 	public int hashCode() {
-		return Long.hashCode(toLong());
+		return 17 * 37 + toInt() + super.hashCode();
 	}
 
 	public String toString() {

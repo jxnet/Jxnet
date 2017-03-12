@@ -165,7 +165,9 @@ public final class MacAddress {
 
 	@Override
 	public int hashCode() {
-		return Long.hashCode(toLong());
+		long hashcode = toLong();
+		return 17 * 37 +
+				((int) (hashcode ^ (hashcode >> 32))) + super.hashCode();
 	}
 
 	@Override
