@@ -1,0 +1,36 @@
+
+
+
+BUILD FOR LINUX
+---------------
+
+export JXNET=$(pwd)
+
+sudo apt-get install bison flex
+sudo apt-get install automake autoconf libtool gcc
+
+cd $JXNET/libpcap
+./configure --prefix=/usr
+make
+sudo make install
+
+cd $JXNET/libdnet
+./configure --prefix=/usr
+make
+sudo make install
+
+cd $JXNET
+./bootstrap.sh
+./configure --prefix=/usr
+make
+sudo make install
+
+
+BUILD FOR ANDROID
+-----------------
+
+ndk-build
+
+
+BUILD FOR WINDOWS
+-----------------

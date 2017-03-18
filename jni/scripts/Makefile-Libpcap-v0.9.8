@@ -1,0 +1,24 @@
+
+LOCAL_SRC_FILE = \
+		pcap-linux.c \
+		fad-getad.c \
+		pcap.c \
+		inet.c \
+		gencode.c \
+		optimize.c \
+		nametoaddr.c \
+		etherent.c \
+		savefile.c \
+		bpf/net/bpf_filter.c \
+		bpf_image.c \
+		bpf_dump.c \
+		scanner.c \
+		grammar.c \
+		version.c \
+
+LOCAL_CFLAGS = -DHAVE_CONFIG_H -D_U_="__attribute__((unused))" -fpic -I. -Dlinux -D__GLIBC__ -D_GNU_SOURCE -I.
+
+
+all:
+	gcc -shared $(LOCAL_CFLAGS) $(LOCAL_SRC_FILE) -o libpcap.so
+

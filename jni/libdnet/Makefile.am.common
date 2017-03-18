@@ -1,0 +1,6 @@
+## $Id: Makefile.am.common,v 1.3 2006/01/19 06:09:27 dugsong Exp $
+
+AUTOMAKE_OPTIONS = foreign no-dependencies
+
+AM_CPPFLAGS = -I$(top_srcdir)/include
+

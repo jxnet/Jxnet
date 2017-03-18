@@ -1,0 +1,28 @@
+
+dev = dnet.intf('fxp0')
+dev.mtu = 1500
+dev.addr = dnet.addr('1.2.3.4')
+dev.send(eth_pkt)
+pkt = dev.recv(...)
+
+arptab = dnet.arp()
+arptab['1.2.3.4] = '0:d:e:a:d:0'
+
+
+maybe generators to iterate over *_loop?
+
+maybe dict representation for tables?
+
+arp = dnet.arp()
+arp['10.0.1.1'] = '0:d:e:a:d'
+
+rt = dnet.route()
+rt['10.0.3.0']	# XXX - weird for less-specific matching
+
+intf.get_list()
+
+wi = dnet.intf('wi0')
+wi.mtu = 100
+wi.addr = ...
+
+
