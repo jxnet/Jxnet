@@ -16,16 +16,16 @@ public class PcapDatalink {
         if (handler == null) {
             throw new PcapCloseException(errbuf.toString());
         }
-        int datalink = PcapDatalink(handler);
-        String linkName = PcapDatalinkValToName(datalink);
-        String linkDesc = PcapDatalinkValToDescription(datalink);
+        int datalink = PcapDataLink(handler);
+        String linkName = PcapDataLinkValToName(datalink);
+        String linkDesc = PcapDataLinkValToDescription(datalink);
 
         System.out.println("Datalink : " + datalink);
         System.out.println("Set Datalink to " + datalink + " : "
-                + ((PcapSetDatalink(handler, datalink) == 0) ? true : false));
+                + ((PcapSetDataLink(handler, datalink) == 0) ? true : false));
         System.out.println("Datalink Name " + linkName);
         System.out.println("Datalink Desc : " + linkDesc);
-        System.out.println("Link name to value : " + PcapDatalinkNameToVal(linkName));
+        System.out.println("Link name to value : " + PcapDataLinkNameToVal(linkName));
     }
 
 }

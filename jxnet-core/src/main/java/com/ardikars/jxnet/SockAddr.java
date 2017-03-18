@@ -17,6 +17,7 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.jxnet.util.EnumHelpers;
 import com.ardikars.jxnet.util.FormatUtils;
 
 import java.util.Arrays;
@@ -34,11 +35,11 @@ public final class SockAddr {
         ;
 
         private short value;
-        private String name;
+        private String description;
 
-        private Family(short value, String name) {
+        private Family(Short value, String description) {
             this.value = value;
-            this.name = name;
+            this.description = description;
         }
 
         /**
@@ -50,11 +51,11 @@ public final class SockAddr {
         }
 
         /**
-         * Returning address value name.
-         * @return address value name.
+         * Returning address value description.
+         * @return address value description.
          */
-        public String getName() {
-            return name;
+        public String getDescription() {
+            return description;
         }
 
         /**
@@ -69,6 +70,14 @@ public final class SockAddr {
                 }
             }
             return null;
+        }
+
+        public static void register(String enumName, short value, String name) {
+            EnumHelpers.add(Family.class, enumName, new Object[] {value, name});
+        }
+
+        public static void unregister(String enumName) {
+            EnumHelpers.remove(Family.class, enumName);
         }
 
     }

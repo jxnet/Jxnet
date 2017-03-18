@@ -1,29 +1,16 @@
 package com.ardikars.test;
 
-import com.ardikars.jxnet.util.Preconditions;
 
-import java.lang.reflect.Field;
+import com.ardikars.jxnet.DataLinkType;
 
+import java.util.Map;
+import java.util.Properties;
 
-class MYOBJ {
-    public String val;
-}
+public class Test {
 
-public class    Test {
 
     public static void main(String[] args) {
-        MYOBJ obj = new MYOBJ();
-        obj.val = "HAHAHA";
-        xxx(obj);
-        System.out.println(obj.val);
+        System.setProperty("username", "ardikars");
     }
-
-
-    private static void xxx(MYOBJ obj) {
-        obj.val = "HIHI";
-    }
-
-
-
 }
 

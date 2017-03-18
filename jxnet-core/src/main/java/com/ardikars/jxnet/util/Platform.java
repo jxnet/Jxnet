@@ -20,7 +20,6 @@ package com.ardikars.jxnet.util;
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
- * @version 1.0.0
  */
 public class Platform {
 	

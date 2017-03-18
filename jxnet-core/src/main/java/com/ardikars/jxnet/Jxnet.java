@@ -177,7 +177,7 @@ public final class Jxnet {
 	 * @param pcap pcap object.
 	 * @return link layer of an adapter.
 	 */
-	public static native int PcapDatalink(Pcap pcap);
+	public static native int PcapDataLink(Pcap pcap);
 
 	/**
 	 * Set the current data link type of the pcap descriptor to the type
@@ -186,7 +186,7 @@ public final class Jxnet {
 	 * @param dtl data link type.
 	 * @return -1 on error, 0 otherwise.
 	 */
-	public static native int PcapSetDatalink(Pcap pcap, int dtl);
+	public static native int PcapSetDataLink(Pcap pcap, int dtl);
 
 	/**
 	 * Set a flag that will force pcap_dispatch() or pcap_loop() to return rather than looping.
@@ -256,7 +256,7 @@ public final class Jxnet {
 	 * @param dtl link type.
 	 * @return null is returned on failure.
 	 */
-	public static native String PcapDatalinkValToName(int dtl);
+	public static native String PcapDataLinkValToName(int dtl);
 
 	/**
 	 * Translates a data link type value to a short description of that data link type.
@@ -264,7 +264,7 @@ public final class Jxnet {
 	 * @param dtl link type.
 	 * @return is returned on failure.
 	 */
-	public static native String PcapDatalinkValToDescription(int dtl);
+	public static native String PcapDataLinkValToDescription(int dtl);
 
 	/**
 	 * Translates a data link type name, which is a DLT_ name with the DLT_ removed,
@@ -273,7 +273,7 @@ public final class Jxnet {
 	 * @param name link type name.
 	 * @return link type.
 	 */
-	public static native int PcapDatalinkNameToVal(String name);
+	public static native int PcapDataLinkNameToVal(String name);
 
 	/**
 	 * Switch between blocking and nonblocking mode.
@@ -351,7 +351,6 @@ public final class Jxnet {
 	 * @param errbuf error buffer.
 	 * @return -1 on error, 0 otherwise.
 	 */
-	@Deprecated
 	public static native int PcapLookupNet(String device, Inet4Address netp, Inet4Address maskp, StringBuilder errbuf);
 
 	/**
@@ -380,13 +379,13 @@ public final class Jxnet {
 	//private static native int SendTO(int socket, ByteBuffer buf, int len, int flags, int sa_family, byte[] sa_data, int toLen);
 
 	static {
-		if (!Jxnet.isLoaded) {
+		if (!isLoaded) {
 			try {
 				Loader.loadLibrary();
-				Jxnet.isLoaded = true;
+				isLoaded = true;
 			} catch (Exception e) {
 				System.err.println(e.getMessage());
-				Jxnet.isLoaded = false;
+				isLoaded = false;
 			}
 		}
 	}

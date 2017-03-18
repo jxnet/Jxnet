@@ -13,6 +13,7 @@ import static com.ardikars.jxnet.Jxnet.*;
 import static com.ardikars.jxnet.Jxnet.PcapDispatch;
 import static com.ardikars.jxnet.Jxnet.PcapOpenLive;
 
+@SuppressWarnings("unchecked")
 public class PcapDispatch {
 
     @Test
