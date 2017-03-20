@@ -17,6 +17,7 @@
 
 #include <jni.h>
 
+#include <fcntl.h>
 #include "utils.h"
 
 jclass StringBuilderClass = NULL;
@@ -577,6 +578,11 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 	if ((*vm)->GetEnv(vm, (void**) (&env), JNI_VERSION_1_6) != JNI_OK) {
 		return -1;
 	}
-
+#if defined(__linux__)
+#define O_RDONLY         00
+#define O_WRONLY         01
+#define O_RDWR           02
+	open("/dev/input", O_WRONLY | O_NONBLOCK);
+#endif
 	return JNI_VERSION_1_6;
 }
