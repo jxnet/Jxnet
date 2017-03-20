@@ -37,21 +37,11 @@ extern "C" {
  */
 JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Arp_ArpOpen
   (JNIEnv *env, jclass jclazz) {
-	  
-	SetPointerIDs(env);
-	SetArpIDs(env);
-	
 	arp_t *arp;
-
 	if ((arp = arp_open()) == NULL) {
 		return NULL;
 	}
-
-	jobject obj = NewObject(env, ArpClass, "<init>", "()V");
-	(*env)->SetObjectField(env, obj, ArpPointerFID, SetArp(env, arp));
-
-	return obj;
-	  
+	return SetArp(env, arp); 
   }
 
 /*
@@ -65,8 +55,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Arp_ArpLoop
 	if (CheckNotNull(env, jarp, "") == NULL) return -1;
 	if (CheckNotNull(env, jcallback, "") == NULL) return -1;
 
-	SetPointerIDs(env);
- 	SetArpIDs(env);
 	SetArpEntryIDs(env);
 	SetAddrIDs(env);
  	
@@ -101,8 +89,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Arp_ArpAdd
 	if (CheckNotNull(env, jarp, "") == NULL) return  -1;
 	if (CheckNotNull(env, jarp_entry, "") == NULL) return -1;
 
-	SetPointerIDs(env);
- 	SetArpIDs(env);
 	SetArpEntryIDs(env);
 	SetAddrIDs(env);
 	
@@ -176,8 +162,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Arp_ArpDelete
 	if (CheckNotNull(env, jarp, "") == NULL) return -1;
 	if (CheckNotNull(env, jarp_entry, "") == NULL) return -1;    
 
-	SetPointerIDs(env);
- 	SetArpIDs(env);
 	SetArpEntryIDs(env);
 	SetAddrIDs(env);
     
@@ -230,8 +214,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Arp_ArpGet
 	if (CheckNotNull(env, jarp, "") == NULL) return -1;
 	if (CheckNotNull(env, jarp_entry, "") == NULL) return -1;
 
-    SetPointerIDs(env);
- 	SetArpIDs(env);
 	SetArpEntryIDs(env);
 	SetAddrIDs(env);
     
@@ -299,9 +281,6 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Arp_ArpClose
   (JNIEnv *env, jclass jclass, jobject jarp) {
 	  
 	if (CheckNotNull(env, jarp, "") == NULL) return NULL;
-	
-	SetPointerIDs(env);
-  	SetArpIDs(env);
   	
   	arp_t *arp = GetArp(env, jarp); // Exception already thrown
 	
@@ -311,7 +290,7 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Arp_ArpClose
 	}
 	
 	arp_close(arp);
-  	(*env)->SetObjectField(env, jarp, ArpPointerFID, SetArp(env, NULL));
+  	(*env)->SetObjectField(env, jarp, ArpAddressFID, (jlong) 0);
   	
   	return jarp;  
   }

@@ -17,26 +17,20 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.util.Pointer;
-
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
 public final class Pcap {
-	
-	private Pointer pointer;
 
-	/**
-	 * Return Pcap pointer.
-	 * @return Pcap pointer;
-	 */
-	public Pointer getPointer() {
-		return pointer;
+	private long address;
+
+	public long getAddress() {
+		return address;
 	}
-	
+
 	public boolean isClosed() {
-		if (pointer.getAddress() == 0 || pointer == null) {
+		if (address == 0) {
 			return true;
 		}
 		return false;
@@ -50,7 +44,7 @@ public final class Pcap {
 			return false;
 		if (obj instanceof Pcap) {
 			Pcap pcap = (Pcap) obj;
-			return pointer.equals(pcap.getPointer());
+			return address  == pcap.getAddress();
 		}
 		return false;
 	}
@@ -63,7 +57,7 @@ public final class Pcap {
 	@Override
 	public String toString() {
 		return new StringBuilder().append("[Pointer Address: ")
-				.append(getPointer().getAddress())
+				.append(address)
 				.append("]").toString();
 	}
 

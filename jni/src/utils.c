@@ -107,77 +107,71 @@ jobject NewSockAddr(JNIEnv *env, struct sockaddr *addr) {
 }
 
 jobject SetPcap(JNIEnv *env, pcap_t *pcap) {
-	SetPointerIDs(env);
-	jobject pointer = NewObject(env, PointerClass, "<init>", "()V");
-	if(pcap == NULL) {
-		(*env)->SetLongField(env, pointer, PointerAddressFID, (jlong) 0);
-	} else {
-		(*env)->SetLongField(env, pointer, PointerAddressFID, PointerToJlong(pcap));
-	}
-	return pointer;
+	SetPcapIDs(env);
+	jobject obj = NewObject(env, PcapClass, "<init>", "()V");
+  	(*env)->SetLongField(env, obj, PcapAddressFID, PointerToJlong(pcap));
+  	return obj;
 }
 
 jobject SetArp(JNIEnv *env, arp_t *arp) {
-	SetPointerIDs(env);
-	jobject pointer = NewObject(env, PointerClass, "<init>", "()V");
-	if(arp == NULL) {
-		(*env)->SetLongField(env, pointer, PointerAddressFID, (jlong) 0);
-	} else {
-		(*env)->SetLongField(env, pointer, PointerAddressFID, PointerToJlong(arp));
-	}
-	return pointer;
+	SetArpIDs(env);
+	jobject obj = NewObject(env, ArpClass, "<init>", "()V");
+  	(*env)->SetLongField(env, obj, ArpAddressFID, PointerToJlong(arp));
+  	return obj;
 }
 
 pcap_t *GetPcap(JNIEnv *env, jobject jpcap) {
-	SetPointerIDs(env);
-	jobject pointer = (*env)->GetObjectField(env, jpcap, PcapPointerFID);
+	if(jpcap == NULL) {
+		ThrowNew(env, NULL_PTR_EXCEPTION, NULL);
+		return NULL;
+	}
+	SetPcapIDs(env);
 	jlong pcap = 0;
-	if((pcap = (*env)->GetLongField(env, pointer, PointerAddressFID)) == 0) {
+	if ((pcap = (*env)->GetLongField(env, jpcap, PcapAddressFID)) == 0) {
 		ThrowNew(env, PCAP_CLOSE_EXCEPTION, NULL);
 	}
 	return JlongToPointer(pcap);
 }
 
 arp_t *GetArp(JNIEnv *env, jobject jarp) {
-	SetPointerIDs(env);
-	jobject pointer = (*env)->GetObjectField(env, jarp, ArpPointerFID);
+	if(jarp == NULL) {
+		ThrowNew(env, NULL_PTR_EXCEPTION, NULL);
+		return NULL;
+	}
+	SetArpIDs(env);
 	jlong arp = 0;
-	if((arp = (*env)->GetLongField(env, pointer, PointerAddressFID)) == 0) {
+	if ((arp = (*env)->GetLongField(env, jarp, ArpAddressFID)) == 0) {
 		ThrowNew(env, ARP_CLOSE_EXCEPTION, NULL);
 	}
 	return JlongToPointer(arp);
 }
 
 jobject SetFile(JNIEnv *env, FILE *file) {
-	SetPointerIDs(env);
-	jobject pointer = NewObject(env, PointerClass, "<init>", "()V");
-	if(file == NULL) {
-		(*env)->SetLongField(env, pointer, PointerAddressFID, (jlong) 0);
-	} else {
-		(*env)->SetLongField(env, pointer, PointerAddressFID, PointerToJlong(file));
-	}
-	return pointer;
+	SetFileIDs(env);
+	jobject obj = NewObject(env, FileClass, "<init>", "()V");
+  	(*env)->SetLongField(env, obj, FileAddressFID, PointerToJlong(file));
+  	return obj;
 }
 
 FILE *GetFile(JNIEnv *env, jobject jf) {
-	SetPointerIDs(env);
-	jobject pointer = (*env)->GetObjectField(env, jf, FilePointerFID);
+	if(jf == NULL) {
+		ThrowNew(env, NULL_PTR_EXCEPTION, NULL);
+		return NULL;
+	}
+	SetFileIDs(env);
 	jlong file = 0;
-	if((file = (*env)->GetLongField(env, pointer, PointerAddressFID)) == 0) {
+	if ((file = (*env)->GetLongField(env, jf, FileAddressFID)) == 0) {
 		ThrowNew(env, FILE_CLOSE_EXCEPTION, NULL);
 	}
 	return JlongToPointer(file);
 }
 
 jobject SetPcapDumper(JNIEnv *env, pcap_dumper_t *pcap_dumper) {
-	SetPointerIDs(env);
-	jobject pointer = NewObject(env, PointerClass, "<init>", "()V");
-	if(pcap_dumper == NULL) {
-		(*env)->SetLongField(env, pointer, PointerAddressFID, (jlong) 0);
-	} else {
-		(*env)->SetLongField(env, pointer, PointerAddressFID, PointerToJlong(pcap_dumper));
-	}
-	return pointer;
+	SetPcapDumperIDs(env);
+	jobject obj = NewObject(env, PcapDumperClass, "<init>", "()V");
+  	(*env)->SetLongField(env, obj, PcapDumperAddressFID, PointerToJlong(pcap_dumper));
+  	return obj;
+	
 }
 
 pcap_dumper_t *GetPcapDumper(JNIEnv *env, jobject jpcap_dumper) {
@@ -185,13 +179,18 @@ pcap_dumper_t *GetPcapDumper(JNIEnv *env, jobject jpcap_dumper) {
 		ThrowNew(env, NULL_PTR_EXCEPTION, NULL);
 		return NULL;
 	}
-	SetPointerIDs(env);
-	jobject pointer = (*env)->GetObjectField(env, jpcap_dumper, PcapDumperPointerFID);
+	SetPcapDumperIDs(env);
 	jlong pcap_dumper = 0;
-	if((pcap_dumper = (*env)->GetLongField(env, pointer, PointerAddressFID)) == 0) {
+	if ((pcap_dumper = (*env)->GetLongField(env, jpcap_dumper, PcapDumperAddressFID)) == 0) {
 		ThrowNew(env, PCAP_DUMPER_CLOSE_EXCEPTION, NULL);
 	}
 	return JlongToPointer(pcap_dumper);
+}
+
+jobject SetBpfProgram(JNIEnv *env, jobject obj, struct bpf_program *fp) {
+	SetBpfProgramIDs(env);
+  	(*env)->SetLongField(env, obj, BpfProgramAddressFID, PointerToJlong(fp));
+  	return obj;
 }
 
 struct bpf_program *GetBpfProgram(JNIEnv *env, jobject jbpf_program) {
@@ -199,9 +198,13 @@ struct bpf_program *GetBpfProgram(JNIEnv *env, jobject jbpf_program) {
 		ThrowNew(env, NULL_PTR_EXCEPTION, NULL);
 		return NULL;
 	}
-	SetPointerIDs(env);
-	jobject pointer = (*env)->GetObjectField(env, jbpf_program, BpfProgramPointerFID);
-	return JlongToPointer((*env)->GetLongField(env, pointer, PointerAddressFID));
+	SetBpfProgramIDs(env);
+	jlong bpf_program = 0;
+	if ((bpf_program = (*env)->GetLongField(env, jbpf_program, BpfProgramAddressFID)) == 0) {
+		ThrowNew(env, BPF_PROGRAM_CLOSE_EXCEPTION, NULL);
+	}
+	return JlongToPointer(bpf_program);
+	
 }
 
 void pcap_callback(u_char *user, const struct pcap_pkthdr *pkt_header, const u_char *pkt_data) {

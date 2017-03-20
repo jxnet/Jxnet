@@ -39,10 +39,6 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxnet_BpfProgram_initBpfProgram
         
 		if (CheckNotNull(env, jobj, "") == NULL) return;
 		
-        SetPointerIDs(env);
-        SetBpfProgramIDs(env);
-        
-        jobject pointer = NewObject(env, PointerClass, "<init>", "()V");
         struct bpf_program *fp = (struct bpf_program *) malloc(sizeof(struct bpf_program));
         
         if(fp == NULL) {
@@ -53,9 +49,7 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxnet_BpfProgram_initBpfProgram
         fp->bf_insns = NULL;
         fp->bf_len = 0;
         
-        (*env)->SetLongField(env, pointer, PointerAddressFID, PointerToJlong(fp));
-        (*env)->SetObjectField(env, jobj, BpfProgramPointerFID, pointer);
-        (*env)->DeleteLocalRef(env, pointer);
+        SetBpfProgram(env, jobj, fp);
   }
 
 #ifdef __cplusplus

@@ -1,13 +1,15 @@
 package com.ardikars.test;
 
 import static com.ardikars.jxnet.Jxnet.*;
-import com.ardikars.jxnet.Pcap;
-import com.ardikars.jxnet.PcapDumper;
+
+import com.ardikars.jxnet.*;
 import com.ardikars.jxnet.exception.PcapCloseException;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class PcapDumpOpen {
+import java.nio.ByteBuffer;
+
+public class PcapDump {
 	
 	@Test
 	public void run() throws PcapCloseException {
@@ -25,11 +27,18 @@ public class PcapDumpOpen {
 			PcapClose(handler);
 		} else {
 			System.out.println("OK");
-			PcapDumpClose(dumper);
-			PcapClose(handler);
 		}
+
+		PcapHandler<String> callback = (user, h, bytes) -> {
+			Jxnet.PcapDump(dumper, h, bytes);
+		};
+
+		Jxnet.PcapLoop(handler, 5, callback, null);
+
 		Assert.assertFalse(error);
 		Assert.assertNotEquals(null, dumper);
+		PcapClose(handler);
+		PcapDumpClose(dumper);
 	}
 	
 }

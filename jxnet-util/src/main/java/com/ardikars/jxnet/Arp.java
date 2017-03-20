@@ -17,22 +17,20 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.util.Pointer;
-
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
 public class Arp {
 
-    private Pointer pointer;
+    private long address;
 
-    public Pointer getPointer() {
-        return pointer;
+    public long getAddress() {
+        return address;
     }
 
     public boolean isClosed() {
-        if (pointer.getAddress() == 0) {
+        if (address == 0) {
             return true;
         }
         return false;
@@ -40,7 +38,7 @@ public class Arp {
 
     @Override
     public String toString() {
-        return pointer.toString();
+        return String.valueOf(address);
     }
 
     // static

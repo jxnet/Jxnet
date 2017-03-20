@@ -17,8 +17,6 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.util.Pointer;
-
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
@@ -26,8 +24,8 @@ import com.ardikars.jxnet.util.Pointer;
 public final class BpfProgram {
 	
 	private native void initBpfProgram();
-	
-	private Pointer pointer;
+
+	private long address;
 
 	/**
 	 * Create instance ob BpfProgram and initialize it.
@@ -36,16 +34,12 @@ public final class BpfProgram {
 		initBpfProgram();
 	}
 
-	/**
-	 * Pointer of BpfProgram.
-	 * @return pointer of BpfProgram.
-	 */
-	public Pointer getPointer() {
-		return pointer;
+	public long getAddress() {
+		return address;
 	}
 
 	public boolean isClosed() {
-		if (pointer.getAddress() == 0 || pointer == null) {
+		if (address == 0) {
 			return true;
 		}
 		return false;
@@ -59,7 +53,7 @@ public final class BpfProgram {
 			return false;
 		if (obj instanceof BpfProgram) {
 			BpfProgram bpf = (BpfProgram) obj;
-			return pointer.equals(bpf.getPointer());
+			return address == bpf.getAddress();
 		}
 		return false;
 	}
@@ -72,7 +66,7 @@ public final class BpfProgram {
 	@Override
 	public String toString() {
 		return new StringBuilder().append("[Pointer Address: ")
-				.append(getPointer().getAddress())
+				.append(address)
 				.append("]").toString();
 	}
 	

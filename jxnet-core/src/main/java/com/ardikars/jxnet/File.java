@@ -17,22 +17,16 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.util.Pointer;
-
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
 public final class File extends java.io.File {
 
-	private Pointer pointer;
+	private long address;
 
-	/**
-	 * Pointer of File.
-	 * @return pointer of File.
-	 */
-	public Pointer getPointer() {
-		return pointer;
+	public long getAddress() {
+		return address;
 	}
 
 	/**
@@ -51,7 +45,7 @@ public final class File extends java.io.File {
 			return false;
 		if (obj instanceof BpfProgram) {
 			BpfProgram bpf = (BpfProgram) obj;
-			return pointer.equals(bpf.getPointer());
+			return address  == bpf.getAddress();
 		}
 		return false;
 	}
@@ -64,7 +58,7 @@ public final class File extends java.io.File {
 	@Override
 	public String toString() {
 		return new StringBuilder().append("[Pointer Address: ")
-				.append(getPointer().getAddress())
+				.append(address)
 				.append("]").toString();
 	}
 

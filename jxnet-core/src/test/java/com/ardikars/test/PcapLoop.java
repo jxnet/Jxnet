@@ -20,6 +20,7 @@ public class PcapLoop {
 		StringBuilder errbuf = new StringBuilder();
 		String dev = AllTests.deviceName;
 		Pcap handler = PcapOpenLive(dev, AllTests.snaplen, AllTests.promisc, AllTests.to_ms, errbuf);
+		System.out.println(handler.getAddress());
 		if (handler == null) {
 			throw new PcapCloseException(errbuf.toString());
 		}
@@ -32,7 +33,7 @@ public class PcapLoop {
 			}
 		};
 		
-		if (PcapLoop(handler, 10, callback, null) != OK) {
+		if (PcapLoop(handler, 5, callback, null) != OK) {
 			System.err.println("GAGAL");
 		}
 		PcapClose(handler);

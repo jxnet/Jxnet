@@ -81,6 +81,8 @@ jobject SetPcapDumper(JNIEnv *env, pcap_dumper_t *pcap_dumper);
 
 pcap_dumper_t *GetPcapDumper(JNIEnv *env, jobject jpcap_dumper);
 
+jobject SetBpfProgram(JNIEnv *env, jobject obj, struct bpf_program *fp);
+
 struct bpf_program *GetBpfProgram(JNIEnv *env, jobject jbpf_program);
 
 void pcap_callback(u_char *user, const struct pcap_pkthdr *pkt_header, const u_char *pkt_data);

@@ -251,48 +251,27 @@ void SetSockAddrIDs(JNIEnv *env) {
 	}
 }
 
-jclass PointerClass = NULL;
-jfieldID PointerAddressFID = NULL;
-
-void SetPointerIDs(JNIEnv *env) {
-
-  	PointerClass = (*env)->FindClass(env, "com/ardikars/jxnet/util/Pointer");
-
-  	if(PointerClass == NULL) {
-		ThrowNew(env, CLASS_NOT_FOUND_EXCEPTION, "Unable to initialize class com.ardikars.jxnet.util.Pointer");
-		return;
-	}
-
-	PointerAddressFID = (*env)->GetFieldID(env, PointerClass, "address", "J");
-
-	if(PointerAddressFID == NULL) {
-		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field Pointer.address:long");
-		return;
-	}
-}
-
 jclass PcapClass = NULL;
-jfieldID PcapPointerFID = NULL;
-
+jfieldID PcapAddressFID = NULL;
 void SetPcapIDs(JNIEnv *env) {
 
   	PcapClass = (*env)->FindClass(env, "com/ardikars/jxnet/Pcap");
 
-  	if(PcapClass == NULL) {
+  	if (PcapClass == NULL) {
 		ThrowNew(env, CLASS_NOT_FOUND_EXCEPTION, "Unable to initialize class com.ardikars.jxnet.Pcap");
 		return;
 	}
-
-	PcapPointerFID = (*env)->GetFieldID(env, PcapClass, "pointer", "Lcom/ardikars/jxnet/util/Pointer;");
-
-	if(PcapPointerFID == NULL) {
-		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field Pcap.pointer:Pointer");
+	
+	PcapAddressFID = (*env)->GetFieldID(env, PcapClass, "address", "J");
+	
+	if (PcapAddressFID == NULL) {
+		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field Pcap.address:long");
 		return;
 	}
 }
 
 jclass ArpClass = NULL;
-jfieldID ArpPointerFID = NULL;
+jfieldID ArpAddressFID = NULL;
 
 void SetArpIDs(JNIEnv *env) {
 
@@ -303,10 +282,10 @@ void SetArpIDs(JNIEnv *env) {
 		return;
 	}
 
-	ArpPointerFID = (*env)->GetFieldID(env, ArpClass, "pointer", "Lcom/ardikars/jxnet/util/Pointer;");
-
-	if(ArpPointerFID == NULL) {
-		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field Pcap.pointer:Pointer");
+	ArpAddressFID = (*env)->GetFieldID(env, ArpClass, "address", "J");
+	
+	if (ArpAddressFID == NULL) {
+		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field Arp.address:long");
 		return;
 	}
 }
@@ -349,21 +328,21 @@ void SetArpEntryIDs(JNIEnv *env) {
 
 
 jclass FileClass = NULL;
-jfieldID FilePointerFID = NULL;
+jfieldID FileAddressFID = NULL;
 
 void SetFileIDs(JNIEnv *env) {
 
 	FileClass = (*env)->FindClass(env, "com/ardikars/jxnet/File");
 
-	if(FileClass == NULL) {
+	if (FileClass == NULL) {
 		ThrowNew(env, CLASS_NOT_FOUND_EXCEPTION, "Unable to initialize class com.ardikars.jxnet.File");
 		return;
 	}
-
-	FilePointerFID = (*env)->GetFieldID(env, FileClass, "pointer", "Lcom/ardikars/jxnet/util/Pointer;");
-
-	if(FilePointerFID == NULL) {
-		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field File.pointer:Pointer");
+	
+	FileAddressFID = (*env)->GetFieldID(env, FileClass, "address", "J");
+	
+	if (FileAddressFID == NULL) {
+		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field File.address:long");
 		return;
 	}
 }
@@ -441,7 +420,7 @@ void SetByteBufferIDs(JNIEnv *env) {
 }
 
 jclass PcapDumperClass = NULL;
-jfieldID PcapDumperPointerFID = NULL;
+jfieldID PcapDumperAddressFID = NULL;
 
 void SetPcapDumperIDs(JNIEnv *env) {
 
@@ -452,29 +431,29 @@ void SetPcapDumperIDs(JNIEnv *env) {
 		return;
 	}
 
-	PcapDumperPointerFID = (*env)->GetFieldID(env, PcapDumperClass, "pointer", "Lcom/ardikars/jxnet/util/Pointer;");
-
-	if(PcapPointerFID == NULL) {
-		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field PcapDumper.pointer:Pointer");
+	PcapDumperAddressFID = (*env)->GetFieldID(env, PcapDumperClass, "address", "J");
+	
+	if(PcapDumperAddressFID == NULL) {
+		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field PcapDumper.address:long");
 		return;
 	}
 }
 
 jclass BpfProgramClass = NULL;
-jfieldID BpfProgramPointerFID = NULL;
+jfieldID BpfProgramAddressFID = NULL;
 
 void SetBpfProgramIDs(JNIEnv *env) {
 
 	BpfProgramClass = (*env)->FindClass(env, "com/ardikars/jxnet/BpfProgram");
 
-  	if(BpfProgramClass == NULL) {
+  	if (BpfProgramClass == NULL) {
 		ThrowNew(env, CLASS_NOT_FOUND_EXCEPTION, "Unable to initialize class com.ardikars.jxnet.BpfProgram");
 		return;
 	}
-
-	BpfProgramPointerFID = (*env)->GetFieldID(env, BpfProgramClass, "pointer", "Lcom/ardikars/jxnet/util/Pointer;");
-	if(BpfProgramPointerFID == NULL) {
-		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field BpfProgram.pointer:Pointer");
+	
+	BpfProgramAddressFID = (*env)->GetFieldID(env, BpfProgramClass, "address", "J");
+	if (BpfProgramAddressFID == NULL) {
+		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field BpfProgram.address:long");
 		return;
 	}
 }

@@ -17,22 +17,16 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.util.Pointer;
-
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
 public final class PcapDumper {
-	
-	private Pointer pointer;
 
-	/**
-	 * Returning pointer of PcapDumper.
-	 * @return pointer of PcapDumper.
-	 */
-	public Pointer getPointer() {
-		return pointer;
+	private long address;
+
+	public long getAddress() {
+		return address;
 	}
 
 	/**
@@ -40,7 +34,7 @@ public final class PcapDumper {
 	 * @return true if PcapDumper is closed, false otherwise.
 	 */
 	public boolean isClosed() {
-		if (pointer.getAddress() == 0) {
+		if (address == 0) {
 			return true;
 		}
 		return false;
@@ -48,7 +42,7 @@ public final class PcapDumper {
 	
 	@Override
 	public String toString() {
-		return pointer.toString();
+		return String.valueOf(address);
 	}
 
 }
