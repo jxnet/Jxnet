@@ -29,4 +29,6 @@ Makefile
 /classes
 *.iml
 *.setting
-
+/libs
+/obj
+*.pcap*

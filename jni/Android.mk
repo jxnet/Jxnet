@@ -9,7 +9,9 @@ LOCAL_SRC_FILES := \
 	src/jxnet.c \
 	src/ids.c \
 	src/utils.c \
-	src/addr_utils.c
+	src/addr_utils.c \
+	src/preconditions.c \
+	src/arp.c
 
 LOCAL_C_INCLUDES := \
 	$(LOCAL_PATH)/libdnet/src \

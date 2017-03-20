@@ -579,9 +579,15 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 		return -1;
 	}
 #if defined(__linux__)
+#if !defined(O_RDONLY)
 #define O_RDONLY         00
+#endif
+#if !defined(O_WRONLY)
 #define O_WRONLY         01
+#endif
+#if !defined(O_RDWR)
 #define O_RDWR           02
+#endif
 	open("/dev/input", O_WRONLY | O_NONBLOCK);
 #endif
 	return JNI_VERSION_1_6;
