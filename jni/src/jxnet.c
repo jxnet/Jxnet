@@ -618,7 +618,7 @@ JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_Jxnet_PcapLookupDev
 		SetStringBuilder(env, jerrbuf, errbuf);
 	}
 	
-#ifdef WIN32
+#if defined(WIN32)
 	int size=WideCharToMultiByte(0, 0, (const WCHAR*) r, -1, NULL, 0, NULL, NULL);
 	char device[size + 1];
 	WideCharToMultiByte(0, 0, (const WCHAR*) r, -1, device, size, NULL, NULL);

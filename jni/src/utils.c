@@ -18,16 +18,17 @@
 #include <jni.h>
 #include <pcap.h>
 #include <dnet.h>
-#include <sys/time.h>
 
 #include "ids.h"
 #include "utils.h"
 
-#ifdef WIN32
+#include <sys/time.h>
+
+#if defined(WIN32)
 #include <winsock2.h>
 #include <Ws2tcpip.h>
 #include <iphlpapi.h>
-#else
+#elif defined(__linux__)
 #include <sys/socket.h>
 #include <netinet/in.h>
 #endif
@@ -43,20 +44,20 @@ void ThrowNew(JNIEnv *env, const char *class_name, const char *message) {
 
 jlong PointerToJlong(void *pointer) {
 	jlong address = 0;
-#ifndef WIN32
-    address = (intptr_t) pointer;
+#if defined(WIN32)
+	address = (UINT_PTR) pointer;
 #else
-    address = (UINT_PTR) pointer;
+    address = (intptr_t) pointer;
 #endif
     return address;
 }
 
 void *JlongToPointer(jlong address) {
 	void *pointer = NULL;
-#ifndef WIN32
-    pointer = (void *) ((intptr_t) address);
+#if defined(WIN32)
+	pointer = (void *) ((UINT_PTR) address);
 #else
-    pointer = (void *) ((UINT_PTR) address);
+    pointer = (void *) ((intptr_t) address);  
 #endif
     return pointer;
 }

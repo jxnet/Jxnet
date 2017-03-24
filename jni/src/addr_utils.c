@@ -158,7 +158,7 @@ JNIEXPORT jbyteArray JNICALL Java_com_ardikars_jxnet_util_AddrUtils_GetMACAddres
 
 	(*env)->ReleaseStringUTFChars(env, jdev_name, buf);
 	
-  	return 	hw_addr;
+  	return hw_addr;
   }
 
 // Get Gateway Address
@@ -319,17 +319,16 @@ JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_util_AddrUtils_GetGatewayAddre
 		free(pAdapterInfo);
 #elif defined(__linux__)
 	struct nlmsghdr *nlMsg = NULL;
-	struct rtmsg *rtMsg = NULL;
 	struct route_info *rtInfo = NULL;
 	char msgBuf[BUFSIZE];
 	int sock, len, msgSeq = 0;
+	
 	/* Create Socket */
 	if ((sock = socket(PF_NETLINK, SOCK_DGRAM, NETLINK_ROUTE)) < 0)
 		perror("Socket Creation: ");
 	memset(msgBuf, 0, BUFSIZE);
 	/* point the header and the msg structure pointers into the buffer */
 	nlMsg = (struct nlmsghdr *) msgBuf;
-	rtMsg = (struct rtmsg *) NLMSG_DATA(nlMsg);
 	/* Fill in the nlmsg header*/
 	nlMsg->nlmsg_len = NLMSG_LENGTH(sizeof(struct rtmsg));  // Length of message.
 	nlMsg->nlmsg_type = RTM_GETROUTE;   // Get the routes from kernel routing table.
