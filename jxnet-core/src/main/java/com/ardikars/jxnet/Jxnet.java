@@ -437,7 +437,7 @@ public final class Jxnet {
 	 * @param pcap pcap object.
 	 * @return 0 on success or PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.
 	 */
-	public static native int PcapSetRfMon(Pcap pcap);
+	public static native int PcapSetRfMon(Pcap pcap, int rfmon);
 
 	/**
 	 * Sets whether immediate mode should be set on a capture handle when the handle is activated. If immediate_mode is non-zero,

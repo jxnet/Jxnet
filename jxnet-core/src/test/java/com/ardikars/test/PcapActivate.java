@@ -18,7 +18,8 @@ public class PcapActivate {
         Jxnet.PcapSetTimeout(pcap, 1000);
         Jxnet.PcapSetImmediateMode(pcap, 1);
         if (Jxnet.PcapCanSetRfMon(pcap) == 1) {
-            Jxnet.PcapSetRfMon(pcap);
+            System.out.println("Set rfmon.");
+            Jxnet.PcapSetRfMon(pcap, 1);
         }
         Jxnet.PcapActivate(pcap);
 

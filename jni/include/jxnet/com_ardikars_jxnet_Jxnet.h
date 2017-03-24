@@ -388,10 +388,10 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCanSetRfMon
 /*
  * Class:     com_ardikars_jxnet_Jxnet
  * Method:    PcapSetRfMon
- * Signature: (Lcom/ardikars/jxnet/Pcap;)I
+ * Signature: (Lcom/ardikars/jxnet/Pcap;I)I
  */
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetRfMon
-  (JNIEnv *, jclass, jobject);
+  (JNIEnv *, jclass, jobject, jint);
 
 /*
  * Class:     com_ardikars_jxnet_Jxnet
