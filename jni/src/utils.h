@@ -30,6 +30,7 @@
 #define FILE_CLOSE_EXCEPTION "com/ardikars/jxnet/exception/FileCloseException"
 #define ARP_CLOSE_EXCEPTION "com/ardikars/jxnet/exception/ArpCloseException"
 #define JXNET_EXCEPTION "com/ardikars/jxnet/exception/JxnetException"
+#define NOT_SUPPORTED_PLATFORM_EXCEPTION "com/ardikars/jxnet/exception/NotSupportedPlatformException"
 #define ILLEGAL_STATE_EXCEPTION "java/lang/IllegalStateException"
 #define ILLEGAL_ARGUMENT_EXCEPTION "java/lang/IllegalArgumentException"
 
