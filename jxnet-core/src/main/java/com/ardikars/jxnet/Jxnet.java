@@ -374,6 +374,88 @@ public final class Jxnet {
 	 */
 	public static native void PcapPError(Pcap pcap, String prefix);
 
+	//////////////////////
+
+	/**
+	 * Is used to create a packet capture handle to look at packets on the network.
+	 * Source is a string that specifies the network device to open;
+	 * on Linux systems with 2.2 or later kernels, a source argument of "any" or NULL
+	 * can be used to capture packets from all interfaces.
+	 *
+	 * The returned handle must be activated with pcap_activate() before packets can be captured with it;
+	 * options for the capture, such as promiscuous mode, can be set on the handle before activating it.
+	 * @param source network device.
+	 * @param errbuf errof buffer.
+	 * @return returns a pcap_t * on success and NULL on failure. If NULL is returned, errbuf is filled in with an
+	 * appropriate error message.
+	 */
+	public static native Pcap PcapCreate(String source, StringBuilder errbuf);
+
+	/**
+	 * Sets the snapshot length to be used on a capture handle when the handle is activated to snaplen.
+	 * @param pcap pcap object.
+	 * @param snaplen snaplen.
+	 * @return 0 on success or PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.
+	 */
+	public static native int PcapSetSnaplen(Pcap pcap, int snaplen);
+
+	/**
+	 * sets whether promiscuous mode should be set on a capture handle when the handle is activated.
+	 * If promisc is non-zero, promiscuous mode will be set, otherwise it will not be set.
+	 * @param pcap pcap object.
+	 * @param promisc promisc.
+	 * @return 0 on success or PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.
+	 */
+	public static native int PcapSetPromisc(Pcap pcap, int promisc);
+
+	/**
+	 * Sets the packet buffer timeout that will be used on a capture handle when the handle is activated to to_ms, which is in units of milliseconds.
+	 * @param pcap pcap object.
+	 * @param timeout timeout.
+	 * @return 0 on success or PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.
+	 */
+	public static native int PcapSetTimeout(Pcap pcap, int timeout);
+
+	/**
+	 * Sets the buffer size that will be used on a capture handle when the handle is activated to buffer_size, which is in units of bytes.
+	 * @param pcap pcap object.
+	 * @param buffer_size buffer size.
+	 * @return 0 on success or PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.
+	 */
+	public static native int PcapSetBufferSize(Pcap pcap, int buffer_size);
+
+	/**
+	 * Checks whether monitor mode could be set on a capture handle when the handle is activated.
+	 * @param pcap pcap object.
+	 * @return 0 if monitor mode could not be set, 1 if monitor mode could be set, and a negative value on error.
+	 */
+	public static native int PcapCanSetRfMon(Pcap pcap);
+
+	/**
+	 * Sets whether monitor mode should be set on a capture handle when the handle is activated.
+	 * If rfmon is non-zero, monitor mode will be set, otherwise it will not be set.
+	 * @param pcap pcap object.
+	 * @return 0 on success or PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.
+	 */
+	public static native int PcapSetRfMon(Pcap pcap);
+
+	/**
+	 * Sets whether immediate mode should be set on a capture handle when the handle is activated. If immediate_mode is non-zero,
+	 * immediate mode will be set, otherwise it will not be set.
+	 * @param pcap pcap object.
+	 * @param immediate_mode immediate_mode.
+	 * @return 0 on success or PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.
+	 */
+	public static native int PcapSetImmediateMode(Pcap pcap, int immediate_mode);
+
+	/**
+	 * Is used to activate a packet capture handle to look at packets on the network,
+	 * with the options that were set on the handle being in effect.
+	 * @param pcap pcap object.
+	 * @return 0 on success without warnings, a non-zero positive value on success with warnings, and a negative value on error.
+	 */
+	public static native int PcapActivate(Pcap pcap);
+
 	//public static native int Socket(int af, int type, int protocol);
 	//private static native int SendTo(int socket, ByteBuffer buf, int len, int flags, SockAddr to, int toLen);
 	//private static native int SendTO(int socket, ByteBuffer buf, int len, int flags, int sa_family, byte[] sa_data, int toLen);

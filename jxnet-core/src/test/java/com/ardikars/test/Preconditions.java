@@ -13,5 +13,4 @@ public class Preconditions {
         CheckNotNull("", "Check Not Null Yes");
         CheckNotNull("");
     }
-
 }

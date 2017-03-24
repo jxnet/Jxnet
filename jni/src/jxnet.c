@@ -1044,6 +1044,121 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxnet_Jxnet_PcapPError
 	(*env)->ReleaseStringUTFChars(env, jprefix, prefix);
   }
 
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapCreate
+ * Signature: (Ljava/lang/String;Ljava/lang/StringBuilder;)Lcom/ardikars/jxnet/Pcap;
+ */
+JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCreate
+  (JNIEnv *env, jclass jclazz, jstring jsource, jobject jerrbuf) {
+	if (CheckNotNull(env, jsource, NULL) == NULL) return NULL;
+	if (CheckNotNull(env, jerrbuf, NULL) == NULL) return NULL;
+  	
+  	char errbuf[PCAP_ERRBUF_SIZE];
+  	errbuf[0] = '\0';
+  	const char *source = (*env)->GetStringUTFChars(env, jsource, 0);
+  	
+  	pcap_t *pcap = pcap_create(source, errbuf);
+  	(*env)->ReleaseStringUTFChars(env, jsource, source);
+  	
+  	if(pcap == NULL) {
+		SetStringBuilder(env, jerrbuf, errbuf);
+		return NULL;
+  	}
+	return SetPcap(env, pcap);
+  }
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapSetSnaplen
+ * Signature: (Lcom/ardikars/jxnet/Pcap;I)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetSnaplen
+  (JNIEnv *env, jclass jclazz, jobject jpcap, jint jsnaplen) {
+	  if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
+	  if (!CheckArgument(env, (jsnaplen > 0 && jsnaplen < 65535), NULL)) return -1;
+	  return pcap_set_snaplen(GetPcap(env, jpcap), jsnaplen);
+  }
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapSetPromisc
+ * Signature: (Lcom/ardikars/jxnet/Pcap;I)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetPromisc
+  (JNIEnv *env, jclass jclazz, jobject jpcap, jint jpromisc) {
+	  if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
+	  if (!CheckArgument(env, (jpromisc == 0 || jpromisc == 1), NULL)) return -1;
+	  return pcap_set_promisc(GetPcap(env, jpcap), jpromisc);
+}
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapSetTimeout
+ * Signature: (Lcom/ardikars/jxnet/Pcap;I)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetTimeout
+  (JNIEnv *env, jclass jclazz, jobject jpcap, jint jtimeout) {
+	  if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
+	  if (!CheckArgument(env, (jtimeout > 0), NULL)) return -1;
+	  return pcap_set_timeout(GetPcap(env, jpcap), jtimeout);
+}
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapSetBufferSize
+ * Signature: (Lcom/ardikars/jxnet/Pcap;I)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetBufferSize
+  (JNIEnv *env, jclass jclazz, jobject jpcap, jint jbuffer_size) {
+	  if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
+	  if (!CheckArgument(env, (jbuffer_size > 0 && jbuffer_size < 65535), NULL)) return -1;
+	  return pcap_set_buffer_size(GetPcap(env, jpcap), jbuffer_size);
+}
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapCanSetRfMon
+ * Signature: (Lcom/ardikars/jxnet/Pcap;)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCanSetRfMon
+  (JNIEnv *env, jclass jclazz, jobject jpcap) {
+	  if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
+	  return pcap_can_set_rfmon(GetPcap(env, jpcap));
+  }
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapSetRfMon
+ * Signature: (Lcom/ardikars/jxnet/Pcap;I)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetRfMon
+  (JNIEnv *env, jclass jclazz, jobject jpcap, jint jrfmon) {
+	  if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
+	  if (!CheckArgument(env, (jrfmon == 0 || jrfmon == 1), NULL)) return -1;
+	  return pcap_set_rfmon(GetPcap(env, jpcap), jrfmon);
+  }
+  
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapSetImmediateMode
+ * Signature: (Lcom/ardikars/jxnet/Pcap;I)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetImmediateMode
+  (JNIEnv *env, jclass jclazz, jobject jpcap, jint jimmediate) {
+	  if (!CheckArgument(env, (jimmediate == 0 || jimmediate == 1), NULL)) return -1;
+	  return pcap_set_immediate_mode(GetPcap(env, jpcap), jimmediate);
+  }
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapActivate
+ * Signature: (Lcom/ardikars/jxnet/Pcap;)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapActivate
+  (JNIEnv *env, jclass jclazz, jobject jpcap) {
+	  if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
+	  return pcap_activate(GetPcap(env, jpcap));
+  }
 #ifdef __cplusplus
 }
 #endif

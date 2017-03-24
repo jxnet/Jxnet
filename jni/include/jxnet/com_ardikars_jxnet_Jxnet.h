@@ -337,6 +337,78 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCompileNoPcap
 JNIEXPORT void JNICALL Java_com_ardikars_jxnet_Jxnet_PcapPError
   (JNIEnv *, jclass, jobject, jstring);
 
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapCreate
+ * Signature: (Ljava/lang/String;Ljava/lang/StringBuilder;)Lcom/ardikars/jxnet/Pcap;
+ */
+JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCreate
+  (JNIEnv *, jclass, jstring, jobject);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapSetSnaplen
+ * Signature: (Lcom/ardikars/jxnet/Pcap;I)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetSnaplen
+  (JNIEnv *, jclass, jobject, jint);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapSetPromisc
+ * Signature: (Lcom/ardikars/jxnet/Pcap;I)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetPromisc
+  (JNIEnv *, jclass, jobject, jint);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapSetTimeout
+ * Signature: (Lcom/ardikars/jxnet/Pcap;I)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetTimeout
+  (JNIEnv *, jclass, jobject, jint);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapSetBufferSize
+ * Signature: (Lcom/ardikars/jxnet/Pcap;I)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetBufferSize
+  (JNIEnv *, jclass, jobject, jint);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapCanSetRfMon
+ * Signature: (Lcom/ardikars/jxnet/Pcap;)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCanSetRfMon
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapSetRfMon
+ * Signature: (Lcom/ardikars/jxnet/Pcap;)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetRfMon
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapSetImmediateMode
+ * Signature: (Lcom/ardikars/jxnet/Pcap;I)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetImmediateMode
+  (JNIEnv *, jclass, jobject, jint);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapActivate
+ * Signature: (Lcom/ardikars/jxnet/Pcap;)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapActivate
+  (JNIEnv *, jclass, jobject);
+
 #ifdef __cplusplus
 }
 #endif
