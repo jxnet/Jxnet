@@ -29,6 +29,10 @@ public final class PcapDumper {
 		return address;
 	}
 
+	private PcapDumper() {
+		//
+	}
+
 	/**
 	 * Return true if PcapDumper is closed.
 	 * @return true if PcapDumper is closed, false otherwise.

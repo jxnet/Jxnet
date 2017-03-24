@@ -86,6 +86,10 @@ public final class SockAddr {
 
     private volatile byte[] data;
 
+    private SockAddr() {
+        //
+    }
+
     /**
      * Returning address value type.
      * @return address value type.

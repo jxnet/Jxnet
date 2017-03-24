@@ -40,6 +40,10 @@ public final class PcapIf {
 	
 	private volatile int flags;
 
+	private PcapIf() {
+		//
+	}
+
 	/**
 	 * Returning interface name.
 	 * @return interface name.

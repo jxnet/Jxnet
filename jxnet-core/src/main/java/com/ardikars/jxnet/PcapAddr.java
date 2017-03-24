@@ -36,6 +36,10 @@ public final class PcapAddr {
 	
 	private volatile SockAddr dstaddr;
 
+	private PcapAddr() {
+		//
+	}
+
 	/**
 	 * Returning interface address.
 	 * @return interface address.

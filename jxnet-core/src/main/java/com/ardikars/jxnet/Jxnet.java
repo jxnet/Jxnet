@@ -17,6 +17,7 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.jxnet.exception.PcapCloseException;
 import com.ardikars.jxnet.util.Loader;
 
 import java.nio.ByteBuffer;
