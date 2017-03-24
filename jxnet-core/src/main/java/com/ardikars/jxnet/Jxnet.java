@@ -17,7 +17,6 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.exception.PcapCloseException;
 import com.ardikars.jxnet.util.Loader;
 
 import java.nio.ByteBuffer;
@@ -93,6 +92,7 @@ public final class Jxnet {
 	 * Save a packet to disk.
 	 * @param pcap_dumper pcap dumper object.
 	 * @param h pcap packet header.
+	 * @param sp packet buffer.
 	 * @param sp packet buffer.
 	 */
 	public static native void PcapDump(PcapDumper pcap_dumper, PcapPktHdr h, ByteBuffer sp);
@@ -374,8 +374,6 @@ public final class Jxnet {
 	 * @param prefix prrfix.
 	 */
 	public static native void PcapPError(Pcap pcap, String prefix);
-
-	//////////////////////
 
 	/**
 	 * Is used to create a packet capture handle to look at packets on the network.

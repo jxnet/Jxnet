@@ -17,7 +17,6 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.util.EnumHelpers;
 import com.ardikars.jxnet.util.FormatUtils;
 
 import java.util.Arrays;
@@ -71,15 +70,6 @@ public final class SockAddr {
             }
             return null;
         }
-
-        public static void register(String enumName, short value, String name) {
-            EnumHelpers.add(Family.class, enumName, new Object[] {value, name});
-        }
-
-        public static void unregister(String enumName) {
-            EnumHelpers.remove(Family.class, enumName);
-        }
-
     }
 
     private volatile short sa_family;

@@ -17,13 +17,12 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.util.EnumHelpers;
-
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
 public enum DataLinkType {
+
     /**
      * Ethernet (10Mb, 100Mb, 1000Mb, and up): 1
      */
@@ -93,14 +92,6 @@ public enum DataLinkType {
             }
         }
         return null;
-    }
-
-    public static void register(String enumName, short value, String name) {
-        EnumHelpers.add(DataLinkType.class, enumName, new Object[] {value, name});
-    }
-
-    public static void unregister(String enumName) {
-        EnumHelpers.remove(DataLinkType.class, enumName);
     }
 
 }
