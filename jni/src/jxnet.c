@@ -1064,7 +1064,7 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCreate
   	errbuf[0] = '\0';
   	const char *source = (*env)->GetStringUTFChars(env, jsource, 0);
   	
-  	pcap_t *pcap = pcap_create(source, errbuf);
+  	pcap_t *pcap = (pcap_t *) pcap_create(source, errbuf);
   	(*env)->ReleaseStringUTFChars(env, jsource, source);
   	
   	if(pcap == NULL) {
