@@ -1084,7 +1084,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetSnaplen
 	  
 #if !defined(__linux__) || defined(__ANDROID__)
 	ThrowNew(env, NOT_SUPPORTED_PLATFORM_EXCEPTION, NULL);
-	return NULL;
+	return -1;
 #endif
 
 	  if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
@@ -1101,7 +1101,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetPromisc
 	  
 #if !defined(__linux__) || defined(__ANDROID__)
 	ThrowNew(env, NOT_SUPPORTED_PLATFORM_EXCEPTION, NULL);
-	return NULL;
+	return -1;
 #endif
 
 	  if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
@@ -1119,7 +1119,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetTimeout
 	  
 #if !defined(__linux__) || defined(__ANDROID__)
 	ThrowNew(env, NOT_SUPPORTED_PLATFORM_EXCEPTION, NULL);
-	return NULL;
+	return -1;
 #endif
 
 	  if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
@@ -1137,7 +1137,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetBufferSize
 	  
 #if !defined(__linux__) || defined(__ANDROID__)
 	ThrowNew(env, NOT_SUPPORTED_PLATFORM_EXCEPTION, NULL);
-	return NULL;
+	return -1;
 #endif
 	  
 	  if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
@@ -1155,7 +1155,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCanSetRfMon
 	  
 #if !defined(__linux__) || defined(__ANDROID__)
 	ThrowNew(env, NOT_SUPPORTED_PLATFORM_EXCEPTION, NULL);
-	return NULL;
+	return -1;
 #endif
 	  
 	  if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
@@ -1172,7 +1172,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetRfMon
 	  
 #if !defined(__linux__) || defined(__ANDROID__)
 	ThrowNew(env, NOT_SUPPORTED_PLATFORM_EXCEPTION, NULL);
-	return NULL;
+	return -1;
 #endif
 	  
 	  if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
@@ -1190,7 +1190,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetImmediateMode
 	  
 #if !defined(__linux__) || defined(__ANDROID__)
 	ThrowNew(env, NOT_SUPPORTED_PLATFORM_EXCEPTION, NULL);
-	return NULL;
+	return -1;
 #endif
 	  
 	  if (!CheckArgument(env, (jimmediate == 0 || jimmediate == 1), NULL)) return -1;
@@ -1207,7 +1207,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapActivate
 	  
 #if !defined(__linux__) || defined(__ANDROID__)
 	ThrowNew(env, NOT_SUPPORTED_PLATFORM_EXCEPTION, NULL);
-	return NULL;
+	return -1;
 #endif
 	  
 	  if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
