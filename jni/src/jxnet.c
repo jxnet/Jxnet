@@ -1052,7 +1052,7 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxnet_Jxnet_PcapPError
 JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCreate
   (JNIEnv *env, jclass jclazz, jstring jsource, jobject jerrbuf) {
 
-#if !defined(__linux__)
+#if !defined(__linux__) || defined(__ANDROID__)
 	ThrowNew(env, NOT_SUPPORTED_PLATFORM_EXCEPTION, NULL);
 	return NULL;
 #endif
@@ -1082,7 +1082,7 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCreate
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetSnaplen
   (JNIEnv *env, jclass jclazz, jobject jpcap, jint jsnaplen) {
 	  
-#if !defined(__linux__)
+#if !defined(__linux__) || defined(__ANDROID__)
 	ThrowNew(env, NOT_SUPPORTED_PLATFORM_EXCEPTION, NULL);
 	return NULL;
 #endif
@@ -1099,7 +1099,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetSnaplen
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetPromisc
   (JNIEnv *env, jclass jclazz, jobject jpcap, jint jpromisc) {
 	  
-#if !defined(__linux__)
+#if !defined(__linux__) || defined(__ANDROID__)
 	ThrowNew(env, NOT_SUPPORTED_PLATFORM_EXCEPTION, NULL);
 	return NULL;
 #endif
@@ -1117,7 +1117,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetPromisc
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetTimeout
   (JNIEnv *env, jclass jclazz, jobject jpcap, jint jtimeout) {
 	  
-#if !defined(__linux__)
+#if !defined(__linux__) || defined(__ANDROID__)
 	ThrowNew(env, NOT_SUPPORTED_PLATFORM_EXCEPTION, NULL);
 	return NULL;
 #endif
@@ -1135,7 +1135,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetTimeout
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetBufferSize
   (JNIEnv *env, jclass jclazz, jobject jpcap, jint jbuffer_size) {
 	  
-#if !defined(__linux__)
+#if !defined(__linux__) || defined(__ANDROID__)
 	ThrowNew(env, NOT_SUPPORTED_PLATFORM_EXCEPTION, NULL);
 	return NULL;
 #endif
@@ -1153,7 +1153,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetBufferSize
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCanSetRfMon
   (JNIEnv *env, jclass jclazz, jobject jpcap) {
 	  
-#if !defined(__linux__)
+#if !defined(__linux__) || defined(__ANDROID__)
 	ThrowNew(env, NOT_SUPPORTED_PLATFORM_EXCEPTION, NULL);
 	return NULL;
 #endif
@@ -1170,7 +1170,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCanSetRfMon
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetRfMon
   (JNIEnv *env, jclass jclazz, jobject jpcap, jint jrfmon) {
 	  
-#if !defined(__linux__)
+#if !defined(__linux__) || defined(__ANDROID__)
 	ThrowNew(env, NOT_SUPPORTED_PLATFORM_EXCEPTION, NULL);
 	return NULL;
 #endif
@@ -1188,7 +1188,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetRfMon
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetImmediateMode
   (JNIEnv *env, jclass jclazz, jobject jpcap, jint jimmediate) {
 	  
-#if !defined(__linux__)
+#if !defined(__linux__) || defined(__ANDROID__)
 	ThrowNew(env, NOT_SUPPORTED_PLATFORM_EXCEPTION, NULL);
 	return NULL;
 #endif
@@ -1205,7 +1205,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetImmediateMode
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapActivate
   (JNIEnv *env, jclass jclazz, jobject jpcap) {
 	  
-#if !defined(__linux__)
+#if !defined(__linux__) || defined(__ANDROID__)
 	ThrowNew(env, NOT_SUPPORTED_PLATFORM_EXCEPTION, NULL);
 	return NULL;
 #endif
