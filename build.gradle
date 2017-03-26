@@ -31,12 +31,12 @@ jar {
 
 task ndkBuild(type: Exec) {
 	commandLine "${NDK_HOME}/ndk-build", 
-			'NDK_LIBS_OUT=./jxnet-core/src/main/lib', "NDK_OUT=${NDK_OUT}"
+			'NDK_LIBS_OUT=./jxnet-core/src/main/resources/lib', "NDK_OUT=${NDK_OUT}"
 }
 
 task ndkClean(type: Exec) {
 	commandLine "${NDK_HOME}/ndk-build", 'clean', 
-			'NDK_LIBS_OUT=./jxnet-core/src/main/lib', "NDK_OUT=${NDK_OUT}"
+			'NDK_LIBS_OUT=./jxnet-core/src/main/resources/lib', "NDK_OUT=${NDK_OUT}"
 }
 
 tasks.withType(JavaCompile) {
