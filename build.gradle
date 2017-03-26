@@ -27,3 +27,14 @@ jar {
     }
 }
 
+task ndkBuild(type: Exec) {
+	if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+		commandLine 'ndk-build.cmd', '-C', file('.').absolutePath
+	} else {
+		commandLine 'ndk-build', '-C', file('.').absolutePath
+	}
+}
+
+tasks.withType(JavaCompile) {
+	compileTask -> compileTask.dependsOn ndkBuild
+}
