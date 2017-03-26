@@ -28,19 +28,11 @@ jar {
 }
 
 task ndkBuild(type: Exec) {
-	if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-		commandLine "${NDK_HOME}/ndk-build.cmd", '-C', file('.').absolutePath
-	} else {
-		commandLine "${NDK_HOME}/ndk-build.cmd", '-C', file('.').absolutePath
-	}
+	commandLine "${NDK_HOME}/ndk-build.cmd", '-C', file('.').absolutePath
 }
 
 task ndkClean(type: Exec) {
-    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-		commandLine "${NDK_HOME}/ndk-build.cmd", 'clean', '-C', file('.').absolutePath
-	} else {
-		commandLine "${NDK_HOME}/ndk-build.cmd", 'clean', '-C', file('.').absolutePath
-	}
+	commandLine "${NDK_HOME}/ndk-build", 'clean', '-C', file('.').absolutePath
 }
 
 tasks.withType(JavaCompile) {
