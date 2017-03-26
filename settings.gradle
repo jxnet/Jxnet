@@ -1,7 +1,3 @@
 
 include 'jxnet-core', 'jxnet-util'
 rootProject.name = 'jxnet-all'
-
-ext {
-	NDK_HOME = "some/sub/directory"
-}

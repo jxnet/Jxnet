@@ -28,11 +28,13 @@ jar {
 }
 
 task ndkBuild(type: Exec) {
-	commandLine "${NDK_HOME}/ndk-build.cmd", '-C', file('.').absolutePath
+	commandLine "${NDK_HOME}/ndk-build", 
+			"NDK_LIBS_OUT=${NDK_LIBS_OUT}", "NDK_OUT=${NDK_OUT}"
 }
 
 task ndkClean(type: Exec) {
-	commandLine "${NDK_HOME}/ndk-build", 'clean', '-C', file('.').absolutePath
+	commandLine "${NDK_HOME}/ndk-build", 'clean', 
+			"NDK_LIBS_OUT=${NDK_LIBS_OUT}", "NDK_OUT=${NDK_OUT}"
 }
 
 tasks.withType(JavaCompile) {
