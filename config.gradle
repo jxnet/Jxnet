@@ -1,6 +1,5 @@
 
 ext {
 	NDK_HOME = '/home/users/a/ar/ardikars/android-ndk-r12b'
-	NDK_LIBS_OUT='jxnet-core/src/main/lib'
-	NDK_OUT='obj'
+	NDK_OUT='./obj'
 }
