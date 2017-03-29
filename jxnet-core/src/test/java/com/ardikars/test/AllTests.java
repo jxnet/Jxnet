@@ -15,7 +15,7 @@ import java.nio.ByteBuffer;
 @SuiteClasses({ PcapActivate.class, PcapSetFilter.class, PcapDump.class, PcapFindAllDevs.class,
 		PcapLookupDev.class, PcapLookupNet.class, Generic.class, Error.class,
 		PcapNextEx.class, PcapOpenDead.class, PcapOpenLive.class,
-		PcapOpenOffline.class, PcapBreakLoop.class,
+		PcapOpenOffline.class, PcapBreakLoop.class, Blocking.class,
 		PcapDatalink.class, PcapDispatch.class, Preconditions.class })
 public class AllTests {
 
