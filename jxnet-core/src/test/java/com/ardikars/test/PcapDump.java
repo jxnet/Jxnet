@@ -31,17 +31,18 @@ public class PcapDump {
 			System.out.println("User   : " + user);
 			System.out.println("Header : " + h);
 			System.out.println("Packet : " + bytes);
+			System.out.println("Write bytes: " +PcapDumpFTell(dumper));
 			System.out.println("=======");
-			Jxnet.PcapDump(dumper, h, bytes);
+			PcapDump(dumper, h, bytes);
+			PcapDumpFlush(dumper);
 		};
 
-		if (Jxnet.PcapLoop(handler, AllTests.maxIteration, callback, null) != 0) {
+		if (Jxnet.PcapLoop(handler, -1, callback, null) != 0) {
 			String err = PcapGetErr(handler);
 			PcapDumpClose(dumper);
 			PcapClose(handler);
 			throw new JxnetException(err);
 		}
-
 		Assert.assertFalse(error);
 		Assert.assertNotEquals(null, dumper);
 		PcapDumpClose(dumper);

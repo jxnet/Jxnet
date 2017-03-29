@@ -3,9 +3,6 @@ package com.ardikars.test;
 /**
  * Jxnet Untested function
  *
- * PcapDumpFlush
- *
- * PcapDumpFTell
  * PcapFile
  * PcapDumpFile
  * PcapDumpFOpen
