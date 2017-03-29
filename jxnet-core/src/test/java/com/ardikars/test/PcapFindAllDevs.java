@@ -30,19 +30,20 @@ public class PcapFindAllDevs {
 					System.out.println("IPv4");
 					System.out.println("Addr                   = " + addr.getAddr().toString());
 					System.out.println("Netmask                = " + addr.getNetmask().toString());
-//					System.out.println("BroadAddr              = " + addr.getBroadAddr().toString());
-//					System.out.println("DstAddr                = " + addr.getDstAddr().toString());
+					System.out.println("BroadAddr              = " + addr.getBroadAddr().toString());
+					System.out.println("DstAddr                = " + addr.getDstAddr().toString());
 					System.out.println("------------------------------------------------");
 				} else if (addr.getAddr().getSaFamily() == SockAddr.Family.AF_INET6) {
 					System.out.println("------------------------------------------------");
 					System.out.println("IPv6");
 					System.out.println("Addr                   = " + addr.getAddr().toString());
 					System.out.println("Netmask                = " + addr.getNetmask().toString());
-//					System.out.println("BroadAddr              = " + addr.getBroadAddr().toString());
-//					System.out.println("DstAddr                = " + addr.getDstAddr().toString());
+					System.out.println("BroadAddr              = " + addr.getBroadAddr().toString());
+					System.out.println("DstAddr                = " + addr.getDstAddr().toString());
 					System.out.println("------------------------------------------------");
 				}
 			}
+			//System.out.println(dev.getAddresses());
 			
 			Assert.assertNotEquals(null, dev.getName());
 			System.out.println("================================================\n\n");

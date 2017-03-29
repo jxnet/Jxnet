@@ -26,14 +26,8 @@ public class PcapBreakLoop {
         @Override
         public void run() {
 
-            PcapHandler<String> callback = (t, pph, bb) -> {
-                //System.out.println("User   : " + t);
-                System.out.println("PktHdr : " + pph);
-                System.out.println("Data   : " + bb);
-            };
-
-            if (Jxnet.PcapLoop(handler, -1, callback, null) !=0) {
-                System.err.println("Gagal");
+            if (Jxnet.PcapLoop(handler, -1, AllTests.handler, null) !=0) {
+                System.err.println(Jxnet.PcapGetErr(handler));
             }
 
         }
@@ -43,21 +37,18 @@ public class PcapBreakLoop {
     @org.junit.Test
     public void run() {
 
-        StringBuilder errbuf = new StringBuilder();
-        String dev = AllTests.deviceName;
-
-        Pcap handler = Jxnet.PcapOpenLive(dev, AllTests.snaplen, AllTests.promisc, AllTests.to_ms, errbuf);
+        Pcap handler = AllTests.openHandle(); // Exception already thrown
 
         Thread thread = new MyThread(handler);
         thread.start();
-        for (int i=0; i<10; i++) {
+        for (int i=0; i<AllTests.maxIteration; i++) {
             System.out.println("i = " + i);
             try {
                 Thread.sleep(3600);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if (i == 5 ) {
+            if (i == AllTests.maxIteration - 1 ) {
                 Jxnet.PcapBreakLoop(handler);
             }
         }

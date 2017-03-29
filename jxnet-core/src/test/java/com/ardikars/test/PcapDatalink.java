@@ -10,12 +10,8 @@ public class PcapDatalink {
 
     @org.junit.Test
     public void run() {
-        StringBuilder errbuf = new StringBuilder();
-        String dev = AllTests.deviceName;
-        Pcap handler = PcapOpenLive(dev, AllTests.snaplen, AllTests.promisc, AllTests.to_ms, errbuf);
-        if (handler == null) {
-            throw new PcapCloseException(errbuf.toString());
-        }
+        Pcap handler = AllTests.openHandle(); // Exception already thrown
+
         int datalink = PcapDataLink(handler);
         String linkName = PcapDataLinkValToName(datalink);
         String linkDesc = PcapDataLinkValToDescription(datalink);

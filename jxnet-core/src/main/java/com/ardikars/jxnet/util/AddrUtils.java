@@ -75,8 +75,8 @@ public final class AddrUtils {
 				for (PcapAddr addr : dev.getAddresses()) {
 					if (addr.getAddr().getSaFamily() == SockAddr.Family.AF_INET) {
 						if (addr.getAddr().getData() != null && addr.getNetmask().getData() != null) {
-							netp.update((Inet4Address) addr.getAddr().toInetAddress());
-							maskp.update((Inet4Address) addr.getNetmask().toInetAddress());
+							netp.update(Inet4Address.valueOf(addr.getAddr().toString()));
+							maskp.update(Inet4Address.valueOf(addr.getNetmask().toString()));
 							return 0;
 						}
 					}

@@ -3,6 +3,7 @@ package com.ardikars.test;
 import static com.ardikars.jxnet.Jxnet.*;
 
 import com.ardikars.jxnet.*;
+import com.ardikars.jxnet.exception.JxnetException;
 import com.ardikars.jxnet.exception.PcapCloseException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -14,12 +15,9 @@ public class PcapDump {
 	@Test
 	public void run() throws PcapCloseException {
 		boolean error = false;
-		StringBuilder errbuf = new StringBuilder();
-		String dev = AllTests.deviceName;
-		Pcap handler = PcapOpenLive(dev, AllTests.snaplen, AllTests.promisc, AllTests.to_ms, errbuf);
-		if (handler == null) {
-			throw new PcapCloseException(errbuf.toString());
-		}
+
+		Pcap handler = AllTests.openHandle(); // Exception already thrown
+
 		PcapDumper dumper = PcapDumpOpen(handler, "dump.pcapng");
 		if (dumper == null) {
 			System.err.println(PcapGetErr(handler));
@@ -30,15 +28,24 @@ public class PcapDump {
 		}
 
 		PcapHandler<String> callback = (user, h, bytes) -> {
+			System.out.println("User   : " + user);
+			System.out.println("Header : " + h);
+			System.out.println("Packet : " + bytes);
+			System.out.println("=======");
 			Jxnet.PcapDump(dumper, h, bytes);
 		};
 
-		Jxnet.PcapLoop(handler, 5, callback, null);
+		if (Jxnet.PcapLoop(handler, AllTests.maxIteration, callback, null) != 0) {
+			String err = PcapGetErr(handler);
+			PcapDumpClose(dumper);
+			PcapClose(handler);
+			throw new JxnetException(err);
+		}
 
 		Assert.assertFalse(error);
 		Assert.assertNotEquals(null, dumper);
-		PcapClose(handler);
 		PcapDumpClose(dumper);
+		PcapClose(handler);
 	}
 	
 }

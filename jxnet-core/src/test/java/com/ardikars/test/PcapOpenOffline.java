@@ -1,5 +1,6 @@
 package com.ardikars.test;
 
+import com.ardikars.jxnet.exception.JxnetException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,11 +17,13 @@ public class PcapOpenOffline {
         Pcap handler = PcapOpenOffline("dump.pcapng", errbuf);
         if(handler == null) {
             throw new PcapCloseException(errbuf.toString());
-        } else {
-            System.out.println("OK");
-            PcapClose(handler);
         }
-        Assert.assertNotEquals(null, handler);
+        if (PcapLoop(handler, -1, AllTests.handler, null) != 0) {
+            String err = PcapGetErr(handler);
+            PcapClose(handler);
+            throw new JxnetException(err);
+        }
+        PcapClose(handler);
 	}
 		
 }

@@ -103,18 +103,6 @@ public final class SockAddr {
         return data;
     }
 
-    /**
-     * Create Inet4Address or Inet6Address from SockAddr.
-     * @return Inet4Address or Inet6Address.
-     */
-    public InetAddress toInetAddress() {
-        switch (getSaFamily()) {
-            case AF_INET: return Inet4Address.valueOf(data);
-            case AF_INET6: return Inet6Address.valueOf(data);
-            default: return null;
-        }
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (obj == this)
@@ -138,7 +126,16 @@ public final class SockAddr {
 
     @Override
     public String toString() {
-        return toInetAddress().toString();
+        Family family = getSaFamily();
+        if (family == null) return null;
+        switch (family) {
+            case AF_INET:
+                return Inet4Address.valueOf(data).toString();
+            case AF_INET6:
+                return Inet6Address.valueOf(data).toString();
+            default:
+                return null;
+        }
     }
 
 }

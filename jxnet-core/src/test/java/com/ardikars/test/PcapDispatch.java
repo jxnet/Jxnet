@@ -1,8 +1,10 @@
 package com.ardikars.test;
 
+import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
 import com.ardikars.jxnet.PcapHandler;
 import com.ardikars.jxnet.PcapPktHdr;
+import com.ardikars.jxnet.exception.JxnetException;
 import com.ardikars.jxnet.exception.PcapCloseException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -18,23 +20,13 @@ public class PcapDispatch {
 
     @Test
     public void run() throws PcapCloseException {
-        StringBuilder errbuf = new StringBuilder();
-        String dev = AllTests.deviceName;
-        Pcap handler = PcapOpenLive(dev, AllTests.snaplen, AllTests.promisc, AllTests.to_ms, errbuf);
-        if (handler == null) {
-            throw new PcapCloseException(errbuf.toString());
-        }
 
-        PcapHandler callback = new PcapHandler() {
-            public void nextPacket(Object t, PcapPktHdr pph, ByteBuffer bb) {
-                System.out.println("User   : " + t);
-                System.out.println("PktHdr : " + pph);
-                System.out.println("Data   : " + bb);
-            }
-        };
+        Pcap handler = AllTests.openHandle(); // Exception already thrown
 
-        if (PcapDispatch(handler, 10, callback, null) != OK) {
-            System.out.println("Gagal");
+        if (PcapDispatch(handler, AllTests.maxIteration, AllTests.handler, null) != 0) {
+            String err = PcapGetErr(handler);
+            //Jxnet.PcapClose(handler);
+            //throw new JxnetException(err);
         }
         PcapClose(handler);
     }
