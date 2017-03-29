@@ -29,10 +29,6 @@ public final class PcapStat {
 	
 	private long ps_ifdrop;
 
-	private PcapStat() {
-		//
-	}
-
 	/**
 	 * Returning recieved packets.
 	 * @return recieved packets.

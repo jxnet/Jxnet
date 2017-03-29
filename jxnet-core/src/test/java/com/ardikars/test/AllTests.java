@@ -13,7 +13,7 @@ import java.nio.ByteBuffer;
 
 @RunWith(Suite.class)
 @SuiteClasses({ PcapActivate.class, PcapSetFilter.class, PcapDump.class, PcapFindAllDevs.class,
-		PcapLookupDev.class, PcapLookupNet.class,
+		PcapLookupDev.class, PcapLookupNet.class, Generic.class, Error.class,
 		PcapNextEx.class, PcapOpenDead.class, PcapOpenLive.class,
 		PcapOpenOffline.class, PcapBreakLoop.class,
 		PcapDatalink.class, PcapDispatch.class, Preconditions.class })

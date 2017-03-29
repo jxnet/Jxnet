@@ -2,6 +2,7 @@ package com.ardikars.test;
 
 import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
+import com.ardikars.jxnet.PcapStat;
 import com.ardikars.jxnet.exception.JxnetException;
 
 import static com.ardikars.jxnet.Jxnet.*;
@@ -44,6 +45,13 @@ public class PcapActivate {
 
         AllTests.nextPacket(pcap);
 
+        PcapStat stat = new PcapStat();
+        if (Jxnet.PcapStats(pcap, stat) != -1) {
+            System.out.println(stat);
+        } else {
+            PcapClose(pcap);
+            throw new JxnetException("PcapStat error");
+        }
         PcapClose(pcap);
 
     }
