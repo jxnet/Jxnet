@@ -44,11 +44,12 @@ public class PcapBreakLoop {
         for (int i=0; i<AllTests.maxIteration; i++) {
             System.out.println("i = " + i);
             try {
-                Thread.sleep(3600);
+                Thread.sleep(1500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if (i == AllTests.maxIteration - 1 ) {
+            if (i == (AllTests.maxIteration/2)) {
+                System.out.println("Break loop.");
                 Jxnet.PcapBreakLoop(handler);
             }
         }
