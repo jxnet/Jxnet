@@ -21,7 +21,7 @@ public class Error {
         int res = Jxnet.PcapActivate(pcap);
         System.out.println(Jxnet.PcapStrError(res));
         if (res != 0) {
-            Jxnet.PcapPError(pcap, "");
+            //Jxnet.PcapPError(pcap, ""); // it's tested
         }
         Jxnet.PcapClose(pcap);
 
