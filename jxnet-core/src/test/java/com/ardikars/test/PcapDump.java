@@ -37,7 +37,7 @@ public class PcapDump {
 			PcapDumpFlush(dumper);
 		};
 
-		if (Jxnet.PcapLoop(handler, -1, callback, null) != 0) {
+		if (Jxnet.PcapLoop(handler, AllTests.maxIteration, callback, null) != 0) {
 			String err = PcapGetErr(handler);
 			PcapDumpClose(dumper);
 			PcapClose(handler);

@@ -23,7 +23,7 @@ public class PcapActivate {
             PcapClose(pcap);
             throw new JxnetException(err);
         }
-        if (PcapSetBufferSize(pcap, AllTests.snaplen) != 0) {
+        if (PcapSetBufferSize(pcap, 10000) != 0) {
             String err = PcapGetErr(pcap);
             PcapClose(pcap);
             throw new JxnetException(err);

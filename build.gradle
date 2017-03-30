@@ -39,8 +39,10 @@ task ndkClean(type: Exec) {
 			'NDK_LIBS_OUT=./jxnet-core/src/main/resources/lib', "NDK_OUT=${NDK_OUT}"
 }
 
+/*
 tasks.withType(JavaCompile) {
 	compileTask -> compileTask.dependsOn ndkBuild
 }
 
 clean.dependsOn 'ndkClean'
+*/
