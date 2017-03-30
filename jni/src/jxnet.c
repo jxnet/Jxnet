@@ -1004,8 +1004,8 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCompileNoPcap
   (JNIEnv *env, jclass jclass, jint jsnaplen_arg, jint jlinktype_arg, jobject jprogram,
 		jstring jbuf, jint joptimize, jint jmask) {
 	
-	if (!CheckArgument(env, (jsnaplen_arg > 0 && jsnaplen_arg < 65535), NULL)) return -1;
-	if (!CheckArgument(env, (jlinktype_arg < 1), NULL)) return -1;
+	if (!CheckArgument(env, (jsnaplen_arg > 0 && jsnaplen_arg < 65536), NULL)) return -1;
+	if (!CheckArgument(env, (jlinktype_arg > -1), NULL)) return -1;
 	if (CheckNotNull(env, jprogram, NULL) == NULL) return -1;
 	if (CheckNotNull(env, jbuf, NULL) == NULL) return -1;
 	if (!CheckArgument(env, (joptimize == 0 || joptimize == 1), NULL)) return -1;

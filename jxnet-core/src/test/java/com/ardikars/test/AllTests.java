@@ -21,6 +21,12 @@ public class AllTests {
 
 	private static StringBuilder errbuf = new StringBuilder();
 
+	public static String rawData = " 6c3b 6b04 e427 0002 3b10 1c09 8864 1100 " +
+			" 0026 002e 0021 4500 002c a432 0000 2206 " +
+			" 28f3 b5bc d092 2451 2107 163d 01bd 00af " +
+			" 9c22 0000 0000 6002 ffff 1818 0000 0204 " +
+			" 0550";
+
 	public static final String deviceName = AddrUtils.LookupDev(errbuf);
 	public static final int snaplen = 1500;
 	public static final int promisc = 1;

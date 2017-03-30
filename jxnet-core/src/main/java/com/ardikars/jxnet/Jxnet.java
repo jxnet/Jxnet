@@ -319,14 +319,14 @@ public final class Jxnet {
 	 * @param pcap pcap object.
 	 * @return null on error.
 	 */
-	public static native File PcapFile(Pcap pcap);
+	//public static native File PcapFile(Pcap pcap);
 
 	/**
 	 * Return the standard I/O stream of the 'savefile' opened by pcap_dump_open().
 	 * @param pcap_dumper pcap dumper object.
 	 * @return null on error.
 	 */
-	public static native File PcapDumpFile(PcapDumper pcap_dumper);
+	//public static native File PcapDumpFile(PcapDumper pcap_dumper);
 
 	/**
 	 *
@@ -334,7 +334,7 @@ public final class Jxnet {
 	 * @param f file object.
 	 * @return null on error.
 	 */
-	public static native PcapDumper PcapDumpFOpen(Pcap pcap, File f);
+	//public static native PcapDumper PcapDumpFOpen(Pcap pcap, File f);
 
 	/**
 	 * Return statistics on current capture.

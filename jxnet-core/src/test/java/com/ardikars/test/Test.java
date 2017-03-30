@@ -8,8 +8,6 @@ package com.ardikars.test;
  * PcapDumpFOpen
  *
  * PcapCompileNoPcap
- *
- * PcapSetBufferSize
  */
 
 

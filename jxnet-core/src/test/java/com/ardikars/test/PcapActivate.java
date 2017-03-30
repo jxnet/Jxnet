@@ -16,31 +16,50 @@ public class PcapActivate {
         StringBuilder errbuf = new StringBuilder();
         Pcap pcap = PcapCreate(AllTests.deviceName, errbuf);
         if (pcap == null) {
-            throw new JxnetException(PcapGetErr(pcap));
+            throw new JxnetException("Filed create pcap handle.");
         }
         if (PcapSetSnaplen(pcap, AllTests.snaplen) != 0) {
-            throw new JxnetException(PcapGetErr(pcap));
+            String err = PcapGetErr(pcap);
+            PcapClose(pcap);
+            throw new JxnetException(err);
+        }
+        if (PcapSetBufferSize(pcap, AllTests.snaplen) != 0) {
+            String err = PcapGetErr(pcap);
+            PcapClose(pcap);
+            throw new JxnetException(err);
         }
         if (PcapSetPromisc(pcap, AllTests.promisc) !=0 ) {
-            throw new JxnetException(PcapGetErr(pcap));
+            String err = PcapGetErr(pcap);
+            PcapClose(pcap);
+            throw new JxnetException(err);
         }
         if (PcapSetTimeout(pcap, AllTests.to_ms) !=0 ) {
-            throw new JxnetException(PcapGetErr(pcap));
+            String err = PcapGetErr(pcap);
+            PcapClose(pcap);
+            throw new JxnetException(err);
         }
         if (PcapSetImmediateMode(pcap, AllTests.immediate) !=0 ) {
-            throw new JxnetException(PcapGetErr(pcap));
+            String err = PcapGetErr(pcap);
+            PcapClose(pcap);
+            throw new JxnetException(err);
         }
         if (PcapCanSetRfMon(pcap) == 1) {
             if (PcapSetRfMon(pcap, 1) != 0) {
-                throw new JxnetException(PcapGetErr(pcap));
+                String err = PcapGetErr(pcap);
+                PcapClose(pcap);
+                throw new JxnetException(err);
             }
         } else {
             if (PcapSetRfMon(pcap, 0) != 0) {
-                throw new JxnetException(PcapGetErr(pcap));
+                String err = PcapGetErr(pcap);
+                PcapClose(pcap);
+                throw new JxnetException(err);
             }
         }
         if (Jxnet.PcapActivate(pcap) != 0 ) {
-            throw new JxnetException(PcapGetErr(pcap));
+            String err = PcapGetErr(pcap);
+            PcapClose(pcap);
+            throw new JxnetException(err);
         }
 
         AllTests.nextPacket(pcap);
