@@ -21,15 +21,15 @@ package com.ardikars.jxnet.util;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
-public class Platform {
+public class Platforms {
 	
-	public enum OS_NAME {
+	public enum NAME {
 		LINUX(1, "Linux"), WINDOWS(2, "Windows"), ANDROID(3, "Android"), UNKNOWN(0, "Unknown");
 		
 		private int type;
 		private String name;
 		
-		private OS_NAME(int type, String name) {
+		private NAME(int type, String name) {
 			this.type = type;
 			this.name = name;
 		}
@@ -43,14 +43,14 @@ public class Platform {
 		}
 		
 	}
-	
-	public enum OS_ARCH {
+
+	public enum ARCH {
 		x86(1, "32 Bit"), x86_64(2, "64 Bit");
 		
 		private int type;
 		private String arch;
 		
-		private OS_ARCH(int type, String arch) {
+		private ARCH(int type, String arch) {
 			this.type = type;
 			this.arch = arch;
 		}
@@ -64,32 +64,32 @@ public class Platform {
 		}
 	}
 	
-	private static OS_NAME NAME;
+	private static Platforms.NAME NAME;
 	
-	private static OS_ARCH ARCH;
+	private static Platforms.ARCH ARCH;
 	
-	public static OS_NAME getNAME() {
+	public static Platforms.NAME getName() {
 		return NAME;
 	}
 	
-	public static OS_ARCH getARCH() {
+	public static Platforms.ARCH getArch() {
 		return ARCH;
 	}
 	
 	public static final boolean isWindows() {
-		return NAME == OS_NAME.WINDOWS;
+		return NAME == Platforms.NAME.WINDOWS;
 	}
 	
 	public static final boolean isLinux() {
-		return NAME == OS_NAME.LINUX;
+		return NAME == Platforms.NAME.LINUX;
 	}
 	
 	public static final boolean isAndroid() {
-		return NAME == OS_NAME.ANDROID;
+		return NAME == Platforms.NAME.ANDROID;
 	}
 	
 	public static final boolean is64Bit() {
-		return ARCH == OS_ARCH.x86_64;
+		return ARCH == Platforms.ARCH.x86_64;
 	}
 	
 	public static final boolean isIntel() {
@@ -113,18 +113,18 @@ public class Platform {
 		String osArch = System.getProperty("os.arch");
 		if (osName.startsWith("Linux")) {
 			if (new String("dalvik").equals(System.getProperty("java.vm.name").toLowerCase())) {
-				NAME = OS_NAME.ANDROID;
+				NAME = Platforms.NAME.ANDROID;
 			} else {
-				NAME = OS_NAME.LINUX;
+				NAME = Platforms.NAME.LINUX;
 			}
 		} else if (osName.startsWith("Windows")) {
-			NAME = OS_NAME.WINDOWS;
+			NAME = Platforms.NAME.WINDOWS;
 		}
 		osArch = osArch.toLowerCase().trim();
 		if ("i386".equals(osArch) || "i686".equals(osArch)) {
-			ARCH = OS_ARCH.x86;
+			ARCH = Platforms.ARCH.x86;
 		} else if ("x86_64".equals(osArch) || "amd64".equals(osArch)) {
-			ARCH = OS_ARCH.x86_64;
+			ARCH = Platforms.ARCH.x86_64;
 		}
 	}
 	

@@ -1,13 +1,11 @@
 package com.ardikars.test;
 
 import com.ardikars.jxnet.exception.JxnetException;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static com.ardikars.jxnet.Jxnet.*;
 import com.ardikars.jxnet.Pcap;
 import com.ardikars.jxnet.exception.PcapCloseException;
-import com.ardikars.jxnet.util.Loader;
 
 public class PcapOpenOffline {
 

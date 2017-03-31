@@ -2,6 +2,7 @@ package com.ardikars.test;
 
 import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
+import com.ardikars.jxnet.PcapDirection;
 import com.ardikars.jxnet.PcapStat;
 import com.ardikars.jxnet.exception.JxnetException;
 
@@ -57,6 +58,11 @@ public class PcapActivate {
             }
         }
         if (Jxnet.PcapActivate(pcap) != 0 ) {
+            String err = PcapGetErr(pcap);
+            PcapClose(pcap);
+            throw new JxnetException(err);
+        }
+        if (Jxnet.PcapSetDirection(pcap, PcapDirection.PCAP_D_IN) !=0 ) {
             String err = PcapGetErr(pcap);
             PcapClose(pcap);
             throw new JxnetException(err);

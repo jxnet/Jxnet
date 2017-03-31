@@ -27,7 +27,7 @@ import static com.ardikars.jxnet.util.Preconditions.CheckNotNull;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
-public class Loader {
+public class Loaders {
 
 	/**
 	 * Load library from jar /lib.
@@ -49,14 +49,14 @@ public class Loader {
 		if (load()) {
 			return;
 		}
-		switch (Platform.getNAME()) {
+		switch (Platforms.getName()) {
 			case LINUX:
-				if (Platform.isARM()) {
-					if (Platform.getVersion().equals("v7") || Platform.getVersion().equals("v6")) {
+				if (Platforms.isARM()) {
+					if (Platforms.getVersion().equals("v7") || Platforms.getVersion().equals("v6")) {
 						loadLibrary("/lib/armeabi-v7l/libjxnet-linux.so");
 					}
 				} else {
-					if (Platform.is64Bit()) {
+					if (Platforms.is64Bit()) {
 						loadLibrary("/lib/x86_64/libjxnet-linux.so");
 					} else {
 						loadLibrary("/lib/x86/libjxnet-linux.so");
@@ -64,7 +64,7 @@ public class Loader {
 				}
 				break;
 			case WINDOWS:
-				if (Platform.is64Bit()) {
+				if (Platforms.is64Bit()) {
 					loadLibrary("/lib/x86_64/jxnet.dll");
 				} else {
 					loadLibrary("/lib/x86/jxnet.dll");
@@ -103,7 +103,7 @@ public class Loader {
 		temp.deleteOnExit();
 		byte[] buffer = new byte[1024];
 		int readBytes;
-		InputStream is = Loader.class.getResourceAsStream(path);
+		InputStream is = Loaders.class.getResourceAsStream(path);
 		if (is == null) {
 			throw new FileNotFoundException(path + " not found.");
 		}

@@ -17,7 +17,7 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.util.Loader;
+import com.ardikars.jxnet.util.Loaders;
 
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -481,7 +481,7 @@ public final class Jxnet {
 	static {
 		if (!isLoaded) {
 			try {
-				Loader.loadLibrary();
+				Loaders.loadLibrary();
 				isLoaded = true;
 			} catch (Exception e) {
 				System.err.println(e.getMessage());

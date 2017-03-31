@@ -20,11 +20,6 @@ public class Test {
 
     public static void main(String[] args) {
 
-        StringBuilder errbuf = new StringBuilder();
-        Pcap pcap = Jxnet.PcapOpenLive("eth0", 1500, 1, 500, errbuf);
 
-        System.out.println(Jxnet.PcapSetDirection(pcap, PcapDirection.PCAP_D_OUT));
-
-        Jxnet.PcapClose(pcap);
     }
 }
