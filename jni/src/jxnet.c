@@ -1213,6 +1213,39 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapActivate
 	  if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
 	  return pcap_activate(GetPcap(env, jpcap));
   }
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapSetDirection
+ * Signature: (Lcom/ardikars/jxnet/Pcap;Lcom/ardikars/jxnet/PcapDirection;)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetDirection
+  (JNIEnv *env, jclass jclazz, jobject jpcap, jobject jdirection) {
+	  if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
+	  if (CheckNotNull(env, jdirection, NULL) == NULL) return -1;
+	  
+	  SetPcapDirectionIDs(env);
+	  jstring direction = (jstring) (*env)->CallObjectMethod(env, jdirection, PcapDirectionNameMID);
+	  const char *enumName = (*env)->GetStringUTFChars(env, direction, 0);
+	  
+	  int ret;
+	  
+	  if (strncmp(enumName, "PCAP_D_INOUT", 12) == 0) {
+		  ret = pcap_setdirection(GetPcap(env, jpcap), PCAP_D_INOUT);
+	  } else if (strncmp(enumName, "PCAP_D_OUT", 10) == 0) {
+		  ret = pcap_setdirection(GetPcap(env, jpcap), PCAP_D_OUT);
+	  } else if (strncmp(enumName, "PCAP_D_IN", 9) == 0) {
+		  ret = pcap_setdirection(GetPcap(env, jpcap), PCAP_D_IN);
+	  } else {
+		  ret = -1;
+	  }
+	  
+	  (*env)->ReleaseStringUTFChars(env, direction, enumName);
+	  (*env)->DeleteLocalRef(env, direction);
+	  return ret;
+  }
+  
+  
 #ifdef __cplusplus
 }
 #endif

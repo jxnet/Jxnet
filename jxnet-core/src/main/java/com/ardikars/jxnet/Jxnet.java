@@ -455,6 +455,25 @@ public final class Jxnet {
 	 */
 	public static native int PcapActivate(Pcap pcap);
 
+	/**
+	 * used to specify a direction that packets will be
+	 * captured.    d  is  one  of  the  constants  PCAP_D_IN,  PCAP_D_OUT  or
+	 * PCAP_D_INOUT.  PCAP_D_IN will only  capture  packets  received  by  the
+	 * device,  PCAP_D_OUT  will  only  capture packets sent by the device and
+	 * PCAP_D_INOUT will capture packets received by or sent  by  the  device.
+	 * PCAP_D_INOUT is the default setting if this function is not called.
+	 *
+	 * pcap_setdirection() isn't necessarily fully supported on all platforms;
+	 * some platforms might return an error for all  values,  and  some  other
+	 * platforms might not support PCAP_D_OUT.
+	 *
+	 * This operation is not supported if a ``savefile'' is being read.
+	 * @param pcap pcap object.
+	 * @param direction direction.
+	 * @return returns  0 on success and -1 on failure.
+	 */
+	public static native int PcapSetDirection(Pcap pcap, PcapDirection direction);
+
 	//public static native int Socket(int af, int type, int protocol);
 	//private static native int SendTo(int socket, ByteBuffer buf, int len, int flags, SockAddr to, int toLen);
 	//private static native int SendTO(int socket, ByteBuffer buf, int len, int flags, int sa_family, byte[] sa_data, int toLen);

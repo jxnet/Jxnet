@@ -283,30 +283,6 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxnet_Jxnet_PcapFreeCode
 
 /*
  * Class:     com_ardikars_jxnet_Jxnet
- * Method:    PcapFile
- * Signature: (Lcom/ardikars/jxnet/Pcap;)Lcom/ardikars/jxnet/File;
- */
-JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapFile
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     com_ardikars_jxnet_Jxnet
- * Method:    PcapDumpFile
- * Signature: (Lcom/ardikars/jxnet/PcapDumper;)Lcom/ardikars/jxnet/File;
- */
-JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDumpFile
-  (JNIEnv *, jclass, jobject);
-
-/*
- * Class:     com_ardikars_jxnet_Jxnet
- * Method:    PcapDumpFOpen
- * Signature: (Lcom/ardikars/jxnet/Pcap;Lcom/ardikars/jxnet/File;)Lcom/ardikars/jxnet/PcapDumper;
- */
-JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDumpFOpen
-  (JNIEnv *, jclass, jobject, jobject);
-
-/*
- * Class:     com_ardikars_jxnet_Jxnet
  * Method:    PcapStats
  * Signature: (Lcom/ardikars/jxnet/Pcap;Lcom/ardikars/jxnet/PcapStat;)I
  */
@@ -408,6 +384,14 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetImmediateMode
  */
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapActivate
   (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapSetDirection
+ * Signature: (Lcom/ardikars/jxnet/Pcap;Lcom/ardikars/jxnet/PcapDirection;)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetDirection
+  (JNIEnv *, jclass, jobject, jobject);
 
 #ifdef __cplusplus
 }

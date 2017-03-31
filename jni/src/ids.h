@@ -130,3 +130,8 @@ extern jclass WLanOperationModeClass;
 extern jmethodID WLanOperationModeInitMID;
 
 void SetWLanDeviceIDs(JNIEnv *env);
+
+extern jclass PcapDirectionClass;
+extern jmethodID PcapDirectionNameMID;
+
+void SetPcapDirectionIDs(JNIEnv *env);

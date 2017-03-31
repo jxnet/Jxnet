@@ -571,6 +571,28 @@ void SetWLanDeviceIDs(JNIEnv *env) {
 	}	
 }
 
+jclass PcapDirectionClass = NULL;
+jmethodID PcapDirectionNameMID = NULL;
+
+void SetPcapDirectionIDs(JNIEnv *env) {
+	
+	PcapDirectionClass = (*env)->FindClass(env, "com/ardikars/jxnet/PcapDirection");
+	
+	if(PcapDirectionClass == NULL) {
+		ThrowNew(env, CLASS_NOT_FOUND_EXCEPTION, "Unable to initialize class com.ardikars.jxnet.PcapDirection");
+   		return;
+  	}
+  	
+  	PcapDirectionNameMID = (*env)->GetMethodID(env, PcapDirectionClass, "name", "()Ljava/lang/String;");
+  	
+  	if(PcapDirectionNameMID == NULL) {
+  		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method PcapDirection.name()");
+  		return;
+  	}
+  	
+}
+
+
 jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 
 	JNIEnv* env = NULL;

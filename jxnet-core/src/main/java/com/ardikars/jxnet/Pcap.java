@@ -25,6 +25,10 @@ public final class Pcap {
 
 	private long address;
 
+	private Pcap() {
+		//
+	}
+
 	public long getAddress() {
 		return address;
 	}
