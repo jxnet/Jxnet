@@ -17,6 +17,8 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.jxnet.util.Preconditions;
+
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +29,8 @@ import java.util.List;
  * @since 1.0.0
  */
 public final class Inet6Address extends InetAddress {
+
+	public static final Inet6Address LOCALHOST = valueOf("::1");
 	
 	public static final short IPV6_ADDRESS_LENGTH = 16;
 	
@@ -45,6 +49,8 @@ public final class Inet6Address extends InetAddress {
 	 * @return Inet6Address object.
 	 */
 	public static Inet6Address valueOf(byte[] address) {
+		Preconditions.CheckNotNull(address);
+		Preconditions.CheckArgument(address.length == IPV6_ADDRESS_LENGTH);
 		return new Inet6Address(address);
 	}
 
@@ -54,6 +60,9 @@ public final class Inet6Address extends InetAddress {
 	 * @return Inet6Address object.
 	 */
 	public static Inet6Address valueOf(String inet6Address) {
+
+		Preconditions.CheckNotNull(inet6Address);
+
 		final int IPV6_MAX_HEX_GROUPS = 8;
 		final int IPV6_MAX_HEX_DIGITS_PER_GROUP = 4;
 

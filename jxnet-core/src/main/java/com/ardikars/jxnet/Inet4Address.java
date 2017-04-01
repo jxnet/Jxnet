@@ -17,6 +17,8 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.jxnet.util.Preconditions;
+
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
@@ -25,6 +27,8 @@ import java.util.Arrays;
  * @since 1.0.0
  */
 public final class Inet4Address extends InetAddress {
+
+	public static final Inet4Address LOCALHOST = valueOf("127.0.0.1");
 
 	public static final int IPV4_ADDRESS_LENGTH = 4;
 	
@@ -44,14 +48,11 @@ public final class Inet4Address extends InetAddress {
 	 * @return Inet4Address object.
 	 */
 	public static Inet4Address valueOf(String inet4Address) {
-		if (!inet4Address.matches("^([0-9.])+$") || inet4Address == null) {
-			throw new IllegalArgumentException("");
-		}
+		Preconditions.CheckNotNull(inet4Address);
+		Preconditions.CheckArgument(inet4Address.matches("^([0-9.])+$"));
 		String[] parts = inet4Address.split("\\.");
 		byte[] result = new byte[parts.length];
-		if (result.length != 4) {
-			throw new IllegalArgumentException("");
-		}
+		Preconditions.CheckArgument(result.length == IPV4_ADDRESS_LENGTH);
 		for (int i=0; i<result.length; i++) {
 			if (parts[i].length() == 0 || parts[i] == null) {
 				throw new IllegalArgumentException("");
@@ -77,11 +78,9 @@ public final class Inet4Address extends InetAddress {
 	 * @return IPv4Address object.
 	 */
 	public static Inet4Address valueOf(byte[] address) {
-		if (address == null || address.length != Inet4Address.IPV4_ADDRESS_LENGTH ||
-				address[0] == 0x0) {
-			throw new IllegalArgumentException("the length is not "
-					+ Inet4Address.IPV4_ADDRESS_LENGTH);
-		}
+		Preconditions.CheckNotNull(address);
+		Preconditions.CheckArgument(address.length == Inet4Address.IPV4_ADDRESS_LENGTH);
+		//Preconditions.CheckArgument(address[0] != 0x0);
 		return new Inet4Address(address);
 	}
 

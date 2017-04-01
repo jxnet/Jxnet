@@ -18,6 +18,7 @@
 package com.ardikars.jxnet;
 
 import com.ardikars.jxnet.util.FormatUtils;
+import com.ardikars.jxnet.util.Preconditions;
 
 import java.util.Arrays;
 
@@ -35,6 +36,11 @@ public final class MacAddress {
 	public static final MacAddress ZERO = valueOf("00:00:00:00:00:00");
 
 	/**
+	 * Dummy MAC Address (de:ad:be:ef:c0:fe).
+	 */
+	public static final MacAddress DUMMY = valueOf("de:ad:be:ef:c0:fe");
+
+	/**
 	 * Broadcast MAC Address (ff:ff:ff:ff:ff:ff).
 	 */
 	public static final MacAddress BROADCAST = valueOf("ff:ff:ff:ff:ff:ff");
@@ -43,7 +49,7 @@ public final class MacAddress {
 	
 	public static final MacAddress IPV4_MULTICAST_MASK = valueOf("ff:ff:ff:80:00:00");
 	
-	private byte[] address = new byte[MacAddress.MAC_ADDRESS_LENGTH];
+	private byte[] address = new byte[MAC_ADDRESS_LENGTH];
 	
 	private MacAddress(final byte[] address) {
 		this.address = Arrays.copyOf(address, MacAddress.MAC_ADDRESS_LENGTH);
@@ -55,11 +61,9 @@ public final class MacAddress {
 	 * @return MacAddress object.
 	 */
 	public static MacAddress valueOf(final String address) {
+		Preconditions.CheckNotNull(address);
 		final String[] elements = address.split(":");
-		if (elements.length != MacAddress.MAC_ADDRESS_LENGTH) {
-			throw new IllegalArgumentException(
-					"Specified MAC Address must contain 12 hex digits" + " separated pairwise by :'s.");
-		}
+		Preconditions.CheckArgument((elements.length == MAC_ADDRESS_LENGTH), "Specified MAC Address must contain 12 hex digits");
 		final byte[] b = new byte[MacAddress.MAC_ADDRESS_LENGTH];
 		for (int i = 0; i < MacAddress.MAC_ADDRESS_LENGTH; i++) {
 			final String element = elements[i];
@@ -74,10 +78,8 @@ public final class MacAddress {
 	 * @return MacAddress object.
 	 */
 	public static MacAddress valueOf(final byte[] address) {
-		if (address.length != MacAddress.MAC_ADDRESS_LENGTH) {
-			throw new IllegalArgumentException("the length is not "
-					+ MacAddress.MAC_ADDRESS_LENGTH);
-		}
+		Preconditions.CheckNotNull(address);
+		Preconditions.CheckArgument((address.length == MAC_ADDRESS_LENGTH), "Specified MAC Address must contain 12 hex digits");
 		return new MacAddress(address);
 	}
 

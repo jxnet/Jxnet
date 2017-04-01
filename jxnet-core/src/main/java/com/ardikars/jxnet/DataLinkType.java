@@ -66,7 +66,12 @@ public enum DataLinkType {
     /**
      * Null (BSD loopback encapsulation): 0
      */
-    NULL((short) 0, "NULL")
+    NULL((short) 0, "NULL"),
+
+    /**
+     * Unknown
+     */
+    UNKNOWN((short) -1, "Unknown")
     ;
 
     private short value;
