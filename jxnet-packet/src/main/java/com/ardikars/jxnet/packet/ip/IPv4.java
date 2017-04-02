@@ -253,16 +253,15 @@ public class IPv4 extends Packet implements Builder<Packet> {
     public Packet setPacket(Packet packet) {
 
         ByteBuffer bb;
-        int length;
+        int length = 0;
         int accumulation = 0;
 
         switch (packet.getClass().getName()) {
             case "com.ardikars.jxnet.packet.tcp.TCP":
                 TCP tcp = (TCP) packet;
-                bb = ByteBuffer.wrap(tcp.toBytes());
                 if (tcp.getChecksum() == 0) {
-                    length = tcp.getDataOffset() << 2;
-                    accumulation = 0;
+                    bb = ByteBuffer.wrap(tcp.toBytes());
+                    length += tcp.getDataOffset() << 2;
                     if (tcp.getPayload() != null) {
                         length += tcp.getPayload().length;
                     }
@@ -288,26 +287,27 @@ public class IPv4 extends Packet implements Builder<Packet> {
                 return this.setPayload(tcp.toBytes());
             case "com.ardikars.jxnet.packet.tcp.UDP":
                 UDP udp = (UDP) packet;
-                bb = ByteBuffer.wrap(udp.toBytes());
-                length = udp.getLength()+ ((udp.getPayload() == null) ? 0 : udp.getPayload().length);
-                accumulation = 0;
                 if (udp.getChecksum() == 0) {
-                    accumulation += (this.getSourceAddress().toInt() >> 16 & 0xffff)
-                            + (this.getSourceAddress().toInt() & 0xffff);
-                    accumulation += (this.getDestinationAddress().toInt() >> 16 & 0xffff)
-                            + (this.getDestinationAddress().toInt() & 0xffff);
-                    accumulation += this.getProtocol().getValue() & 0xff;
-                    accumulation += length & 0xffff;
+                    bb = ByteBuffer.wrap(udp.toBytes());
+                    length += udp.getLength() + ((udp.getPayload() == null) ? 0 : udp.getPayload().length);
+                    if (udp.getChecksum() == 0) {
+                        accumulation += (this.getSourceAddress().toInt() >> 16 & 0xffff)
+                                + (this.getSourceAddress().toInt() & 0xffff);
+                        accumulation += (this.getDestinationAddress().toInt() >> 16 & 0xffff)
+                                + (this.getDestinationAddress().toInt() & 0xffff);
+                        accumulation += this.getProtocol().getValue() & 0xff;
+                        accumulation += length & 0xffff;
+                    }
+                    for (int i = 0; i < length / 2; ++i) {
+                        accumulation += 0xffff & bb.getShort();
+                    }
+                    if (length % 2 > 0) {
+                        accumulation += (bb.get() & 0xff) << 8;
+                    }
+                    accumulation = (accumulation >> 16 & 0xffff)
+                            + (accumulation & 0xffff);
+                    udp.setChecksum((short) (~accumulation & 0xffff));
                 }
-                for (int i = 0; i < length / 2; ++i) {
-                    accumulation += 0xffff & bb.getShort();
-                }
-                if (length % 2 > 0) {
-                    accumulation += (bb.get() & 0xff) << 8;
-                }
-                accumulation = (accumulation >> 16 & 0xffff)
-                        + (accumulation & 0xffff);
-                this.checksum = (short) (~accumulation & 0xffff);
                 this.setProtocol(IPProtocolNumber.UDP);
                 return this.setPayload(udp.toBytes());
         }

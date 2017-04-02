@@ -19,6 +19,8 @@ package com.ardikars.jxnet.packet.ip;
 
 import com.ardikars.jxnet.Inet6Address;
 import com.ardikars.jxnet.packet.Packet;
+import com.ardikars.jxnet.packet.tcp.TCP;
+import com.ardikars.jxnet.packet.udp.UDP;
 import com.ardikars.jxnet.util.Builder;
 
 import java.nio.ByteBuffer;
@@ -168,6 +170,84 @@ public class IPv6 extends Packet implements Builder<Packet> {
 
     @Override
     public Packet setPacket(Packet packet) {
+        ByteBuffer bb;
+        int length = 0;
+        int accumulation = 0;
+
+        switch (packet.getClass().getName()) {
+            case "com.ardikars.jxnet.packet.tcp.TCP":
+                TCP tcp = (TCP) packet;
+                if (tcp.getChecksum() == 0) {
+                    bb = ByteBuffer.wrap(tcp.toBytes());
+                    length += tcp.getDataOffset() << 2;
+                    if (tcp.getPayload() != null) {
+                        length += tcp.getPayload().length;
+                    }
+                    final int bbLength =
+                            Inet6Address.IPV6_ADDRESS_LENGTH * 2 // IPv6 src, dst
+                                    + 2  // nextHeader (with padding)
+                                    + 4; // length
+                    final ByteBuffer bbChecksum = ByteBuffer.allocate(bbLength);
+                    bbChecksum.put(this.getSourceAddress().toBytes());
+                    bbChecksum.put(this.getDestinationAddress().toBytes());
+                    bbChecksum.put((byte) 0); // padding
+                    bbChecksum.put(this.getNextHeader().getValue());
+                    bbChecksum.putInt(length);
+                    bbChecksum.rewind();
+                    for (int i = 0; i < bbLength / 2; ++i) {
+                        accumulation += 0xffff & bbChecksum.getShort();
+                    }
+                    for (int i = 0; i < length / 2; ++i) {
+                        accumulation += 0xffff & bb.getShort();
+                    }
+                    // pad to an even number of shorts
+                    if (length % 2 > 0) {
+                        accumulation += (bb.get() & 0xff) << 8;
+                    }
+
+                    accumulation = (accumulation >> 16 & 0xffff)
+                            + (accumulation & 0xffff);
+                    tcp.setChecksum((short) (~accumulation & 0xffff));
+                }
+                this.setNextHeader(IPProtocolNumber.TCP);
+                return this.setPayload(tcp.toBytes());
+            case "com.ardikars.jxnet.packet.tcp.UDP":
+                UDP udp = (UDP) packet;
+                if (udp.getChecksum() == 0) {
+                    bb = ByteBuffer.wrap(udp.toBytes());
+                    length += UDP.UDP_HEADER_LENGTH;
+                    if (udp.getPayload() != null) {
+                        length += udp.getPayload().length;
+                    }
+                    final int bbLength =
+                            Inet6Address.IPV6_ADDRESS_LENGTH * 2 // IPv6 src, dst
+                                    + 2  // nextHeader (with padding)
+                                    + 4; // length
+                    final ByteBuffer bbChecksum = ByteBuffer.allocate(bbLength);
+                    bbChecksum.put(this.getSourceAddress().toBytes());
+                    bbChecksum.put(this.getDestinationAddress().toBytes());
+                    bbChecksum.put((byte) 0); // padding
+                    bbChecksum.put(this.getNextHeader().getValue());
+                    bbChecksum.putInt(length);
+                    bbChecksum.rewind();
+                    for (int i = 0; i < bbLength / 2; ++i) {
+                        accumulation += 0xffff & bbChecksum.getShort();
+                    }
+                    for (int i = 0; i < length / 2; ++i) {
+                        accumulation += 0xffff & bb.getShort();
+                    }
+                    // pad to an even number of shorts
+                    if (length % 2 > 0) {
+                        accumulation += (bb.get() & 0xff) << 8;
+                    }
+
+                    accumulation = (accumulation >> 16 & 0xffff)
+                            + (accumulation & 0xffff);
+                    udp.setChecksum((short) (~accumulation & 0xffff));
+                }
+                this.setNextHeader(IPProtocolNumber.UDP);
+                return this.setPayload(udp.toBytes());
+        }
         this.payload = packet.toBytes();
         return this;
     }
