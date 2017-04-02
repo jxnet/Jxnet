@@ -19,6 +19,7 @@ package com.ardikars.jxnet.packet.ip;
 
 import com.ardikars.jxnet.Inet4Address;
 import com.ardikars.jxnet.packet.Packet;
+import com.ardikars.jxnet.packet.tcp.TCP;
 import com.ardikars.jxnet.util.Builder;
 
 import java.nio.ByteBuffer;
@@ -249,11 +250,45 @@ public class IPv4 extends Packet implements Builder<IPv4> {
 
     @Override
     public Packet setPacket(Packet packet) {
-        return this.setPayload(packet.toBytes());
+        switch (packet.getClass().getName()) {
+            case "com.ardikars.jxnet.packet.tcp.TCP":
+                TCP tcp = (TCP) packet;
+                ByteBuffer bb = ByteBuffer.wrap(tcp.toBytes());
+                if (tcp.getChecksum() == 0) {
+                    int accumulation = 0;
+                    int length = tcp.getDataOffset() << 2;
+                    if (tcp.getPayload() != null) {
+                        length += tcp.getPayload().length;
+                    }
+                    accumulation += (this.getSourceAddress().toInt() >> 16 & 0xffff)
+                            + (this.getSourceAddress().toInt() & 0xffff);
+                    accumulation += (this.getDestinationAddress().toInt() >> 16 & 0xffff)
+                            + (this.getDestinationAddress().toInt() & 0xffff);
+                    accumulation += this.getProtocol().getValue() & 0xff;
+                    accumulation += length & 0xffff;
+
+                    for (int i = 0; i < length / 2; ++i) {
+                        accumulation += 0xffff & bb.getShort();
+                    }
+                    if (length % 2 > 0) {
+                        accumulation += (bb.get() & 0xff) << 8;
+                    }
+
+                    accumulation = (accumulation >> 16 & 0xffff)
+                            + (accumulation & 0xffff);
+                    tcp.setChecksum((short) (~accumulation & 0xffff));
+                }
+                this.setProtocol(IPProtocolNumber.TCP);
+                return this.setPayload(tcp.toBytes());
+        }
+        return this;
     }
 
     @Override
     public Packet getPacket() {
+        switch (this.getProtocol().getValue()) {
+            case 6: return TCP.newInstance(this.getPayload());
+        }
         return null;
     }
 
@@ -285,7 +320,7 @@ public class IPv4 extends Packet implements Builder<IPv4> {
             }
             accumulation = (accumulation >> 16 & 0xffff)
                     + (accumulation & 0xffff);
-            this.setChecksum((short) (~accumulation & 0xffff));
+            this.checksum = ((short) (~accumulation & 0xffff));
             buffer.putShort(10, (short) (this.getChecksum() & 0xffff));
         }
         if (this.getPayload() != null) {

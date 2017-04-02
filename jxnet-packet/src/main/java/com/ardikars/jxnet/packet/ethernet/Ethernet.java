@@ -174,6 +174,20 @@ public class Ethernet extends Packet implements Builder<Ethernet> {
 
     @Override
     public Packet setPacket(Packet packet) {
+        switch (packet.getClass().getName()) {
+            case "com.ardikars.jxnet.packet.ip.IPv4":
+                IPv4 ipv4 = (IPv4) packet;
+                this.setEthernetType(EthernetType.IPV4);
+                return this.setPayload(ipv4.toBytes());
+            case "com.ardikars.jxnet.packet.ip.IPv6":
+                IPv6 ipv6 = (IPv6) packet;
+                this.setEthernetType(EthernetType.IPV6);
+                return this.setPayload(ipv6.toBytes());
+            case "com.ardikars.jxnet.packet.arp.ARP":
+                ARP arp = (ARP) packet;
+                this.setEthernetType(EthernetType.ARP);
+                return this.setPayload(arp.toBytes());
+        }
         return setPayload(packet.toBytes());
     }
 

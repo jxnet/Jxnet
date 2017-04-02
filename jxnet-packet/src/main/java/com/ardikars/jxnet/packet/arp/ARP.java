@@ -75,20 +75,20 @@ public class ARP extends Packet implements Builder<ARP> {
     }
 
     public byte getHardwareAddressLength() {
-        return this.hardwareAddressLength;
+        return (byte) (this.hardwareAddressLength & 0xff);
     }
 
     public ARP setHardwareAddressLength(final byte hardwareAddressLength) {
-        this.hardwareAddressLength = hardwareAddressLength;
+        this.hardwareAddressLength = (byte) (hardwareAddressLength & 0xff);
         return this;
     }
 
     public byte getProtocolAddressLength() {
-        return this.protocolAddressLength;
+        return (byte) (this.protocolAddressLength & 0xff);
     }
 
     public ARP setProtocolAddressLength(final byte protocolAddressLength) {
-        this.protocolAddressLength = protocolAddressLength;
+        this.protocolAddressLength = (byte) (protocolAddressLength & 0xff);
         return this;
     }
 
@@ -150,11 +150,11 @@ public class ARP extends Packet implements Builder<ARP> {
         arp.setProtocolAddressLength(bb.get());
         arp.setOperationCode(ARPOperationCode.getInstance(bb.getShort()));
 
-        byte[] hwAddrBuf = new byte[arp.getHardwareAddressLength()];
+        byte[] hwAddrBuf = new byte[arp.getHardwareAddressLength() & 0xff];
         bb.get(hwAddrBuf);
         arp.setSenderHardwareAddress(MacAddress.valueOf(hwAddrBuf));
 
-        byte[] addrBuf = new byte[arp.getProtocolAddressLength()];
+        byte[] addrBuf = new byte[arp.getProtocolAddressLength() & 0xff];
         bb.get(addrBuf);
         arp.setSenderProtocolAddress(Inet4Address.valueOf(addrBuf));
 
