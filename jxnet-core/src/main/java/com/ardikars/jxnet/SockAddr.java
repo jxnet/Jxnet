@@ -46,7 +46,7 @@ public final class SockAddr {
          * @return address value.
          */
         public short getValue() {
-            return value;
+            return this.value;
         }
 
         /**
@@ -54,7 +54,7 @@ public final class SockAddr {
          * @return address value description.
          */
         public String getDescription() {
-            return description;
+            return this.description;
         }
 
         /**
@@ -62,7 +62,7 @@ public final class SockAddr {
          * @param family address value type.
          * @return value type.
          */
-        public static Family valueOf(short family) {
+        public static Family valueOf(final short family) {
             for(Family f : values()) {
                 if(f.getValue() == family) {
                     return f;
@@ -100,14 +100,14 @@ public final class SockAddr {
      * @return bytes address.
      */
     public byte[] getData() {
-        return data;
+        return this.data;
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj == this)
             return true;
-        if (obj.getClass() != getClass())
+        if (obj.getClass() != this.getClass())
             return false;
         if (obj instanceof Inet4Address) {
             final Inet4Address addr = (Inet4Address) obj;

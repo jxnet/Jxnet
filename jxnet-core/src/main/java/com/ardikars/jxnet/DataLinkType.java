@@ -83,14 +83,14 @@ public enum DataLinkType {
     }
 
     public short getValue() {
-        return value;
+        return this.value;
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
-    public static DataLinkType valueOf(short dataLinkType) {
+    public static DataLinkType valueOf(final short dataLinkType) {
         for(DataLinkType f : values()) {
             if(f.getValue() == dataLinkType) {
                 return f;

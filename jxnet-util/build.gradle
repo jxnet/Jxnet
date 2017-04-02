@@ -9,4 +9,3 @@ task generateJNIHeaders(type: Exec, dependsOn: classes) {
     commandLine 'javah', '-jni', '-d', 'build/include/jxnet', '-classpath', classpath,
             'com.ardikars.jxnet.Arp'
 }
-

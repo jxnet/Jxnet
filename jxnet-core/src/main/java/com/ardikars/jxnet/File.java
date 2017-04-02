@@ -26,7 +26,7 @@ public final class File extends java.io.File {
 	private long address;
 
 	public long getAddress() {
-		return address;
+		return this.address;
 	}
 
 	/**
@@ -39,9 +39,9 @@ public final class File extends java.io.File {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (obj == this)
 			return true;
-		if (getClass() != obj.getClass())
+		if (obj.getClass() == this.getClass())
 			return false;
 		if (obj instanceof BpfProgram) {
 			BpfProgram bpf = (BpfProgram) obj;
@@ -52,7 +52,9 @@ public final class File extends java.io.File {
 
 	@Override
 	public int hashCode() {
-		return 17 * 37 + super.hashCode();
+		return 17 * 37 +
+				((int) (this.address ^ (this.address >> 32))) +
+				super.hashCode();
 	}
 
 	@Override

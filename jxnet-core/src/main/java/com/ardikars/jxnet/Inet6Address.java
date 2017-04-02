@@ -48,7 +48,7 @@ public final class Inet6Address extends InetAddress {
 	 * @param address ipv6 bytes address.
 	 * @return Inet6Address object.
 	 */
-	public static Inet6Address valueOf(byte[] address) {
+	public static Inet6Address valueOf(final byte[] address) {
 		Preconditions.CheckNotNull(address);
 		Preconditions.CheckArgument(address.length == IPV6_ADDRESS_LENGTH);
 		return new Inet6Address(address);
@@ -176,7 +176,7 @@ public final class Inet6Address extends InetAddress {
 	 * @return bytes ipv6 address.
 	 */
 	public byte[] toBytes() {
-		return address;
+		return this.address;
 	}
 
 	private long toLong() {
@@ -185,7 +185,7 @@ public final class Inet6Address extends InetAddress {
 		return bb.getLong();
 	}
 
-	private static short parseHextet(String ipPart) {
+	private static short parseHextet(final String ipPart) {
 		int hextet = Integer.parseInt(ipPart, 16);
 		if (hextet > 0xffff) {
 			throw new NumberFormatException();
@@ -193,7 +193,7 @@ public final class Inet6Address extends InetAddress {
 		return (short) hextet;
 	}
 
-	public void update(Inet6Address inet6address) {
+	public void update(final Inet6Address inet6address) {
 		this.address = inet6address.toBytes();
 	}
 
@@ -201,7 +201,7 @@ public final class Inet6Address extends InetAddress {
 	public boolean equals(Object obj) {
 		if (obj == this)
 			return true;
-		if (obj.getClass() != getClass())
+		if (obj.getClass() != this.getClass())
 			return false;
 		if (obj instanceof Inet4Address) {
 			final Inet4Address addr = (Inet4Address) obj;
@@ -225,8 +225,8 @@ public final class Inet6Address extends InetAddress {
 		for (int hextet = 0; hextet < 7; ) {
 			int curByte = hextet * 2;
 			int size = 0;
-			while (curByte < address.length && address[curByte] == 0
-					&& address[curByte + 1] == 0) {
+			while (curByte < this.address.length && this.address[curByte] == 0
+					&& this.address[curByte + 1] == 0) {
 				curByte += 2;
 				size++;
 			}
@@ -238,12 +238,12 @@ public final class Inet6Address extends InetAddress {
 		}
 		StringBuilder sb = new StringBuilder(39);
 		if (cmprHextet == -1 || cmprSize < 2) {
-			ipv6toStr(sb, address, 0, 8);
+			ipv6toStr(sb, this.address, 0, 8);
 			return sb.toString();
 		}
-		ipv6toStr(sb, address, 0, cmprHextet);
+		ipv6toStr(sb, this.address, 0, cmprHextet);
 		sb.append(new char[]{':', ':'});
-		ipv6toStr(sb, address, cmprHextet + cmprSize, 8);
+		ipv6toStr(sb, this.address, cmprHextet + cmprSize, 8);
 		return sb.toString();
 	}
 	

@@ -26,7 +26,7 @@ public final class PcapDumper {
 	private long address;
 
 	public long getAddress() {
-		return address;
+		return this.address;
 	}
 
 	private PcapDumper() {
@@ -38,10 +38,30 @@ public final class PcapDumper {
 	 * @return true if PcapDumper is closed, false otherwise.
 	 */
 	public boolean isClosed() {
-		if (address == 0) {
+		if (this.address == 0) {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this)
+			return true;
+		if (obj.getClass() != this.getClass())
+			return false;
+		if (obj instanceof PcapDumper) {
+			PcapDumper dumper = (PcapDumper) obj;
+			return this.address == dumper.getAddress();
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return 17 * 37 +
+				((int) (this.address ^ (this.address >> 32))) +
+				super.hashCode();
 	}
 	
 	@Override

@@ -51,7 +51,7 @@ public final class MacAddress {
 	
 	private byte[] address = new byte[MAC_ADDRESS_LENGTH];
 	
-	private MacAddress(final byte[] address) {
+	private MacAddress(byte[] address) {
 		this.address = Arrays.copyOf(address, MacAddress.MAC_ADDRESS_LENGTH);
 	}
 
@@ -156,7 +156,7 @@ public final class MacAddress {
 	public boolean equals(Object obj) {
 		if (obj == this)
 			return true;
-		if (obj.getClass() != getClass())
+		if (obj.getClass() != this.getClass())
 			return false;
 		if (obj instanceof MacAddress) {
 			final MacAddress addr = (MacAddress) obj;

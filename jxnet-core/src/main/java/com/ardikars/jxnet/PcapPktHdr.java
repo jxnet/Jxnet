@@ -48,7 +48,7 @@ public final class PcapPktHdr {
 	 * @return capture length.
 	 */
 	public int getCapLen() {
-		return caplen;
+		return this.caplen;
 	}
 
 	/**
@@ -56,7 +56,7 @@ public final class PcapPktHdr {
 	 * @return packet length.
 	 */
 	public int getLen() {
-		return len;
+		return this.len;
 	}
 
 	/**
@@ -64,7 +64,7 @@ public final class PcapPktHdr {
 	 * @return tv_sec.
 	 */
 	public int getTvSec() {
-		return tv_sec;
+		return this.tv_sec;
 	}
 
 	/**
@@ -72,16 +72,16 @@ public final class PcapPktHdr {
 	 * @return tv_usec.
 	 */
 	public long getTvUsec() {
-		return tv_usec;
+		return this.tv_usec;
 	}
 	
 	@Override
 	public String toString() {
 		return new StringBuilder()
-				.append("[Capture Length: ").append(caplen)
-				.append(", Length: ").append(len)
-				.append(", TvSec: ").append(tv_sec)
-				.append(", TvUSec: ").append(tv_usec)
+				.append("[Capture Length: ").append(this.caplen)
+				.append(", Length: ").append(this.len)
+				.append(", TvSec: ").append(this.tv_sec)
+				.append(", TvUSec: ").append(this.tv_usec)
 				.append("]").toString();
 	}
 	

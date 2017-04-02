@@ -30,11 +30,11 @@ public final class Pcap {
 	}
 
 	public long getAddress() {
-		return address;
+		return this.address;
 	}
 
 	public boolean isClosed() {
-		if (address == 0) {
+		if (this.address == 0) {
 			return true;
 		}
 		return false;
@@ -42,9 +42,9 @@ public final class Pcap {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (obj == this)
 			return true;
-		if (getClass() != obj.getClass())
+		if (obj.getClass() != this.getClass())
 			return false;
 		if (obj instanceof Pcap) {
 			Pcap pcap = (Pcap) obj;
@@ -55,7 +55,9 @@ public final class Pcap {
 
 	@Override
 	public int hashCode() {
-		return 17 * 37 + super.hashCode();
+		return 17 * 37 +
+				((int) (this.address ^ (this.address >> 32))) +
+				super.hashCode();
 	}
 
 	@Override

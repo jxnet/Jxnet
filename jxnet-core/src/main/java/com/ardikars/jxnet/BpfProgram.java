@@ -31,15 +31,15 @@ public final class BpfProgram {
 	 * Create instance ob BpfProgram and initialize it.
 	 */
 	public BpfProgram() {
-		initBpfProgram();
+		this.initBpfProgram();
 	}
 
 	public long getAddress() {
-		return address;
+		return this.address;
 	}
 
 	public boolean isClosed() {
-		if (address == 0) {
+		if (this.address == 0) {
 			return true;
 		}
 		return false;
@@ -47,26 +47,28 @@ public final class BpfProgram {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (obj == this)
 			return true;
-		if (getClass() != obj.getClass())
+		if (obj.getClass() != this.getClass())
 			return false;
 		if (obj instanceof BpfProgram) {
 			BpfProgram bpf = (BpfProgram) obj;
-			return address == bpf.getAddress();
+			return this.address == bpf.getAddress();
 		}
 		return false;
 	}
 
 	@Override
 	public int hashCode() {
-		return 17 * 37 + super.hashCode();
+		return 17 * 37 +
+				((int) (this.address ^ (this.address >> 32))) +
+				super.hashCode();
 	}
 
 	@Override
 	public String toString() {
 		return new StringBuilder().append("[Pointer Address: ")
-				.append(address)
+				.append(this.address)
 				.append("]").toString();
 	}
 	
@@ -79,4 +81,3 @@ public final class BpfProgram {
 	}
 
 }
-

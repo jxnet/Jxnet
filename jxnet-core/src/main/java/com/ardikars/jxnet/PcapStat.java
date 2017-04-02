@@ -34,7 +34,7 @@ public final class PcapStat {
 	 * @return recieved packets.
 	 */
 	public long getPsRecv() {
-		return ps_recv;
+		return this.ps_recv;
 	}
 
 	/**
@@ -42,7 +42,7 @@ public final class PcapStat {
 	 * @return dropped packets.
 	 */
 	public long getPsDrop() {
-		return ps_drop;
+		return this.ps_drop;
 	}
 
 	/**
@@ -50,7 +50,7 @@ public final class PcapStat {
 	 * @return dropped packets by interface.
 	 */
 	public long getPsIfdrop() {
-		return ps_ifdrop;
+		return this.ps_ifdrop;
 	}
 
 	@Override

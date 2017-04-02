@@ -49,7 +49,7 @@ public final class PcapIf {
 	 * @return interface name.
 	 */
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	/**
@@ -57,7 +57,7 @@ public final class PcapIf {
 	 * @return interface description.
 	 */
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	/**
@@ -65,7 +65,7 @@ public final class PcapIf {
 	 * @return interface flags.
 	 */
 	public int getFlags() {
-		return flags;
+		return this.flags;
 	}
 
 	/**
@@ -73,18 +73,18 @@ public final class PcapIf {
 	 * @return interface addresses.
 	 */
 	public List<PcapAddr> getAddresses() {
-		return addresses;
+		return this.addresses;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == this) return true;
-		if (obj.getClass() != getClass()) return false;
+		if (obj.getClass() != this.getClass()) return false;
 		if (!(obj instanceof PcapIf)) return false;
 		PcapIf pcapIf = (PcapIf) obj;
-		if (name.equals(pcapIf.getName()) &&
-				description.equals(pcapIf.getDescription()) &&
-				flags == pcapIf.getFlags())
+		if (this.name.equals(pcapIf.getName()) &&
+				this.description.equals(pcapIf.getDescription()) &&
+				this.flags == pcapIf.getFlags())
 			return true;
 		return false;
 	}
@@ -98,7 +98,11 @@ public final class PcapIf {
 
 	@Override
 	public String toString() {
-		return name;
+		return new StringBuilder()
+				.append("[Name: " + this.name)
+				.append(", Description: " + this.description)
+				.append(", Flags: " + this.flags)
+				.append("]").toString();
 	}
 	
 }

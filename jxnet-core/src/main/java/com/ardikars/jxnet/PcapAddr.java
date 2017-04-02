@@ -45,7 +45,7 @@ public final class PcapAddr {
 	 * @return interface address.
 	 */
 	public SockAddr getAddr() {
-		return addr;
+		return this.addr;
 	}
 
 	/**
@@ -53,7 +53,7 @@ public final class PcapAddr {
 	 * @return interface netmask.
 	 */
 	public SockAddr getNetmask() {
-		return netmask;
+		return this.netmask;
 	}
 
 	/**
@@ -61,7 +61,7 @@ public final class PcapAddr {
 	 * @return interface broadcast address.
 	 */
 	public SockAddr getBroadAddr() {
-		return broadaddr;
+		return this.broadaddr;
 	}
 
 	/**
@@ -69,19 +69,19 @@ public final class PcapAddr {
 	 * @return interface destination address.
 	 */
 	public SockAddr getDstAddr() {
-		return dstaddr;
+		return this.dstaddr;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == this) return true;
-		if (obj.getClass() != getClass()) return false;
+		if (obj.getClass() != this.getClass()) return false;
 		if (!(obj instanceof PcapAddr)) return false;
 		PcapAddr pcapAddr = (PcapAddr) obj;
-		if (addr.equals(pcapAddr.getAddr()) &&
-				netmask.equals(pcapAddr.getNetmask()) &&
-				broadaddr.equals(pcapAddr.getBroadAddr()) &&
-				dstaddr.equals(pcapAddr.getDstAddr()))
+		if (this.addr.equals(pcapAddr.getAddr()) &&
+				this.netmask.equals(pcapAddr.getNetmask()) &&
+				this.broadaddr.equals(pcapAddr.getBroadAddr()) &&
+				this.dstaddr.equals(pcapAddr.getDstAddr()))
 			return true;
 		return false;
 	}
@@ -89,17 +89,17 @@ public final class PcapAddr {
 	@Override
 	public int hashCode() {
 		return Long.hashCode(FormatUtils.toLong(
-				toString().getBytes()
+				this.toString().getBytes()
 		));
 	}
 
 	@Override
 	public String toString() {
 		return new StringBuilder()
-				.append("[Addr: ").append(addr.toString())
-				.append(", Netmask: ").append(netmask.toString())
-				.append(", Broadcast Addr: ").append(broadaddr.toString())
-				.append(", Destiantion Addr: ").append(dstaddr.toString())
+				.append("[Addr: ").append(this.addr.toString())
+				.append(", Netmask: ").append(this.netmask.toString())
+				.append(", Broadcast Addr: ").append(this.broadaddr.toString())
+				.append(", Destiantion Addr: ").append(this.dstaddr.toString())
 				.toString();
 	}
 	

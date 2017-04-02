@@ -1,0 +1,5 @@
+
+dependencies {
+    compile project(":jxnet-core")
+    testCompile 'junit:junit:4.12'
+}

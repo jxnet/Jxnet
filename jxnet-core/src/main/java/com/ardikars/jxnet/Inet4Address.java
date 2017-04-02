@@ -47,7 +47,7 @@ public final class Inet4Address extends InetAddress {
 	 * @param inet4Address ipv4 string address.
 	 * @return Inet4Address object.
 	 */
-	public static Inet4Address valueOf(String inet4Address) {
+	public static Inet4Address valueOf(final String inet4Address) {
 		Preconditions.CheckNotNull(inet4Address);
 		Preconditions.CheckArgument(inet4Address.matches("^([0-9.])+$"));
 		String[] parts = inet4Address.split("\\.");
@@ -77,10 +77,9 @@ public final class Inet4Address extends InetAddress {
 	 * @param address ipv4 bytes address.
 	 * @return IPv4Address object.
 	 */
-	public static Inet4Address valueOf(byte[] address) {
+	public static Inet4Address valueOf(final byte[] address) {
 		Preconditions.CheckNotNull(address);
 		Preconditions.CheckArgument(address.length == Inet4Address.IPV4_ADDRESS_LENGTH);
-		//Preconditions.CheckArgument(address[0] != 0x0);
 		return new Inet4Address(address);
 	}
 
@@ -89,7 +88,7 @@ public final class Inet4Address extends InetAddress {
 	 * @param address ipv4 int address.
 	 * @return Inet4Address object.
 	 */
-	public static Inet4Address valueOf(int address) {
+	public static Inet4Address valueOf(final int address) {
 		return new Inet4Address(new byte[]{(byte) (address >>> 24),
 				(byte) (address >>> 16), (byte) (address >>> 8),
 				(byte) address});
@@ -102,7 +101,7 @@ public final class Inet4Address extends InetAddress {
 	public int toInt() {
 		int ip = 0;
 		for (int i = 0; i < Inet4Address.IPV4_ADDRESS_LENGTH; i++) {
-			final int t = (address[i] & 0xff) << (3 - i) * 8;
+			final int t = (this.address[i] & 0xff) << (3 - i) * 8;
 			ip |= t;
 		}
 		return ip;
@@ -122,7 +121,7 @@ public final class Inet4Address extends InetAddress {
 		return Arrays.copyOf(this.address, this.address.length);
 	}
 
-	public void update(Inet4Address inet4address) {
+	public void update(final Inet4Address inet4address) {
 		this.address = inet4address.toBytes();
 	}
 
@@ -130,7 +129,7 @@ public final class Inet4Address extends InetAddress {
 	public boolean equals(Object obj) {
 		if (obj == this)
 			return true;
-		if (obj.getClass() != getClass())
+		if (obj.getClass() != this.getClass())
 			return false;
 		if (obj instanceof Inet4Address) {
 			final Inet4Address addr = (Inet4Address) obj;
@@ -146,10 +145,10 @@ public final class Inet4Address extends InetAddress {
 
 	public String toString() {
 		return new StringBuilder()
-				.append(address[0] & 0xFF).append(".")
-				.append(address[1] & 0xFF).append(".")
-				.append(address[2] & 0xFF).append(".")
-				.append(address[3] & 0xFF).toString();
+				.append(this.address[0] & 0xff).append(".")
+				.append(this.address[1] & 0xff).append(".")
+				.append(this.address[2] & 0xff).append(".")
+				.append(this.address[3] & 0xff).toString();
 	}
 
 }
