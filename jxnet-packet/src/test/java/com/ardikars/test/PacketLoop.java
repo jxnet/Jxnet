@@ -53,8 +53,14 @@ public class PacketLoop {
             //for (Map.Entry value : packets.entrySet()) {
             //    System.out.println(value);
             //}
-            TCP tcp_1 = (TCP) packets.get(TCP.class);
-            if (tcp_1 != null) System.out.println(FormatUtils.toHexString(tcp_1.toBytes()));
+            Ethernet tcp_1 = (Ethernet) packets.get(Ethernet.class);
+            if (tcp_1 != null) {
+                if (FormatUtils.toHexString(tcp_1.toBytes()).equals("4c5e0c78508f40f02fa46abe08004500003c5e2f40004006aae2ac1001e5670b1caa982401bb665426d500000000a002721004280000020405b40402080a001a78fa0000000001030307")) {
+                    System.out.println("BREAK");
+                } else {
+
+                }
+            }
             System.out.println("===========================================================");
         };
 
