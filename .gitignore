@@ -10,7 +10,7 @@
 *.la
 *.po
 *.Plo
-/*.jar
+*.jar
 description-pak
 Makefile
 /.gradle
