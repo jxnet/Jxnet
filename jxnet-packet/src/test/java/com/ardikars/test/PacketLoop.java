@@ -42,16 +42,18 @@ public class PacketLoop {
 
 
         StringBuilder errbuf = new StringBuilder();
-        //Pcap pcap = Jxnet.PcapOpenOffline("/home/pi/Downloads/dns-zone-transfer-ixfr.cap", errbuf);
-        Pcap pcap = Jxnet.PcapOpenLive("eth0", 1500, 1, 2000, errbuf);
+        Pcap pcap = Jxnet.PcapOpenOffline("/tmp/tcp.pcapng", errbuf);
+        //Pcap pcap = Jxnet.PcapOpenLive("wlan0", 1500, 1, 2000, errbuf);
         if (pcap == null) {
             System.err.println(errbuf.toString());
             return;
         }
         PacketHandler<String> callback = (arg, pktHdr, packets) -> {
-            for (Map.Entry value : packets.entrySet()) {
-                System.out.println(value);
-            }
+            //for (Map.Entry value : packets.entrySet()) {
+            //    System.out.println(value);
+            //}
+            TCP tcp_1 = (TCP) packets.get(TCP.class);
+            if (tcp_1 != null) System.out.println(tcp_1);
             System.out.println("===========================================================");
         };
 

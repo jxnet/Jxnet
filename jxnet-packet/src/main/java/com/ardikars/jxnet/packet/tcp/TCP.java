@@ -133,16 +133,18 @@ public class TCP extends Packet implements Builder<Packet> {
         return this.options;
     }
 
-    public void setOptions(final byte[] options) {
+    public TCP setOptions(final byte[] options) {
         this.options = options;
+        return this;
     }
 
     public byte[] getPayload() {
         return this.payload;
     }
 
-    public void setPayload(final byte[] payload) {
+    public TCP setPayload(final byte[] payload) {
         this.payload = payload;
+        return this;
     }
 
     public static TCP newInstance(final byte[] bytes) {

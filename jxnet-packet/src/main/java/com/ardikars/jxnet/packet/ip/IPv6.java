@@ -136,7 +136,10 @@ public class IPv6 extends Packet implements Builder<Packet> {
     }
 
     public IPv6 setPayload(final byte[] payload) {
-        this.payload = payload;
+        if (payload != null) {
+            this.setPayloadLength((short) payload.length);
+            this.payload = payload;
+        }
         return this;
     }
 
