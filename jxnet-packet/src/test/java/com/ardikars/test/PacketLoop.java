@@ -12,7 +12,7 @@ public class PacketLoop {
     public static void main(String[] args) {
 
         StringBuilder errbuf = new StringBuilder();
-        Pcap pcap = Jxnet.PcapOpenOffline("/home/pi/Downloads/pcapfiles/eth-ipv6-icmpv6_ping.cap", errbuf);
+        Pcap pcap = Jxnet.PcapOpenOffline("/home/pi/Downloads/pcapfiles/arp_pcap.pcapng.cap", errbuf);
 
         PacketHandler<String> callback = (arg, pktHdr, packets) -> {
             for (Map.Entry value : packets.entrySet()) {

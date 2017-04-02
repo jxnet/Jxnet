@@ -35,7 +35,7 @@ public class IPv6 extends Packet implements Builder<IPv6> {
     private byte trafficClass;
     private int flowLabel;
     private short payloadLength;
-    private Protocol nextHeader;
+    private IPProtocolNumber nextHeader;
     private byte hopLimit;
     private Inet6Address sourceAddress = Inet6Address.LOCALHOST;
     private Inet6Address destinationAddress = Inet6Address.LOCALHOST;
@@ -50,7 +50,7 @@ public class IPv6 extends Packet implements Builder<IPv6> {
         this.setTrafficClass((byte) 0);
         this.setFlowLabel(0);
         this.setPayloadLength((short) 0);
-        this.setNextHeader(Protocol.UNKNOWN);
+        this.setNextHeader(IPProtocolNumber.UNKNOWN);
         this.setHopLimit((byte) 0);
         this.setSourceAddress(Inet6Address.LOCALHOST);
         this.setDestinationAddress(Inet6Address.LOCALHOST);
@@ -93,11 +93,11 @@ public class IPv6 extends Packet implements Builder<IPv6> {
         return this;
     }
 
-    public Protocol getNextHeader() {
+    public IPProtocolNumber getNextHeader() {
         return this.nextHeader;
     }
 
-    public IPv6 setNextHeader(final Protocol nextHeader) {
+    public IPv6 setNextHeader(final IPProtocolNumber nextHeader) {
         this.nextHeader = nextHeader;
         return this;
     }
@@ -150,16 +150,16 @@ public class IPv6 extends Packet implements Builder<IPv6> {
         ipv6.setTrafficClass((byte) (iscratch >> 20 & 0xff));
         ipv6.setFlowLabel(iscratch & 0xfffff);
         ipv6.setPayloadLength(bb.getShort());
-        ipv6.setNextHeader(Protocol.getInstance(bb.get()));
+        ipv6.setNextHeader(IPProtocolNumber.getInstance(bb.get()));
         ipv6.setHopLimit(bb.get());
 
-        byte[] srcAddrBuf = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
-        bb.get(srcAddrBuf);
-        ipv6.setSourceAddress(Inet6Address.valueOf(srcAddrBuf));
+        byte[] addrBuf = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
+        bb.get(addrBuf);
+        ipv6.setSourceAddress(Inet6Address.valueOf(addrBuf));
 
-        byte[] dstAddrBuf = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
-        bb.get(dstAddrBuf);
-        ipv6.setDestinationAddress(Inet6Address.valueOf(dstAddrBuf));
+        addrBuf = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
+        bb.get(addrBuf);
+        ipv6.setDestinationAddress(Inet6Address.valueOf(addrBuf));
 
         ipv6.payload = new byte[bb.limit() - IPV6_HEADER_LENGTH];
         bb.get(ipv6.payload);

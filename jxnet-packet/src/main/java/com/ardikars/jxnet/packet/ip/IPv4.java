@@ -40,7 +40,7 @@ public class IPv4 extends Packet implements Builder<IPv4> {
     private byte flags;
     private short fragmentOffset;
     private byte ttl;
-    private Protocol protocol = Protocol.UNKNOWN;
+    private IPProtocolNumber protocol = IPProtocolNumber.UNKNOWN;
     private short checksum;
     private Inet4Address sourceAddress = Inet4Address.LOCALHOST;
     private Inet4Address destinationAddress = Inet4Address.LOCALHOST;
@@ -56,7 +56,7 @@ public class IPv4 extends Packet implements Builder<IPv4> {
         this.setFlags((byte) 0x02);
         this.setFragmentOffset((byte) 0);
         this.setTtl((byte) 0);
-        this.setProtocol(Protocol.UNKNOWN);
+        this.setProtocol(IPProtocolNumber.UNKNOWN);
         this.setChecksum((short) 0);
         this.setSourceAddress(Inet4Address.LOCALHOST);
         this.setDestinationAddress(Inet4Address.LOCALHOST);
@@ -150,11 +150,11 @@ public class IPv4 extends Packet implements Builder<IPv4> {
         return this;
     }
 
-    public Protocol getProtocol() {
+    public IPProtocolNumber getProtocol() {
         return this.protocol;
     }
 
-    public IPv4 setProtocol(final Protocol protocol) {
+    public IPv4 setProtocol(final IPProtocolNumber protocol) {
         this.protocol = protocol;
         return this;
     }
@@ -223,16 +223,16 @@ public class IPv4 extends Packet implements Builder<IPv4> {
         ipv4.setFlags((byte) (sscratch >> 13 & 0x7));
         ipv4.setFragmentOffset((short) (sscratch & 0x1fff));
         ipv4.setTtl(buffer.get());
-        ipv4.setProtocol(Protocol.getInstance(buffer.get()));
+        ipv4.setProtocol(IPProtocolNumber.getInstance(buffer.get()));
         ipv4.setChecksum(buffer.getShort());
 
-        byte[] srcAddrBuf = new byte[Inet4Address.IPV4_ADDRESS_LENGTH];
-        buffer.get(srcAddrBuf);
-        ipv4.setSourceAddress(Inet4Address.valueOf(srcAddrBuf));
+        byte[] addrBuf = new byte[Inet4Address.IPV4_ADDRESS_LENGTH];
+        buffer.get(addrBuf);
+        ipv4.setSourceAddress(Inet4Address.valueOf(addrBuf));
 
-        byte[] dstAddrBuf = new byte[Inet4Address.IPV4_ADDRESS_LENGTH];
-        buffer.get(dstAddrBuf);
-        ipv4.setDestinationAddress(Inet4Address.valueOf(dstAddrBuf));
+        addrBuf = new byte[Inet4Address.IPV4_ADDRESS_LENGTH];
+        buffer.get(addrBuf);
+        ipv4.setDestinationAddress(Inet4Address.valueOf(addrBuf));
 
         if (ipv4.getHeaderLength() > 5) {
             int optionsLength = (ipv4.getHeaderLength() - 5) * 4;
@@ -312,7 +312,7 @@ public class IPv4 extends Packet implements Builder<IPv4> {
                 .append(", Flags: " + this.getFlags())
                 .append(", Fragment Offset: " + this.getFragmentOffset())
                 .append(", Time To Live: " + this.getTtl())
-                .append(", Protocol: " + this.getProtocol().getName())
+                .append(", IPProtocolNumber: " + this.getProtocol().getName())
                 .append(", Header Checksum: " + this.getChecksum())
                 .append(", Source Address: " + this.getSourceAddress().toString())
                 .append(", Destination Address: " + this.getDestinationAddress().toString())

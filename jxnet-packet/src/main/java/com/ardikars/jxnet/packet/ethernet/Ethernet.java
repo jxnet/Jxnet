@@ -19,6 +19,7 @@ package com.ardikars.jxnet.packet.ethernet;
 
 import com.ardikars.jxnet.MacAddress;
 import com.ardikars.jxnet.packet.Packet;
+import com.ardikars.jxnet.packet.arp.ARP;
 import com.ardikars.jxnet.packet.ip.IPv4;
 import com.ardikars.jxnet.packet.ip.IPv6;
 import com.ardikars.jxnet.util.Builder;
@@ -144,11 +145,12 @@ public class Ethernet extends Packet implements Builder<Ethernet> {
     public static Ethernet newInstance(final byte[] bytes, final int offset, final int length) {
         Ethernet ethernet = new Ethernet();
         ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
-        byte[] MACBuffer = new byte[MacAddress.MAC_ADDRESS_LENGTH];
-        buffer.get(MACBuffer);
-        ethernet.setDestinationMacAddress(MacAddress.valueOf(MACBuffer));
-        buffer.get(MACBuffer);
-        ethernet.setSourceMacAddress(MacAddress.valueOf(MACBuffer));
+        byte[] hwAddrBuf = new byte[MacAddress.MAC_ADDRESS_LENGTH];
+        buffer.get(hwAddrBuf);
+        ethernet.setDestinationMacAddress(MacAddress.valueOf(hwAddrBuf));
+        hwAddrBuf = new byte[MacAddress.MAC_ADDRESS_LENGTH];
+        buffer.get(hwAddrBuf);
+        ethernet.setSourceMacAddress(MacAddress.valueOf(hwAddrBuf));
         EthernetType ethernetType = EthernetType.getInstance(buffer.getShort());
         if (ethernetType == EthernetType.DOT1Q_VLAN_TAGGED_FRAMES) {
             short tci = buffer.getShort();
@@ -179,6 +181,7 @@ public class Ethernet extends Packet implements Builder<Ethernet> {
     public Packet getPacket() {
         if (this.getEthernetType() == null) return null;
         switch (this.getEthernetType().getValue() & 0xffff) {
+            case 0x0806: return ARP.newInstance(this.getPayload());
             case 0x0800: return IPv4.newInstance(this.getPayload());
             case 0x86dd: return IPv6.newInstance(this.getPayload());
         }

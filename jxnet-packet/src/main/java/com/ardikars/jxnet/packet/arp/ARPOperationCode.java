@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet.packet.ip;
+package com.ardikars.jxnet.packet.arp;
 
 import com.ardikars.jxnet.util.NamedNumber;
 
@@ -26,36 +26,31 @@ import java.util.Map;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class Protocol extends NamedNumber<Byte, Protocol> {
+public final class ARPOperationCode extends NamedNumber<Short, ARPOperationCode> {
 
-    public static final Protocol ICMP = new Protocol((byte) 1, "Internet Control Message Protocol");
+    public static final ARPOperationCode ARP_REQUEST = new ARPOperationCode((short) 0x01, "ARP Request");
 
-    public static final Protocol IGMP = new Protocol((byte) 2, "Internet Group Management Protocol");
+    public static final ARPOperationCode ARP_REPLY = new ARPOperationCode((short) 0x02, "ARP Reply");
 
-    public static final Protocol TCP = new Protocol((byte) 6, "Transmission Control Protocol");
+    public static final ARPOperationCode UNKNOWN = new ARPOperationCode((short) -1, "Unknown");
 
-    public static final Protocol UDP = new Protocol((byte) 11, "User Datagram Protocol");
-
-    public static final Protocol UNKNOWN = new Protocol((byte) -1, "Unknown");
-
-    protected Protocol(Byte value, String name) {
+    public ARPOperationCode(Short value, String name) {
         super(value, name);
     }
 
-    private static Map<Byte, Protocol> registry = new HashMap<Byte, Protocol>();
+    private static final Map<Short, ARPOperationCode> registry
+            = new HashMap<Short, ARPOperationCode>();
 
     static {
-        registry.put(ICMP.getValue(), ICMP);
-        registry.put(IGMP.getValue(), IGMP);
-        registry.put(TCP.getValue(), TCP);
-        registry.put(UDP.getValue(), UDP);
+        registry.put(ARP_REQUEST.getValue(), ARP_REQUEST);
+        registry.put(ARP_REPLY.getValue(), ARP_REPLY);
     }
 
-    public static Protocol register(Protocol protocol) {
-        return registry.put(protocol.getValue(), protocol);
+    public static ARPOperationCode register(ARPOperationCode operationCode) {
+        return registry.put(operationCode.getValue(), operationCode);
     }
 
-    public static Protocol getInstance(Byte value) {
+    public static ARPOperationCode getInstance(Short value) {
         if (registry.containsKey(value)) {
             return registry.get(value);
         } else {
