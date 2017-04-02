@@ -9,6 +9,7 @@ import com.ardikars.jxnet.packet.PacketHelper;
 import com.ardikars.jxnet.packet.ethernet.Ethernet;
 import com.ardikars.jxnet.packet.ip.IPv4;
 import com.ardikars.jxnet.packet.tcp.TCP;
+import com.ardikars.jxnet.util.FormatUtils;
 
 import java.nio.ByteBuffer;
 import java.util.Map;
@@ -53,7 +54,7 @@ public class PacketLoop {
             //    System.out.println(value);
             //}
             TCP tcp_1 = (TCP) packets.get(TCP.class);
-            if (tcp_1 != null) System.out.println(tcp_1);
+            if (tcp_1 != null) System.out.println(FormatUtils.toHexString(tcp_1.toBytes()));
             System.out.println("===========================================================");
         };
 

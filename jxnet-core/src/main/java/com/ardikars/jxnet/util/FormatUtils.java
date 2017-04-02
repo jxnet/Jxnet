@@ -72,10 +72,13 @@ public class FormatUtils {
 		return bb.getLong();
 	}
 
+	public static String toHexString(byte[] data) {
+		return toHexString(data, 0, data.length);
+	}
 	
 	public static String toHexString(byte[] data, int offset, int length) {
 		CheckNotNull(data);
-		CheckArgument(offset > 0 && length > 0);
+		CheckArgument(offset >= 0 && length > 0);
 		StringBuilder sb = new StringBuilder();
 		int l;
 		if(data.length != length) {

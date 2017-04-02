@@ -32,16 +32,16 @@ public class ChecksumTest {
         iPv4.setDestinationAddress(Inet4Address.LOCALHOST);
 
         TCP tcp = new TCP()
-                .setSourcePort((short) 55138)
+                .setSourcePort((short) 38948)
                 .setDestinationPort((short) 443)
-                .setSequence(1)
-                .setAcknowledge(24)
-                .setDataOffset((byte) 0)
-                .setFlags((short) 20480)
-                .setWindowSize((short) 229)
+                .setSequence(0x665426d5)
+                .setAcknowledge(0)
+                .setFlags((short) 2)
+                .setWindowSize((short) 29200)
                 .setUrgentPointer((short) 0)
                 .setOptions(FormatUtils.toBytes("0101080a000b228e5c026753"));
-        System.out.println(tcp);
+
+        System.out.println(FormatUtils.toHexString(tcp.toBytes()));
 
         iPv4.setPacket(tcp);
         ethernet.setPacket(iPv4);

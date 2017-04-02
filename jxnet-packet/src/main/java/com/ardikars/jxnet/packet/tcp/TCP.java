@@ -159,8 +159,8 @@ public class TCP extends Packet implements Builder<Packet> {
         tcp.setSequence(buffer.getInt());
         tcp.setAcknowledge(buffer.getInt());
         tcp.flags = buffer.getShort();
-        tcp.setDataOffset((byte) (tcp.getFlags() >> 12 & 0xf));
-        tcp.setFlags((short) (tcp.getFlags() & 0x1ff));
+        tcp.setDataOffset((byte) (tcp.flags >> 12 & 0xf));
+        tcp.setFlags((short) (tcp.flags & 0x1ff));
         tcp.setWindowSize(buffer.getShort());
         tcp.setChecksum(buffer.getShort());
         tcp.setUrgentPointer(buffer.getShort());
