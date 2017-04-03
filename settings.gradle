@@ -1,5 +1,5 @@
-
-include 'jxnet-core', 'jxnet-util'
 rootProject.name = 'jxnet-all'
-include 'jxnet-packet'
 
+include 'jxnet-core'
+include 'jxnet-packet'
+include 'jxnet-util'

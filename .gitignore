@@ -31,4 +31,3 @@ Makefile
 *.setting
 /libs
 /obj
-*.pcap*
