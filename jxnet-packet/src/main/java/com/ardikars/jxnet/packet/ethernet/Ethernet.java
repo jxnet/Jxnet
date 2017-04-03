@@ -164,7 +164,6 @@ public class Ethernet extends Packet implements Builder<Packet> {
             ethernet.payload = new byte[(buffer.limit() - ETHERNET_HEADER_LENGTH)];
             buffer.get(ethernet.payload);
         }
-
         return ethernet;
     }
 
@@ -201,7 +200,7 @@ public class Ethernet extends Packet implements Builder<Packet> {
     @Override
     public byte[] toBytes() {
         int headerLength = ETHERNET_HEADER_LENGTH +
-                ((this.getEthernetType() == EthernetType.DOT1Q_VLAN_TAGGED_FRAMES) ? VLAN_HEADER_LENGTH : 0) +
+                ((this.getVlanIdentifier() != 0xffff) ? VLAN_HEADER_LENGTH : 0) +
                 ((this.getPayload() == null) ? 0 : this.getPayload().length);
         if (this.padding && (headerLength < 60)) {
             headerLength = 60;

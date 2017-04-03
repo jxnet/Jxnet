@@ -2,9 +2,6 @@ package com.ardikars.test;
 
 import java.nio.ByteBuffer;
 
-/**
- * Created by root on 02/04/17.
- */
 public class NumberTetst {
 
     private short number;
