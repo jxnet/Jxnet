@@ -28,13 +28,13 @@ import java.util.Map;
  */
 public class IPProtocolNumber extends NamedNumber<Byte, IPProtocolNumber> {
 
-    public static final IPProtocolNumber ICMP = new IPProtocolNumber((byte) 1, "Internet Control Message IPProtocolNumber");
+    public static final IPProtocolNumber ICMP = new IPProtocolNumber((byte) 1, "Internet Control Message Protocol");
 
-    public static final IPProtocolNumber IGMP = new IPProtocolNumber((byte) 2, "Internet Group Management IPProtocolNumber");
+    public static final IPProtocolNumber IGMP = new IPProtocolNumber((byte) 2, "Internet Group Management Protocol");
 
-    public static final IPProtocolNumber TCP = new IPProtocolNumber((byte) 6, "Transmission Control IPProtocolNumber");
+    public static final IPProtocolNumber TCP = new IPProtocolNumber((byte) 6, "Transmission Control Protocol");
 
-    public static final IPProtocolNumber UDP = new IPProtocolNumber((byte) 11, "User Datagram IPProtocolNumber");
+    public static final IPProtocolNumber UDP = new IPProtocolNumber((byte) 17, "User Datagram Protocol");
 
     public static final IPProtocolNumber UNKNOWN = new IPProtocolNumber((byte) -1, "Unknown");
 

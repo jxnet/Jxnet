@@ -27,7 +27,7 @@ import java.nio.ByteBuffer;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class IPv6 extends Packet implements Builder<IPv6> {
+public class IPv6 extends Packet implements Builder<Packet> {
 
     public static final int IPV6_HEADER_LENGTH = 40;
 
@@ -194,7 +194,7 @@ public class IPv6 extends Packet implements Builder<IPv6> {
     }
 
     @Override
-    public IPv6 build() {
+    public Packet build() {
         return this;
     }
 

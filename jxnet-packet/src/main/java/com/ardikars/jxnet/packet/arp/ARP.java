@@ -30,7 +30,7 @@ import java.nio.ByteBuffer;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class ARP extends Packet implements Builder<ARP> {
+public class ARP extends Packet implements Builder<Packet> {
 
     public static final int ARP_HEADER_LENGTH = 28;
 
@@ -195,7 +195,7 @@ public class ARP extends Packet implements Builder<ARP> {
     }
 
     @Override
-    public ARP build() {
+    public Packet build() {
         return this;
     }
 

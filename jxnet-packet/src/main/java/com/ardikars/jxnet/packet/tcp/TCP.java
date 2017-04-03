@@ -27,7 +27,7 @@ import java.util.Arrays;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class TCP extends Packet implements Builder<TCP> {
+public class TCP extends Packet implements Builder<Packet> {
 
     public static int TCP_HEADER_LENGTH = 20;
 
@@ -217,7 +217,7 @@ public class TCP extends Packet implements Builder<TCP> {
     }
 
     @Override
-    public TCP build() {
+    public Packet build() {
         return this;
     }
 

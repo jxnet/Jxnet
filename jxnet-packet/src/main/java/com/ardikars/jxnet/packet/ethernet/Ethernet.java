@@ -30,7 +30,7 @@ import java.nio.ByteBuffer;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class Ethernet extends Packet implements Builder<Ethernet> {
+public class Ethernet extends Packet implements Builder<Packet> {
 
     public static final int ETHERNET_HEADER_LENGTH = 14;
     public static final int VLAN_HEADER_LENGTH = 4;
@@ -231,7 +231,7 @@ public class Ethernet extends Packet implements Builder<Ethernet> {
     }
 
     @Override
-    public Ethernet build() {
+    public Packet build() {
         return this;
     }
 

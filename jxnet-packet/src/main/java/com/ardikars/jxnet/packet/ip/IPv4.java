@@ -20,6 +20,7 @@ package com.ardikars.jxnet.packet.ip;
 import com.ardikars.jxnet.Inet4Address;
 import com.ardikars.jxnet.packet.Packet;
 import com.ardikars.jxnet.packet.tcp.TCP;
+import com.ardikars.jxnet.packet.udp.UDP;
 import com.ardikars.jxnet.util.Builder;
 
 import java.nio.ByteBuffer;
@@ -28,7 +29,7 @@ import java.nio.ByteBuffer;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class IPv4 extends Packet implements Builder<IPv4> {
+public class IPv4 extends Packet implements Builder<Packet> {
 
     public static final int IPV4_HEADER_LENGTH = 20;
 
@@ -250,13 +251,18 @@ public class IPv4 extends Packet implements Builder<IPv4> {
 
     @Override
     public Packet setPacket(Packet packet) {
+
+        ByteBuffer bb;
+        int length;
+        int accumulation = 0;
+
         switch (packet.getClass().getName()) {
             case "com.ardikars.jxnet.packet.tcp.TCP":
                 TCP tcp = (TCP) packet;
-                ByteBuffer bb = ByteBuffer.wrap(tcp.toBytes());
+                bb = ByteBuffer.wrap(tcp.toBytes());
                 if (tcp.getChecksum() == 0) {
-                    int accumulation = 0;
-                    int length = tcp.getDataOffset() << 2;
+                    length = tcp.getDataOffset() << 2;
+                    accumulation = 0;
                     if (tcp.getPayload() != null) {
                         length += tcp.getPayload().length;
                     }
@@ -280,6 +286,30 @@ public class IPv4 extends Packet implements Builder<IPv4> {
                 }
                 this.setProtocol(IPProtocolNumber.TCP);
                 return this.setPayload(tcp.toBytes());
+            case "com.ardikars.jxnet.packet.tcp.UDP":
+                UDP udp = (UDP) packet;
+                bb = ByteBuffer.wrap(udp.toBytes());
+                length = udp.getLength()+ ((udp.getPayload() == null) ? 0 : udp.getPayload().length);
+                accumulation = 0;
+                if (udp.getChecksum() == 0) {
+                    accumulation += (this.getSourceAddress().toInt() >> 16 & 0xffff)
+                            + (this.getSourceAddress().toInt() & 0xffff);
+                    accumulation += (this.getDestinationAddress().toInt() >> 16 & 0xffff)
+                            + (this.getDestinationAddress().toInt() & 0xffff);
+                    accumulation += this.getProtocol().getValue() & 0xff;
+                    accumulation += length & 0xffff;
+                }
+                for (int i = 0; i < length / 2; ++i) {
+                    accumulation += 0xffff & bb.getShort();
+                }
+                if (length % 2 > 0) {
+                    accumulation += (bb.get() & 0xff) << 8;
+                }
+                accumulation = (accumulation >> 16 & 0xffff)
+                        + (accumulation & 0xffff);
+                this.checksum = (short) (~accumulation & 0xffff);
+                this.setProtocol(IPProtocolNumber.UDP);
+                return this.setPayload(udp.toBytes());
         }
         return this;
     }
@@ -288,6 +318,7 @@ public class IPv4 extends Packet implements Builder<IPv4> {
     public Packet getPacket() {
         switch (this.getProtocol().getValue()) {
             case 6: return TCP.newInstance(this.getPayload());
+            case 17: return UDP.newInstance(this.getPayload());
         }
         return null;
     }
@@ -330,7 +361,7 @@ public class IPv4 extends Packet implements Builder<IPv4> {
     }
 
     @Override
-    public IPv4 build() {
+    public Packet build() {
         return this;
     }
 

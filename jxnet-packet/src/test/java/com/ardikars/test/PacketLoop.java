@@ -41,10 +41,13 @@ public class PacketLoop {
         ethernet.setPacket(iPv4);
 
 
-
         StringBuilder errbuf = new StringBuilder();
-        //Pcap pcap = Jxnet.PcapOpenOffline("/home/pi/Downloads/pcapfiles/arp_pcap.pcapng.cap", errbuf);
+        //Pcap pcap = Jxnet.PcapOpenOffline("/home/pi/Downloads/dns-zone-transfer-ixfr.cap", errbuf);
         Pcap pcap = Jxnet.PcapOpenLive("eth0", 1500, 1, 2000, errbuf);
+        if (pcap == null) {
+            System.err.println(errbuf.toString());
+            return;
+        }
         PacketHandler<String> callback = (arg, pktHdr, packets) -> {
             for (Map.Entry value : packets.entrySet()) {
                 System.out.println(value);
@@ -52,12 +55,12 @@ public class PacketLoop {
             System.out.println("===========================================================");
         };
 
-        //PacketHelper.loop(pcap, 50, callback, null);
+        PacketHelper.loop(pcap, 50, callback, null);
 
-        byte[] data = ethernet.toBytes();
-        ByteBuffer buf = ByteBuffer.allocateDirect(data.length);
-        buf.put(data);
-        Jxnet.PcapSendPacket(pcap, buf, buf.capacity());
+        //byte[] data = ethernet.toBytes();
+        //ByteBuffer buf = ByteBuffer.allocateDirect(data.length);
+        //buf.put(data);
+        //Jxnet.PcapSendPacket(pcap, buf, buf.capacity());
         Jxnet.PcapClose(pcap);
     }
 }
