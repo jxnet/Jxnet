@@ -41,12 +41,16 @@ public class Ethernet extends Packet implements Builder<Packet> {
     private byte canonicalFormatIndicator;
     private short vlanIdentifier;
     private EthernetType ethernetType;
-    private byte[] padding;
 
     /**
      * Ethernet paylaod
      */
     private byte[] payload;
+
+    /**
+     * If needed
+     */
+    private boolean padding;
 
     //private int checksum; //CRC32
 
@@ -114,27 +118,18 @@ public class Ethernet extends Packet implements Builder<Packet> {
         return this;
     }
 
-    public boolean isPadded() {
-        return !((this.payload.length + ETHERNET_HEADER_LENGTH +
-                ((this.vlanIdentifier == 0xffff) ? 0 : VLAN_HEADER_LENGTH) +
-                ((this.padding == null) ? 0 : padding.length))  < 60);
-    }
-
-    public byte[] getPadding() {
-        return this.padding;
-    }
-
-    public Ethernet setPadding(final byte[] padding) {
-        this.padding = padding;
-        return this;
-    }
-
     public byte[] getPayload() {
         return this.payload;
     }
 
     public Ethernet setPayload(final byte[] payload) {
         this.payload = payload;
+
+        return this;
+    }
+
+    public Ethernet setPadding(final boolean padding) {
+        this.padding = padding;
         return this;
     }
 
@@ -169,6 +164,7 @@ public class Ethernet extends Packet implements Builder<Packet> {
             ethernet.payload = new byte[(buffer.limit() - ETHERNET_HEADER_LENGTH)];
             buffer.get(ethernet.payload);
         }
+
         return ethernet;
     }
 
@@ -206,9 +202,8 @@ public class Ethernet extends Packet implements Builder<Packet> {
     public byte[] toBytes() {
         int headerLength = ETHERNET_HEADER_LENGTH +
                 ((this.getEthernetType() == EthernetType.DOT1Q_VLAN_TAGGED_FRAMES) ? VLAN_HEADER_LENGTH : 0) +
-                ((this.getPayload() == null) ? 0 : this.getPayload().length) +
-                ((this.getPadding() == null) ? 0 : this.getPadding().length);
-        if (headerLength < 60) {
+                ((this.getPayload() == null) ? 0 : this.getPayload().length);
+        if (this.padding && (headerLength < 60)) {
             headerLength = 60;
         }
         byte[] data = new byte[headerLength];
@@ -223,9 +218,6 @@ public class Ethernet extends Packet implements Builder<Packet> {
         buffer.putShort((short) (this.getEthernetType().getValue() & 0xffff));
         if (this.getPayload() != null) {
             buffer.put(this.getPayload());
-        }
-        if (headerLength < 60 && this.getPadding() != null) {
-            buffer.put(this.getPadding());
         }
         return data;
     }
