@@ -56,8 +56,7 @@ public final class Pcap {
 	@Override
 	public int hashCode() {
 		return 17 * 37 +
-				((int) (this.address ^ (this.address >> 32))) +
-				super.hashCode();
+				((int) (this.address ^ (this.address >> 32)));
 	}
 
 	@Override

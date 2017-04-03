@@ -169,7 +169,7 @@ public final class MacAddress {
 	public int hashCode() {
 		long hashcode = toLong();
 		return 17 * 37 +
-				((int) (hashcode ^ (hashcode >> 32))) + super.hashCode();
+				((int) (hashcode ^ (hashcode >> 32)));
 	}
 
 	@Override

@@ -60,13 +60,12 @@ public final class PcapDumper {
 	@Override
 	public int hashCode() {
 		return 17 * 37 +
-				((int) (this.address ^ (this.address >> 32))) +
-				super.hashCode();
+				((int) (this.address ^ (this.address >> 32)));
 	}
 	
 	@Override
 	public String toString() {
-		return String.valueOf(address);
+		return String.valueOf(this.address);
 	}
 
 }

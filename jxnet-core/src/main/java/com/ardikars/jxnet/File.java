@@ -53,8 +53,7 @@ public final class File extends java.io.File {
 	@Override
 	public int hashCode() {
 		return 17 * 37 +
-				((int) (this.address ^ (this.address >> 32))) +
-				super.hashCode();
+				((int) (this.address ^ (this.address >> 32)));
 	}
 
 	@Override

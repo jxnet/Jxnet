@@ -216,7 +216,7 @@ public final class Inet6Address extends InetAddress {
 		for (int i=0; i<address.length; i++) {
 			hashCode = hashCode * 3 + address[i];
 		}
-		return hashCode + super.hashCode();
+		return hashCode;
 	}
 
 	public String toString() {

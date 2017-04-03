@@ -140,7 +140,7 @@ public final class Inet4Address extends InetAddress {
 
 	@Override
 	public int hashCode() {
-		return 17 * 37 + toInt() + super.hashCode();
+		return 17 * 37 + toInt();
 	}
 
 	public String toString() {
