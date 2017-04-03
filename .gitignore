@@ -21,6 +21,9 @@ Makefile
 /jxnet-core/.gradle
 /jxnet-core/build
 /jxnet-core/target
+/jxnet-packet/.gradle
+/jxnet-packet/build
+/jxnet-packet/target
 /jxnet-util/.gradle
 /jxnet-util/build
 /jxnet-util/target
