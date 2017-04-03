@@ -142,28 +142,28 @@ public class ARP extends Packet implements Builder<Packet> {
     }
 
     public static ARP newInstance(final byte[] bytes, final int offset, final int length) {
-        ByteBuffer bb = ByteBuffer.wrap(bytes, offset, length);
+        ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
         ARP arp = new ARP();
-        arp.setHardwareType(DataLinkType.valueOf(bb.getShort()));
-        arp.setProtocolType(EthernetType.getInstance(bb.getShort()));
-        arp.setHardwareAddressLength(bb.get());
-        arp.setProtocolAddressLength(bb.get());
-        arp.setOperationCode(ARPOperationCode.getInstance(bb.getShort()));
+        arp.setHardwareType(DataLinkType.valueOf(buffer.getShort()));
+        arp.setProtocolType(EthernetType.getInstance(buffer.getShort()));
+        arp.setHardwareAddressLength(buffer.get());
+        arp.setProtocolAddressLength(buffer.get());
+        arp.setOperationCode(ARPOperationCode.getInstance(buffer.getShort()));
 
         byte[] hwAddrBuf = new byte[arp.getHardwareAddressLength() & 0xff];
-        bb.get(hwAddrBuf);
+        buffer.get(hwAddrBuf);
         arp.setSenderHardwareAddress(MacAddress.valueOf(hwAddrBuf));
 
         byte[] addrBuf = new byte[arp.getProtocolAddressLength() & 0xff];
-        bb.get(addrBuf);
+        buffer.get(addrBuf);
         arp.setSenderProtocolAddress(Inet4Address.valueOf(addrBuf));
 
         hwAddrBuf = new byte[arp.getHardwareAddressLength()];
-        bb.get(hwAddrBuf);
+        buffer.get(hwAddrBuf);
         arp.setTargetHardwareAddress(MacAddress.valueOf(hwAddrBuf));
 
         addrBuf = new byte[arp.getProtocolAddressLength()];
-        bb.get(addrBuf);
+        buffer.get(addrBuf);
         arp.setTargetProtocolAddress(Inet4Address.valueOf(addrBuf));
         return arp;
     }

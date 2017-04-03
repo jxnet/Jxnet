@@ -82,16 +82,16 @@ public final class EthernetType extends NamedNumber<Short, EthernetType> {
             = new EthernetType((short) 0x8847, "MPLS");
 
     /**
-     * PPPoE Discovery Stage: 0x8863
+     * PPPoED Discovery Stage: 0x8863
      */
     public static final EthernetType PPPOE_DISCOVERY_STAGE
-            = new EthernetType((short) 0x8863, "PPPoE Discovery Stage");
+            = new EthernetType((short) 0x8863, "PPPoED Discovery Stage");
 
     /**
-     * PPPoE Session Stage: 0x8864
+     * PPPoED Session Stage: 0x8864
      */
     public static final EthernetType PPPOE_SESSION_STAGE
-            = new EthernetType((short) 0x8864, "PPPoE Session Stage");
+            = new EthernetType((short) 0x8864, "PPPoED Session Stage");
 
     public static final EthernetType UNKNOWN
             = new EthernetType((short) -1, "Unknown");

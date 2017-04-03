@@ -22,6 +22,7 @@ import com.ardikars.jxnet.packet.Packet;
 import com.ardikars.jxnet.packet.arp.ARP;
 import com.ardikars.jxnet.packet.ip.IPv4;
 import com.ardikars.jxnet.packet.ip.IPv6;
+import com.ardikars.jxnet.packet.pppoe.PPPoED;
 import com.ardikars.jxnet.util.Builder;
 
 import java.nio.ByteBuffer;
@@ -193,6 +194,7 @@ public class Ethernet extends Packet implements Builder<Packet> {
             case 0x0806: return ARP.newInstance(this.getPayload());
             case 0x0800: return IPv4.newInstance(this.getPayload());
             case 0x86dd: return IPv6.newInstance(this.getPayload());
+            case 0x8863: return PPPoED.newInstance(this.getPayload());
         }
         return null;
     }
