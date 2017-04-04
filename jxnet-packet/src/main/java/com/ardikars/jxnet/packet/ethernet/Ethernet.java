@@ -200,9 +200,9 @@ public class Ethernet extends Packet implements Builder<Packet> {
     @Override
     public byte[] toBytes() {
         int headerLength = ETHERNET_HEADER_LENGTH +
-                ((this.getVlanIdentifier() != 0xffff) ? VLAN_HEADER_LENGTH : 0) +
+                ((this.getVlanIdentifier() != (short) 0xffff) ? VLAN_HEADER_LENGTH : 0) +
                 ((this.getPayload() == null) ? 0 : this.getPayload().length);
-        if (this.padding && (headerLength < 60)) {
+        if ((this.padding == true) && (headerLength < 60)) {
             headerLength = 60;
         }
         byte[] data = new byte[headerLength];

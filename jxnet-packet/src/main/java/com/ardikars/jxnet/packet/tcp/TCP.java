@@ -169,16 +169,10 @@ public class TCP extends Packet implements Builder<Packet> {
             if (buffer.limit() < buffer.position() + optionLength) {
                 optionLength = buffer.limit() - buffer.position();
             }
-            try {
-                tcp.options = new byte[optionLength];
-                buffer.get(tcp.options, 0, optionLength);
-                tcp.payload = new byte[(buffer.limit() - (TCP_HEADER_LENGTH + optionLength))];
-                buffer.get(tcp.payload);
-            } catch (IndexOutOfBoundsException e) {
-                tcp.setOptions(null);
-                tcp.payload = new byte[(buffer.limit() - TCP_HEADER_LENGTH)];
-                buffer.get(tcp.payload);
-            }
+            tcp.options = new byte[optionLength];
+            buffer.get(tcp.options, 0, optionLength);
+            tcp.payload = new byte[(buffer.limit() - (TCP_HEADER_LENGTH + optionLength))];
+            buffer.get(tcp.payload);
         } else {
             tcp.setOptions(null);
             tcp.payload = new byte[(buffer.limit() - TCP_HEADER_LENGTH)];

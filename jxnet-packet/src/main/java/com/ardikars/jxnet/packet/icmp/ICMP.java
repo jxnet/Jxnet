@@ -42,7 +42,7 @@ public class ICMP extends Packet implements Builder<Packet> {
         return this.typeAndCode;
     }
 
-    public ICMP setTypeAndCode(ICMPTypeAndCode typeAndCode) {
+    public ICMP setTypeAndCode(final ICMPTypeAndCode typeAndCode) {
         this.typeAndCode = typeAndCode;
         return this;
     }
@@ -51,7 +51,7 @@ public class ICMP extends Packet implements Builder<Packet> {
         return (short) (this.checksum & 0xffff);
     }
 
-    public ICMP setChecksum(short checksum) {
+    public ICMP setChecksum(final short checksum) {
         this.checksum = (short) (checksum & 0xffff);
         return this;
     }
@@ -60,13 +60,13 @@ public class ICMP extends Packet implements Builder<Packet> {
         return this.payload;
     }
 
-    public ICMP setPayload(byte[] payload) {
+    public ICMP setPayload(final byte[] payload) {
         this.payload = payload;
         return this;
     }
 
     @Override
-    public Packet setPacket(Packet packet) {
+    public Packet setPacket(final Packet packet) {
         return this.setPayload(packet.toBytes());
     }
 
