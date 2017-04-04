@@ -42,7 +42,7 @@ public class IPv4 extends Packet implements Builder<Packet> {
     private byte flags;
     private short fragmentOffset;
     private byte ttl;
-    private IPProtocolNumber protocol = IPProtocolNumber.UNKNOWN;
+    private IPProtocolType protocol = IPProtocolType.UNKNOWN;
     private short checksum;
     private Inet4Address sourceAddress = Inet4Address.LOCALHOST;
     private Inet4Address destinationAddress = Inet4Address.LOCALHOST;
@@ -58,7 +58,7 @@ public class IPv4 extends Packet implements Builder<Packet> {
         this.setFlags((byte) 0x02);
         this.setFragmentOffset((byte) 0);
         this.setTtl((byte) 0);
-        this.setProtocol(IPProtocolNumber.UNKNOWN);
+        this.setProtocol(IPProtocolType.UNKNOWN);
         this.setChecksum((short) 0);
         this.setSourceAddress(Inet4Address.LOCALHOST);
         this.setDestinationAddress(Inet4Address.LOCALHOST);
@@ -152,11 +152,11 @@ public class IPv4 extends Packet implements Builder<Packet> {
         return this;
     }
 
-    public IPProtocolNumber getProtocol() {
+    public IPProtocolType getProtocol() {
         return this.protocol;
     }
 
-    public IPv4 setProtocol(final IPProtocolNumber protocol) {
+    public IPv4 setProtocol(final IPProtocolType protocol) {
         this.protocol = protocol;
         return this;
     }
@@ -225,7 +225,7 @@ public class IPv4 extends Packet implements Builder<Packet> {
         ipv4.setFlags((byte) (sscratch >> 13 & 0x7));
         ipv4.setFragmentOffset((short) (sscratch & 0x1fff));
         ipv4.setTtl(buffer.get());
-        ipv4.setProtocol(IPProtocolNumber.getInstance(buffer.get()));
+        ipv4.setProtocol(IPProtocolType.getInstance(buffer.get()));
         ipv4.setChecksum(buffer.getShort());
 
         byte[] addrBuf = new byte[Inet4Address.IPV4_ADDRESS_LENGTH];
@@ -283,7 +283,7 @@ public class IPv4 extends Packet implements Builder<Packet> {
                             + (accumulation & 0xffff);
                     tcp.setChecksum((short) (~accumulation & 0xffff));
                 }
-                this.setProtocol(IPProtocolNumber.TCP);
+                this.setProtocol(IPProtocolType.TCP);
                 return this.setPayload(tcp.toBytes());
             case "com.ardikars.jxnet.packet.tcp.UDP":
                 UDP udp = (UDP) packet;
@@ -308,7 +308,7 @@ public class IPv4 extends Packet implements Builder<Packet> {
                             + (accumulation & 0xffff);
                     udp.setChecksum((short) (~accumulation & 0xffff));
                 }
-                this.setProtocol(IPProtocolNumber.UDP);
+                this.setProtocol(IPProtocolType.UDP);
                 return this.setPayload(udp.toBytes());
         }
         return this;
@@ -378,7 +378,7 @@ public class IPv4 extends Packet implements Builder<Packet> {
                 .append(", Flags: " + this.getFlags())
                 .append(", Fragment Offset: " + this.getFragmentOffset())
                 .append(", Time To Live: " + this.getTtl())
-                .append(", IPProtocolNumber: " + this.getProtocol().getName())
+                .append(", IPProtocolType: " + this.getProtocol().getName())
                 .append(", Header Checksum: " + this.getChecksum())
                 .append(", Source Address: " + this.getSourceAddress().toString())
                 .append(", Destination Address: " + this.getDestinationAddress().toString())

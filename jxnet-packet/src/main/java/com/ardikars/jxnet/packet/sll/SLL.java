@@ -1,7 +1,7 @@
 package com.ardikars.jxnet.packet.sll;
 
 import com.ardikars.jxnet.packet.Packet;
-import com.ardikars.jxnet.packet.ethernet.EthernetType;
+import com.ardikars.jxnet.packet.ethernet.ProtocolType;
 import com.ardikars.jxnet.util.Builder;
 
 import java.nio.ByteBuffer;
@@ -15,7 +15,7 @@ public class SLL extends Packet implements Builder<Packet> {
     private short hardwareAddressType;
     private short hardwareAddressLength;
     private byte[] address;
-    private EthernetType protocol;
+    private ProtocolType protocol;
 
     /**
      * SLL payload
@@ -62,11 +62,11 @@ public class SLL extends Packet implements Builder<Packet> {
         return this;
     }
 
-    public EthernetType getProtocol() {
+    public ProtocolType getProtocol() {
         return this.protocol;
     }
 
-    public SLL setProtocol(final EthernetType protocol) {
+    public SLL setProtocol(final ProtocolType protocol) {
         this.protocol = protocol;
         return this;
     }

@@ -26,23 +26,23 @@ import java.util.Map;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class IPProtocolNumber extends NamedNumber<Byte, IPProtocolNumber> {
+public class IPProtocolType extends NamedNumber<Byte, IPProtocolType> {
 
-    public static final IPProtocolNumber ICMP = new IPProtocolNumber((byte) 1, "Internet Control Message Protocol");
+    public static final IPProtocolType ICMP = new IPProtocolType((byte) 1, "Internet Control Message Protocol");
 
-    public static final IPProtocolNumber IGMP = new IPProtocolNumber((byte) 2, "Internet Group Management Protocol");
+    public static final IPProtocolType IGMP = new IPProtocolType((byte) 2, "Internet Group Management Protocol");
 
-    public static final IPProtocolNumber TCP = new IPProtocolNumber((byte) 6, "Transmission Control Protocol");
+    public static final IPProtocolType TCP = new IPProtocolType((byte) 6, "Transmission Control Protocol");
 
-    public static final IPProtocolNumber UDP = new IPProtocolNumber((byte) 17, "User Datagram Protocol");
+    public static final IPProtocolType UDP = new IPProtocolType((byte) 17, "User Datagram Protocol");
 
-    public static final IPProtocolNumber UNKNOWN = new IPProtocolNumber((byte) -1, "Unknown");
+    public static final IPProtocolType UNKNOWN = new IPProtocolType((byte) -1, "Unknown");
 
-    protected IPProtocolNumber(Byte value, String name) {
+    protected IPProtocolType(Byte value, String name) {
         super(value, name);
     }
 
-    private static Map<Byte, IPProtocolNumber> registry = new HashMap<Byte, IPProtocolNumber>();
+    private static Map<Byte, IPProtocolType> registry = new HashMap<Byte, IPProtocolType>();
 
     static {
         registry.put(ICMP.getValue(), ICMP);
@@ -51,11 +51,11 @@ public class IPProtocolNumber extends NamedNumber<Byte, IPProtocolNumber> {
         registry.put(UDP.getValue(), UDP);
     }
 
-    public static IPProtocolNumber register(IPProtocolNumber protocol) {
+    public static IPProtocolType register(IPProtocolType protocol) {
         return registry.put(protocol.getValue(), protocol);
     }
 
-    public static IPProtocolNumber getInstance(Byte value) {
+    public static IPProtocolType getInstance(Byte value) {
         if (registry.containsKey(value)) {
             return registry.get(value);
         } else {

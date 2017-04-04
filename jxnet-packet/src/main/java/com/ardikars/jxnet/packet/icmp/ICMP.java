@@ -28,7 +28,7 @@ import java.nio.ByteBuffer;
  */
 public class ICMP extends Packet implements Builder<Packet> {
 
-    public static int ICMPV4_HEADER_LENGTH = 4;
+    public static int ICMP_HEADER_LENGTH = 4;
 
     private ICMPTypeAndCode typeAndCode;
     private short checksum;
@@ -77,7 +77,7 @@ public class ICMP extends Packet implements Builder<Packet> {
 
     @Override
     public byte[] toBytes() {
-        byte[] data = new byte[ICMPV4_HEADER_LENGTH + ((this.getPayload() == null) ? 0 : this.getPayload().length)];
+        byte[] data = new byte[ICMP_HEADER_LENGTH + ((this.getPayload() == null) ? 0 : this.getPayload().length)];
         ByteBuffer buffer = ByteBuffer.wrap(data);
         buffer.put(this.getTypeAndCode().getType());
         buffer.put(this.getTypeAndCode().getCode());

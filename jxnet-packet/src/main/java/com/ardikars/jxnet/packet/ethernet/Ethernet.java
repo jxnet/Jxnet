@@ -40,7 +40,7 @@ public class Ethernet extends Packet implements Builder<Packet> {
     private byte priorityCodePoint;
     private byte canonicalFormatIndicator;
     private short vlanIdentifier;
-    private EthernetType ethernetType;
+    private ProtocolType ethernetType;
 
     /**
      * Ethernet paylaod
@@ -60,7 +60,7 @@ public class Ethernet extends Packet implements Builder<Packet> {
         this.setPriorityCodePoint((byte) 0);
         this.setCanonicalFormatIndicator((byte) 0);
         this.setVlanIdentifier((short) 0xffff);
-        this.setEthernetType(EthernetType.UNKNOWN);
+        this.setEthernetType(ProtocolType.UNKNOWN);
         this.setPayload(null);
     }
 
@@ -109,11 +109,11 @@ public class Ethernet extends Packet implements Builder<Packet> {
         return this;
     }
 
-    public EthernetType getEthernetType() {
+    public ProtocolType getEthernetType() {
         return this.ethernetType;
     }
 
-    public Ethernet setEthernetType(final EthernetType ethernetType) {
+    public Ethernet setEthernetType(final ProtocolType ethernetType) {
         this.ethernetType = ethernetType;
         return this;
     }
@@ -146,13 +146,13 @@ public class Ethernet extends Packet implements Builder<Packet> {
         hwAddrBuf = new byte[MacAddress.MAC_ADDRESS_LENGTH];
         buffer.get(hwAddrBuf);
         ethernet.setSourceMacAddress(MacAddress.valueOf(hwAddrBuf));
-        EthernetType ethernetType = EthernetType.getInstance(buffer.getShort());
-        if (ethernetType == EthernetType.DOT1Q_VLAN_TAGGED_FRAMES) {
+        ProtocolType ethernetType = ProtocolType.getInstance(buffer.getShort());
+        if (ethernetType == ProtocolType.DOT1Q_VLAN_TAGGED_FRAMES) {
             short tci = buffer.getShort();
             ethernet.setPriorityCodePoint((byte) (tci >> 13 & 0x07));
             ethernet.setCanonicalFormatIndicator((byte) (tci >> 14 & 0x01));
             ethernet.setVlanIdentifier((short) (tci & 0x0fff));
-            ethernetType = EthernetType.getInstance(buffer.getShort());
+            ethernetType = ProtocolType.getInstance(buffer.getShort());
         } else {
             ethernet.setVlanIdentifier((short) 0xffff);
         }
@@ -172,15 +172,15 @@ public class Ethernet extends Packet implements Builder<Packet> {
         switch (packet.getClass().getName()) {
             case "com.ardikars.jxnet.packet.ip.IPv4":
                 IPv4 ipv4 = (IPv4) packet;
-                this.setEthernetType(EthernetType.IPV4);
+                this.setEthernetType(ProtocolType.IPV4);
                 return this.setPayload(ipv4.toBytes());
             case "com.ardikars.jxnet.packet.ip.IPv6":
                 IPv6 ipv6 = (IPv6) packet;
-                this.setEthernetType(EthernetType.IPV6);
+                this.setEthernetType(ProtocolType.IPV6);
                 return this.setPayload(ipv6.toBytes());
             case "com.ardikars.jxnet.packet.arp.ARP":
                 ARP arp = (ARP) packet;
-                this.setEthernetType(EthernetType.ARP);
+                this.setEthernetType(ProtocolType.ARP);
                 return this.setPayload(arp.toBytes());
         }
         return setPayload(packet.toBytes());
@@ -210,7 +210,7 @@ public class Ethernet extends Packet implements Builder<Packet> {
         buffer.put(this.getDestinationMacAddress().toBytes());
         buffer.put(this.getSourceMacAddress().toBytes());
         if (this.getVlanIdentifier() != (short) 0xffff) {
-            buffer.putShort(EthernetType.DOT1Q_VLAN_TAGGED_FRAMES.getValue());
+            buffer.putShort(ProtocolType.DOT1Q_VLAN_TAGGED_FRAMES.getValue());
             buffer.putShort((short) (((this.getPriorityCodePoint() << 13) & 0x07)
                     | ((this.getCanonicalFormatIndicator() << 14) & 0x01) | (this.getVlanIdentifier() & 0x0fff)));
         }

@@ -21,7 +21,7 @@ import com.ardikars.jxnet.DataLinkType;
 import com.ardikars.jxnet.Inet4Address;
 import com.ardikars.jxnet.MacAddress;
 import com.ardikars.jxnet.packet.Packet;
-import com.ardikars.jxnet.packet.ethernet.EthernetType;
+import com.ardikars.jxnet.packet.ethernet.ProtocolType;
 import com.ardikars.jxnet.util.Builder;
 
 import java.nio.ByteBuffer;
@@ -35,7 +35,7 @@ public class ARP extends Packet implements Builder<Packet> {
     public static final int ARP_HEADER_LENGTH = 28;
 
     private DataLinkType hardwareType;
-    private EthernetType protocolType;
+    private ProtocolType protocolType;
     private byte hardwareAddressLength;
     private byte protocolAddressLength;
     private ARPOperationCode operationCode;
@@ -46,7 +46,7 @@ public class ARP extends Packet implements Builder<Packet> {
 
     public ARP() {
         this.setHardwareType(DataLinkType.UNKNOWN);
-        this.setProtocolType(EthernetType.ARP);
+        this.setProtocolType(ProtocolType.ARP);
         this.setHardwareAddressLength((byte) 6);
         this.setProtocolAddressLength((byte) 4);
         this.setOperationCode(ARPOperationCode.UNKNOWN);
@@ -65,11 +65,11 @@ public class ARP extends Packet implements Builder<Packet> {
         return this;
     }
 
-    public EthernetType getProtocolType() {
+    public ProtocolType getProtocolType() {
         return this.protocolType;
     }
 
-    public ARP setProtocolType(final EthernetType protocolType) {
+    public ARP setProtocolType(final ProtocolType protocolType) {
         this.protocolType = protocolType;
         return this;
     }
@@ -145,7 +145,7 @@ public class ARP extends Packet implements Builder<Packet> {
         ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
         ARP arp = new ARP();
         arp.setHardwareType(DataLinkType.valueOf(buffer.getShort()));
-        arp.setProtocolType(EthernetType.getInstance(buffer.getShort()));
+        arp.setProtocolType(ProtocolType.getInstance(buffer.getShort()));
         arp.setHardwareAddressLength(buffer.get());
         arp.setProtocolAddressLength(buffer.get());
         arp.setOperationCode(ARPOperationCode.getInstance(buffer.getShort()));

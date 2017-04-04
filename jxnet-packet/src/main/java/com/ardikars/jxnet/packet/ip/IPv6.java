@@ -37,7 +37,7 @@ public class IPv6 extends Packet implements Builder<Packet> {
     private byte trafficClass;
     private int flowLabel;
     private short payloadLength;
-    private IPProtocolNumber nextHeader;
+    private IPProtocolType nextHeader;
     private byte hopLimit;
     private Inet6Address sourceAddress = Inet6Address.LOCALHOST;
     private Inet6Address destinationAddress = Inet6Address.LOCALHOST;
@@ -52,7 +52,7 @@ public class IPv6 extends Packet implements Builder<Packet> {
         this.setTrafficClass((byte) 0);
         this.setFlowLabel(0);
         this.setPayloadLength((short) 0);
-        this.setNextHeader(IPProtocolNumber.UNKNOWN);
+        this.setNextHeader(IPProtocolType.UNKNOWN);
         this.setHopLimit((byte) 0);
         this.setSourceAddress(Inet6Address.LOCALHOST);
         this.setDestinationAddress(Inet6Address.LOCALHOST);
@@ -95,11 +95,11 @@ public class IPv6 extends Packet implements Builder<Packet> {
         return this;
     }
 
-    public IPProtocolNumber getNextHeader() {
+    public IPProtocolType getNextHeader() {
         return this.nextHeader;
     }
 
-    public IPv6 setNextHeader(final IPProtocolNumber nextHeader) {
+    public IPv6 setNextHeader(final IPProtocolType nextHeader) {
         this.nextHeader = nextHeader;
         return this;
     }
@@ -155,7 +155,7 @@ public class IPv6 extends Packet implements Builder<Packet> {
         ipv6.setTrafficClass((byte) (iscratch >> 20 & 0xff));
         ipv6.setFlowLabel(iscratch & 0xfffff);
         ipv6.setPayloadLength(bb.getShort());
-        ipv6.setNextHeader(IPProtocolNumber.getInstance(bb.get()));
+        ipv6.setNextHeader(IPProtocolType.getInstance(bb.get()));
         ipv6.setHopLimit(bb.get());
 
         byte[] addrBuf = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
@@ -212,7 +212,7 @@ public class IPv6 extends Packet implements Builder<Packet> {
                             + (accumulation & 0xffff);
                     tcp.setChecksum((short) (~accumulation & 0xffff));
                 }
-                this.setNextHeader(IPProtocolNumber.TCP);
+                this.setNextHeader(IPProtocolType.TCP);
                 return this.setPayload(tcp.toBytes());
             case "com.ardikars.jxnet.packet.tcp.UDP":
                 UDP udp = (UDP) packet;
@@ -248,7 +248,7 @@ public class IPv6 extends Packet implements Builder<Packet> {
                             + (accumulation & 0xffff);
                     udp.setChecksum((short) (~accumulation & 0xffff));
                 }
-                this.setNextHeader(IPProtocolNumber.UDP);
+                this.setNextHeader(IPProtocolType.UDP);
                 return this.setPayload(udp.toBytes());
         }
         this.payload = packet.toBytes();

@@ -26,7 +26,7 @@ import java.util.Map;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public final class EthernetType extends NamedNumber<Short, EthernetType> {
+public final class ProtocolType extends NamedNumber<Short, ProtocolType> {
 
     /**
      * MTU Size (1500)
@@ -36,68 +36,68 @@ public final class EthernetType extends NamedNumber<Short, EthernetType> {
     /**
      * IPv4: 0x0800
      */
-    public static final EthernetType IPV4
-            = new EthernetType((short) 0x0800, "IPv4");
+    public static final ProtocolType IPV4
+            = new ProtocolType((short) 0x0800, "IPv4");
 
     /**
      * ARP: 0x0806
      */
-    public static final EthernetType ARP
-            = new EthernetType((short) 0x0806, "ARP");
+    public static final ProtocolType ARP
+            = new ProtocolType((short) 0x0806, "ARP");
 
     /**
      * IEEE 802.1Q VLAN-tagged frames: 0x8100
      */
-    public static final EthernetType DOT1Q_VLAN_TAGGED_FRAMES
-            = new EthernetType((short) 0x8100, "IEEE 802.1Q VLAN-tagged frames");
+    public static final ProtocolType DOT1Q_VLAN_TAGGED_FRAMES
+            = new ProtocolType((short) 0x8100, "IEEE 802.1Q VLAN-tagged frames");
 
     /**
      * RARP: 0x8035
      */
-    public static final EthernetType RARP
-            = new EthernetType((short) 0x8035, "RARP");
+    public static final ProtocolType RARP
+            = new ProtocolType((short) 0x8035, "RARP");
 
     /**
      * Appletalk: 0x809b
      */
-    public static final EthernetType APPLETALK
-            = new EthernetType((short) 0x809b, "Appletalk");
+    public static final ProtocolType APPLETALK
+            = new ProtocolType((short) 0x809b, "Appletalk");
 
     /**
      * IPv6: 0x86dd
      */
-    public static final EthernetType IPV6
-            = new EthernetType((short) 0x86dd, "IPv6");
+    public static final ProtocolType IPV6
+            = new ProtocolType((short) 0x86dd, "IPv6");
 
     /**
      * PPP: 0x880b
      */
-    public static final EthernetType PPP
-            = new EthernetType((short) 0x880b, "PPP");
+    public static final ProtocolType PPP
+            = new ProtocolType((short) 0x880b, "PPP");
 
     /**
      * MPLS: 0x8847
      */
-    public static final EthernetType MPLS
-            = new EthernetType((short) 0x8847, "MPLS");
+    public static final ProtocolType MPLS
+            = new ProtocolType((short) 0x8847, "MPLS");
 
     /**
      * PPPoED Discovery Stage: 0x8863
      */
-    public static final EthernetType PPPOE_DISCOVERY_STAGE
-            = new EthernetType((short) 0x8863, "PPPoED Discovery Stage");
+    public static final ProtocolType PPPOE_DISCOVERY_STAGE
+            = new ProtocolType((short) 0x8863, "PPPoED Discovery Stage");
 
     /**
      * PPPoED Session Stage: 0x8864
      */
-    public static final EthernetType PPPOE_SESSION_STAGE
-            = new EthernetType((short) 0x8864, "PPPoED Session Stage");
+    public static final ProtocolType PPPOE_SESSION_STAGE
+            = new ProtocolType((short) 0x8864, "PPPoED Session Stage");
 
-    public static final EthernetType UNKNOWN
-            = new EthernetType((short) -1, "Unknown");
+    public static final ProtocolType UNKNOWN
+            = new ProtocolType((short) -1, "Unknown");
 
-    private static final Map<Short, EthernetType> registry
-            = new HashMap<Short, EthernetType>();
+    private static final Map<Short, ProtocolType> registry
+            = new HashMap<Short, ProtocolType>();
 
     static {
         registry.put(IPV4.getValue(), IPV4);
@@ -116,19 +116,19 @@ public final class EthernetType extends NamedNumber<Short, EthernetType> {
      * @param value value
      * @param name  name
      */
-    public EthernetType(Short value, String name) {
+    public ProtocolType(Short value, String name) {
         super(value, name);
     }
 
     /**
      * @param value value
-     * @return a EthernetType object.
+     * @return a ProtocolType object.
      */
-    public static EthernetType getInstance(final Short value) {
+    public static ProtocolType getInstance(final Short value) {
         if (registry.containsKey(value)) {
             return registry.get(value);
         } else if ((value & 0xFFFF) <= IEEE802_3_MAX_LENGTH) {
-            return new EthernetType(value, "-");
+            return new ProtocolType(value, "-");
         } else {
             return UNKNOWN;
         }
@@ -136,9 +136,9 @@ public final class EthernetType extends NamedNumber<Short, EthernetType> {
 
     /**
      * @param type type
-     * @return a EthernetType object.
+     * @return a ProtocolType object.
      */
-    public static EthernetType register(EthernetType type) {
+    public static ProtocolType register(ProtocolType type) {
         return registry.put(type.getValue(), type);
     }
 
