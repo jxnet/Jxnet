@@ -29,15 +29,19 @@ import java.util.Map;
  */
 public abstract class ICMPTypeAndCode extends NamedTwoKeyMap<Byte, Byte, ICMPTypeAndCode> {
 
-    public static Map<TwoKeyMap<Byte, Byte>, ICMPTypeAndCode> registry =
+    protected static Map<TwoKeyMap<Byte, Byte>, ICMPTypeAndCode> registry =
             new HashMap<TwoKeyMap<Byte, Byte>, ICMPTypeAndCode>();
 
-    public ICMPTypeAndCode(Byte firstKey, Byte secondKey, String name) {
+    protected ICMPTypeAndCode(Byte firstKey, Byte secondKey, String name) {
         super(firstKey, secondKey, name);
     }
 
     public static ICMPTypeAndCode getInstance(Byte type, Byte code) {
         TwoKeyMap<Byte, Byte> key = TwoKeyMap.newInstance(type, code);
+        ICMPTypeAndCode typeAndCode = registry.get(key);
+        if (typeAndCode == null) {
+            return ICMPUnknownTypeAndCode.UNKNOWN;
+        }
         return registry.get(key);
     }
 

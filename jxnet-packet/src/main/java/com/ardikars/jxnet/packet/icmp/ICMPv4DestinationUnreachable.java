@@ -1,7 +1,28 @@
+/**
+ * Copyright (C) 2017  Ardika Rommy Sanjaya
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.ardikars.jxnet.packet.icmp;
 
 import com.ardikars.jxnet.util.TwoKeyMap;
 
+/**
+ * @author Ardika Rommy Sanjaya
+ * @since 1.1.0
+ */
 public class ICMPv4DestinationUnreachable extends ICMPTypeAndCode {
 
     public static ICMPv4DestinationUnreachable DESTINATION_NETWORK_UNREACHABLE =
@@ -52,7 +73,7 @@ public class ICMPv4DestinationUnreachable extends ICMPTypeAndCode {
     public static ICMPv4DestinationUnreachable PRECEDENCE_CUTOFF_IN_EFFECT =
             new ICMPv4DestinationUnreachable((byte) 15, "Precedence cutoff in effect");
 
-    private ICMPv4DestinationUnreachable(Byte code, String name) {
+    protected ICMPv4DestinationUnreachable(Byte code, String name) {
         super((byte) 3, code, name);
     }
 
