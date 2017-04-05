@@ -2,14 +2,14 @@
  * Copyright (C) 2017  Ardika Rommy Sanjaya
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
+ * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -169,7 +169,7 @@ public class ARP extends Packet implements Builder<Packet> {
     }
 
     @Override
-    public Packet setPacket(Packet packet) {
+    public Packet setPacket(final Packet packet) {
         return null;
     }
 
@@ -201,17 +201,17 @@ public class ARP extends Packet implements Builder<Packet> {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("[Hardware Type: ").append(this.getHardwareType().getDescription());
-        sb.append(", Protocol Type: ").append(this.getProtocolType().getName());
-        sb.append(", Hardware Address Length: ").append(this.getHardwareAddressLength());
-        sb.append(", Protocol Address Length: ").append(this.getProtocolAddressLength());
-        sb.append(", Operation Code: ").append(this.getOperationCode().getName());
-        sb.append(", SHA: ").append(this.getSenderHardwareAddress().toString());
-        sb.append(", SPA: ").append(this.getSenderProtocolAddress().toString());
-        sb.append(", THA: ").append(this.getTargetHardwareAddress().toString());
-        sb.append(", TPA: ").append(this.getTargetProtocolAddress().toString()).append("]");
-        return sb.toString();
+        return new StringBuilder()
+        .append("[Hardware Type: ").append(this.getHardwareType().getDescription())
+        .append(", Protocol Type: ").append(this.getProtocolType().getName())
+        .append(", Hardware Address Length: ").append(this.getHardwareAddressLength())
+        .append(", Protocol Address Length: ").append(this.getProtocolAddressLength())
+        .append(", Operation Code: ").append(this.getOperationCode().getName())
+        .append(", SHA: ").append(this.getSenderHardwareAddress().toString())
+        .append(", SPA: ").append(this.getSenderProtocolAddress().toString())
+        .append(", THA: ").append(this.getTargetHardwareAddress().toString())
+        .append(", TPA: ").append(this.getTargetProtocolAddress().toString())
+        .append("]").toString();
     }
 
 }
