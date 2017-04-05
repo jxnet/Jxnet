@@ -18,6 +18,7 @@
 package com.ardikars.jxnet.packet.radiotap;
 
 import com.ardikars.jxnet.packet.Packet;
+import com.ardikars.jxnet.util.Builder;
 
 import java.nio.ByteBuffer;
 
@@ -25,7 +26,7 @@ import java.nio.ByteBuffer;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class RadioTap extends Packet {
+public class RadioTap extends Packet implements Builder<Packet> {
 
     public static final int RADIO_TAP_HEADER = 8;
 
@@ -123,6 +124,11 @@ public class RadioTap extends Packet {
     }
 
     @Override
+    public Packet build() {
+        return this;
+    }
+
+    @Override
     public String toString() {
         return new StringBuilder()
                 .append("[Version: " + this.getVersion())
@@ -131,5 +137,5 @@ public class RadioTap extends Packet {
                 .append(", Present: " + this.getPresent())
                 .append("]").toString();
     }
-    
+
 }

@@ -18,7 +18,10 @@
 package com.ardikars.jxnet.packet.sll;
 
 import com.ardikars.jxnet.packet.Packet;
+import com.ardikars.jxnet.packet.arp.ARP;
 import com.ardikars.jxnet.packet.ethernet.ProtocolType;
+import com.ardikars.jxnet.packet.ip.IPv4;
+import com.ardikars.jxnet.packet.ip.IPv6;
 import com.ardikars.jxnet.util.Builder;
 
 import java.nio.ByteBuffer;
@@ -126,6 +129,12 @@ public class SLL extends Packet implements Builder<Packet> {
 
     @Override
     public Packet getPacket() {
+        if (this.getProtocol() == null) return null;
+        switch (this.getProtocol().getValue() & 0xffff) {
+            case 0x0806: return ARP.newInstance(this.getPayload());
+            case 0x0800: return IPv4.newInstance(this.getPayload());
+            case 0x86dd: return IPv6.newInstance(this.getPayload());
+        }
         return null;
     }
 

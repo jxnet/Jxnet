@@ -257,6 +257,10 @@ public class IPv6 extends Packet implements IP, Builder<Packet> {
 
     @Override
     public Packet getPacket() {
+        switch (this.getNextHeader().getValue()) {
+            case 6: return TCP.newInstance(this.getPayload());
+            case 17: return UDP.newInstance(this.getPayload());
+        }
         return null;
     }
 
