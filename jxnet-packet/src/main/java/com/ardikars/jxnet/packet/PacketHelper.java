@@ -21,6 +21,8 @@ import com.ardikars.jxnet.DataLinkType;
 import com.ardikars.jxnet.Pcap;
 import com.ardikars.jxnet.PcapHandler;
 import com.ardikars.jxnet.PcapPktHdr;
+import com.ardikars.jxnet.packet.radiotap.RadioTap;
+import com.ardikars.jxnet.packet.sll.SLL;
 import com.ardikars.jxnet.util.FormatUtils;
 import com.ardikars.jxnet.packet.ethernet.Ethernet;
 
@@ -71,7 +73,13 @@ public class PacketHelper {
                 packet = Ethernet.newInstance(bytes);
                 pkts.put(packet.getClass(), packet);
                 break;
-            case IEEE802:
+            case IEEE802_11:
+                packet = RadioTap.newInstance(bytes);
+                pkts.put(packet.getClass(), packet);
+                break;
+            case LINUX_SLL:
+                packet = SLL.newInstance(bytes);
+                pkts.put(packet.getClass(), packet);
                 break;
         }
         while ((packet = packet.getPacket()) != null) {
