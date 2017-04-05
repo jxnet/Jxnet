@@ -69,6 +69,11 @@ public enum DataLinkType {
     NULL((short) 0, "NULL"),
 
     /**
+     *
+     */
+    WLAN((short) 127, "Wlan"),
+
+    /**
      * Unknown
      */
     UNKNOWN((short) -1, "Unknown")
