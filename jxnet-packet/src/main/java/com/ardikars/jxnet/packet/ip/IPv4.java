@@ -42,10 +42,10 @@ public class IPv4 extends Packet implements IP, Builder<Packet> {
     private byte flags;
     private short fragmentOffset;
     private byte ttl;
-    private IPProtocolType protocol = IPProtocolType.UNKNOWN;
+    private IPProtocolType protocol;
     private short checksum;
-    private Inet4Address sourceAddress = Inet4Address.LOCALHOST;
-    private Inet4Address destinationAddress = Inet4Address.LOCALHOST;
+    private Inet4Address sourceAddress;
+    private Inet4Address destinationAddress;
     private byte[] options;
 
     public IPv4() {

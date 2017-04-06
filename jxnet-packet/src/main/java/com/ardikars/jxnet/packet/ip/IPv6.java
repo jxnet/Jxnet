@@ -39,8 +39,8 @@ public class IPv6 extends Packet implements IP, Builder<Packet> {
     private short payloadLength;
     private IPProtocolType nextHeader;
     private byte hopLimit;
-    private Inet6Address sourceAddress = Inet6Address.LOCALHOST;
-    private Inet6Address destinationAddress = Inet6Address.LOCALHOST;
+    private Inet6Address sourceAddress;
+    private Inet6Address destinationAddress;
 
     /**
      * IPv6 payload
