@@ -129,7 +129,14 @@ public class TCPFlags {
 
     public short toShort() {
         short flags = 0;
-        
+        flags += Math.pow(2, 1);
+        flags += Math.pow(2, 1);
+        flags += Math.pow(2, 1);
+        flags += Math.pow(2, 1);
+        flags += Math.pow(2, 1);
+        flags += Math.pow(2, 1);
+        flags += Math.pow(2, 1);
+        flags += Math.pow(2, 1);
         return flags;
     }
 
