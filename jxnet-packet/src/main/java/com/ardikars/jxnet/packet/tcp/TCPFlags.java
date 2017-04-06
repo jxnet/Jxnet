@@ -129,14 +129,15 @@ public class TCPFlags {
 
     public short toShort() {
         short flags = 0;
-        flags += Math.pow(2, 1);
-        flags += Math.pow(2, 1);
-        flags += Math.pow(2, 1);
-        flags += Math.pow(2, 1);
-        flags += Math.pow(2, 1);
-        flags += Math.pow(2, 1);
-        flags += Math.pow(2, 1);
-        flags += Math.pow(2, 1);
+        if (this.getNS() == (byte) 0x1) flags += 256;
+        if (this.getCWR() == (byte) 0x1) flags += 128;
+        if (this.getECE() == (byte) 0x1) flags += 64;
+        if (this.getURG() == (byte) 0x1) flags += 32;
+        if (this.getACK() == (byte) 0x1) flags += 16;
+        if (this.getPSH() == (byte) 0x1) flags += 8;
+        if (this.getRST() == (byte) 0x1) flags += 4;
+        if (this.getSYN() == (byte) 0x1) flags += 2;
+        if (this.getFIN() == (byte) 0x1) flags += 1;
         return flags;
     }
 
@@ -144,14 +145,14 @@ public class TCPFlags {
     public String toString() {
         return new StringBuilder()
                 .append("NS: ").append(this.getNS())
-                .append("CWR: ").append(this.getCWR())
-                .append("ECE: ").append(this.getECE())
-                .append("URG: ").append(this.getURG())
-                .append("ACK: ").append(this.getACK())
-                .append("PSH: ").append(this.getPSH())
-                .append("RST: ").append(this.getRST())
-                .append("SYN: ").append(this.getSYN())
-                .append("FIN: ").append(this.getFIN())
+                .append(", CWR: ").append(this.getCWR())
+                .append(", ECE: ").append(this.getECE())
+                .append(", URG: ").append(this.getURG())
+                .append(", ACK: ").append(this.getACK())
+                .append(", PSH: ").append(this.getPSH())
+                .append(", RST: ").append(this.getRST())
+                .append(", SYN: ").append(this.getSYN())
+                .append(", FIN: ").append(this.getFIN())
                 .toString();
     }
 
