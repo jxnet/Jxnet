@@ -18,7 +18,7 @@ public class PcapDump {
 
 		Pcap handler = AllTests.openHandle(); // Exception already thrown
 
-		PcapDumper dumper = PcapDumpOpen(handler, "dump.pcapng");
+		PcapDumper dumper = PcapDumpOpen(handler, "../sample-capture/dump.pcapng");
 		if (dumper == null) {
 			System.err.println(PcapGetErr(handler));
 			error = true;

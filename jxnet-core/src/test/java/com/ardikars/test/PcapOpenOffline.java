@@ -12,7 +12,7 @@ public class PcapOpenOffline {
 	@Test
 	public void run() throws PcapCloseException {
 		StringBuilder errbuf = new StringBuilder();
-        Pcap handler = PcapOpenOffline("dump.pcapng", errbuf);
+        Pcap handler = PcapOpenOffline("../sample-capture/dump.pcapng", errbuf);
         if(handler == null) {
             throw new PcapCloseException(errbuf.toString());
         }
