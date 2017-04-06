@@ -71,7 +71,7 @@ public enum DataLinkType {
     /**
      *
      */
-    WLAN((short) 127, "Wlan"),
+    IEEE802_11_RADIO((short) 127, "IEEE 802.11 Radiotap: 127"),
 
     /**
      * Unknown

@@ -73,7 +73,7 @@ public class PacketHelper {
                 packet = Ethernet.newInstance(bytes);
                 pkts.put(packet.getClass(), packet);
                 break;
-            case WLAN:
+            case IEEE802_11_RADIO:
                 packet = RadioTap.newInstance(bytes);
                 pkts.put(packet.getClass(), packet);
                 break;
