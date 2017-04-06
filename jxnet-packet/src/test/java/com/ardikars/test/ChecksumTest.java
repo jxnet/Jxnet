@@ -5,6 +5,7 @@ import com.ardikars.jxnet.packet.ethernet.Ethernet;
 import com.ardikars.jxnet.packet.ip.IPv4;
 import com.ardikars.jxnet.packet.ip.IPv6;
 import com.ardikars.jxnet.packet.tcp.TCP;
+import com.ardikars.jxnet.packet.tcp.TCPFlags;
 import com.ardikars.jxnet.util.FormatUtils;
 
 import javax.crypto.Mac;
@@ -36,7 +37,7 @@ public class ChecksumTest {
                 .setDestinationPort((short) 443)
                 .setSequence(0x665426d5)
                 .setAcknowledge(0)
-                .setFlags((short) 2)
+                .setFlags(TCPFlags.newInstance((short) 2))
                 .setWindowSize((short) 29200)
                 .setUrgentPointer((short) 0)
                 .setOptions(FormatUtils.toBytes("0101080a000b228e5c026753"));

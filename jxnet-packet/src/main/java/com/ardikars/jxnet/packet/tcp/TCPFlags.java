@@ -144,7 +144,7 @@ public class TCPFlags {
     @Override
     public String toString() {
         return new StringBuilder()
-                .append("NS: ").append(this.getNS())
+                .append("[NS: ").append(this.getNS())
                 .append(", CWR: ").append(this.getCWR())
                 .append(", ECE: ").append(this.getECE())
                 .append(", URG: ").append(this.getURG())
@@ -153,7 +153,7 @@ public class TCPFlags {
                 .append(", RST: ").append(this.getRST())
                 .append(", SYN: ").append(this.getSYN())
                 .append(", FIN: ").append(this.getFIN())
-                .toString();
+                .append("]").toString();
     }
 
 }

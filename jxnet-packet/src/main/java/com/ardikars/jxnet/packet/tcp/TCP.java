@@ -36,7 +36,7 @@ public class TCP extends Packet implements Builder<Packet> {
     private int sequence;
     private int acknowledge;
     private byte dataOffset;
-    private short flags;
+    private TCPFlags flags;
     private short windowSize;
     private short checksum;
     private short urgentPointer;
@@ -45,7 +45,6 @@ public class TCP extends Packet implements Builder<Packet> {
     private byte[] payload;
 
     public TCP() {
-
     }
 
     public short getSourcePort() {
@@ -93,12 +92,12 @@ public class TCP extends Packet implements Builder<Packet> {
         return this;
     }
 
-    public short getFlags() {
-        return (short) (this.flags & 0x1ff);
+    public TCPFlags getFlags() {
+        return this.flags;
     }
 
-    public TCP setFlags(final short flags) {
-        this.flags = (short) (flags & 0x1ff);;
+    public TCP setFlags(final TCPFlags flags) {
+        this.flags = flags;
         return this;
     }
 
@@ -158,9 +157,9 @@ public class TCP extends Packet implements Builder<Packet> {
         tcp.setDestinationPort(buffer.getShort());
         tcp.setSequence(buffer.getInt());
         tcp.setAcknowledge(buffer.getInt());
-        tcp.flags = buffer.getShort();
-        tcp.setDataOffset((byte) (tcp.flags >> 12 & 0xf));
-        tcp.setFlags((short) (tcp.flags & 0x1ff));
+        short flags = buffer.getShort();
+        tcp.setDataOffset((byte) (flags >> 12 & 0xf));
+        tcp.setFlags(TCPFlags.newInstance((short) (flags & 0x1ff)));
         tcp.setWindowSize(buffer.getShort());
         tcp.setChecksum(buffer.getShort());
         tcp.setUrgentPointer(buffer.getShort());
@@ -201,7 +200,7 @@ public class TCP extends Packet implements Builder<Packet> {
         buffer.putShort(this.getDestinationPort());
         buffer.putInt(this.getSequence());
         buffer.putInt(this.getAcknowledge());
-        buffer.putShort((short) ((this.getFlags() & 0x1ff) | (this.getDataOffset() & 0xf) << 12));
+        buffer.putShort((short) ((this.getFlags().toShort() & 0x1ff) | (this.getDataOffset() & 0xf) << 12));
         buffer.putShort(this.getWindowSize());
         buffer.putShort(this.getChecksum());
         buffer.putShort(this.getUrgentPointer());
