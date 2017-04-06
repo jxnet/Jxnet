@@ -19,6 +19,7 @@ package com.ardikars.jxnet.packet.ip;
 
 import com.ardikars.jxnet.Inet4Address;
 import com.ardikars.jxnet.packet.Packet;
+import com.ardikars.jxnet.packet.icmp.ICMP;
 import com.ardikars.jxnet.packet.tcp.TCP;
 import com.ardikars.jxnet.packet.udp.UDP;
 import com.ardikars.jxnet.util.Builder;
@@ -310,6 +311,9 @@ public class IPv4 extends Packet implements IP, Builder<Packet> {
                 }
                 this.setProtocol(IPProtocolType.UDP);
                 return this.setPayload(udp.toBytes());
+            case "com.ardikars.jxnet.packet.icmp.ICMP":
+                this.setProtocol(IPProtocolType.ICMP);
+                return this.setPayload(packet.toBytes());
         }
         return this;
     }
@@ -317,17 +321,25 @@ public class IPv4 extends Packet implements IP, Builder<Packet> {
     @Override
     public Packet getPacket() {
         switch (this.getProtocol().getValue()) {
-            case 6: return TCP.newInstance(this.getPayload());
+            case 1: return ICMP.newInstance(this.getPayload());
             case 17: return UDP.newInstance(this.getPayload());
+            case 6: return TCP.newInstance(this.getPayload());
         }
         return null;
     }
 
     @Override
     public byte[] toBytes() {
-        byte[] data = new byte[IPV4_HEADER_LENGTH +
-                ((this.getPayload() == null) ? 0 : this.getPayload().length) +
-                ((this.getHeaderLength() > 5) ? this.getOptions().length * 5 : 0)];
+
+        int optionsLength = 0;
+        if (this.getOptions() != null) {
+            optionsLength = this.getOptions().length / 4;
+        }
+        this.setHeaderLength((byte) (5 + optionsLength));
+        this.setTotalLength((short) (this.getHeaderLength() * 4 + (this.getPayload() == null ? 0
+                : this.getPayload().length)));
+
+        byte[] data = new byte[this.getTotalLength()];
 
         ByteBuffer buffer = ByteBuffer.wrap(data);
         buffer.put((byte) ((this.getVersion() & 0xf) << 4 | this.getHeaderLength() & 0xf));

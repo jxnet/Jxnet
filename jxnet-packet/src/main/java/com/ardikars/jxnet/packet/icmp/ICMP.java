@@ -99,6 +99,22 @@ public class ICMP extends Packet implements Builder<Packet> {
         if (this.getPayload() != null) {
             buffer.put(this.getPayload());
         }
+        if (this.getChecksum() == 0) {
+            buffer.rewind();
+            int accumulation = 0;
+            for (int i = 0; i < data.length / 2; ++i) {
+                accumulation += 0xffff & buffer.getShort();
+            }
+            // pad to an even number of shorts
+            if (data.length % 2 > 0) {
+                accumulation += (buffer.get() & 0xff) << 8;
+            }
+
+            accumulation = (accumulation >> 16 & 0xffff)
+                    + (accumulation & 0xffff);
+            this.checksum = (short) (~accumulation & 0xffff);
+            buffer.putShort(2, this.checksum);
+        }
         return data;
     }
 
