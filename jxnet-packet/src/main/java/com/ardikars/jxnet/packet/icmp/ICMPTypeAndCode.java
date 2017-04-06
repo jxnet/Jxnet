@@ -63,6 +63,8 @@ public abstract class ICMPTypeAndCode extends NamedTwoKeyMap<Byte, Byte, ICMPTyp
     static {
         try {
             Class.forName("com.ardikars.jxnet.packet.icmp.ICMPv4DestinationUnreachable");
+            Class.forName("com.ardikars.jxnet.packet.icmp.ICMPv4EchoRequest");
+            Class.forName("com.ardikars.jxnet.packet.icmp.ICMPv4EchoReply");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
