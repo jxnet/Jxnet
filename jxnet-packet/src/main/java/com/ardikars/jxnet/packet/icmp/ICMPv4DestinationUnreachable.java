@@ -25,52 +25,52 @@ import com.ardikars.jxnet.util.TwoKeyMap;
  */
 public class ICMPv4DestinationUnreachable extends ICMPTypeAndCode {
 
-    public static ICMPv4DestinationUnreachable DESTINATION_NETWORK_UNREACHABLE =
+    public static final ICMPv4DestinationUnreachable DESTINATION_NETWORK_UNREACHABLE =
             new ICMPv4DestinationUnreachable((byte) 0, "Destination network unreachable");
 
-    public static ICMPv4DestinationUnreachable DESTINATION_HOST_UNREACHABLE =
+    public static final ICMPv4DestinationUnreachable DESTINATION_HOST_UNREACHABLE =
             new ICMPv4DestinationUnreachable((byte) 1, "Destination host unreachable");
 
-    public static ICMPv4DestinationUnreachable DESTINATION_PROTOCOL_UNREACHABLE =
+    public static final ICMPv4DestinationUnreachable DESTINATION_PROTOCOL_UNREACHABLE =
             new ICMPv4DestinationUnreachable((byte) 2, "Destination protocol unreachable");
 
-    public static ICMPv4DestinationUnreachable DESTINATION_PORT_UNREACHABLE =
+    public static final ICMPv4DestinationUnreachable DESTINATION_PORT_UNREACHABLE =
             new ICMPv4DestinationUnreachable((byte) 3, "Destination port unreachable");
 
-    public static ICMPv4DestinationUnreachable FRAGMENTATION_REQUIRED =
+    public static final ICMPv4DestinationUnreachable FRAGMENTATION_REQUIRED =
             new ICMPv4DestinationUnreachable((byte) 4, "Fragmentation required, and DF flag set");
 
-    public static ICMPv4DestinationUnreachable SOURCE_ROUTE_FAILED =
+    public static final ICMPv4DestinationUnreachable SOURCE_ROUTE_FAILED =
             new ICMPv4DestinationUnreachable((byte) 5, "Source route failed");
 
-    public static ICMPv4DestinationUnreachable DESTINATION_NETWORK_UNKNOWN =
+    public static final ICMPv4DestinationUnreachable DESTINATION_NETWORK_UNKNOWN =
             new ICMPv4DestinationUnreachable((byte) 6, "Destination network unknown");
 
-    public static ICMPv4DestinationUnreachable DESTINATION_HOST_UNKOWN =
+    public static final ICMPv4DestinationUnreachable DESTINATION_HOST_UNKOWN =
             new ICMPv4DestinationUnreachable((byte) 7, "Destinatin host unknown");
 
-    public static ICMPv4DestinationUnreachable SOURCE_HOST_ISOLATED =
+    public static final ICMPv4DestinationUnreachable SOURCE_HOST_ISOLATED =
             new ICMPv4DestinationUnreachable((byte) 8, "Destination host isolated");
 
-    public static ICMPv4DestinationUnreachable NETWORK_ADMINISTRATIVELY_PROHIBITED =
+    public static final ICMPv4DestinationUnreachable NETWORK_ADMINISTRATIVELY_PROHIBITED =
             new ICMPv4DestinationUnreachable((byte) 9, "Network administratively prohibited");
 
-    public static ICMPv4DestinationUnreachable HOST_ADMINISTRATIVELY_PROHIBITED =
+    public static final ICMPv4DestinationUnreachable HOST_ADMINISTRATIVELY_PROHIBITED =
             new ICMPv4DestinationUnreachable((byte) 10, "Host administratively prohibited");
 
-    public static ICMPv4DestinationUnreachable NETWORK_UNREACHABLE_FOR_TOS =
+    public static final ICMPv4DestinationUnreachable NETWORK_UNREACHABLE_FOR_TOS =
             new ICMPv4DestinationUnreachable((byte) 11, "Network unreachable for ToS");
 
-    public static ICMPv4DestinationUnreachable HOST_UNREACHABLE_FOR_TOS =
+    public static final ICMPv4DestinationUnreachable HOST_UNREACHABLE_FOR_TOS =
             new ICMPv4DestinationUnreachable((byte) 12, "Host unreachable for ToS");
 
-    public static ICMPv4DestinationUnreachable COMMUNICATION_ADMINISTRATIVELY_PROHIBITED =
+    public static final ICMPv4DestinationUnreachable COMMUNICATION_ADMINISTRATIVELY_PROHIBITED =
             new ICMPv4DestinationUnreachable((byte) 13, "Communication administratively prohibited");
 
-    public static ICMPv4DestinationUnreachable HOST_PRECEDENCE_VIOLATION =
+    public static final ICMPv4DestinationUnreachable HOST_PRECEDENCE_VIOLATION =
             new ICMPv4DestinationUnreachable((byte) 14, "Host Precedence Violation");
 
-    public static ICMPv4DestinationUnreachable PRECEDENCE_CUTOFF_IN_EFFECT =
+    public static final ICMPv4DestinationUnreachable PRECEDENCE_CUTOFF_IN_EFFECT =
             new ICMPv4DestinationUnreachable((byte) 15, "Precedence cutoff in effect");
 
     protected ICMPv4DestinationUnreachable(Byte code, String name) {

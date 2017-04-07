@@ -23,20 +23,20 @@ import com.ardikars.jxnet.util.TwoKeyMap;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class ICMPv4EchoReply extends ICMPTypeAndCode {
+public class ICMPv4TimestampReply extends ICMPTypeAndCode {
 
-    public static final ICMPv4EchoReply ECHO_REPLY =
-            new ICMPv4EchoReply((byte) 0, "Echo reply (used to ping)");
+    public static final ICMPv4TimestampReply TIMESTAMP_REPLY =
+            new ICMPv4TimestampReply((byte) 0, "Timestamp reply");
 
-    protected ICMPv4EchoReply(Byte code, String name) {
-        super((byte) 0, code, name);
+    protected ICMPv4TimestampReply(Byte code, String name) {
+        super((byte) 13, code, name);
     }
 
-    public static ICMPv4EchoReply register(Byte code, String name) {
-        TwoKeyMap<Byte, Byte> key = TwoKeyMap.newInstance((byte) 0, code);
-        ICMPv4EchoReply icmPv4EchoReply =
-                new ICMPv4EchoReply(key.getSecondKey(), name);
-        return (ICMPv4EchoReply) ICMPTypeAndCode.registry.put(key, icmPv4EchoReply);
+    public static ICMPv4TimestampReply register(Byte code, String name) {
+        TwoKeyMap<Byte, Byte> key = TwoKeyMap.newInstance((byte) 13, code);
+        ICMPv4TimestampReply timestampReply =
+                new ICMPv4TimestampReply(key.getSecondKey(), name);
+        return (ICMPv4TimestampReply) ICMPTypeAndCode.registry.put(key, timestampReply);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class ICMPv4EchoReply extends ICMPTypeAndCode {
     }
 
     static {
-        ICMPTypeAndCode.registry.put(ECHO_REPLY.getKey(), ECHO_REPLY);
+        ICMPTypeAndCode.registry.put(TIMESTAMP_REPLY.getKey(), TIMESTAMP_REPLY);
     }
 
 }

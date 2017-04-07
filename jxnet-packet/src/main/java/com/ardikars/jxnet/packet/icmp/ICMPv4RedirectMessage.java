@@ -23,19 +23,19 @@ import com.ardikars.jxnet.util.TwoKeyMap;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class ICMPRedirectMessage extends ICMPTypeAndCode {
+public class ICMPv4RedirectMessage extends ICMPTypeAndCode {
 
-    public static ICMPRedirectMessage REDIRECT_DATAGRAM_FOR_NETWORK =
-            new ICMPRedirectMessage((byte) 0, "Redirect datagram for the network");
+    public static final ICMPv4RedirectMessage REDIRECT_DATAGRAM_FOR_NETWORK =
+            new ICMPv4RedirectMessage((byte) 0, "Redirect datagram for the network");
 
-    protected ICMPRedirectMessage(Byte code, String name) {
+    protected ICMPv4RedirectMessage(Byte code, String name) {
         super((byte) 5, code, name);
     }
 
-    public static ICMPRedirectMessage register(Byte code, String name) {
+    public static ICMPv4RedirectMessage register(Byte code, String name) {
         TwoKeyMap<Byte, Byte> key = TwoKeyMap.newInstance((byte) 5, code);
-        ICMPRedirectMessage redirectMessage = new ICMPRedirectMessage(code, name);
-        return (ICMPRedirectMessage) ICMPTypeAndCode.registry.put(key, redirectMessage);
+        ICMPv4RedirectMessage redirectMessage = new ICMPv4RedirectMessage(key.getSecondKey(), name);
+        return (ICMPv4RedirectMessage) ICMPTypeAndCode.registry.put(key, redirectMessage);
     }
 
     @Override

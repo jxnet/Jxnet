@@ -25,7 +25,7 @@ import com.ardikars.jxnet.util.TwoKeyMap;
  */
 public class ICMPv4EchoRequest extends ICMPTypeAndCode {
 
-    public static ICMPv4EchoRequest ECHO_REQUEST =
+    public static final ICMPv4EchoRequest ECHO_REQUEST =
             new ICMPv4EchoRequest((byte) 0, "Echo request (used to ping)");
 
     protected ICMPv4EchoRequest(Byte code, String name) {

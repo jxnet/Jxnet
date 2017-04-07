@@ -25,7 +25,7 @@ import com.ardikars.jxnet.util.TwoKeyMap;
  */
 public class ICMPUnknownTypeAndCode extends ICMPTypeAndCode {
 
-    public static ICMPUnknownTypeAndCode UNKNOWN =
+    public static final ICMPUnknownTypeAndCode UNKNOWN =
             new ICMPUnknownTypeAndCode((byte) -1, "Unknown type or code");
 
     protected ICMPUnknownTypeAndCode(Byte code, String name) {

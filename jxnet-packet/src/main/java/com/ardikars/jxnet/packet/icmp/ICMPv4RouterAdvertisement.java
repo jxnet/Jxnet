@@ -23,20 +23,20 @@ import com.ardikars.jxnet.util.TwoKeyMap;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class ICMPv4EchoReply extends ICMPTypeAndCode {
+public class ICMPv4RouterAdvertisement extends ICMPTypeAndCode {
 
-    public static final ICMPv4EchoReply ECHO_REPLY =
-            new ICMPv4EchoReply((byte) 0, "Echo reply (used to ping)");
+    public static final ICMPv4RouterAdvertisement ROUTER_ADVERTISEMENT =
+            new ICMPv4RouterAdvertisement((byte) 0, "Router Advertisement");
 
-    protected ICMPv4EchoReply(Byte code, String name) {
-        super((byte) 0, code, name);
+    protected ICMPv4RouterAdvertisement(Byte code, String name) {
+        super((byte) 9, code, name);
     }
 
-    public static ICMPv4EchoReply register(Byte code, String name) {
+    public static ICMPv4RouterAdvertisement register(Byte code, String name) {
         TwoKeyMap<Byte, Byte> key = TwoKeyMap.newInstance((byte) 0, code);
-        ICMPv4EchoReply icmPv4EchoReply =
-                new ICMPv4EchoReply(key.getSecondKey(), name);
-        return (ICMPv4EchoReply) ICMPTypeAndCode.registry.put(key, icmPv4EchoReply);
+        ICMPv4RouterAdvertisement routerAdvertisement =
+                new ICMPv4RouterAdvertisement(key.getSecondKey(), name);
+        return (ICMPv4RouterAdvertisement) ICMPTypeAndCode.registry.put(key, routerAdvertisement);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class ICMPv4EchoReply extends ICMPTypeAndCode {
     }
 
     static {
-        ICMPTypeAndCode.registry.put(ECHO_REPLY.getKey(), ECHO_REPLY);
+        ICMPTypeAndCode.registry.put(ROUTER_ADVERTISEMENT.getKey(), ROUTER_ADVERTISEMENT);
     }
 
 }
