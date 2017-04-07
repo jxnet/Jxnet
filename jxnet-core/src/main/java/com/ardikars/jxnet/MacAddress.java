@@ -99,6 +99,10 @@ public final class MacAddress {
 		return new MacAddress(bytes);
 	}
 
+	public void update(final MacAddress macAddress) {
+		this.address = macAddress.toBytes();
+	}
+
 	/**
 	 * Reuturning length of MAC Address.
 	 * @return MAC Address length.

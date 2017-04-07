@@ -54,30 +54,62 @@ public final class AddrUtils {
 		return (gwAddr == null ? null : Inet4Address.valueOf(gwAddr));
 	}
 
-	public static String LookupDev(StringBuilder errbuf) {
+	public static String LookupDev(Inet4Address netaddr, Inet4Address addr, Inet4Address mask,
+								Inet4Address broadaddr, Inet4Address dstaddr,
+								MacAddress macaddr, StringBuilder errbuf) {
+		CheckNotNull(netaddr);
+		CheckNotNull(addr);
+		CheckNotNull(mask);
+		CheckNotNull(broadaddr);
+		CheckNotNull(dstaddr);
+		CheckNotNull(macaddr);
+		CheckNotNull(errbuf);
 		List<PcapIf> alldevsp = new ArrayList<PcapIf>();
-		PcapFindAllDevs(alldevsp, errbuf);
-		for (PcapIf dev : alldevsp) {
-			for (PcapAddr addr : dev.getAddresses()) {
-				if (addr.getAddr().getSaFamily() == SockAddr.Family.AF_INET) {
-					return dev.getName();
+		if (PcapFindAllDevs(alldevsp, errbuf) == 0) {
+			for (PcapIf dev : alldevsp) {
+				for (PcapAddr address : dev.getAddresses()) {
+					if (address.getAddr().getSaFamily() == SockAddr.Family.AF_INET) {
+						if (address.getAddr().getData() != null && address.getNetmask().getData() != null) {
+							addr.update(Inet4Address.valueOf(address.getAddr().getData()));
+							mask.update(Inet4Address.valueOf(address.getNetmask().getData()));
+							broadaddr.update(Inet4Address.valueOf(address.getBroadAddr().getData()));
+							dstaddr.update(Inet4Address.valueOf(address.getDstAddr().getData()));
+							netaddr.update(Inet4Address.valueOf(addr.toInt() & mask.toInt()));
+							macaddr.update(getHardwareAddress(dev.getName()));
+							return dev.getName();
+						}
+					}
 				}
 			}
 		}
 		return null;
 	}
 
-	public static int LookupNet(String source, Inet4Address netp, Inet4Address maskp, StringBuilder errbuf) {
+	public static int LookupNet(String source, Inet4Address netaddr, Inet4Address addr, Inet4Address mask,
+								Inet4Address broadaddr, Inet4Address dstaddr,
+								MacAddress macaddr, StringBuilder errbuf) {
+		CheckNotNull(netaddr);
+		CheckNotNull(addr);
+		CheckNotNull(mask);
+		CheckNotNull(broadaddr);
+		CheckNotNull(dstaddr);
+		CheckNotNull(macaddr);
+		CheckNotNull(errbuf);
 		List<PcapIf> alldevsp = new ArrayList<PcapIf>();
-		PcapFindAllDevs(alldevsp, errbuf);
-		for (PcapIf dev : alldevsp) {
-			if (dev.getName().equals(source)) {
-				for (PcapAddr addr : dev.getAddresses()) {
-					if (addr.getAddr().getSaFamily() == SockAddr.Family.AF_INET) {
-						if (addr.getAddr().getData() != null && addr.getNetmask().getData() != null) {
-							netp.update(Inet4Address.valueOf(addr.getAddr().toString()));
-							maskp.update(Inet4Address.valueOf(addr.getNetmask().toString()));
-							return 0;
+		if (PcapFindAllDevs(alldevsp, errbuf) == 0) {
+			for (PcapIf dev : alldevsp) {
+				if (dev.getName().equals(source)) {
+					for (PcapAddr address : dev.getAddresses()) {
+						if (address.getAddr().getSaFamily() == SockAddr.Family.AF_INET) {
+							if (address.getAddr().getData() != null && address.getNetmask().getData() != null) {
+								addr.update(Inet4Address.valueOf(address.getAddr().getData()));
+								mask.update(Inet4Address.valueOf(address.getNetmask().getData()));
+								broadaddr.update(Inet4Address.valueOf(address.getBroadAddr().getData()));
+								dstaddr.update(Inet4Address.valueOf(address.getDstAddr().getData()));
+								netaddr.update(Inet4Address.valueOf(addr.toInt() & mask.toInt()));
+								macaddr.update(getHardwareAddress(dev.getName()));
+								return 0;
+							}
 						}
 					}
 				}
