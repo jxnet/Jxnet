@@ -24,7 +24,7 @@ public class PcapOpenDead {
 		if (handler == null) {
 			throw new JxnetException("Failed to open pcap dead handle.");
 		}
-		PcapDumper dumper = PcapDumpOpen(handler, "dump_dead.pcapng");
+		PcapDumper dumper = PcapDumpOpen(handler, "../sample-capture/dump_dead.pcapng");
 		if (dumper == null) {
 			PcapClose(handler);
 			throw new JxnetException("Failed to open pcap dumper handle.");
