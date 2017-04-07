@@ -29,11 +29,11 @@ public class ICMPv4TimestampReply extends ICMPTypeAndCode {
             new ICMPv4TimestampReply((byte) 0, "Timestamp reply");
 
     protected ICMPv4TimestampReply(Byte code, String name) {
-        super((byte) 13, code, name);
+        super((byte) 14, code, name);
     }
 
     public static ICMPv4TimestampReply register(Byte code, String name) {
-        TwoKeyMap<Byte, Byte> key = TwoKeyMap.newInstance((byte) 13, code);
+        TwoKeyMap<Byte, Byte> key = TwoKeyMap.newInstance((byte) 14, code);
         ICMPv4TimestampReply timestampReply =
                 new ICMPv4TimestampReply(key.getSecondKey(), name);
         return (ICMPv4TimestampReply) ICMPTypeAndCode.registry.put(key, timestampReply);

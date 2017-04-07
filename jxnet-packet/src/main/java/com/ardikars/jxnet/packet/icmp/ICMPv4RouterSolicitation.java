@@ -26,14 +26,14 @@ import com.ardikars.jxnet.util.TwoKeyMap;
 public class ICMPv4RouterSolicitation extends ICMPTypeAndCode {
 
     public static final ICMPv4RouterSolicitation ROUTER_DISCOVERY_SELECTION_SOLICITATION =
-            new ICMPv4RouterSolicitation((byte) 10, "Router discovery/selection/solicitation");
+            new ICMPv4RouterSolicitation((byte) 0, "Router discovery/selection/solicitation");
 
     protected ICMPv4RouterSolicitation(Byte code, String name) {
         super((byte) 10, code, name);
     }
 
     public static ICMPv4RouterSolicitation register(Byte code, String name) {
-        TwoKeyMap<Byte, Byte> key = TwoKeyMap.newInstance((byte) 0, code);
+        TwoKeyMap<Byte, Byte> key = TwoKeyMap.newInstance((byte) 10, code);
         ICMPv4RouterSolicitation routerSolicitation =
                 new ICMPv4RouterSolicitation(key.getSecondKey(), name);
         return (ICMPv4RouterSolicitation) ICMPTypeAndCode.registry.put(key, routerSolicitation);

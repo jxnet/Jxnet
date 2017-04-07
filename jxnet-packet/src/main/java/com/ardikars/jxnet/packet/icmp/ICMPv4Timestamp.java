@@ -29,7 +29,7 @@ public class ICMPv4Timestamp extends ICMPTypeAndCode {
             new ICMPv4Timestamp((byte) 0, "Timestamp");
 
     protected ICMPv4Timestamp(Byte code, String name) {
-        super((byte) 12, code, name);
+        super((byte) 13, code, name);
     }
 
     public static ICMPv4Timestamp register(Byte code, String name) {

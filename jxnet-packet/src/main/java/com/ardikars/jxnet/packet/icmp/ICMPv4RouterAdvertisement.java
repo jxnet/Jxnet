@@ -33,7 +33,7 @@ public class ICMPv4RouterAdvertisement extends ICMPTypeAndCode {
     }
 
     public static ICMPv4RouterAdvertisement register(Byte code, String name) {
-        TwoKeyMap<Byte, Byte> key = TwoKeyMap.newInstance((byte) 0, code);
+        TwoKeyMap<Byte, Byte> key = TwoKeyMap.newInstance((byte) 9, code);
         ICMPv4RouterAdvertisement routerAdvertisement =
                 new ICMPv4RouterAdvertisement(key.getSecondKey(), name);
         return (ICMPv4RouterAdvertisement) ICMPTypeAndCode.registry.put(key, routerAdvertisement);

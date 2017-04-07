@@ -29,11 +29,11 @@ public class ICMPv4EchoRequest extends ICMPTypeAndCode {
             new ICMPv4EchoRequest((byte) 0, "Echo request (used to ping)");
 
     protected ICMPv4EchoRequest(Byte code, String name) {
-        super((byte) 0, code, name);
+        super((byte) 8, code, name);
     }
 
     public static ICMPv4EchoRequest register(Byte code, String name) {
-        TwoKeyMap<Byte, Byte> key = TwoKeyMap.newInstance((byte) 0, code);
+        TwoKeyMap<Byte, Byte> key = TwoKeyMap.newInstance((byte) 8, code);
         ICMPv4EchoRequest icmPv4EchoRequest =
                 new ICMPv4EchoRequest(key.getSecondKey(), name);
         return (ICMPv4EchoRequest) ICMPTypeAndCode.registry.put(key, icmPv4EchoRequest);
