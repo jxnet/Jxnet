@@ -28,7 +28,9 @@ import java.util.Map;
  */
 public class IPProtocolType extends NamedNumber<Byte, IPProtocolType> {
 
-    public static final IPProtocolType ICMP = new IPProtocolType((byte) 1, "Internet Control Message Protocol");
+    public static final IPProtocolType ICMP = new IPProtocolType((byte) 1, "Internet Control Message Protocol Version 4");
+
+    public static final IPProtocolType IPV6_ICMP = new IPProtocolType((byte) 58, "Internet Control Message Protocol Version 6");
 
     public static final IPProtocolType IGMP = new IPProtocolType((byte) 2, "Internet Group Management Protocol");
 
@@ -46,6 +48,7 @@ public class IPProtocolType extends NamedNumber<Byte, IPProtocolType> {
 
     static {
         registry.put(ICMP.getValue(), ICMP);
+        registry.put(ICMP.getValue(), IPV6_ICMP);
         registry.put(IGMP.getValue(), IGMP);
         registry.put(TCP.getValue(), TCP);
         registry.put(UDP.getValue(), UDP);

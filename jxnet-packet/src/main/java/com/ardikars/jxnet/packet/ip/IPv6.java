@@ -19,6 +19,7 @@ package com.ardikars.jxnet.packet.ip;
 
 import com.ardikars.jxnet.Inet6Address;
 import com.ardikars.jxnet.packet.Packet;
+import com.ardikars.jxnet.packet.icmp.ICMPv6;
 import com.ardikars.jxnet.packet.tcp.TCP;
 import com.ardikars.jxnet.packet.udp.UDP;
 import com.ardikars.jxnet.util.Builder;
@@ -250,6 +251,47 @@ public class IPv6 extends Packet implements IP, Builder<Packet> {
                 }
                 this.setNextHeader(IPProtocolType.UDP);
                 return this.setPayload(udp.toBytes());
+            case "com.ardikars.jxnet.packet.icmp.ICMPv6":
+                ICMPv6 icmp = (ICMPv6) packet;
+                if (icmp.getChecksum() == 0) {
+                    bb = ByteBuffer.wrap(icmp.toBytes());
+                    final int bbLength =
+                            IPV6_HEADER_LENGTH + ICMPv6.ICMP_HEADER_LENGTH +
+                            icmp.getPayload().length;
+
+                    final ByteBuffer bbChecksum = ByteBuffer.allocate(bbLength);
+                    bbChecksum.put(this.getSourceAddress().toBytes());
+                    bbChecksum.put(this.getDestinationAddress().toBytes());
+                    bbChecksum.putInt(IPV6_HEADER_LENGTH + icmp.getPayload().length);
+                    bbChecksum.put((byte) 0);
+                    bbChecksum.put((byte) 0);
+                    bbChecksum.put((byte) 0);
+                    bbChecksum.put(IPProtocolType.IPV6_ICMP.getValue());
+                    bbChecksum.put(icmp.getTypeAndCode().getType());
+                    bbChecksum.put(icmp.getTypeAndCode().getCode());
+                    bbChecksum.put((byte) 0);
+                    bbChecksum.put((byte) 0);
+                    if (icmp.getPayload() != null) {
+                        bb.put(icmp.getPayload());
+                        bbChecksum.put(icmp.getPayload());
+                    }
+                    bb.rewind();
+                    bbChecksum.rewind();
+
+                    for (int i = 0; i < bbChecksum.capacity() / 2; ++i) {
+                        accumulation += 0xffff & bbChecksum.getShort();
+                    }
+                    // pad to an even number of shorts
+                    if (bbChecksum.capacity() % 2 > 0) {
+                        accumulation += (bbChecksum.get() & 0xff) << 8;
+                    }
+
+                    accumulation = (accumulation >> 16 & 0xffff)
+                            + (accumulation & 0xffff);
+                    icmp.setChecksum((short) (~accumulation & 0xffff));
+                }
+                this.setNextHeader(IPProtocolType.IPV6_ICMP);
+                return this.setPayload(icmp.toBytes());
         }
         this.payload = packet.toBytes();
         return this;
