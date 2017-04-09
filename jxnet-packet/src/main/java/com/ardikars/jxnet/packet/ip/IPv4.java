@@ -22,7 +22,6 @@ import com.ardikars.jxnet.packet.Packet;
 import com.ardikars.jxnet.packet.icmp.ICMPv4;
 import com.ardikars.jxnet.packet.tcp.TCP;
 import com.ardikars.jxnet.packet.udp.UDP;
-import com.ardikars.jxnet.util.Builder;
 
 import java.nio.ByteBuffer;
 
@@ -30,7 +29,7 @@ import java.nio.ByteBuffer;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class IPv4 extends Packet implements IP, Builder<Packet> {
+public class IPv4 extends Packet implements IP {
 
     public static final int IPV4_HEADER_LENGTH = 20;
 

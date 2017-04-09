@@ -1,12 +1,20 @@
 package com.ardikars.test;
 
+import com.ardikars.jxnet.Inet4Address;
 import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
+import com.ardikars.jxnet.packet.Packet;
 import com.ardikars.jxnet.packet.PacketHandler;
 import com.ardikars.jxnet.packet.PacketHelper;
 import com.ardikars.jxnet.packet.ethernet.Ethernet;
+import com.ardikars.jxnet.packet.icmp.ICMPv4;
+import com.ardikars.jxnet.packet.ip.IPProtocolType;
+import com.ardikars.jxnet.packet.ip.IPv4;
+import com.ardikars.jxnet.packet.tcp.TCP;
 import com.ardikars.jxnet.util.FormatUtils;
 import org.junit.Test;
+
+import java.util.Arrays;
 
 public class Ethernet_IPv4_TCP {
 
@@ -39,6 +47,58 @@ public class Ethernet_IPv4_TCP {
             if (eth != null) {
                 if (!FormatUtils.toHexString(eth.toBytes()).equals(hexStream[index])) {
                     System.out.println(index+": "+FormatUtils.toHexString(eth.toBytes()));
+                } else {
+                    Ethernet ethernet = new Ethernet()
+                            .setDestinationMacAddress(eth.getDestinationMacAddress())
+                            .setSourceMacAddress(eth.getSourceMacAddress())
+                            .setEthernetType(eth.getEthernetType())
+                            .setPayload(eth.getPayload());
+                    if (Arrays.equals(eth.toBytes(), ethernet.toBytes())) {
+                        System.out.println("Valid ethernet.");
+                    }
+
+                    if (eth.getPacket() instanceof IPv4) {
+                        IPv4 ipv4 = (IPv4) eth.getPacket();
+                        IPv4 ip = new IPv4();
+                        ip.setVersion(ipv4.getVersion());
+                        ip.setHeaderLength(ipv4.getHeaderLength());
+                        ip.setDiffServ(ipv4.getDiffServ());
+                        ip.setExpCon(ipv4.getExpCon());
+                        ip.setTotalLength(ipv4.getTotalLength());
+                        ip.setIdentification(ipv4.getIdentification());
+                        ip.setFlags(ipv4.getFlags());
+                        ip.setFragmentOffset(ipv4.getFragmentOffset());
+                        ip.setTtl(ipv4.getTtl());
+                        ip.setProtocol(ipv4.getProtocol());
+                        ip.setChecksum(ipv4.getChecksum());
+                        ip.setSourceAddress(ipv4.getSourceAddress());
+                        ip.setDestinationAddress(ipv4.getDestinationAddress());
+                        ip.setOptions(ipv4.getOptions());
+                        ip.setPayload(ipv4.getPayload());
+                        if (Arrays.equals(ipv4.toBytes(), ip.toBytes())) {
+                            System.out.println("Valid ipv4.");
+                        }
+
+                        if (ip.getPacket() instanceof TCP) {
+                            TCP tcp = (TCP) ip.getPacket();
+                            TCP t = new TCP();
+                            t.setSourcePort(tcp.getSourcePort());
+                            t.setDestinationPort(tcp.getDestinationPort());
+                            t.setSequence(tcp.getSequence());
+                            t.setAcknowledge(tcp.getAcknowledge());
+                            t.setDataOffset(tcp.getDataOffset());
+                            t.setFlags(tcp.getFlags());
+                            t.setWindowSize(tcp.getWindowSize());
+                            t.setChecksum(tcp.getChecksum());
+                            t.setUrgentPointer(tcp.getUrgentPointer());
+                            t.setOptions(tcp.getOptions());
+                            t.setPayload(tcp.getPayload());
+                            if (Arrays.equals(tcp.toBytes(), t.toBytes())) {
+                                System.out.println("Valid tcp.");
+                            }
+                        }
+                    }
+
                 }
                 index++;
             }

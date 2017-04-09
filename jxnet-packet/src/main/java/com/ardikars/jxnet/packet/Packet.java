@@ -17,11 +17,13 @@
 
 package com.ardikars.jxnet.packet;
 
+import com.ardikars.jxnet.util.Builder;
+
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public abstract class Packet {
+public abstract class Packet implements Builder<Packet> {
 
     public abstract Packet setPacket(final Packet packet);
 

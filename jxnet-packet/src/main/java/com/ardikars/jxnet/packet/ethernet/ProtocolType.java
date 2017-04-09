@@ -144,17 +144,7 @@ public final class ProtocolType extends NamedNumber<Short, ProtocolType> {
 
     @Override
     public String toString() {
-        if ((super.getValue() & 0xFFFF) <= IEEE802_3_MAX_LENGTH) {
-            StringBuilder sb = new StringBuilder(70);
-            return sb.append("[Value: ")
-                    .append(super.getValue() & 0xffff)
-                    .append(", Name: ")
-                    .append(super.getName())
-                    .append("]")
-                    .toString();
-        } else {
-            return super.toString();
-        }
+        return super.toString();
     }
 
 }

@@ -12,6 +12,10 @@ public class TCPFlags {
     private byte SYN;
     private byte FIN;
 
+    private TCPFlags() {
+
+    }
+
     private TCPFlags(byte NS, byte CWR, byte ECE, byte URG,
                     byte ACK, byte PSH, byte RST, byte SYN, byte FIN) {
         this.NS = (byte) (NS & 0x1);
@@ -35,6 +39,10 @@ public class TCPFlags {
         this.ECE = (byte) ((flags >> 6) & 0x1);
         this.CWR = (byte) ((flags >> 7) & 0x1);
         this.NS = (byte) ((flags >> 8) & 0x1);
+    }
+
+    public static TCPFlags newInstance() {
+        return new TCPFlags();
     }
 
     public static TCPFlags newInstance(short flags) {

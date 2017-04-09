@@ -22,7 +22,6 @@ import com.ardikars.jxnet.Inet4Address;
 import com.ardikars.jxnet.MacAddress;
 import com.ardikars.jxnet.packet.Packet;
 import com.ardikars.jxnet.packet.ethernet.ProtocolType;
-import com.ardikars.jxnet.util.Builder;
 
 import java.nio.ByteBuffer;
 
@@ -30,7 +29,7 @@ import java.nio.ByteBuffer;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class ARP extends Packet implements Builder<Packet> {
+public class ARP extends Packet {
 
     public static final int ARP_HEADER_LENGTH = 28;
 

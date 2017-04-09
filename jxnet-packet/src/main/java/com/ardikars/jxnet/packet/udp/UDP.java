@@ -18,7 +18,6 @@
 package com.ardikars.jxnet.packet.udp;
 
 import com.ardikars.jxnet.packet.Packet;
-import com.ardikars.jxnet.util.Builder;
 
 import java.nio.ByteBuffer;
 
@@ -26,7 +25,7 @@ import java.nio.ByteBuffer;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class UDP extends Packet implements Builder<Packet> {
+public class UDP extends Packet {
 
     public static final int UDP_HEADER_LENGTH = 8;
 

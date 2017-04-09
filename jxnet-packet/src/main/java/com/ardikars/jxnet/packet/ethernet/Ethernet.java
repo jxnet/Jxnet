@@ -22,7 +22,6 @@ import com.ardikars.jxnet.packet.Packet;
 import com.ardikars.jxnet.packet.arp.ARP;
 import com.ardikars.jxnet.packet.ip.IPv4;
 import com.ardikars.jxnet.packet.ip.IPv6;
-import com.ardikars.jxnet.util.Builder;
 
 import java.nio.ByteBuffer;
 
@@ -30,7 +29,7 @@ import java.nio.ByteBuffer;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class Ethernet extends Packet implements Builder<Packet> {
+public class Ethernet extends Packet {
 
     public static final int ETHERNET_HEADER_LENGTH = 14;
     public static final int VLAN_HEADER_LENGTH = 4;

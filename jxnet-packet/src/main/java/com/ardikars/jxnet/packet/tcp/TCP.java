@@ -18,7 +18,6 @@
 package com.ardikars.jxnet.packet.tcp;
 
 import com.ardikars.jxnet.packet.Packet;
-import com.ardikars.jxnet.util.Builder;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -27,7 +26,7 @@ import java.util.Arrays;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class TCP extends Packet implements Builder<Packet> {
+public class TCP extends Packet {
 
     public static int TCP_HEADER_LENGTH = 20;
 
@@ -45,6 +44,7 @@ public class TCP extends Packet implements Builder<Packet> {
     private byte[] payload;
 
     public TCP() {
+        this.flags = TCPFlags.newInstance();
     }
 
     public short getSourcePort() {

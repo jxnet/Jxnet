@@ -26,7 +26,7 @@ import java.nio.ByteBuffer;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class ICMPv4 extends Packet implements ICMP, Builder<Packet> {
+public class ICMPv4 extends Packet implements ICMP {
 
     public static int ICMP_HEADER_LENGTH = 4;
 

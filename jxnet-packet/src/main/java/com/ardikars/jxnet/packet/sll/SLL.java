@@ -22,7 +22,6 @@ import com.ardikars.jxnet.packet.arp.ARP;
 import com.ardikars.jxnet.packet.ethernet.ProtocolType;
 import com.ardikars.jxnet.packet.ip.IPv4;
 import com.ardikars.jxnet.packet.ip.IPv6;
-import com.ardikars.jxnet.util.Builder;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -31,7 +30,7 @@ import java.util.Arrays;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class SLL extends Packet implements Builder<Packet> {
+public class SLL extends Packet {
 
     public static final int SLL_HEADER_LENGTH = 16;
 
