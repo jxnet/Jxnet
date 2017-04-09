@@ -23,4 +23,8 @@ package com.ardikars.jxnet.packet.icmp;
  */
 public interface ICMP {
 
+    ICMPTypeAndCode getTypeAndCode();
+
+    ICMP setTypeAndCode(final ICMPTypeAndCode typeAndCode);
+
 }
