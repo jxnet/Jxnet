@@ -54,6 +54,23 @@ public final class AddrUtils {
 		return (gwAddr == null ? null : Inet4Address.valueOf(gwAddr));
 	}
 
+	public static String LookupDev(StringBuilder errbuf) {
+		CheckNotNull(errbuf);
+		List<PcapIf> alldevsp = new ArrayList<PcapIf>();
+		if (PcapFindAllDevs(alldevsp, errbuf) == 0) {
+			for (PcapIf dev : alldevsp) {
+				for (PcapAddr address : dev.getAddresses()) {
+					if (address.getAddr().getSaFamily() == SockAddr.Family.AF_INET) {
+						if (address.getAddr().getData() != null && address.getNetmask().getData() != null) {
+							return dev.getName();
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
+
 	public static String LookupDev(Inet4Address netaddr, Inet4Address addr, Inet4Address mask,
 								Inet4Address broadaddr, Inet4Address dstaddr,
 								MacAddress macaddr, StringBuilder errbuf) {

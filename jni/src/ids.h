@@ -71,18 +71,6 @@ extern jfieldID PcapAddressFID;
 
 void SetPcapIDs(JNIEnv *env);
 
-extern jclass ArpClass;
-extern jfieldID ArpAddressFID;
-
-void SetArpIDs(JNIEnv *env);
-
-extern jclass ArpEntryClass;
-extern jfieldID ArpEntryArpPaFID;
-extern jfieldID ArpEntryArpHaFID;
-extern jmethodID ArpEntryInitializeMID;
-
-void SetArpEntryIDs(JNIEnv *env);
-
 extern jclass PcapPktHdrClass;
 extern jfieldID PcapPktHdrCaplenFID;
 extern jfieldID PcapPktHdrLenFID;

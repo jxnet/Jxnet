@@ -46,17 +46,11 @@ case "$host_os" in
 		AC_CHECK_LIB([iphlpapi], [main], [LDFLAGS+="-liphlpapi "], [
 			AC_MSG_ERROR(["Cannot find -liphlpapi."])
 		])
-		AC_CHECK_LIB([dnet], [main], [LDFLAGS+="-ldnet" ], [
-			AC_MSG_ERROR(["Cannot find -ldnet."])
-		])
 		AC_CHECK_HEADERS([winsock2.h iphlpapi.h Ws2tcpip.h])
 	;;
 	*)
 		AC_CHECK_LIB([pcap], [pcap_lib_version], [LDFLAGS+="-lpcap "], [
 			AC_MSG_ERROR(["Cannot find -lpcap."])
-		])
-		AC_CHECK_LIB([dnet], [main], [LDFLAGS+=-ldnet ], [
-			AC_MSG_ERROR(["Cannot find -ldnet."])
 		])
 	;;
 esac
@@ -66,9 +60,6 @@ AC_CONFIG_FILES([Makefile src/Makefile])
 # Checks for headers
 AC_CHECK_HEADERS([pcap.h], [AC_DEFINE([HAVE_PCAP_H], [1], [Define to 1 if you have <pcap.h>.])], [
 	AC_MSG_ERROR(["Cannot find find pcap.h"])
-])
-AC_CHECK_HEADERS([dnet.h], [AC_DEFINE([HAVE_DNET_H], [1], [Define to 1 if you have <dnet.h>.])], [
-	AC_MSG_ERROR(["Cannot find find dnet.h."])
 ])
 
 # Checks for library functions.

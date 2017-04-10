@@ -701,9 +701,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSnapshot
  */  
 JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_Jxnet_PcapStrError
   (JNIEnv *env, jclass jcls, jint jerror) {
-
-	if (!CheckArgument(env, (jerror < 0), NULL)) return NULL;
-
   	return (*env)->NewStringUTF(env, pcap_strerror((int) jerror));
   }
 

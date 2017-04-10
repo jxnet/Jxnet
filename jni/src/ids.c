@@ -271,63 +271,6 @@ void SetPcapIDs(JNIEnv *env) {
 	}
 }
 
-jclass ArpClass = NULL;
-jfieldID ArpAddressFID = NULL;
-
-void SetArpIDs(JNIEnv *env) {
-
-  	ArpClass = (*env)->FindClass(env, "com/ardikars/jxnet/Arp");
-
-  	if(ArpClass == NULL) {
-		ThrowNew(env, CLASS_NOT_FOUND_EXCEPTION, "Unable to initialize class com.ardikars.jxnet.Arp");
-		return;
-	}
-
-	ArpAddressFID = (*env)->GetFieldID(env, ArpClass, "address", "J");
-	
-	if (ArpAddressFID == NULL) {
-		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field Arp.address:long");
-		return;
-	}
-}
-
-jclass ArpEntryClass = NULL;
-jfieldID ArpEntryArpPaFID = NULL;
-jfieldID ArpEntryArpHaFID = NULL;
-jmethodID ArpEntryInitializeMID = NULL;
-
-void SetArpEntryIDs(JNIEnv *env) {
-
-    ArpEntryClass = (*env)->FindClass(env, "com/ardikars/jxnet/ArpEntry");
-
-	if(ArpEntryClass == NULL) {
-		ThrowNew(env, CLASS_NOT_FOUND_EXCEPTION, "Unable to initialize class com.ardikars.jxnet.ArpEntry");
-		return;
-	}
-
-	ArpEntryArpPaFID = (*env)->GetFieldID(env, ArpEntryClass, "arp_pa", "Lcom/ardikars/jxnet/Addr;");
-
-	if(ArpEntryArpPaFID == NULL) {
-		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field ArpEntry.arp_pa:Addr");
-		return;
-	}
-
-	ArpEntryArpHaFID = (*env)->GetFieldID(env, ArpEntryClass, "arp_ha", "Lcom/ardikars/jxnet/Addr;");
-
-	if(ArpEntryArpHaFID == NULL) {
-		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field ArpEntry.arp_ha:Addr");
-		return;
-	}
-
-    ArpEntryInitializeMID = (*env)->GetStaticMethodID(env, ArpEntryClass, "initialize", "(Lcom/ardikars/jxnet/Addr;Lcom/ardikars/jxnet/Addr;)Lcom/ardikars/jxnet/ArpEntry;");
-
-    if(ArpEntryInitializeMID == NULL) {
-		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize static method ArpEntry.initialize(Addr,Addr)");
-		return;
-	}
-}
-
-
 jclass FileClass = NULL;
 jfieldID FileAddressFID = NULL;
 

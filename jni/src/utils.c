@@ -17,7 +17,6 @@
 
 #include <jni.h>
 #include <pcap.h>
-#include <dnet.h>
 
 #include "ids.h"
 #include "utils.h"
@@ -114,13 +113,6 @@ jobject SetPcap(JNIEnv *env, pcap_t *pcap) {
   	return obj;
 }
 
-jobject SetArp(JNIEnv *env, arp_t *arp) {
-	SetArpIDs(env);
-	jobject obj = NewObject(env, ArpClass, "<init>", "()V");
-  	(*env)->SetLongField(env, obj, ArpAddressFID, PointerToJlong(arp));
-  	return obj;
-}
-
 pcap_t *GetPcap(JNIEnv *env, jobject jpcap) {
 	if(jpcap == NULL) {
 		ThrowNew(env, NULL_PTR_EXCEPTION, NULL);
@@ -132,19 +124,6 @@ pcap_t *GetPcap(JNIEnv *env, jobject jpcap) {
 		ThrowNew(env, PCAP_CLOSE_EXCEPTION, NULL);
 	}
 	return JlongToPointer(pcap);
-}
-
-arp_t *GetArp(JNIEnv *env, jobject jarp) {
-	if(jarp == NULL) {
-		ThrowNew(env, NULL_PTR_EXCEPTION, NULL);
-		return NULL;
-	}
-	SetArpIDs(env);
-	jlong arp = 0;
-	if ((arp = (*env)->GetLongField(env, jarp, ArpAddressFID)) == 0) {
-		ThrowNew(env, ARP_CLOSE_EXCEPTION, NULL);
-	}
-	return JlongToPointer(arp);
 }
 
 jobject SetFile(JNIEnv *env, FILE *file) {
@@ -226,38 +205,3 @@ void pcap_callback(u_char *user, const struct pcap_pkthdr *pkt_header, const u_c
 	(*env)->DeleteLocalRef(env, pkt_hdr);
 }
 
-int arp_callback(const struct arp_entry *entry, void *arg) {
-	jbyteArray jb = NULL;
-	arp_user_data_t *user_data = (arp_user_data_t *) arg;
-	JNIEnv *env = user_data->env;
-
-	jb = (*env)->NewByteArray(env, 4);
-	(*env)->SetByteArrayRegion(env, jb, 0, 4, (jbyte *) &entry->arp_pa.addr_data8);
-	jobject addr_pa = (*env)->CallStaticObjectMethod(env, AddrClass, AddrInitializeMID,
-			 entry->arp_pa.addr_type, entry->arp_pa.addr_bits, jb);
-	if (addr_pa == NULL) {
-		return -1;
-	}
-	jb = (*env)->NewByteArray(env, 6);
-	(*env)->SetByteArrayRegion(env, jb, 0, 6, (jbyte *) &entry->arp_ha.addr_data8);
-	jobject addr_ha = (*env)->CallStaticObjectMethod(env, AddrClass, AddrInitializeMID,
-			 entry->arp_ha.addr_type, entry->arp_ha.addr_bits, jb);
-	if (addr_ha == NULL) {
-		return -1;
-	}
-	jobject arp_entry = (*env)->CallStaticObjectMethod(env, ArpEntryClass, ArpEntryInitializeMID,
-			addr_pa, addr_ha);
-	if (arp_entry == NULL) {
-		return -1;
-	}
-	int res = (*env)->CallNonvirtualIntMethod(env,
-			user_data->callback,
-			user_data->ArpHandlerClass,
-			user_data->ArpHandlerNextArpEntryMID,
-			arp_entry,
-			user_data->user);
-	(*env)->DeleteLocalRef(env, addr_pa);
-	(*env)->DeleteLocalRef(env, addr_ha);
-	(*env)->DeleteLocalRef(env, arp_entry);
-	return res;
-}

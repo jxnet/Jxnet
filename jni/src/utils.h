@@ -17,7 +17,6 @@
 
 #include <jni.h>
 #include <pcap.h>
-#include <dnet.h>
 #include <stdint.h>
 
 #define CLASS_NOT_FOUND_EXCEPTION "java/lang/ClassNotFoundException"
@@ -68,13 +67,9 @@ jobject NewSockAddr(JNIEnv *env, struct sockaddr *addr);
 
 jobject SetPcap(JNIEnv *env, pcap_t *pcap);
 
-jobject SetArp(JNIEnv *env, arp_t *arp);
-
 jobject SetFile(JNIEnv *env, FILE *file);
 
 pcap_t *GetPcap(JNIEnv *env, jobject jpcap);
-
-arp_t *GetArp(JNIEnv *env, jobject jarp);
 
 FILE *GetFile(JNIEnv *env, jobject jf);
 
@@ -88,4 +83,3 @@ struct bpf_program *GetBpfProgram(JNIEnv *env, jobject jbpf_program);
 
 void pcap_callback(u_char *user, const struct pcap_pkthdr *pkt_header, const u_char *pkt_data);
 
-int arp_callback(const struct arp_entry *entry, void *arg);
