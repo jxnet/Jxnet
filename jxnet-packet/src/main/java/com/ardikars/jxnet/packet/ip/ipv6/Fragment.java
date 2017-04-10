@@ -15,14 +15,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet.packet.ip;
+package com.ardikars.jxnet.packet.ip.ipv6;
+
+import com.ardikars.jxnet.packet.Packet;
 
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class IPv6Extension {
+public class Fragment extends IPv6ExtensionHeader {
 
-    
+    @Override
+    public IPv6ExtensionHeader getNextHeader() {
+        return null;
+    }
+
+    @Override
+    public IPv6ExtensionHeader setNextHeader(IPv6ExtensionHeader nextHeader) {
+        return null;
+    }
+
+    @Override
+    public Packet setPacket(Packet packet) {
+        return null;
+    }
+
+    @Override
+    public Packet getPacket() {
+        return null;
+    }
+
+    @Override
+    public byte[] toBytes() {
+        return new byte[0];
+    }
+
+    @Override
+    public Packet build() {
+        return null;
+    }
 
 }
