@@ -16,7 +16,8 @@ import java.nio.ByteBuffer;
 		PcapLookupDev.class, PcapLookupNet.class, Generic.class, Error.class,
 		PcapNextEx.class, PcapOpenDead.class, PcapOpenLive.class,
 		PcapOpenOffline.class, PcapBreakLoop.class, Blocking.class,
-		PcapDatalink.class, PcapDispatch.class, Preconditions.class })
+		PcapDatalink.class, PcapDispatch.class, Preconditions.class,
+		MacAddr.class })
 public class AllTests {
 
 	private static StringBuilder errbuf = new StringBuilder();
