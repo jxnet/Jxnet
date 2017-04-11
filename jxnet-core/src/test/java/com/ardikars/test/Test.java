@@ -18,6 +18,6 @@ import com.ardikars.jxnet.util.AddrUtils;
 public class Test {
 
     public static void main(String[] args) {
-        System.out.println(MacAddress.fromNicName("wlan1"));
+        System.out.println(MacAddress.fromNicName(null));
     }
 }

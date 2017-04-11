@@ -13,6 +13,7 @@ extern "C" {
 #include "../include/jxnet/com_ardikars_jxnet_MacAddress.h"
 #include "ids.h"
 #include "utils.h"
+#include "preconditions.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -46,6 +47,8 @@ extern "C" {
  */
 JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_MacAddress_fromNicName
   (JNIEnv *env, jclass jclazz, jstring jnic_name) {
+
+	if (CheckNotNull(env, jnic_name, NULL) == NULL) return NULL;
 
 	jbyteArray hw_addr;
 	const char *buf = (*env)->GetStringUTFChars(env, jnic_name, 0);
