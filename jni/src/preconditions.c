@@ -70,7 +70,7 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxnet_util_Preconditions_CheckArgument_
   (JNIEnv *env, jclass jclazz, jboolean jexpression, jstring jerror_message) {
 	const char *error_message = (*env)->GetStringUTFChars(env, jerror_message, 0);
 	CheckArgument(env, jexpression, error_message);
-  	(*env)->ReleaseStringUTFChars(env, jerror_message, error_message);  
+  	(*env)->ReleaseStringUTFChars(env, jerror_message, error_message);
   }
 
 /*
@@ -92,7 +92,7 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxnet_util_Preconditions_CheckState__ZL
   (JNIEnv *env, jclass jclazz, jboolean jexpression, jstring jerror_message) {
 	const char *error_message = (*env)->GetStringUTFChars(env, jerror_message, 0);
 	CheckState(env, jexpression, error_message);
-	(*env)->ReleaseStringUTFChars(env, jerror_message, error_message);  
+	(*env)->ReleaseStringUTFChars(env, jerror_message, error_message);
   }
 
 /*
@@ -103,7 +103,7 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxnet_util_Preconditions_CheckState__ZL
 JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_util_Preconditions_CheckNotNull__Ljava_lang_Object_2
   (JNIEnv *env, jclass jclazz, jobject jobj) {
 	jobj = CheckNotNull(env, jobj, NULL);
-	return jobj;    
+	return jobj;
   }
 
 /*
@@ -116,7 +116,7 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_util_Preconditions_CheckNotNul
 	const char *error_message = (*env)->GetStringUTFChars(env, jerror_message, 0);
 	jobj = CheckNotNull(env, jobj, error_message);
 	(*env)->ReleaseStringUTFChars(env, jerror_message, error_message);
-	return jobj;  
+	return jobj;
   }
 
 

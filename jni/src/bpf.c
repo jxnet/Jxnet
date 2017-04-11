@@ -36,19 +36,19 @@ extern "C" {
  */
 JNIEXPORT void JNICALL Java_com_ardikars_jxnet_BpfProgram_initBpfProgram
   (JNIEnv *env, jobject jobj) {
-        
+
 		if (CheckNotNull(env, jobj, "") == NULL) return;
-		
+
         struct bpf_program *fp = (struct bpf_program *) malloc(sizeof(struct bpf_program));
-        
+
         if(fp == NULL) {
                 ThrowNew(env, BPF_PROGRAM_CLOSE_EXCEPTION, "BpfProgram out of memory");
                 return;
         }
-        
+
         fp->bf_insns = NULL;
         fp->bf_len = 0;
-        
+
         SetBpfProgram(env, jobj, fp);
   }
 

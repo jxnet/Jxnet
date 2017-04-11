@@ -33,7 +33,7 @@
 #endif
 
 void swap_order_uint32(uint32_t *value) {
-	*value = ((*value << 8) & 0xFF00FF00 ) | ((*value >> 8) & 0xFF00FF); 
+	*value = ((*value << 8) & 0xFF00FF00 ) | ((*value >> 8) & 0xFF00FF);
 	*value = (*value << 16) | (*value >> 16);
 }
 
@@ -46,9 +46,9 @@ jlong PointerToJlong(void *pointer) {
 #if defined(WIN32)
 	address = (UINT_PTR) pointer;
 #else
-    address = (intptr_t) pointer;
+	address = (intptr_t) pointer;
 #endif
-    return address;
+	return address;
 }
 
 void *JlongToPointer(jlong address) {
@@ -56,9 +56,9 @@ void *JlongToPointer(jlong address) {
 #if defined(WIN32)
 	pointer = (void *) ((UINT_PTR) address);
 #else
-    pointer = (void *) ((intptr_t) address);  
+	pointer = (void *) ((intptr_t) address);
 #endif
-    return pointer;
+	return pointer;
 }
 
 
@@ -76,7 +76,7 @@ jobject NewObject(JNIEnv *env, jclass class, const char *name, const char *signa
 }
 
 jbyteArray NewByteAddr(JNIEnv *env, struct sockaddr *addr) {
-	if(addr==NULL) { 
+	if(addr==NULL) {
 		return NULL;
 	}
 	jbyteArray address = NULL;
@@ -151,7 +151,6 @@ jobject SetPcapDumper(JNIEnv *env, pcap_dumper_t *pcap_dumper) {
 	jobject obj = NewObject(env, PcapDumperClass, "<init>", "()V");
   	(*env)->SetLongField(env, obj, PcapDumperAddressFID, PointerToJlong(pcap_dumper));
   	return obj;
-	
 }
 
 pcap_dumper_t *GetPcapDumper(JNIEnv *env, jobject jpcap_dumper) {
@@ -184,7 +183,6 @@ struct bpf_program *GetBpfProgram(JNIEnv *env, jobject jbpf_program) {
 		ThrowNew(env, BPF_PROGRAM_CLOSE_EXCEPTION, NULL);
 	}
 	return JlongToPointer(bpf_program);
-	
 }
 
 void pcap_callback(u_char *user, const struct pcap_pkthdr *pkt_header, const u_char *pkt_data) {
@@ -204,4 +202,3 @@ void pcap_callback(u_char *user, const struct pcap_pkthdr *pkt_header, const u_c
 			(*env)->NewDirectByteBuffer(env, (void *) pkt_data, (jint) pkt_header->caplen));
 	(*env)->DeleteLocalRef(env, pkt_hdr);
 }
-

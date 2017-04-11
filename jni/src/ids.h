@@ -31,7 +31,7 @@ extern jmethodID AddrInitializeMID;
 extern jmethodID AddrGetStringAddressMID;
 
 void SetAddrIDs(JNIEnv *env);
- 
+
 extern jclass ListClass;
 extern jmethodID ListAddMID;
 
