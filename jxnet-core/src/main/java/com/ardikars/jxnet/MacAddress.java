@@ -194,5 +194,13 @@ public final class MacAddress {
 		}
 		return sb.toString();
 	}
-	
+
+	static {
+		try {
+			Class.forName("com.ardikars.jxnet.Jxnet");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
 }

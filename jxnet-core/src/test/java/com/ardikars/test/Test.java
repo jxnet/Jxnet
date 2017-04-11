@@ -1,7 +1,6 @@
 package com.ardikars.test;
 
 import com.ardikars.jxnet.MacAddress;
-import com.ardikars.jxnet.util.AddrUtils;
 
 /**
  * Jxnet Untested function
@@ -18,6 +17,6 @@ import com.ardikars.jxnet.util.AddrUtils;
 public class Test {
 
     public static void main(String[] args) {
-        System.out.println(MacAddress.fromNicName(null));
+        System.out.println(MacAddress.fromNicName("eth0"));
     }
 }
