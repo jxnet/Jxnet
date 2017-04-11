@@ -54,13 +54,13 @@ public class PacketHelper {
         return parsePacket(datalinkType, FormatUtils.toBytes(buffer));
     }
 
-    public static int nextEx(Pcap pcap, PcapPktHdr pktHdr, Map<Class, Packet> packets) {
+    public static int nextEx(Pcap pcap, PcapPktHdr pktHdr, HashMap<Class, Packet> packets) {
         packets.clear();
         DataLinkType datalinkType = DataLinkType.valueOf((short)PcapDataLink(pcap));
         ByteBuffer buffer = ByteBuffer.allocateDirect(3600);
         int ret = PcapNextEx(pcap, pktHdr, buffer);
         if (pktHdr == null || buffer == null) return -1;
-        Map pkts = parsePacket(datalinkType, FormatUtils.toBytes(buffer));
+        Map<Class, Packet> pkts = parsePacket(datalinkType, FormatUtils.toBytes(buffer));
         packets.putAll(pkts);
         return ret;
     }
