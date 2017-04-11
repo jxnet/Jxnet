@@ -132,16 +132,16 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_MacAddress_fromNicName
 	mib[3] = AF_LINK;
 	mib[4] = NET_RT_IFLIST;
 	if((mib[5] = if_nametoindex(buf)) == 0) {
-		// error
+		return NULL;
 	}
 	if(sysctl(mib, 6, NULL, &len, NULL, 0) < 0) {
-		//error
+		return NULL;
 	}
 	if((mac_buf = malloc(len)) == NULL) {
-		//error
+		return NULL;
 	}
 	if(sysctl(mib, 6, mac_buf, &len, NULL, 0) < 0) {
-		//error
+		return NULL;
 	}
 	ifm = (struct if_msghdr *) mac_buf;
 	sdl = (struct sockaddr_dl *) (ifm + 1);
