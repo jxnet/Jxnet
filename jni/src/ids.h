@@ -109,17 +109,12 @@ extern jmethodID Inet4AddressUpdateMID;
 
 void SetInet4AddressIDs(JNIEnv *env);
 
-extern jclass WLanClass;
-extern jfieldID WLanDeviceFID;
-
-void SetWLanIDs(JNIEnv *env, jobject jobj);
-
-extern jclass WLanOperationModeClass;
-extern jmethodID WLanOperationModeInitMID;
-
-void SetWLanDeviceIDs(JNIEnv *env);
-
 extern jclass PcapDirectionClass;
 extern jmethodID PcapDirectionNameMID;
 
 void SetPcapDirectionIDs(JNIEnv *env);
+
+extern jclass MacAddressClass;
+extern jmethodID MacAddressValueOfMID;
+
+void SetMacAddressIDs(JNIEnv *env);

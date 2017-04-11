@@ -18,6 +18,7 @@ task generateJNIHeaders(type: Exec, dependsOn: classes) {
 			'com.ardikars.jxnet.Jxnet',
 			'com.ardikars.jxnet.util.AddrUtils',
 			'com.ardikars.jxnet.util.Preconditions',
-			'com.ardikars.jxnet.BpfProgram'
+			'com.ardikars.jxnet.BpfProgram',
+			'com.ardikars.jxnet.MacAddress'
 }
 

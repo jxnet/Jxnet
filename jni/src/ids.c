@@ -494,6 +494,26 @@ void SetPcapDirectionIDs(JNIEnv *env) {
 	}
 }
 
+jclass MacAddressClass = NULL;
+jmethodID MacAddressValueOfMID = NULL;
+
+void SetMacAddressIDs(JNIEnv *env) {
+
+	MacAddressClass = (*env)->FindClass(env, "com/ardikars/jxnet/MacAddress");
+
+	if (MacAddressClass == NULL) {
+		ThrowNew(env, CLASS_NOT_FOUND_EXCEPTION, "Unable to initialize class com.ardikars.jxnet.MacAddress");
+		return;
+	}
+
+	MacAddressValueOfMID = (*env)->GetStaticMethodID(env, MacAddressClass, "valueOf", "([B)Lcom/ardikars/jxnet/MacAddress;");
+
+	if(MacAddressValueOfMID == NULL) {
+		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method MacAddress.valueOf(byte[])");
+		return;
+	}
+}
+
 jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 
 	JNIEnv* env = NULL;

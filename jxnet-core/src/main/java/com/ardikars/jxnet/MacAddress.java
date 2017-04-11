@@ -56,6 +56,13 @@ public final class MacAddress {
 	}
 
 	/**
+	 * Create MacAddress object from NIC name.
+	 * @param nicName NIC name.
+	 * @return MacAddress object.
+	 */
+	public static native MacAddress fromNicName(String nicName);
+
+	/**
 	 * Create MacAddress object.
 	 * @param address string MAC Address.
 	 * @return MacAddress object.
