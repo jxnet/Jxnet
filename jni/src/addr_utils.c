@@ -28,7 +28,7 @@ extern "C" {
 
 #if defined(__linux__) || defined(__FreeBSD__)
 #include <sys/types.h>
-#include <sys/socket.h> 
+#include <sys/socket.h>
 #include <sys/ioctl.h>
 #include <net/if.h>
 #include <netinet/in.h>
@@ -53,10 +53,10 @@ extern "C" {
 
 JNIEXPORT jbyteArray JNICALL Java_com_ardikars_jxnet_util_AddrUtils_GetMACAddress
   (JNIEnv *env, jclass jcls, jstring jdev_name) {
-	  
+
 	jbyteArray hw_addr;
 	const char *buf = (*env)->GetStringUTFChars(env, jdev_name, 0);
-	
+
 #if defined(WIN32) || defined(__CYGWIN__)
 	PIP_ADAPTER_INFO pAdapterInfo;
 	PIP_ADAPTER_INFO pAdapter = NULL;
@@ -100,7 +100,7 @@ JNIEXPORT jbyteArray JNICALL Java_com_ardikars_jxnet_util_AddrUtils_GetMACAddres
 	}
 	if (pAdapterInfo)
 		free(pAdapterInfo);
-		
+
 #elif defined(__linux__)
 
 	char mac_addr[6];
@@ -121,7 +121,7 @@ JNIEXPORT jbyteArray JNICALL Java_com_ardikars_jxnet_util_AddrUtils_GetMACAddres
 	hw_addr = (*env)->NewByteArray(env, (jsize) 6);
 	(*env)->SetByteArrayRegion(env, hw_addr,0 , 6, (jbyte *) mac_addr);
 	close(sd);
-	
+
 #elif defined(__FreeBSD__)
 
 	int			mib[6];
@@ -153,11 +153,11 @@ JNIEXPORT jbyteArray JNICALL Java_com_ardikars_jxnet_util_AddrUtils_GetMACAddres
 	ptr = (unsigned char *) LLADDR(sdl);
 	hw_addr = (*env)->NewByteArray(env, (jsize) 6);
 	(*env)->SetByteArrayRegion(env, hw_addr, 0, 6, (jbyte *) ptr);
-	
+
 #endif
 
 	(*env)->ReleaseStringUTFChars(env, jdev_name, buf);
-	
+
   	return hw_addr;
   }
 
@@ -235,43 +235,43 @@ JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_util_AddrUtils_GetGatewayAddre
 	struct in_addr route_dst;
 	struct in_addr route_gw;
 	int nlfd;
-	
+
 	if ((nlfd = socket(AF_NETLINK, SOCK_RAW, NETLINK_ROUTE)) < 0) {
 		(*env)->ReleaseStringUTFChars(env, jdev_name, buf);
 		return NULL;
 	}
-	
+
 	char msg_buf[8192];
 	memset(msg_buf, 0, 8192);
-	
+
 	struct nlmsghdr *nl_msg = NULL;
 	struct rtmsg *rt_msg = NULL;
 	struct rtattr *rt_attr = NULL;
-	
+
 	nl_msg = (struct nlmsghdr *) msg_buf;
 	rt_msg = (struct rtmsg *) NLMSG_DATA(nl_msg);
-	    
-    int msg_seq = 0, len = 0, rt_len = 0;
-    int pid = getpid();
-    
-    nl_msg->nlmsg_len = NLMSG_LENGTH(sizeof(struct rtmsg));  // Length of message.
-    nl_msg->nlmsg_type = RTM_GETROUTE; // Get the routes from kernel routing table.
+
+	int msg_seq = 0, len = 0, rt_len = 0;
+	int pid = getpid();
+
+	nl_msg->nlmsg_len = NLMSG_LENGTH(sizeof(struct rtmsg));  // Length of message.
+	nl_msg->nlmsg_type = RTM_GETROUTE; // Get the routes from kernel routing table.
 	nl_msg->nlmsg_flags = NLM_F_DUMP | NLM_F_REQUEST;    // The message is a request for dump.
-    nl_msg->nlmsg_seq = msg_seq++;    // Sequence of the message packet.
-    nl_msg->nlmsg_pid = pid;    // PID of process sending the request.
-	
+	nl_msg->nlmsg_seq = msg_seq++;    // Sequence of the message packet.
+	nl_msg->nlmsg_pid = pid;    // PID of process sending the request.
+
 	if (send(nlfd, nl_msg, nl_msg->nlmsg_len, 0) < 0) {
 		(*env)->ReleaseStringUTFChars(env, jdev_name, buf);
-        return NULL;
-    }
+		return NULL;
+	}
 
 	if ((len = read_nl_socket(nlfd, msg_buf, msg_seq, getpid())) < 0) {
 		(*env)->ReleaseStringUTFChars(env, jdev_name, buf);
 		return NULL;
 	}
-	
+
 	char if_name[32];
-	
+
 	for (; NLMSG_OK(nl_msg, len); nl_msg = NLMSG_NEXT(nl_msg, len)) {
 		rt_attr = NULL;
 		rt_msg = NULL;
@@ -282,8 +282,8 @@ JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_util_AddrUtils_GetGatewayAddre
 			continue;
 		}
 		memset(if_name, 0, 32);
-		route_gw.s_addr = -1;
-		route_dst.s_addr = -1;
+		route_gw.s_addr = 0;
+		route_dst.s_addr = 0;
 		for (; RTA_OK(rt_attr, rt_len); rt_attr = RTA_NEXT(rt_attr, rt_len)) {
 			switch (rt_attr->rta_type) {
 				case RTA_OIF:
@@ -293,20 +293,19 @@ JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_util_AddrUtils_GetGatewayAddre
 					route_gw.s_addr = *(u_int *) RTA_DATA(rt_attr);
 					break;
 				case RTA_DST:
-					route_dst.s_addr= *(u_int *) RTA_DATA(rt_attr);
-				break;
+					route_dst.s_addr = *(u_int *) RTA_DATA(rt_attr);
+					break;
 			}
 		}
-		if (strcmp(buf, if_name) == 0 && route_dst.s_addr == 0) {
+		if (strcmp(buf, if_name) == 0 && route_dst.s_addr == 0 && route_gw.s_addr != 0) {
 			break;
 		} else {
-			route_gw.s_addr = -1;
-			route_dst.s_addr = -1;
+			route_gw.s_addr = 0;
+			route_dst.s_addr = 0;
 		}
 	}
 	close(nlfd);
 	char gateway[15];
-	if (route_dst.s_addr == 0)
         sprintf(gateway, (char *) inet_ntoa(route_gw));
 	(*env)->ReleaseStringUTFChars(env, jdev_name, buf);
 	return (*env)->NewStringUTF(env, gateway);

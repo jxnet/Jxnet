@@ -105,8 +105,8 @@ public class AllTests {
 	}
 
 	static {
-		Inet4Address addr = new Inet4Address();
-		Inet4Address mask = new Inet4Address();
+		Inet4Address addr = Inet4Address.ZERO;
+		Inet4Address mask = Inet4Address.ZERO;
 		if (PcapLookupNet(deviceName, addr, mask, errbuf) != 0) {
 			System.err.println(errbuf);
 		} else {
