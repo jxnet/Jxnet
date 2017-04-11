@@ -164,111 +164,24 @@ JNIEXPORT jbyteArray JNICALL Java_com_ardikars_jxnet_util_AddrUtils_GetMACAddres
 // Get Gateway Address
 
 #if defined(__linux__)
-#define BUFSIZE 8192
-char gateway[255];
-
-struct route_info {
-	struct in_addr dstAddr;
-	struct in_addr srcAddr;
-	struct in_addr gateWay;
-	char ifName[IF_NAMESIZE];
-};
-
-int readNlSock(int sockFd, char *bufPtr, int seqNum, int pId) {
-	struct nlmsghdr *nlHdr;
-	int readLen = 0, msgLen = 0;
+int read_nl_socket(int fd, char *buf, int msg_seq, int pid) {
+    struct nlmsghdr *nl_msg;
+    int read_len = 0, msg_len = 0;
 	do {
-		/* Recieve response from the kernel */
-		if ((readLen = recv(sockFd, bufPtr, BUFSIZE - msgLen, 0)) < 0) {
-			perror("SOCK READ: ");
-			return -1;
-		}
-		nlHdr = (struct nlmsghdr *) bufPtr;
-		/* Check if the header is valid */
-		if ((NLMSG_OK(nlHdr, readLen) == 0)
-				|| (nlHdr->nlmsg_type == NLMSG_ERROR)) {
-			perror("Error in recieved packet");
-			return -1;
-		}
-		/* Check if the its the last message */
-		if (nlHdr->nlmsg_type == NLMSG_DONE) {
-			break;
-		} else {
-			/* Else move the pointer to buffer appropriately */
-			bufPtr += readLen;
-			msgLen += readLen;
-		}
-		/* Check if its a multi part message */
-		if ((nlHdr->nlmsg_flags & NLM_F_MULTI) == 0) {
-			/* return if its not */
-			break;
-		}
-	} while ((nlHdr->nlmsg_seq != (unsigned) seqNum) || (nlHdr->nlmsg_pid != (unsigned) pId));
-	return msgLen;
-}
-
-/* For printing the routes. */
-void printRoute(struct route_info *rtInfo) {
-	char tempBuf[512];
-	/* Print Destination address */
-	if (rtInfo->dstAddr.s_addr != 0)
-		strcpy(tempBuf,  inet_ntoa(rtInfo->dstAddr));
-	else
-		sprintf(tempBuf, "*.*.*.*\t");
-	fprintf(stdout, "%s\t", tempBuf);
-	/* Print Gateway address */
-	if (rtInfo->gateWay.s_addr != 0)
-		strcpy(tempBuf, (char *) inet_ntoa(rtInfo->gateWay));
-	else
-		sprintf(tempBuf, "*.*.*.*\t");
-	fprintf(stdout, "%s\t", tempBuf);
-	/* Print Interface Name*/
-	fprintf(stdout, "%s\t", rtInfo->ifName);
-	/* Print Source address */
-	if (rtInfo->srcAddr.s_addr != 0)
-		strcpy(tempBuf, inet_ntoa(rtInfo->srcAddr));
-	else
-		sprintf(tempBuf, "*.*.*.*\t");
-	fprintf(stdout, "%s\n", tempBuf);
-}
-
-void printGateway() {
-	printf("%s\n", gateway);
-}
-
-/* For parsing the route info returned */
-void parseRoutes(struct nlmsghdr *nlHdr, struct route_info *rtInfo, const char *buf) {
-	struct rtmsg *rtMsg;
-	struct rtattr *rtAttr;
-	int rtLen;
-	rtMsg = (struct rtmsg *) NLMSG_DATA(nlHdr);
-	/* If the route is not for AF_INET or does not belong to main routing table then return. */
-	if ((rtMsg->rtm_family != AF_INET) || (rtMsg->rtm_table != RT_TABLE_MAIN))
-		return;
-	/* get the rtattr field */
-	rtAttr = (struct rtattr *) RTM_RTA(rtMsg);
-	rtLen = RTM_PAYLOAD(nlHdr);
-	for (; RTA_OK(rtAttr, rtLen); rtAttr = RTA_NEXT(rtAttr, rtLen)) {
-		switch (rtAttr->rta_type) {
-			case RTA_OIF:
-				if_indextoname(*(int *) RTA_DATA(rtAttr), rtInfo->ifName);
-				break;
-			case RTA_GATEWAY:
-				rtInfo->gateWay.s_addr= *(u_int *) RTA_DATA(rtAttr);
-				break;
-			case RTA_PREFSRC:
-				rtInfo->srcAddr.s_addr= *(u_int *) RTA_DATA(rtAttr);
-				break;
-			case RTA_DST:
-				rtInfo->dstAddr .s_addr= *(u_int *) RTA_DATA(rtAttr);
-				break;
-		}
-	}
-	//printf("%s\n", inet_ntoa(rtInfo->dstAddr));
-	if (rtInfo->dstAddr.s_addr == 0 && strcmp(rtInfo->ifName, buf) == 0)
-		sprintf(gateway, "%s", (char *) inet_ntoa(rtInfo->gateWay));
-	//printRoute(rtInfo);
-	return;
+        if ((read_len = recv(fd, buf, 8192 - msg_len, 0)) < 0) return -1;
+        nl_msg = (struct nlmsghdr *) buf;
+        if ((NLMSG_OK(nl_msg, read_len) == 0) || (nl_msg->nlmsg_type == NLMSG_ERROR)) return -1;
+        if (nl_msg->nlmsg_type == NLMSG_DONE) {
+            break;
+        } else {
+            buf += read_len;
+            msg_len += read_len;
+        }
+        if ((nl_msg->nlmsg_flags & NLM_F_MULTI) == 0) {
+            break;
+        }
+    } while ((nl_msg->nlmsg_seq != msg_seq) || (nl_msg->nlmsg_pid != pid));
+    return msg_len;
 }
 #endif
 
@@ -318,44 +231,83 @@ JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_util_AddrUtils_GetGatewayAddre
 	if (pAdapterInfo)
 		free(pAdapterInfo);
 #elif defined(__linux__)
-	struct nlmsghdr *nlMsg = NULL;
-	struct route_info *rtInfo = NULL;
-	char msgBuf[BUFSIZE];
-	int sock, len, msgSeq = 0;
+
+	struct in_addr route_dst;
+	struct in_addr route_gw;
+	int nlfd;
 	
-	/* Create Socket */
-	if ((sock = socket(PF_NETLINK, SOCK_DGRAM, NETLINK_ROUTE)) < 0)
-		perror("Socket Creation: ");
-	memset(msgBuf, 0, BUFSIZE);
-	/* point the header and the msg structure pointers into the buffer */
-	nlMsg = (struct nlmsghdr *) msgBuf;
-	/* Fill in the nlmsg header*/
-	nlMsg->nlmsg_len = NLMSG_LENGTH(sizeof(struct rtmsg));  // Length of message.
-	nlMsg->nlmsg_type = RTM_GETROUTE;   // Get the routes from kernel routing table.
-	nlMsg->nlmsg_flags = NLM_F_DUMP | NLM_F_REQUEST;    // The message is a request for dump.
-	nlMsg->nlmsg_seq = msgSeq++;    // Sequence of the message packet.
-	nlMsg->nlmsg_pid = getpid();    // PID of process sending the request.
-	/* Send the request */
-	if (send(sock, nlMsg, nlMsg->nlmsg_len, 0) < 0) {
+	if ((nlfd = socket(AF_NETLINK, SOCK_RAW, NETLINK_ROUTE)) < 0) {
 		(*env)->ReleaseStringUTFChars(env, jdev_name, buf);
-		printf("Write To Socket Failed...\n");
 		return NULL;
 	}
-	/* Read the response */
-	if ((len = readNlSock(sock, msgBuf, msgSeq, getpid())) < 0) {
+	
+	char msg_buf[8192];
+	memset(msg_buf, 0, 8192);
+	
+	struct nlmsghdr *nl_msg = NULL;
+	struct rtmsg *rt_msg = NULL;
+	struct rtattr *rt_attr = NULL;
+	
+	nl_msg = (struct nlmsghdr *) msg_buf;
+	rt_msg = (struct rtmsg *) NLMSG_DATA(nl_msg);
+	    
+    int msg_seq = 0, len = 0, rt_len = 0;
+    int pid = getpid();
+    
+    nl_msg->nlmsg_len = NLMSG_LENGTH(sizeof(struct rtmsg));  // Length of message.
+    nl_msg->nlmsg_type = RTM_GETROUTE; // Get the routes from kernel routing table.
+	nl_msg->nlmsg_flags = NLM_F_DUMP | NLM_F_REQUEST;    // The message is a request for dump.
+    nl_msg->nlmsg_seq = msg_seq++;    // Sequence of the message packet.
+    nl_msg->nlmsg_pid = pid;    // PID of process sending the request.
+	
+	if (send(nlfd, nl_msg, nl_msg->nlmsg_len, 0) < 0) {
 		(*env)->ReleaseStringUTFChars(env, jdev_name, buf);
-		printf("Read From Socket Failed...\n");
-	    return NULL;
+        return NULL;
+    }
+
+	if ((len = read_nl_socket(nlfd, msg_buf, msg_seq, getpid())) < 0) {
+		(*env)->ReleaseStringUTFChars(env, jdev_name, buf);
+		return NULL;
 	}
-	/* Parse and print the response */
-	rtInfo = (struct route_info *) malloc(sizeof(struct route_info));
-	//fprintf(stdout, "Destination\tGateway\tInterface\tSource\n");
-	for (; NLMSG_OK(nlMsg, len); nlMsg = NLMSG_NEXT(nlMsg, len)) {
-		memset(rtInfo, 0, sizeof(struct route_info));
-		parseRoutes(nlMsg, rtInfo, buf);
+	
+	char if_name[32];
+	
+	for (; NLMSG_OK(nl_msg, len); nl_msg = NLMSG_NEXT(nl_msg, len)) {
+		rt_attr = NULL;
+		rt_msg = NULL;
+		rt_msg = (struct rtmsg *) NLMSG_DATA(nl_msg);
+		rt_attr = (struct rtattr *) RTM_RTA(rt_msg);
+		rt_len = RTM_PAYLOAD(nl_msg);
+		if ((rt_msg->rtm_family != AF_INET) || (rt_msg->rtm_table != RT_TABLE_MAIN)) {
+			continue;
+		}
+		memset(if_name, 0, 32);
+		route_gw.s_addr = -1;
+		route_dst.s_addr = -1;
+		for (; RTA_OK(rt_attr, rt_len); rt_attr = RTA_NEXT(rt_attr, rt_len)) {
+			switch (rt_attr->rta_type) {
+				case RTA_OIF:
+					if_indextoname(*(int *) RTA_DATA(rt_attr), if_name);
+					break;
+				case RTA_GATEWAY:
+					route_gw.s_addr = *(u_int *) RTA_DATA(rt_attr);
+					break;
+				case RTA_DST:
+					route_dst.s_addr= *(u_int *) RTA_DATA(rt_attr);
+				break;
+			}
+		}
+		if (strcmp(buf, if_name) == 0 && route_dst.s_addr == 0) {
+			break;
+		} else {
+			route_gw.s_addr = -1;
+			route_dst.s_addr = -1;
+		}
 	}
-	free(rtInfo);
-	close(sock);
+	close(nlfd);
+	char gateway[15];
+	if (route_dst.s_addr == 0)
+        sprintf(gateway, (char *) inet_ntoa(route_gw));
 	(*env)->ReleaseStringUTFChars(env, jdev_name, buf);
 	return (*env)->NewStringUTF(env, gateway);
 #endif
