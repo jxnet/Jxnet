@@ -10,7 +10,8 @@ LOCAL_SRC_FILES := \
 	src/ids.c \
 	src/utils.c \
 	src/addr_utils.c \
-	src/preconditions.c
+	src/preconditions.c \
+	src/mac_address.c
 
 LOCAL_C_INCLUDES := \
 	$(LOCAL_PATH)/libpcap
