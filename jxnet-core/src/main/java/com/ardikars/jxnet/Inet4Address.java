@@ -28,13 +28,15 @@ import java.util.Arrays;
  */
 public final class Inet4Address extends InetAddress {
 
+	public static final Inet4Address ZERO = valueOf(0);
+
 	public static final Inet4Address LOCALHOST = valueOf("127.0.0.1");
 
 	public static final int IPV4_ADDRESS_LENGTH = 4;
 	
 	private byte[] address = new byte[Inet4Address.IPV4_ADDRESS_LENGTH];
 
-	public Inet4Address() {
+	private Inet4Address() {
 
 	}
 

@@ -30,13 +30,20 @@ import java.util.List;
  */
 public final class Inet6Address extends InetAddress {
 
+	public static final Inet6Address ZERO = valueOf(new byte[] {
+			(byte) 0x0, (byte) 0x0, (byte) 0x0, (byte) 0x0,
+			(byte) 0x0, (byte) 0x0, (byte) 0x0, (byte) 0x0,
+			(byte) 0x0, (byte) 0x0, (byte) 0x0, (byte) 0x0,
+			(byte) 0x0, (byte) 0x0, (byte) 0x0, (byte) 0x0,
+	});
+
 	public static final Inet6Address LOCALHOST = valueOf("::1");
 	
 	public static final short IPV6_ADDRESS_LENGTH = 16;
 	
 	private byte[] address = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
 
-	public Inet6Address() {
+	private Inet6Address() {
 	}
 
 	private Inet6Address(byte[] address) {
