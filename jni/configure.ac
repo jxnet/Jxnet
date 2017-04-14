@@ -3,7 +3,7 @@ AC_PREREQ(2.69)
 
 AC_INIT([jxnet], [1.1.0], [contact@ardikars.com])
 AM_INIT_AUTOMAKE
-LT_INIT()
+LT_INIT([win32-dll])
 AC_PROG_LIBTOOL(libtool)
 AC_PROG_RANLIB
 AC_PROG_CC
@@ -40,9 +40,13 @@ fi
 
 case "$host_os" in
 	cygwin*|mingw*)
-		AC_CHECK_LIB([wpcap], [wpcap_lib_version], [LDFLAGS+="-lwpcap "], [
-			AC_MSG_ERROR(["Cannot find -lwpcap."])
-		])
+		AC_CHECK_HEADERS([winsock2.h iphlpapi.h Ws2tcpip.h], [], [],
+		[[
+			#include <winsock2.h>
+			#include <iphlpapi.h>
+			#include <Ws2tcpip.h>
+			LDFLAGS+= " -lwpcap "
+		]])
 		AC_CHECK_LIB([iphlpapi], [main], [LDFLAGS+="-liphlpapi "], [
 			AC_MSG_ERROR(["Cannot find -liphlpapi."])
 		])

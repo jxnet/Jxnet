@@ -44,7 +44,7 @@ extern "C" {
 #include <unistd.h>
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
-#elif defined(WIN32)
+#elif defined(WIN32) || defined(__CYGWIN__)
 #include <winsock2.h>
 #include <iphlpapi.h>
 #endif
