@@ -11,7 +11,7 @@ AC_CONFIG_MACRO_DIR([m4])
 m4_include([m4/ax_jni_include_dir.m4])
 AC_CANONICAL_HOST
 
-CFLAGS="$CFLAGS -Wcpp"
+CFLAGS="$CFLAGS "
 
 AC_MSG_CHECKING([checking JAVA_HOME environment variable])
 if test "x$JAVA_HOME" != x; then
