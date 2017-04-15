@@ -11,7 +11,7 @@ AC_CONFIG_MACRO_DIR([m4])
 m4_include([m4/ax_jni_include_dir.m4])
 AC_CANONICAL_HOST
 
-CFLAGS="$CFLAGS -Wall"
+CFLAGS="$CFLAGS -Wcpp"
 
 AC_MSG_CHECKING([checking JAVA_HOME environment variable])
 if test "x$JAVA_HOME" != x; then
@@ -23,7 +23,7 @@ if test "x$JAVA_HOME" != x; then
 		*freebsd*)
 			CFLAGS="$CFLAGS -I$JAVA_HOME/include -I$JVA_HOME/include/freebsd"
 			;;
-		cygwin*|mingw*)
+		cygwin*|mingw*|msys*)
 			CFLAGS="$CFLAGS -I$JAVA_HOME/include -I$JAVA_HOME/include/win32"
 			;;
 		*)
@@ -39,18 +39,20 @@ else
 fi
 
 case "$host_os" in
-	cygwin*|mingw*)
+	cygwin*|mingw*|msys*)
 		AC_CHECK_HEADERS([winsock2.h iphlpapi.h Ws2tcpip.h], [], [],
 		[[
 			#include <winsock2.h>
 			#include <iphlpapi.h>
 			#include <Ws2tcpip.h>
-			LDFLAGS+= " -lwpcap "
+			
 		]])
+		AC_CHECK_LIB([wpcap], [main], [LDFLAGS+="-lwpcap "], [
+			AC_MSG_ERROR(["Cannot find -lwpcap."])
+		])
 		AC_CHECK_LIB([iphlpapi], [main], [LDFLAGS+="-liphlpapi "], [
 			AC_MSG_ERROR(["Cannot find -liphlpapi."])
 		])
-		AC_CHECK_HEADERS([winsock2.h iphlpapi.h Ws2tcpip.h])
 	;;
 	*)
 		AC_CHECK_LIB([pcap], [pcap_lib_version], [LDFLAGS+="-lpcap "], [

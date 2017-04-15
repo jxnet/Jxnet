@@ -61,23 +61,23 @@ JNIEXPORT jbyteArray JNICALL Java_com_ardikars_jxnet_util_AddrUtils_GetMACAddres
 	PIP_ADAPTER_INFO pAdapterInfo;
 	PIP_ADAPTER_INFO pAdapter = NULL;
 	DWORD dwRetVal = 0;
-	u_long ulOutBufLen = sizeof (IP_ADAPTER_INFO);
-	pAdapterInfo = (IP_ADAPTER_INFO *) malloc(sizeof (IP_ADAPTER_INFO));
+	PULONG ulOutBufLen = (PULONG) sizeof (IP_ADAPTER_INFO);
+	pAdapterInfo = (IP_ADAPTER_INFO *) malloc(sizeof(IP_ADAPTER_INFO));
 	if (pAdapterInfo == NULL) {
 		(*env)->ReleaseStringUTFChars(env, jdev_name, buf);
 		ThrowNew(env, JXNET_EXCEPTION, "Error allocating memory needed to call GetAdaptersinfo");
 		return NULL;
 	}
-	if (GetAdaptersInfo(pAdapterInfo, &ulOutBufLen) == ERROR_BUFFER_OVERFLOW) {
+	if (GetAdaptersInfo(pAdapterInfo, ulOutBufLen) == ERROR_BUFFER_OVERFLOW) {
 		free(pAdapterInfo);
-		pAdapterInfo = (IP_ADAPTER_INFO *) malloc(ulOutBufLen);
+		pAdapterInfo = (IP_ADAPTER_INFO *) malloc(sizeof(ulOutBufLen));
 		if (pAdapterInfo == NULL) {
 			(*env)->ReleaseStringUTFChars(env, jdev_name, buf);
 			ThrowNew(env, JXNET_EXCEPTION, "Error allocating memory needed to call GetAdaptersinfo\n");
 			return NULL;
 		}
 	}
-	if ((dwRetVal = GetAdaptersInfo(pAdapterInfo, &ulOutBufLen)) == NO_ERROR) {
+	if ((dwRetVal = GetAdaptersInfo(pAdapterInfo, ulOutBufLen)) == NO_ERROR) {
 		pAdapter = pAdapterInfo;
 		while (pAdapter) {
 			const char *p1 = strchr(buf, '{');
@@ -192,23 +192,23 @@ JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_util_AddrUtils_GetGatewayAddre
 	PIP_ADAPTER_INFO pAdapterInfo;
 	PIP_ADAPTER_INFO pAdapter = NULL;
 	DWORD dwRetVal = 0;
-	u_long ulOutBufLen = sizeof (IP_ADAPTER_INFO);
+	PULONG ulOutBufLen = (PULONG) sizeof (IP_ADAPTER_INFO);
 	pAdapterInfo = (IP_ADAPTER_INFO *) malloc(sizeof (IP_ADAPTER_INFO));
 	if (pAdapterInfo == NULL) {
 		(*env)->ReleaseStringUTFChars(env, jdev_name, buf);
 		ThrowNew(env, JXNET_EXCEPTION, "Error allocating memory needed to call GetAdaptersinfo");
 		return NULL;
 	}
-	if (GetAdaptersInfo(pAdapterInfo, &ulOutBufLen) == ERROR_BUFFER_OVERFLOW) {
+	if (GetAdaptersInfo(pAdapterInfo, ulOutBufLen) == ERROR_BUFFER_OVERFLOW) {
 		free(pAdapterInfo);
-		pAdapterInfo = (IP_ADAPTER_INFO *) malloc(ulOutBufLen);
+		pAdapterInfo = (IP_ADAPTER_INFO *) malloc(sizeof(ulOutBufLen));
 		if (pAdapterInfo == NULL) {
 			(*env)->ReleaseStringUTFChars(env, jdev_name, buf);
 			ThrowNew(env, JXNET_EXCEPTION, "Error allocating memory needed to call GetAdaptersinfo\n");
 			return NULL;
 		}
 	}
-	if ((dwRetVal = GetAdaptersInfo(pAdapterInfo, &ulOutBufLen)) == NO_ERROR) {
+	if ((dwRetVal = GetAdaptersInfo(pAdapterInfo, ulOutBufLen)) == NO_ERROR) {
 		pAdapter = pAdapterInfo;
 		while (pAdapter) {
 			const char *p1 = strchr(buf, '{');

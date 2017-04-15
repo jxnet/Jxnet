@@ -9,8 +9,8 @@ libjxnet_la_SOURCES = \
 	preconditions.c \
 	bpf.c \
 	jxnet.c \
-	utils \
-	addr_utils \
+	utils.c \
+	addr_utils.c \
 	mac_address.c
 
 libjxnet_la_LDFLAGS = -avoid-version -no-undefined

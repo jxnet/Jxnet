@@ -23,7 +23,7 @@
 
 #include <sys/time.h>
 
-#if defined(WIN32)
+#if defined(WIN32) || defined(__CYGWIN__)
 #include <winsock2.h>
 #include <Ws2tcpip.h>
 #include <iphlpapi.h>
