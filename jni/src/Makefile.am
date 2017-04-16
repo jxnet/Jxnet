@@ -13,4 +13,4 @@ libjxnet_la_SOURCES = \
 	addr_utils.c \
 	mac_address.c
 
-libjxnet_la_LDFLAGS = -avoid-version -no-undefined
+libjxnet_la_LDFLAGS = -avoid-version

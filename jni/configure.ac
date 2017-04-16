@@ -1,9 +1,9 @@
 
 AC_PREREQ(2.68)
 
-AC_INIT([jxnet], [1.1.0], [contact@ardikars.com])
-AM_INIT_AUTOMAKE
-LT_INIT([])
+AC_INIT([jxnet], [1.1.0], [contact@ardikars.com], [jxnet], [http://ardikars.com])
+AM_INIT_AUTOMAKE([no-define])
+LT_INIT([shared static])
 AC_PROG_LIBTOOL(libtool)
 AC_PROG_RANLIB
 AC_PROG_CC
@@ -37,12 +37,15 @@ fi
 AS_CASE([$host_os],
 	[cygwin*|mingw*|msys*], [
 		CFLAGS="$CFLAGS -I../include "
+		LDFLAGS+="--disable-rpath "
 		AS_CASE([$host_cpu],
-			[x86_64], [
+			[amd64|x86_64], [
 				LDFLAGS+="-L../lib/x64 "
 			],
-			[i?86], [
+			[i?86|x86], [
 				LDFLAGS+="-L../lib "
+			], [
+				AC_MSG_ERROR(["Unknown architecture."])
 			]
 		)
 		LDFLAGS+="-lwpcap -liphlpapi "
