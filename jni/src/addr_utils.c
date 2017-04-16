@@ -48,7 +48,7 @@
 JNIEXPORT jbyteArray JNICALL Java_com_ardikars_jxnet_util_AddrUtils_GetMACAddress
   (JNIEnv *env, jclass jcls, jstring jdev_name) {
 
-	jbyteArray hw_addr;
+	jbyteArray hw_addr = NULL;
 	const char *buf = (*env)->GetStringUTFChars(env, jdev_name, 0);
 
 #if defined(WIN32) || defined(__CYGWIN__)

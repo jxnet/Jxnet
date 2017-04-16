@@ -41,7 +41,7 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_MacAddress_fromNicName
 
 	if (CheckNotNull(env, jnic_name, NULL) == NULL) return NULL;
 
-	jbyteArray hw_addr;
+	jbyteArray hw_addr = NULL;
 	const char *buf = (*env)->GetStringUTFChars(env, jnic_name, 0);
 
 #if defined(WIN32) || defined(__CYGWIN__)
