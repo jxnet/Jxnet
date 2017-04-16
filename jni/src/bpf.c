@@ -15,12 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _Included_com_ardikars_jxnet_BpfProgram
-#define _Included_com_ardikars_jxnet_BpfProgram
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <pcap.h>
 #include <stdlib.h>
 
@@ -51,8 +45,4 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxnet_BpfProgram_initBpfProgram
 
         SetBpfProgram(env, jobj, fp);
   }
-
-#ifdef __cplusplus
-}
-#endif
-#endif
+  

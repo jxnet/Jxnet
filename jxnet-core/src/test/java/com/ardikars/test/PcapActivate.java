@@ -5,6 +5,7 @@ import com.ardikars.jxnet.Pcap;
 import com.ardikars.jxnet.PcapDirection;
 import com.ardikars.jxnet.PcapStat;
 import com.ardikars.jxnet.exception.JxnetException;
+import com.ardikars.jxnet.util.Platforms;
 
 import static com.ardikars.jxnet.Jxnet.*;
 import static com.ardikars.jxnet.Jxnet.PcapGetErr;
@@ -39,13 +40,15 @@ public class PcapActivate {
             PcapClose(pcap);
             throw new JxnetException(err);
         }
-        if (PcapSetImmediateMode(pcap, AllTests.immediate) !=0 ) {
-            String err = PcapGetErr(pcap);
-            PcapClose(pcap);
-            throw new JxnetException(err);
+        if (Platforms.isLinux()) {
+            if (PcapSetImmediateMode(pcap, AllTests.immediate) != 0) {
+                String err = PcapGetErr(pcap);
+                PcapClose(pcap);
+                throw new JxnetException(err);
+            }
         }
         if (PcapCanSetRfMon(pcap) == 1) {
-            if (PcapSetRfMon(pcap, 1) != 0) {
+            if (PcapSetRfMon(pcap, 0) != 0) {
                 String err = PcapGetErr(pcap);
                 PcapClose(pcap);
                 throw new JxnetException(err);
@@ -62,10 +65,12 @@ public class PcapActivate {
             PcapClose(pcap);
             throw new JxnetException(err);
         }
-        if (Jxnet.PcapSetDirection(pcap, PcapDirection.PCAP_D_IN) !=0 ) {
-            String err = PcapGetErr(pcap);
-            PcapClose(pcap);
-            throw new JxnetException(err);
+        if (!Platforms.isWindows()) {
+            if (Jxnet.PcapSetDirection(pcap, PcapDirection.PCAP_D_IN) != 0) {
+                String err = PcapGetErr(pcap);
+                PcapClose(pcap);
+                throw new JxnetException(err);
+            }
         }
 
         AllTests.nextPacket(pcap);

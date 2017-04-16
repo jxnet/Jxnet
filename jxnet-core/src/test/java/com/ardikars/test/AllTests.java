@@ -5,6 +5,7 @@ import static com.ardikars.jxnet.Jxnet.*;
 import com.ardikars.jxnet.*;
 import com.ardikars.jxnet.exception.JxnetException;
 import com.ardikars.jxnet.util.AddrUtils;
+import com.ardikars.jxnet.util.Platforms;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -64,10 +65,12 @@ public class AllTests {
 			PcapClose(pcap);
 			throw new JxnetException(err);
 		}
-		if (PcapSetImmediateMode(pcap, immediate) !=0 ) {
-			String err = PcapGetErr(pcap);
-			PcapClose(pcap);
-			throw new JxnetException(err);
+		if (Platforms.isLinux()) {
+			if (PcapSetImmediateMode(pcap, immediate) != 0) {
+				String err = PcapGetErr(pcap);
+				PcapClose(pcap);
+				throw new JxnetException(err);
+			}
 		}
 		if (Jxnet.PcapActivate(pcap) != 0 ) {
 			String err = PcapGetErr(pcap);

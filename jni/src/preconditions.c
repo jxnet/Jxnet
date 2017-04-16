@@ -15,17 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _Included_com_ardikars_jxnet_util_Preconditions
-#define _Included_com_ardikars_jxnet_util_Preconditions
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <jni.h>
 
 #include "utils.h"
 #include <stdio.h>
-
 
 int CheckArgument(JNIEnv *env, int expression, const char *error_message) {
         if (!expression) {
@@ -118,9 +111,4 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_util_Preconditions_CheckNotNul
 	(*env)->ReleaseStringUTFChars(env, jerror_message, error_message);
 	return jobj;
   }
-
-
-#ifdef __cplusplus
-}
-#endif
-#endif
+  

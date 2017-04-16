@@ -15,12 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _Included_com_ardikars_jxnet_util_AddrUtils
-#define _Included_com_ardikars_jxnet_util_AddrUtils
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "../include/jxnet/com_ardikars_jxnet_util_AddrUtils.h"
 
 #include <stdio.h>
@@ -61,23 +55,23 @@ JNIEXPORT jbyteArray JNICALL Java_com_ardikars_jxnet_util_AddrUtils_GetMACAddres
 	PIP_ADAPTER_INFO pAdapterInfo;
 	PIP_ADAPTER_INFO pAdapter = NULL;
 	DWORD dwRetVal = 0;
-	PULONG ulOutBufLen = (PULONG) sizeof (IP_ADAPTER_INFO);
+	ULONG ulOutBufLen = (ULONG) sizeof (IP_ADAPTER_INFO);
 	pAdapterInfo = (IP_ADAPTER_INFO *) malloc(sizeof(IP_ADAPTER_INFO));
 	if (pAdapterInfo == NULL) {
 		(*env)->ReleaseStringUTFChars(env, jdev_name, buf);
 		ThrowNew(env, JXNET_EXCEPTION, "Error allocating memory needed to call GetAdaptersinfo");
 		return NULL;
 	}
-	if (GetAdaptersInfo(pAdapterInfo, ulOutBufLen) == ERROR_BUFFER_OVERFLOW) {
+	if (GetAdaptersInfo(pAdapterInfo, &ulOutBufLen) == ERROR_BUFFER_OVERFLOW) {
 		free(pAdapterInfo);
-		pAdapterInfo = (IP_ADAPTER_INFO *) malloc(sizeof(ulOutBufLen));
+		pAdapterInfo = (IP_ADAPTER_INFO *) malloc(ulOutBufLen);
 		if (pAdapterInfo == NULL) {
 			(*env)->ReleaseStringUTFChars(env, jdev_name, buf);
 			ThrowNew(env, JXNET_EXCEPTION, "Error allocating memory needed to call GetAdaptersinfo\n");
 			return NULL;
 		}
 	}
-	if ((dwRetVal = GetAdaptersInfo(pAdapterInfo, ulOutBufLen)) == NO_ERROR) {
+	if ((dwRetVal = GetAdaptersInfo(pAdapterInfo, &ulOutBufLen)) == NO_ERROR) {
 		pAdapter = pAdapterInfo;
 		while (pAdapter) {
 			const char *p1 = strchr(buf, '{');
@@ -313,8 +307,4 @@ JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_util_AddrUtils_GetGatewayAddre
 	(*env)->ReleaseStringUTFChars(env, jdev_name, buf);
   	return NULL;
   }
-
-#ifdef __cplusplus
-}
-#endif
-#endif
+  
