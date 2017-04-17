@@ -15,11 +15,3 @@ libjxnet_la_SOURCES = \
 
 libjxnet_la_LDFLAGS = -avoid-version
 
-all: $(PACKAGE_NAME)
-	
-$(PACKAGE_NAME):
-	$(CC) -shared $(CFLAGS) *.o -o $@.dll $(LDFLAGS)
-
-clean:
-	rm $(PACKAGE_NAME).dll
-

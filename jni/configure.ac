@@ -1,5 +1,5 @@
 
-AC_PREREQ(2.68)
+AC_PREREQ(2.69)
 
 AC_INIT([jxnet], [1.1.0], [contact@ardikars.com], [jxnet], [http://ardikars.com])
 AM_INIT_AUTOMAKE([])
@@ -70,3 +70,4 @@ AC_CONFIG_FILES([Makefile src/Makefile])
 #AC_TYPE_SIZE_T
 
 AC_OUTPUT
+
