@@ -9,16 +9,16 @@ endif
 
 CC = gcc
 CFLAGS = -Wall 
-LDFLAGS = -Wl,--export-all-symbols -Wl,--add-stdcall-alias -shared -lwpcap -liphlpapi
+LDFLAGS =  
 
 CFLAGS += -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/win32 -I../include 
 
 ifeq ($(PROCESSOR_ARCHITECTURE), AMD64)
-	LDFLAGS += -L../lib/x64
+	LDFLAGS += -L../lib/x64 
 endif
 
 ifeq ($(PROCESSOR_ARCHITECTURE), x86)
-	LDFLAGS += -L../lib/x64
+	LDFLAGS += -L../lib 
 endif
 
 SRC = \
@@ -35,7 +35,8 @@ LIB_NAME = jxnet
 all: $(LIB_NAME)
 
 $(LIB_NAME):
-	$(CC) $(CFLAGS) $(SRC) -o $@.dll $(LDFLAGS)
+	$(CC) -shared $(CFLAGS) $(LDFLAGS) $(SRC) -o $@.dll -lwpcap -liphlpapi
 	
 clean:
 	rm $(LIB_NAME).*
+
