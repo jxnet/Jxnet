@@ -22,5 +22,4 @@ config.sub
 *.so
 *.a
 *.dll
-*.lib
 *~*
