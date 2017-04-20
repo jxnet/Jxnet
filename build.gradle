@@ -1,32 +1,35 @@
 
 allprojects {
+	
+	apply plugin: 'java'
 
-    apply plugin: 'java'
+	group = 'com.ardikars.jxnet'
+	version = '1.1.1-SHAPSHOT'
 
-    group = 'com.ardikars.jxnet'
-    version = '1.1.1-SHAPSHOT'
+	sourceCompatibility = 1.8
+	targetCompatibility = 1.8
 
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+	[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-
-    repositories {
-        mavenCentral()
-    }
+	repositories {
+		mavenCentral()
+	}
 
 }
 
 apply from: 'config.gradle'
 
-subprojects.each { subproject -> evaluationDependsOn(subproject.path) }
+subprojects.each {
+	subproject -> evaluationDependsOn(subproject.path)
+}
+
 jar.dependsOn subprojects.tasks["classes"]
 
 jar {
-    subprojects.each { subproject ->
-        from subproject.sourceSets.main.output.classesDir
-        from subproject.sourceSets.main.output.resourcesDir
-    }
+	subprojects.each { subproject ->
+		from subproject.sourceSets.main.output.classesDir
+		from subproject.sourceSets.main.output.resourcesDir
+	}
 }
 
 task ndkBuild(type: Exec) {
@@ -46,3 +49,4 @@ tasks.withType(JavaCompile) {
 
 clean.dependsOn 'ndkClean'
 */
+

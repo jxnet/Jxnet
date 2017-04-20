@@ -3,3 +3,4 @@ ext {
 	NDK_HOME = '/home/users/a/ar/ardikars/android-ndk-r12b'
 	NDK_OUT='./obj'
 }
+

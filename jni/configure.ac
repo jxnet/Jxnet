@@ -18,12 +18,13 @@ AC_MSG_CHECKING([checking JAVA_HOME environment variable])
 if test "x$JAVA_HOME" != x; then
 	AC_MSG_RESULT([JAVA_HOME is found in $JAVA_HOME])
 	AS_CASE([$host_os],
-        [linux*], [
+		[linux*], [
 			CFLAGS="$CFLAGS -I$JAVA_HOME/include -I$JAVA_HOME/include/linux "
 		],
-        [cygwin*|mingw*|msys*], [
+		[cygwin*|mingw*|msys*], [
 			CFLAGS="$CFLAGS -I$JAVA_HOME/include -I$JAVA_HOME/include/win32 "
-        ], [*], [
+		],
+		[*], [
 			AC_MSG_ERROR(["Platform is not supported."])
 		]
 	)
@@ -45,12 +46,14 @@ AS_CASE([$host_os],
 			],
 			[i?86|x86], [
 				LDFLAGS+="-L../lib "
-			], [
+			],
+			[*], [
 				AC_MSG_ERROR(["Unknown architecture."])
 			]
 		)
 		LDFLAGS+="-lwpcap -liphlpapi "
-	], [*], [
+	],
+	[*], [
 		AC_CHECK_LIB([pcap], [pcap_lib_version], [LDFLAGS+="-lpcap "], [
 			AC_MSG_ERROR(["Cannot find -lpcap."])
 		])
