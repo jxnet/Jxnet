@@ -29,7 +29,7 @@ public final class Pcap {
 		//
 	}
 
-	public long getAddress() {
+	public synchronized long getAddress() {
 		return this.address;
 	}
 

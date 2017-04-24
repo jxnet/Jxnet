@@ -25,12 +25,12 @@ public final class PcapDumper {
 
 	private long address;
 
-	public long getAddress() {
-		return this.address;
-	}
-
 	private PcapDumper() {
 		//
+	}
+
+	public synchronized long getAddress() {
+		return this.address;
 	}
 
 	/**

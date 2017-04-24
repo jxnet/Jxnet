@@ -25,16 +25,16 @@ public final class File extends java.io.File {
 
 	private long address;
 
-	public long getAddress() {
-		return this.address;
-	}
-
 	/**
 	 * Create instance of File.
 	 * @param pathname absolute path.
 	 */
 	private File(String pathname) {
 		super(pathname);
+	}
+
+	public synchronized long getAddress() {
+		return this.address;
 	}
 
 	@Override

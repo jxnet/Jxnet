@@ -34,7 +34,7 @@ public final class BpfProgram {
 		this.initBpfProgram();
 	}
 
-	public long getAddress() {
+	public synchronized long getAddress() {
 		return this.address;
 	}
 
