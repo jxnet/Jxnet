@@ -254,6 +254,8 @@ void SetSockAddrIDs(JNIEnv *env) {
 
 jclass PcapClass = NULL;
 jfieldID PcapAddressFID = NULL;
+jmethodID PcapGetAddressMID = NULL;
+
 void SetPcapIDs(JNIEnv *env) {
 
   	PcapClass = (*env)->FindClass(env, "com/ardikars/jxnet/Pcap");
@@ -269,10 +271,18 @@ void SetPcapIDs(JNIEnv *env) {
 		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field Pcap.address:long");
 		return;
 	}
+
+	PcapGetAddressMID = (*env)->GetMethodID(env, PcapClass, "getAddress", "()J");
+
+	if (PcapGetAddressMID = NULL) {
+		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method Pcap.getAddress(long)");
+		return;
+	}
 }
 
 jclass FileClass = NULL;
 jfieldID FileAddressFID = NULL;
+jmethodID FileGetAddressMID = NULL;
 
 void SetFileIDs(JNIEnv *env) {
 
@@ -289,6 +299,14 @@ void SetFileIDs(JNIEnv *env) {
 		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field File.address:long");
 		return;
 	}
+
+	FileGetAddressMID = (*env)->GetMethodID(env, FileClass, "getAddress", "()J");
+
+	if (FileGetAddressMID == NULL) {
+		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method File.getAddress(long)");
+		return;
+	}
+
 }
 
 jclass PcapPktHdrClass = NULL;
@@ -365,26 +383,35 @@ void SetByteBufferIDs(JNIEnv *env) {
 
 jclass PcapDumperClass = NULL;
 jfieldID PcapDumperAddressFID = NULL;
+jmethodID PcapDumperGetAddressMID = NULL;
 
 void SetPcapDumperIDs(JNIEnv *env) {
 
 	PcapDumperClass = (*env)->FindClass(env, "com/ardikars/jxnet/PcapDumper");
 
-	if(PcapDumperClass == NULL) {
+	if (PcapDumperClass == NULL) {
 		ThrowNew(env, CLASS_NOT_FOUND_EXCEPTION, "Unable to initialize class com.ardikars.jxnet.PcapDumper");
 		return;
 	}
 
 	PcapDumperAddressFID = (*env)->GetFieldID(env, PcapDumperClass, "address", "J");
 
-	if(PcapDumperAddressFID == NULL) {
+	if (PcapDumperAddressFID == NULL) {
 		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field PcapDumper.address:long");
+		return;
+	}
+
+	PcapDumperGetAddressMID = (*env)->GetMethodID(env, PcapDumperClass, "getAddress", "()J");
+
+	if (PcapDumperGetAddressMID == NULL) {
+		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method PcapDumper.getAddress(long)");
 		return;
 	}
 }
 
 jclass BpfProgramClass = NULL;
 jfieldID BpfProgramAddressFID = NULL;
+jmethodID BpfProgramGetAddressMID = NULL;
 
 void SetBpfProgramIDs(JNIEnv *env) {
 
@@ -396,10 +423,19 @@ void SetBpfProgramIDs(JNIEnv *env) {
 	}
 
 	BpfProgramAddressFID = (*env)->GetFieldID(env, BpfProgramClass, "address", "J");
+
 	if (BpfProgramAddressFID == NULL) {
 		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field BpfProgram.address:long");
 		return;
 	}
+
+	BpfProgramGetAddressMID = (*env)->GetMethodID(env, BpfProgramClass, "getAddress", "()J");
+
+	if (BpfProgramGetAddressMID == NULL) {
+		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method BpfProgram.getAddress(long)");
+		return;
+	}
+
 }
 
 jclass PcapStatClass = NULL;

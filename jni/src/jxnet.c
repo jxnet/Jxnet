@@ -51,7 +51,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapFindAllDevs
 
 	r = pcap_findalldevs(&alldevsp, errbuf);
 
-	if(r != 0 || alldevsp == NULL) {
+	if (r != 0 || alldevsp == NULL) {
 		SetStringBuilder(env, jerrbuf, errbuf);
 		return (jint) r;
 	}
@@ -66,14 +66,14 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapFindAllDevs
 
 		pcap_if = NewObject(env, PcapIfClass, "<init>", "()V");
 
-		if(dev->name != NULL) {
+		if (dev->name != NULL) {
 			(*env)->SetObjectField(env, pcap_if, PcapIfNameFID,
 					(*env)->NewStringUTF(env, dev->name));
 		} else {
 			(*env)->SetObjectField(env, pcap_if, PcapIfNameFID, NULL);
 		}
 
-		if(dev->description != NULL) {
+		if (dev->description != NULL) {
 			(*env)->SetObjectField(env, pcap_if, PcapIfDescriptionFID,
 					(*env)->NewStringUTF(env, dev->description));
 		} else {
@@ -83,11 +83,11 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapFindAllDevs
 		list_pcap_addr = (*env)->GetObjectField(env, pcap_if, PcapIfAddressesFID);
 		addr = dev->addresses;
 
-		while(addr != NULL) {
+		while (addr != NULL) {
 
 			pcap_addr = NewObject(env, PcapAddrClass, "<init>", "()V");
 
-			if(addr->addr != NULL) {
+			if (addr->addr != NULL) {
 				(*env)->SetObjectField(env, pcap_addr, PcapAddrAddrFID,
 						NewSockAddr(env, addr->addr));
 			} else {
@@ -95,7 +95,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapFindAllDevs
 						NewSockAddr(env, NULL));
 			}
 
-			if(addr->netmask != NULL) {
+			if (addr->netmask != NULL) {
 				(*env)->SetObjectField(env, pcap_addr, PcapAddrNetmaskFID,
 						NewSockAddr(env, addr->netmask));
 			} else {
@@ -103,7 +103,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapFindAllDevs
 						NewSockAddr(env, NULL));
 			}
 
-			if(addr->broadaddr != NULL) {
+			if (addr->broadaddr != NULL) {
 				(*env)->SetObjectField(env, pcap_addr, PcapAddrBroadAddrFID,
 						NewSockAddr(env, addr->broadaddr));
 			} else {
@@ -111,7 +111,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapFindAllDevs
 						NewSockAddr(env, NULL));
 			}
 
-			if(addr->dstaddr != NULL) {
+			if (addr->dstaddr != NULL) {
 				(*env)->SetObjectField(env, pcap_addr, PcapAddrDstAddrFID,
 						NewSockAddr(env, addr->dstaddr));
 			} else {
@@ -119,7 +119,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapFindAllDevs
 						NewSockAddr(env, NULL));
 			}
 
-			if((*env)->CallBooleanMethod(env, list_pcap_addr, ListAddMID,
+			if ((*env)->CallBooleanMethod(env, list_pcap_addr, ListAddMID,
 					pcap_addr) == JNI_FALSE) {
 				(*env)->DeleteLocalRef(env, pcap_addr);
 				return (jint) -1;
@@ -132,7 +132,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapFindAllDevs
 
 		(*env)->SetIntField(env, pcap_if, PcapIfFlagsFID, (jint) alldevsp->flags);
 
-		if((*env)->CallBooleanMethod(env, jlist_pcap_if, ListAddMID, pcap_if) == JNI_FALSE) {
+		if ((*env)->CallBooleanMethod(env, jlist_pcap_if, ListAddMID, pcap_if) == JNI_FALSE) {
 			(*env)->DeleteLocalRef(env, pcap_if);
 			return (jint) -1;
 		}
@@ -166,7 +166,7 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapOpenLive
   	pcap_t *pcap = pcap_open_live(source, (int) jsnaplen, (int) jpromisc, (int) jto_ms, errbuf);
   	(*env)->ReleaseStringUTFChars(env, jsource, source);
 
-  	if(pcap == NULL) {
+  	if (pcap == NULL) {
 		SetStringBuilder(env, jerrbuf, errbuf);
 		return NULL;
   	}
@@ -186,10 +186,12 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapLoop
 
  	SetPcapPktHdrIDs(env);
  	pcap_t *pcap = GetPcap(env, jpcap); // Exception already thrown
- 	if(pcap == NULL) {
+
+	if (pcap == NULL) {
  		return -1;
  	}
- 	pcap_user_data_t user_data;
+
+	pcap_user_data_t user_data;
  	memset(&user_data, 0, sizeof(user_data));
  	user_data.env = env;
  	user_data.callback = jcallback;
@@ -209,16 +211,19 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapLoop
  */
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDispatch
   (JNIEnv *env, jclass jcls, jobject jpcap, jint jcnt, jobject jcallback, jobject juser) {
+
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
 	if (CheckNotNull(env, jcallback, NULL) == NULL) return -1;
 	if (!CheckArgument(env, (jcnt > 0), NULL)) return -1;
 
  	SetPcapPktHdrIDs(env);
  	pcap_t *pcap = GetPcap(env, jpcap); // Exception already thrown
- 	if(pcap == NULL) {
+
+	if(pcap == NULL) {
  		return (jint) -1;
  	}
- 	pcap_user_data_t user_data;
+
+	pcap_user_data_t user_data;
  	memset(&user_data, 0, sizeof(user_data));
  	user_data.env = env;
  	user_data.callback = jcallback;
@@ -237,17 +242,21 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDispatch
  */
 JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDumpOpen
   (JNIEnv *env, jclass jcls, jobject jpcap, jstring jfname) {
+
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return NULL;
 	if (CheckNotNull(env, jfname, NULL) == NULL) return NULL;
 
   	pcap_t *pcap = GetPcap(env, jpcap); // Exception already thrown
-  	if(pcap == NULL) {
+  	
+	if(pcap == NULL) {
   		return NULL;
   	}
-  	const char *fname = (*env)->GetStringUTFChars(env, jfname, 0);
+  	
+	const char *fname = (*env)->GetStringUTFChars(env, jfname, 0);
   	pcap_dumper_t *pcap_dumper = pcap_dump_open(pcap, fname);
   	(*env)->ReleaseStringUTFChars(env, jfname, fname);
-  	if(pcap_dumper == NULL) {
+  	
+	if(pcap_dumper == NULL) {
   		ThrowNew(env, PCAP_DUMPER_CLOSE_EXCEPTION, pcap_geterr(pcap));
   		return NULL;
   	}
