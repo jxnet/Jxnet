@@ -4,7 +4,7 @@ LT_PREREQ(2.4.6)
 
 AC_INIT([jxnet], [1.1.0], [contact@ardikars.com], [jxnet], [http://ardikars.com])
 AM_INIT_AUTOMAKE([])
-LT_INIT([shared static])
+LT_INIT([shared static win32-dll])
 AC_PROG_LIBTOOL(libtool)
 AC_PROG_RANLIB
 AC_PROG_CC
