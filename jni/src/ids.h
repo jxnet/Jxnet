@@ -53,12 +53,13 @@ extern jfieldID PcapAddrNetmaskFID;
 extern jfieldID PcapAddrBroadAddrFID;
 extern jfieldID PcapAddrDstAddrFID;
 
-jobject SetFileIDs(JNIEnv *env);
+void SetPcapAddrIDs(JNIEnv *env);
 
 extern jclass FileClass;
 extern jfieldID FileAddressFID;
+extern jmethodID FileGetAddressMID;
 
-void SetPcapAddrIDs(JNIEnv *env);
+void SetFileIDs(JNIEnv *env);
 
 extern jclass SockAddrClass;
 extern jfieldID SockAddrSaFamilyFID;
@@ -68,6 +69,7 @@ void SetSockAddrIDs(JNIEnv *env);
 
 extern jclass PcapClass;
 extern jfieldID PcapAddressFID;
+extern jmethodID PcapGetAddressMID;
 
 void SetPcapIDs(JNIEnv *env);
 
@@ -87,11 +89,13 @@ void SetByteBufferIDs(JNIEnv *env);
 
 extern jclass PcapDumperClass;
 extern jfieldID PcapDumperAddressFID;
+extern jmethodID PcapDumperGetAddressMID;
 
 void SetPcapDumperIDs(JNIEnv *env);
 
 extern jclass BpfProgramClass;
 extern jfieldID BpfProgramAddressFID;
+extern jmethodID BpfProgramGetAddressMID;
 
 void SetBpfProgramIDs(JNIEnv *env);
 
@@ -118,3 +122,4 @@ extern jclass MacAddressClass;
 extern jmethodID MacAddressValueOfMID;
 
 void SetMacAddressIDs(JNIEnv *env);
+
