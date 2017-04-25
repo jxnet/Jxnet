@@ -274,7 +274,7 @@ void SetPcapIDs(JNIEnv *env) {
 
 	PcapGetAddressMID = (*env)->GetMethodID(env, PcapClass, "getAddress", "()J");
 
-	if (PcapGetAddressMID = NULL) {
+	if (PcapGetAddressMID == NULL) {
 		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method Pcap.getAddress(long)");
 		return;
 	}
