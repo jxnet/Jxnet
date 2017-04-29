@@ -300,7 +300,8 @@ JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_util_AddrUtils_GetGatewayAddre
 	}
 	close(nlfd);
 	char gateway[15];
-        sprintf(gateway, (char *) inet_ntoa(route_gw));
+	strcpy(gateway, (char *) inet_ntoa(route_gw));
+	//sprintf(gateway, (char *) inet_ntoa(route_gw));
 	(*env)->ReleaseStringUTFChars(env, jdev_name, buf);
 	return (*env)->NewStringUTF(env, gateway);
 #endif
