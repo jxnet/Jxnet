@@ -20,9 +20,4 @@ LOCAL_STATIC_LIBRARIES := libpcap
 
 include $(BUILD_SHARED_LIBRARY)
 
-ifeq ($(TARGET_ARCH_ABI), arm64-v8a)	
-	include $(LOCAL_PATH)/libpcap/Android.mk 
-else
-	include $(LOCAL_PATH)/libpcap/Android.mk 
-endif
-
+include $(LOCAL_PATH)/libpcap/Android.mk 

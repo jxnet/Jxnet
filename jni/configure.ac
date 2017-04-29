@@ -1,6 +1,6 @@
 
 AC_PREREQ(2.69)
-LT_PREREQ(2.4.6)
+LT_PREREQ(2.4.2)
 
 AC_INIT([jxnet], [1.1.0], [contact@ardikars.com], [jxnet], [http://ardikars.com])
 AM_INIT_AUTOMAKE([])
