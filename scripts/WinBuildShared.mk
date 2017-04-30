@@ -22,13 +22,13 @@ ifeq ($(PROCESSOR_ARCHITECTURE), x86)
 endif
 
 SRC = \
-	../src/ids.c \
-	../src/preconditions.c \
-	../src/bpf.c \
-	../src/jxnet.c \
-	../src/utils.c \
-	../src/addr_utils.c \
-	../src/mac_address.c
+	jni/src/ids.c \
+	jni/src/preconditions.c \
+	jni/src/bpf.c \
+	jni/src/jxnet.c \
+	jni/src/utils.c \
+	jni/src/addr_utils.c \
+	jni/src/mac_address.c
 
 LIB_NAME = jxnet
 
