@@ -1,6 +1,10 @@
 
 ext {
-	NDK_HOME = '/home/users/a/ar/ardikars/android-ndk-r12b'
-	NDK_OUT='./obj'
+	NDK_HOME = "${System.env.NDK_HOME}"
+	JXNET_DIR = "${rootDir}"
+	TOOLS_DIR = "${rootDir}/tools"
+	JXNET_OBJ = "${rootDir}/obj/jxnet"
+	TOOLS_OBJ = "${rootDir}/obj/tools"
+	JXNET_OUT = "${rootDir}/jxnet-core/src/main/resources/lib"
+	TOOLS_OUT = "${rootDir}/jxnet-core/src/main/resources/tools"
 }
-

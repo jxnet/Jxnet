@@ -33,20 +33,21 @@ jar {
 }
 
 task ndkBuild(type: Exec) {
-	commandLine "${NDK_HOME}/ndk-build", 
-			'NDK_LIBS_OUT=./jxnet-core/src/main/resources/lib', "NDK_OUT=${NDK_OUT}"
+	commandLine "${NDK_HOME}/ndk-build", '-C', "${JXNET_DIR}",
+			"NDK_LIBS_OUT=${JXNET_OUT}", "NDK_OUT=${JXNET_OBJ}"
 }
 
 task ndkClean(type: Exec) {
-	commandLine "${NDK_HOME}/ndk-build", 'clean', 
-			'NDK_LIBS_OUT=./jxnet-core/src/main/resources/lib', "NDK_OUT=${NDK_OUT}"
+	commandLine "${NDK_HOME}/ndk-build", '-C', "${JXNET_DIR}", 'clean',
+			"NDK_LIBS_OUT=${JXNET_OUT}", "NDK_OUT=${JXNET_OBJ}"
 }
 
-/*
-tasks.withType(JavaCompile) {
-	compileTask -> compileTask.dependsOn ndkBuild
+task ndkBuildTools(type: Exec) {
+	commandLine "${NDK_HOME}/ndk-build", '-C', "${TOOLS_DIR}",
+			"NDK_LIBS_OUT=${TOOLS_OUT}", "NDK_OUT=${TOOLS_OBJ}"
 }
 
-clean.dependsOn 'ndkClean'
-*/
-
+task ndkCleanTools(type: Exec) {
+	commandLine "${NDK_HOME}/ndk-build", '-C', "${TOOLS_DIR}", 'clean',
+			"NDK_LIBS_OUT=${TOOLS_OUT}", "NDK_OUT=${TOOLS_OBJ}"
+}
