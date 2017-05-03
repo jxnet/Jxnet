@@ -6,3 +6,4 @@ rm -rf src/.deps src/.libs
 rm -rf src/*.o src/*.lo src/*.la
 rm -rf aclocal.m4 compile config.guess config.log config.status configure depcomp install-sh libtool ltmain.sh missing config.sub
 rm -rf autom4te.cache .autotools 
+rm -rf jxnet-1.1.0.tar.gz
