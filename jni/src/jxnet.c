@@ -1053,7 +1053,7 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCreate
 #if !defined(__linux__) || defined(__ANDROID__)
 	ThrowNew(env, NOT_SUPPORTED_PLATFORM_EXCEPTION, NULL);
 	return NULL;
-#endif
+#else
 
 	if (CheckNotNull(env, jsource, NULL) == NULL) return NULL;
 	if (CheckNotNull(env, jerrbuf, NULL) == NULL) return NULL;
@@ -1070,6 +1070,8 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCreate
 		return NULL;
   	}
 	return SetPcap(env, pcap);
+#endif
+	return NULL;
   }
 
 /*
@@ -1083,11 +1085,13 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetSnaplen
 #if !defined(__linux__) || defined(__ANDROID__)
 	ThrowNew(env, NOT_SUPPORTED_PLATFORM_EXCEPTION, NULL);
 	return -1;
-#endif
+#else
 
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
 	if (!CheckArgument(env, (jsnaplen > 0 && jsnaplen < 65535), NULL)) return -1;
 	return pcap_set_snaplen(GetPcap(env, jpcap), jsnaplen);
+#endif
+	return -1;
   }
 
 /*
@@ -1101,11 +1105,13 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetPromisc
 #if !defined(__linux__) || defined(__ANDROID__)
 	ThrowNew(env, NOT_SUPPORTED_PLATFORM_EXCEPTION, NULL);
 	return -1;
-#endif
+#else
 
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
 	if (!CheckArgument(env, (jpromisc == 0 || jpromisc == 1), NULL)) return -1;
 	return pcap_set_promisc(GetPcap(env, jpcap), jpromisc);
+#endif
+	return -1;
 }
 
 /*
@@ -1119,11 +1125,13 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetTimeout
 #if !defined(__linux__) || defined(__ANDROID__)
 	ThrowNew(env, NOT_SUPPORTED_PLATFORM_EXCEPTION, NULL);
 	return -1;
-#endif
+#else
 
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
 	if (!CheckArgument(env, (jtimeout > 0), NULL)) return -1;
 	return pcap_set_timeout(GetPcap(env, jpcap), jtimeout);
+#endif
+	return -1;
 }
 
 /*
@@ -1137,11 +1145,13 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetBufferSize
 #if !defined(__linux__) || defined(__ANDROID__)
 	ThrowNew(env, NOT_SUPPORTED_PLATFORM_EXCEPTION, NULL);
 	return -1;
-#endif
+#else
 
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
 	if (!CheckArgument(env, (jbuffer_size > 0 && jbuffer_size < 65535), NULL)) return -1;
 	return pcap_set_buffer_size(GetPcap(env, jpcap), jbuffer_size);
+#endif
+	return -1;
 }
 
 /*
@@ -1155,10 +1165,12 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCanSetRfMon
 #if !defined(__linux__) || defined(__ANDROID__)
 	ThrowNew(env, NOT_SUPPORTED_PLATFORM_EXCEPTION, NULL);
 	return -1;
-#endif
+#else
 
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
 	return pcap_can_set_rfmon(GetPcap(env, jpcap));
+#endif
+	return -1;
   }
 
 /*
@@ -1172,11 +1184,13 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetRfMon
 #if !defined(__linux__) || defined(__ANDROID__)
 	ThrowNew(env, NOT_SUPPORTED_PLATFORM_EXCEPTION, NULL);
 	return -1;
-#endif
+#else
 
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
 	if (!CheckArgument(env, (jrfmon == 0 || jrfmon == 1), NULL)) return -1;
 	return pcap_set_rfmon(GetPcap(env, jpcap), jrfmon);
+#endif
+	return -1;
   }
 
 /*
@@ -1190,10 +1204,12 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetImmediateMode
 #if !defined(__linux__) || defined(__ANDROID__)
 	ThrowNew(env, NOT_SUPPORTED_PLATFORM_EXCEPTION, NULL);
 	return -1;
-#endif
+#else
 
 	if (!CheckArgument(env, (jimmediate == 0 || jimmediate == 1), NULL)) return -1;
 	return pcap_set_immediate_mode(GetPcap(env, jpcap), jimmediate);
+#endif
+	return -1;
   }
 
 /*
@@ -1207,10 +1223,12 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapActivate
 #if !defined(__linux__) || defined(__ANDROID__)
 	ThrowNew(env, NOT_SUPPORTED_PLATFORM_EXCEPTION, NULL);
 	return -1;
-#endif
+#else
 
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
 	return pcap_activate(GetPcap(env, jpcap));
+#endif
+	return -1;
   }
 
 /*
@@ -1224,7 +1242,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetDirection
 #if !defined(__linux__) || defined(__ANDROID__)
 	ThrowNew(env, NOT_SUPPORTED_PLATFORM_EXCEPTION, NULL);
 	return -1;
-#endif
+#else
 
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
 	if (CheckNotNull(env, jdirection, NULL) == NULL) return -1;
@@ -1248,5 +1266,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetDirection
 	(*env)->ReleaseStringUTFChars(env, direction, enumName);
 	(*env)->DeleteLocalRef(env, direction);
 	return ret;
+#endif
+	return -1;
   }
   
