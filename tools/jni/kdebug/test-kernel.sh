@@ -47,7 +47,7 @@ file /root/capsh $HERE/../progs/capsh 0755 0 0
 file /root/getpcaps $HERE/../progs/getpcaps 0755 0 0
 EOF
 
-COMMANDS="ls ln cp id pwd mkdir rmdir cat rm sh mount umount chmod less"
+COMMANDS="ls ln cp dmesg id pwd mkdir rmdir cat rm sh mount umount chmod less vi"
 for f in $COMMANDS; do
     echo slink /bin/$f /sbin/busybox 0755 0 0 >> fs.conf
 done

@@ -46,7 +46,7 @@ pass_capsh --print
 
 
 # Make a local non-setuid-0 version of capsh and call it privileged
-cp ./capsh ./privileged && chmod -s ./privileged
+cp ./capsh ./privileged && /bin/chmod -s ./privileged
 if [ $? -ne 0 ]; then
     echo "Failed to copy capsh for capability manipulation"
     exit 1
@@ -67,11 +67,11 @@ fi
 # Explore keep_caps support
 pass_capsh --keep=0 --keep=1 --keep=0 --keep=1 --print
 
-rm -f tcapsh
-cp capsh tcapsh
-chown root.root tcapsh
-chmod u+s tcapsh
-ls -l tcapsh
+/bin/rm -f tcapsh
+/bin/cp capsh tcapsh
+/bin/chown root.root tcapsh
+/bin/chmod u+s tcapsh
+/bin/ls -l tcapsh
 
 # leverage keep caps maintain capabilities accross a change of uid
 # from setuid root to capable luser (as per wireshark/dumpcap 0.99.7)
@@ -98,7 +98,7 @@ fail_capsh --secbits=32 --keep=1 --keep=0 --print
 pass_capsh --secbits=10 --keep=0 --keep=1 --print
 fail_capsh --secbits=47 -- -c "./tcapsh --uid=$nouid"
 
-rm -f tcapsh
+/bin/rm -f tcapsh
 
 # Suppress uid=0 privilege
 fail_capsh --secbits=47 --print -- -c "./capsh --uid=$nouid"
@@ -117,10 +117,10 @@ fail_capsh --drop=cap_setuid --secbits=0x2f --print -- -c "./privileged --uid=$n
 pass_capsh --secbits=47 --inh=cap_setuid,cap_setgid --drop=cap_setuid \
     --uid=500 --print -- -c "./privileged --uid=$nouid"
 
-rm -f ./privileged
+/bin/rm -f ./privileged
 
 # test that we do not support capabilities on setuid shell-scripts
-cat > hack.sh <<EOF
+/bin/cat > hack.sh <<EOF
 #!/bin/bash
 /usr/bin/id
 mypid=\$\$
@@ -134,20 +134,53 @@ else
 fi
 exit 0
 EOF
-chmod +xs hack.sh
+/bin/chmod +xs hack.sh
 ./capsh --uid=500 --inh=none --print -- ./hack.sh
 status=$?
-rm -f ./hack.sh
+/bin/rm -f ./hack.sh
 if [ $status -ne 0 ]; then
     echo "shell scripts can have capabilities (bug)"
     exit 1
 fi
 
-# Max lockdown
+# Max lockdown (ie., pure capability model as POSIX.1e intended).
+secbits=0x2f
+if ./capsh --has-ambient ; then
+    secbits="0xef --noamb"
+fi
 pass_capsh --keep=1 --uid=$nouid --caps=cap_setpcap=ep \
-    --drop=all --secbits=0x2f --caps= --print
+    --drop=all --secbits=$secbits --caps= --print
 
 # Verify we can chroot
 pass_capsh --chroot=$(/bin/pwd)
 pass_capsh --chroot=$(/bin/pwd) ==
 fail_capsh --chroot=$(/bin/pwd) -- -c "echo oops"
+
+exit_early () {
+    echo "$*"
+    exit 0
+}
+
+./capsh --has-ambient || exit_early "skipping ambient tests"
+
+# Ambient capabilities (any file can inherit capabilities)
+pass_capsh --noamb
+
+# test that shell scripts can inherit through ambient capabilities
+/bin/cat > hack.sh <<EOF
+#!/bin/bash
+/usr/bin/id
+mypid=\$\$
+caps=\$(./getpcaps \$mypid 2>&1 | /usr/bin/cut -d: -f2)
+if [ "\$caps" != " = cap_setuid+i" ]; then
+  echo "Shell script got [\$caps]"
+  exit 0
+fi
+ls -l \$0
+echo "no capabilities [\$caps] for this shell script"
+exit 1
+EOF
+/bin/chmod +x hack.sh
+pass_capsh --keep=1 --uid=$nouid --inh=cap_setuid --addamb=cap_setuid -- ./hack.sh
+
+/bin/rm -f hack.sh

@@ -92,8 +92,12 @@ extern int     cap_set_proc(cap_t);
 
 extern int     cap_get_bound(cap_value_t);
 extern int     cap_drop_bound(cap_value_t);
-
 #define CAP_IS_SUPPORTED(cap)  (cap_get_bound(cap) >= 0)
+
+extern int     cap_get_ambient(cap_value_t);
+extern int     cap_set_ambient(cap_value_t, cap_flag_value_t);
+extern int     cap_reset_ambient(void);
+#define CAP_AMBIENT_SUPPORTED() (cap_get_ambient(CAP_CHOWN) >= 0)
 
 /* libcap/cap_extint.c */
 extern ssize_t cap_size(cap_t);

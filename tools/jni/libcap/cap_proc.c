@@ -105,13 +105,20 @@ int capsetp(pid_t pid, cap_t cap_d)
     return error;
 }
 
+/* the kernel api requires unsigned long arguments */
+#define pr_arg(x) ((unsigned long) x)
+
 /* get a capability from the bounding set */
 
 int cap_get_bound(cap_value_t cap)
 {
     int result;
 
-    result = prctl(PR_CAPBSET_READ, cap);
+    result = prctl(PR_CAPBSET_READ, pr_arg(cap));
+    if (result < 0) {
+	errno = -result;
+	return -1;
+    }
     return result;
 }
 
@@ -121,6 +128,64 @@ int cap_drop_bound(cap_value_t cap)
 {
     int result;
 
-    result = prctl(PR_CAPBSET_DROP, cap);
+    result = prctl(PR_CAPBSET_DROP, pr_arg(cap));
+    if (result < 0) {
+	errno = -result;
+	return -1;
+    }
+    return result;
+}
+
+/* get a capability from the ambient set */
+
+int cap_get_ambient(cap_value_t cap)
+{
+    int result;
+    result = prctl(PR_CAP_AMBIENT, pr_arg(PR_CAP_AMBIENT_IS_SET),
+		   pr_arg(cap), pr_arg(0), pr_arg(0));
+    if (result < 0) {
+	errno = -result;
+	return -1;
+    }
+    return result;
+}
+
+/* modify a single ambient capability value */
+
+int cap_set_ambient(cap_value_t cap, cap_flag_value_t set)
+{
+    int result, val;
+    switch (set) {
+    case CAP_SET:
+	val = PR_CAP_AMBIENT_RAISE;
+	break;
+    case CAP_CLEAR:
+	val = PR_CAP_AMBIENT_LOWER;
+	break;
+    default:
+	errno = EINVAL;
+	return -1;
+    }
+    result = prctl(PR_CAP_AMBIENT, pr_arg(val), pr_arg(cap),
+		   pr_arg(0), pr_arg(0));
+    if (result < 0) {
+	errno = -result;
+	return -1;
+    }
+    return result;
+}
+
+/* erase all ambient capabilities */
+
+int cap_reset_ambient()
+{
+    int result;
+
+    result = prctl(PR_CAP_AMBIENT, pr_arg(PR_CAP_AMBIENT_CLEAR_ALL),
+		   pr_arg(0), pr_arg(0), pr_arg(0));
+    if (result < 0) {
+	errno = -result;
+	return -1;
+    }
     return result;
 }

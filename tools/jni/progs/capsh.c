@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-11 Andrew G. Morgan <morgan@kernel.org>
+ * Copyright (c) 2008-11,16 Andrew G. Morgan <morgan@kernel.org>
  *
  * This is a simple 'bash' wrapper program that can be used to
  * raise and lower both the bset and pI capabilities before invoking
@@ -26,9 +26,6 @@
 
 #define MAX_GROUPS       100   /* max number of supplementary groups for user */
 
-static const cap_value_t raise_setpcap[1] = { CAP_SETPCAP };
-static const cap_value_t raise_chroot[1] = { CAP_SYS_CHROOT };
-
 static char *binary(unsigned long value)
 {
     static char string[8*sizeof(unsigned long) + 1];
@@ -43,6 +40,272 @@ static char *binary(unsigned long value)
     return string + i;
 }
 
+static void display_prctl_set(const char *name, int (*fn)(cap_value_t))
+{
+    unsigned cap;
+    const char *sep;
+    int set;
+
+    printf("%s set =", name);
+    for (sep = "", cap=0; (set = fn(cap)) >= 0; cap++) {
+	char *ptr;
+	if (!set) {
+	    continue;
+	}
+
+	ptr = cap_to_name(cap);
+	if (ptr == NULL) {
+	    printf("%s%u", sep, cap);
+	} else {
+	    printf("%s%s", sep, ptr);
+	    cap_free(ptr);
+	}
+	sep = ",";
+    }
+    if (!cap) {
+	printf(" <unsupported>\n");
+    } else {
+	printf("\n");
+    }
+}
+
+/* arg_print displays the current capability state of the process */
+static void arg_print(void)
+{
+    int set, status, j;
+    cap_t all;
+    char *text;
+    const char *sep;
+    struct group *g;
+    gid_t groups[MAX_GROUPS], gid;
+    uid_t uid;
+    struct passwd *u;
+
+    all = cap_get_proc();
+    text = cap_to_text(all, NULL);
+    printf("Current: %s\n", text);
+    cap_free(text);
+    cap_free(all);
+
+    display_prctl_set("Bounding", cap_get_bound);
+    display_prctl_set("Ambient", cap_get_ambient);
+    set = prctl(PR_GET_SECUREBITS);
+    if (set >= 0) {
+	const char *b;
+	b = binary(set);  /* use verilog convention for binary string */
+	printf("Securebits: 0%o/0x%x/%u'b%s\n", set, set,
+	       (unsigned) strlen(b), b);
+	printf(" secure-noroot: %s (%s)\n",
+	       (set & SECBIT_NOROOT) ? "yes":"no",
+	       (set & SECBIT_NOROOT_LOCKED) ? "locked":"unlocked");
+	printf(" secure-no-suid-fixup: %s (%s)\n",
+	       (set & SECBIT_NO_SETUID_FIXUP) ? "yes":"no",
+	       (set & SECBIT_NO_SETUID_FIXUP_LOCKED) ? "locked":"unlocked");
+	printf(" secure-keep-caps: %s (%s)\n",
+	       (set & SECBIT_KEEP_CAPS) ? "yes":"no",
+	       (set & SECBIT_KEEP_CAPS_LOCKED) ? "locked":"unlocked");
+	if (CAP_AMBIENT_SUPPORTED()) {
+	    printf(" secure-no-ambient-raise: %s (%s)\n",
+		   (set & SECBIT_NO_CAP_AMBIENT_RAISE) ? "yes":"no",
+		   (set & SECBIT_NO_CAP_AMBIENT_RAISE_LOCKED) ?
+		   "locked":"unlocked");
+	}
+    } else {
+	printf("[Securebits ABI not supported]\n");
+	set = prctl(PR_GET_KEEPCAPS);
+	if (set >= 0) {
+	    printf(" prctl-keep-caps: %s (locking not supported)\n",
+		   set ? "yes":"no");
+	} else {
+	    printf("[Keepcaps ABI not supported]\n");
+	}
+    }
+    uid = getuid();
+    u = getpwuid(uid);
+    printf("uid=%u(%s)\n", getuid(), u ? u->pw_name : "???");
+    gid = getgid();
+    g = getgrgid(gid);
+    printf("gid=%u(%s)\n", gid, g ? g->gr_name : "???");
+    printf("groups=");
+    status = getgroups(MAX_GROUPS, groups);
+    sep = "";
+    for (j=0; j < status; j++) {
+	g = getgrgid(groups[j]);
+	printf("%s%u(%s)", sep, groups[j], g ? g->gr_name : "???");
+	sep = ",";
+    }
+    printf("\n");
+}
+
+static const cap_value_t raise_setpcap[1] = { CAP_SETPCAP };
+static const cap_value_t raise_chroot[1] = { CAP_SYS_CHROOT };
+
+static void push_pcap(cap_t *orig_p, cap_t *raised_for_setpcap_p)
+{
+    /*
+     * We need to do this here because --inh=XXX may have reset
+     * orig and it isn't until we are within the --drop code that
+     * we know what the prevailing (orig) pI value is.
+     */
+    *orig_p = cap_get_proc();
+    if (NULL == *orig_p) {
+	perror("Capabilities not available");
+	exit(1);
+    }
+
+    *raised_for_setpcap_p = cap_dup(*orig_p);
+    if (NULL == *raised_for_setpcap_p) {
+	fprintf(stderr, "modification requires CAP_SETPCAP\n");
+	exit(1);
+    }
+    if (cap_set_flag(*raised_for_setpcap_p, CAP_EFFECTIVE, 1,
+		     raise_setpcap, CAP_SET) != 0) {
+	perror("unable to select CAP_SETPCAP");
+	exit(1);
+    }
+}
+
+static void pop_pcap(cap_t orig, cap_t raised_for_setpcap)
+{
+    cap_free(raised_for_setpcap);
+    cap_free(orig);
+}
+
+static void arg_drop(const char *arg_names)
+{
+    char *ptr;
+    cap_t orig, raised_for_setpcap;
+    char *names;
+
+    push_pcap(&orig, &raised_for_setpcap);
+    if (strcmp("all", arg_names) == 0) {
+	unsigned j = 0;
+	while (CAP_IS_SUPPORTED(j)) {
+	    int status;
+	    if (cap_set_proc(raised_for_setpcap) != 0) {
+		perror("unable to raise CAP_SETPCAP for BSET changes");
+		exit(1);
+	    }
+	    status = cap_drop_bound(j);
+	    if (cap_set_proc(orig) != 0) {
+		perror("unable to lower CAP_SETPCAP post BSET change");
+		exit(1);
+	    }
+	    if (status != 0) {
+		char *name_ptr;
+
+		name_ptr = cap_to_name(j);
+		fprintf(stderr, "Unable to drop bounding capability [%s]\n",
+			name_ptr);
+		cap_free(name_ptr);
+		exit(1);
+	    }
+	    j++;
+	}
+	pop_pcap(orig, raised_for_setpcap);
+	return;
+    }
+
+    names = strdup(arg_names);
+    if (NULL == names) {
+	fprintf(stderr, "failed to allocate names\n");
+	exit(1);
+    }
+    for (ptr = names; (ptr = strtok(ptr, ",")); ptr = NULL) {
+	/* find name for token */
+	cap_value_t cap;
+	int status;
+
+	if (cap_from_name(ptr, &cap) != 0) {
+	    fprintf(stderr, "capability [%s] is unknown to libcap\n", ptr);
+	    exit(1);
+	}
+	if (cap_set_proc(raised_for_setpcap) != 0) {
+	    perror("unable to raise CAP_SETPCAP for BSET changes");
+	    exit(1);
+	}
+	status = cap_drop_bound(cap);
+	if (cap_set_proc(orig) != 0) {
+	    perror("unable to lower CAP_SETPCAP post BSET change");
+	    exit(1);
+	}
+	if (status != 0) {
+	    fprintf(stderr, "failed to drop [%s=%u]\n", ptr, cap);
+	    exit(1);
+	}
+    }
+    pop_pcap(orig, raised_for_setpcap);
+    free(names);
+}
+
+static void arg_change_amb(const char *arg_names, cap_flag_value_t set)
+{
+    char *ptr;
+    cap_t orig, raised_for_setpcap;
+    char *names;
+
+    push_pcap(&orig, &raised_for_setpcap);
+    if (strcmp("all", arg_names) == 0) {
+	unsigned j = 0;
+	while (CAP_IS_SUPPORTED(j)) {
+	    int status;
+	    if (cap_set_proc(raised_for_setpcap) != 0) {
+		perror("unable to raise CAP_SETPCAP for AMBIENT changes");
+		exit(1);
+	    }
+	    status = cap_set_ambient(j, set);
+	    if (cap_set_proc(orig) != 0) {
+		perror("unable to lower CAP_SETPCAP post AMBIENT change");
+		exit(1);
+	    }
+	    if (status != 0) {
+		char *name_ptr;
+
+		name_ptr = cap_to_name(j);
+		fprintf(stderr, "Unable to %s ambient capability [%s]\n",
+			set == CAP_CLEAR ? "clear":"raise", name_ptr);
+		cap_free(name_ptr);
+		exit(1);
+	    }
+	    j++;
+	}
+	pop_pcap(orig, raised_for_setpcap);
+	return;
+    }
+
+    names = strdup(arg_names);
+    if (NULL == names) {
+	fprintf(stderr, "failed to allocate names\n");
+	exit(1);
+    }
+    for (ptr = names; (ptr = strtok(ptr, ",")); ptr = NULL) {
+	/* find name for token */
+	cap_value_t cap;
+	int status;
+
+	if (cap_from_name(ptr, &cap) != 0) {
+	    fprintf(stderr, "capability [%s] is unknown to libcap\n", ptr);
+	    exit(1);
+	}
+	if (cap_set_proc(raised_for_setpcap) != 0) {
+	    perror("unable to raise CAP_SETPCAP for AMBIENT changes");
+	    exit(1);
+	}
+	status = cap_set_ambient(cap, set);
+	if (cap_set_proc(orig) != 0) {
+	    perror("unable to lower CAP_SETPCAP post AMBIENT change");
+	    exit(1);
+	}
+	if (status != 0) {
+	    fprintf(stderr, "failed to %s ambient [%s=%u]\n",
+		    set == CAP_CLEAR ? "clear":"raise", ptr, cap);
+	    exit(1);
+	}
+    }
+    pop_pcap(orig, raised_for_setpcap);
+    free(names);
+}
+
 int main(int argc, char *argv[], char *envp[])
 {
     pid_t child;
@@ -52,76 +315,21 @@ int main(int argc, char *argv[], char *envp[])
 
     for (i=1; i<argc; ++i) {
 	if (!memcmp("--drop=", argv[i], 4)) {
-	    char *ptr;
-	    cap_t orig, raised_for_setpcap;
-
-	    /*
-	     * We need to do this here because --inh=XXX may have reset
-	     * orig and it isn't until we are within the --drop code that
-	     * we know what the prevailing (orig) pI value is.
-	     */
-	    orig = cap_get_proc();
-	    if (orig == NULL) {
-		perror("Capabilities not available");
+	    arg_drop(argv[i]+7);
+	} else if (!strcmp("--has-ambient", argv[i])) {
+	    if (!CAP_AMBIENT_SUPPORTED()) {
+		fprintf(stderr, "ambient set not supported\n");
 		exit(1);
 	    }
-
-	    raised_for_setpcap = cap_dup(orig);
-	    if (raised_for_setpcap == NULL) {
-		fprintf(stderr, "BSET modification requires CAP_SETPCAP\n");
+	} else if (!memcmp("--addamb=", argv[i], 9)) {
+	    arg_change_amb(argv[i]+9, CAP_SET);
+	} else if (!memcmp("--delamb=", argv[i], 9)) {
+	    arg_change_amb(argv[i]+9, CAP_CLEAR);
+	} else if (!memcmp("--noamb", argv[i], 7)) {
+	    if (cap_reset_ambient() != 0) {
+		fprintf(stderr, "failed to reset ambient set\n");
 		exit(1);
 	    }
-
-	    if (cap_set_flag(raised_for_setpcap, CAP_EFFECTIVE, 1,
-			     raise_setpcap, CAP_SET) != 0) {
-		perror("unable to select CAP_SETPCAP");
-		exit(1);
-	    }
-
-	    if (strcmp("all", argv[i]+7) == 0) {
-		unsigned j = 0;
-		while (CAP_IS_SUPPORTED(j)) {
-		    if (cap_drop_bound(j) != 0) {
-			char *name_ptr;
-
-			name_ptr = cap_to_name(j);
-			fprintf(stderr,
-				"Unable to drop bounding capability [%s]\n",
-				name_ptr);
-			cap_free(name_ptr);
-			exit(1);
-		    }
-		    j++;
-		}
-	    } else {
-		for (ptr = argv[i]+7; (ptr = strtok(ptr, ",")); ptr = NULL) {
-		    /* find name for token */
-		    cap_value_t cap;
-		    int status;
-
-		    if (cap_from_name(ptr, &cap) != 0) {
-			fprintf(stderr,
-				"capability [%s] is unknown to libcap\n",
-				ptr);
-			exit(1);
-		    }
-		    if (cap_set_proc(raised_for_setpcap) != 0) {
-			perror("unable to raise CAP_SETPCAP for BSET changes");
-			exit(1);
-		    }
-		    status = prctl(PR_CAPBSET_DROP, cap);
-		    if (cap_set_proc(orig) != 0) {
-			perror("unable to lower CAP_SETPCAP post BSET change");
-			exit(1);
-		    }
-		    if (status) {
-			fprintf(stderr, "failed to drop [%s=%u]\n", ptr, cap);
-			exit(1);
-		    }
-		}
-	    }
-	    cap_free(raised_for_setpcap);
-	    cap_free(orig);
 	} else if (!memcmp("--inh=", argv[i], 6)) {
 	    cap_t all, raised_for_setpcap;
 	    char *text;
@@ -482,80 +690,7 @@ int main(int argc, char *argv[], char *envp[])
 		exit(1);
 	    }
 	} else if (!strcmp("--print", argv[i])) {
-	    unsigned cap;
-	    int set, status, j;
-	    cap_t all;
-	    char *text;
-	    const char *sep;
-	    struct group *g;
-	    gid_t groups[MAX_GROUPS], gid;
-	    uid_t uid;
-	    struct passwd *u;
-
-	    all = cap_get_proc();
-	    text = cap_to_text(all, NULL);
-	    printf("Current: %s\n", text);
-	    cap_free(text);
-	    cap_free(all);
-
-	    printf("Bounding set =");
- 	    sep = "";
-	    for (cap=0; (set = cap_get_bound(cap)) >= 0; cap++) {
-		char *ptr;
-		if (!set) {
-		    continue;
-		}
-
-		ptr = cap_to_name(cap);
-		if (ptr == NULL) {
-		    printf("%s%u", sep, cap);
-		} else {
-		    printf("%s%s", sep, ptr);
-		    cap_free(ptr);
-		}
-		sep = ",";
-	    }
-	    printf("\n");
-	    set = prctl(PR_GET_SECUREBITS);
-	    if (set >= 0) {
-		const char *b;
-		b = binary(set);  /* use verilog convention for binary string */
-		printf("Securebits: 0%o/0x%x/%u'b%s\n", set, set,
-		       (unsigned) strlen(b), b);
-		printf(" secure-noroot: %s (%s)\n",
-		       (set & 1) ? "yes":"no",
-		       (set & 2) ? "locked":"unlocked");
-		printf(" secure-no-suid-fixup: %s (%s)\n",
-		       (set & 4) ? "yes":"no",
-		       (set & 8) ? "locked":"unlocked");
-		printf(" secure-keep-caps: %s (%s)\n",
-		       (set & 16) ? "yes":"no",
-		       (set & 32) ? "locked":"unlocked");
-	    } else {
-		printf("[Securebits ABI not supported]\n");
-		set = prctl(PR_GET_KEEPCAPS);
-		if (set >= 0) {
-		    printf(" prctl-keep-caps: %s (locking not supported)\n",
-			   set ? "yes":"no");
-		} else {
-		    printf("[Keepcaps ABI not supported]\n");
-		}
-	    }
-	    uid = getuid();
-	    u = getpwuid(uid);
-	    printf("uid=%u(%s)\n", getuid(), u ? u->pw_name : "???");
-	    gid = getgid();
-	    g = getgrgid(gid);
-	    printf("gid=%u(%s)\n", gid, g ? g->gr_name : "???");
-	    printf("groups=");
-	    status = getgroups(MAX_GROUPS, groups);
-	    sep = "";
-	    for (j=0; j < status; j++) {
-		g = getgrgid(groups[j]);
-		printf("%s%u(%s)", sep, groups[j], g ? g->gr_name : "???");
-		sep = ",";
-	    }
-	    printf("\n");
+	    arg_print();
 	} else if ((!strcmp("--", argv[i])) || (!strcmp("==", argv[i]))) {
 	    argv[i] = strdup(argv[i][0] == '-' ? "/bin/bash" : argv[0]);
 	    argv[argc] = NULL;
@@ -570,6 +705,9 @@ int main(int argc, char *argv[], char *envp[])
 		   "  --decode=xxx   decode a hex string to a list of caps\n"
 		   "  --supports=xxx exit 1 if capability xxx unsupported\n"
 		   "  --drop=xxx     remove xxx,.. capabilities from bset\n"
+		   "  --addamb=xxx   add xxx,... capabilities to ambient set\n"
+		   "  --delamb=xxx   remove xxx,... capabilities from ambient\n"
+		   "  --noamb=xxx    reset the ambient capabilities\n"
 		   "  --caps=xxx     set caps as per cap_from_text()\n"
 		   "  --inh=xxx      set xxx,.. inheritiable set\n"
 		   "  --secbits=<n>  write a new value for securebits\n"
