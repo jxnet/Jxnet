@@ -2,7 +2,6 @@
 *~
 *swp
 *.o
-*.so
 *.a
 *.status
 *.deb
