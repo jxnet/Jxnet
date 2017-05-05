@@ -44,11 +44,12 @@ Makefile
 /jxnet-util/.gradle
 /jxnet-util/build
 /jxnet-util/target
-/jni//src/.deps
-/jni//src/.libs
-/jni//autom4te.cache/
+/jni/src/.deps
+/jni/src/.libs
+/jni/autom4te.cache/
 /jni/Makefile
 /jni/Makefile.in
+/jni/src/Makefile.in
 /jni/config.log
 /jni/config.status
 /jni/libtool

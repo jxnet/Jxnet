@@ -120,7 +120,10 @@ pcap_t *GetPcap(JNIEnv *env, jobject jpcap) {
 	}
 	SetPcapIDs(env);
 	jlong pcap = 0;
-	if ((pcap = (*env)->GetLongField(env, jpcap, PcapAddressFID)) == 0) {
+	/*if ((pcap = (*env)->GetLongField(env, jpcap, PcapAddressFID)) == 0) {
+		ThrowNew(env, PCAP_CLOSE_EXCEPTION, NULL);
+	}*/
+	if ((pcap = (*env)->CallLongMethod(env, jpcap, PcapGetAddressMID)) == 0) {
 		ThrowNew(env, PCAP_CLOSE_EXCEPTION, NULL);
 	}
 	return JlongToPointer(pcap);
@@ -140,7 +143,10 @@ FILE *GetFile(JNIEnv *env, jobject jf) {
 	}
 	SetFileIDs(env);
 	jlong file = 0;
-	if ((file = (*env)->GetLongField(env, jf, FileAddressFID)) == 0) {
+	/*if ((file = (*env)->GetLongField(env, jf, FileAddressFID)) == 0) {
+		ThrowNew(env, FILE_CLOSE_EXCEPTION, NULL);
+	}*/
+	if ((file = (*env)->CallLongMethod(env, jf, FileGetAddressMID)) == 0) {
 		ThrowNew(env, FILE_CLOSE_EXCEPTION, NULL);
 	}
 	return JlongToPointer(file);
@@ -160,7 +166,10 @@ pcap_dumper_t *GetPcapDumper(JNIEnv *env, jobject jpcap_dumper) {
 	}
 	SetPcapDumperIDs(env);
 	jlong pcap_dumper = 0;
-	if ((pcap_dumper = (*env)->GetLongField(env, jpcap_dumper, PcapDumperAddressFID)) == 0) {
+	/*if ((pcap_dumper = (*env)->GetLongField(env, jpcap_dumper, PcapDumperAddressFID)) == 0) {
+		ThrowNew(env, PCAP_DUMPER_CLOSE_EXCEPTION, NULL);
+	}*/
+	if ((pcap_dumper = (*env)->CallLongMethod(env, jpcap_dumper, PcapDumperGetAddressMID)) == 0) {
 		ThrowNew(env, PCAP_DUMPER_CLOSE_EXCEPTION, NULL);
 	}
 	return JlongToPointer(pcap_dumper);
@@ -179,7 +188,10 @@ struct bpf_program *GetBpfProgram(JNIEnv *env, jobject jbpf_program) {
 	}
 	SetBpfProgramIDs(env);
 	jlong bpf_program = 0;
-	if ((bpf_program = (*env)->GetLongField(env, jbpf_program, BpfProgramAddressFID)) == 0) {
+	/*if ((bpf_program = (*env)->GetLongField(env, jbpf_program, BpfProgramAddressFID)) == 0) {
+		ThrowNew(env, BPF_PROGRAM_CLOSE_EXCEPTION, NULL);
+	}*/
+	if ((bpf_program = (*env)->CallLongMethod(env, jbpf_program, BpfProgramGetAddressMID)) == 0) {
 		ThrowNew(env, BPF_PROGRAM_CLOSE_EXCEPTION, NULL);
 	}
 	return JlongToPointer(bpf_program);
