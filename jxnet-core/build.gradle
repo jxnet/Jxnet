@@ -4,6 +4,8 @@ sourceSets {
 		resources {
 			srcDir 'src/main/resources'
 			include 'lib/**/*'
+			include 'bin/**/*'
+			include 'system/**/*'
 		}
 	}
 }

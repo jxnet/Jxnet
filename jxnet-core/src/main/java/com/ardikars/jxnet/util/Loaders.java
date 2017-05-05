@@ -53,21 +53,21 @@ public class Loaders {
 			case LINUX:
 				if (Platforms.isARM()) {
 					if (Platforms.getVersion().equals("v7") || Platforms.getVersion().equals("v6")) {
-						loadLibrary("/lib/armeabi-v7l/libjxnet-linux.so");
+						loadLibrary("/system/linux/lib/armeabi-v7l/libjxnet.so");
 					}
 				} else {
 					if (Platforms.is64Bit()) {
-						loadLibrary("/lib/x86_64/libjxnet-linux.so");
+						loadLibrary("/system/linux/x64/libjxnet.so");
 					} else {
-						loadLibrary("/lib/x86/libjxnet-linux.so");
+						loadLibrary("/system/linux/x86/libjxnet.so");
 					}
 				}
 				break;
 			case WINDOWS:
 				if (Platforms.is64Bit()) {
-					loadLibrary("/lib/x86_64/jxnet.dll");
+					loadLibrary("/system/windows/lib/x64/jxnet.dll");
 				} else {
-					loadLibrary("/lib/x86/jxnet.dll");
+					loadLibrary("/system/windows/lib/x86/jxnet.dll");
 				}
 				break;
 			case ANDROID:
