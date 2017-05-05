@@ -54,7 +54,7 @@ AS_CASE([$host_os],
 		LDFLAGS+="-lwpcap -liphlpapi "
 	],
 	[*], [
-		AC_CHECK_LIB([pcap], [pcap_lib_version], [LDFLAGS+="-lpcap "], [
+		AC_CHECK_LIB([pcap], [main], [LDFLAGS+="-lpcap "], [
 			AC_MSG_ERROR(["Cannot find -lpcap."])
 		])
 		AC_CHECK_HEADERS([pcap.h], [AC_DEFINE([HAVE_PCAP_H], [1], [Define to 1 if you have <pcap.h>.])], [
