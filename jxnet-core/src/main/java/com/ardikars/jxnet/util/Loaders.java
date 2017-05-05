@@ -57,9 +57,9 @@ public class Loaders {
 					}
 				} else {
 					if (Platforms.is64Bit()) {
-						loadLibrary("/system/linux/x64/libjxnet.so");
+						loadLibrary("/system/linux/lib/x64/libjxnet.so");
 					} else {
-						loadLibrary("/system/linux/x86/libjxnet.so");
+						loadLibrary("/system/linux/lib/x86/libjxnet.so");
 					}
 				}
 				break;

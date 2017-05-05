@@ -21,8 +21,6 @@
 *.bz2
 *.zip
 *.rar
-description-pak
-Makefile
 /.gradle
 /.idea
 /.nb-gradle
@@ -48,6 +46,7 @@ Makefile
 /jni/src/.libs
 /jni/autom4te.cache/
 /jni/Makefile
+/jni/src/Makefile
 /jni/Makefile.in
 /jni/src/Makefile.in
 /jni/config.log
