@@ -979,16 +979,28 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapLookupNet
 	SetStringBuilder(env, jerrbuf, errbuf);
 
 	// Swap byte order (big endian to little endian)
-	swap_order_uint32(&netp);
-	swap_order_uint32(&maskp);
+	//swap_order_uint32(&netp);
+	//swap_order_uint32(&maskp);
 
+    jbyteArray netp_jarr = (jbyteArray) (*env)->GetObjectField(env, jnetp, Inet4AddressAddressFID);
+    jbyteArray maskp_jarr = (jbyteArray) (*env)->GetObjectField(env, jmaskp, Inet4AddressAddressFID);
+
+    jbyte *netp_arr = (*env)->GetByteArrayElements(env, netp_jarr, 0);
+    jbyte *maskp_arr = (*env)->GetByteArrayElements(env, maskp_jarr, 0);
+
+    memcpy(netp_arr, &netp, 4);
+    memcpy(maskp_arr, &maskp, 4);
+
+    (*env)->ReleaseByteArrayElements(env, netp_jarr, netp_arr, 0);
+    (*env)->ReleaseByteArrayElements(env, maskp_jarr, maskp_arr, 0);
+    /*
 	jobject netp_jobj = (*env)->CallStaticObjectMethod(env, Inet4AddressClass,
 			Inet4AddressValueOfMID, (int) netp);
 	jobject maskp_jobj = (*env)->CallStaticObjectMethod(env, Inet4AddressClass,
 			Inet4AddressValueOfMID, (int) maskp);
 
 	(*env)->CallVoidMethod(env, jnetp, Inet4AddressUpdateMID, netp_jobj);
-	(*env)->CallVoidMethod(env, jmaskp, Inet4AddressUpdateMID, maskp_jobj);
+	(*env)->CallVoidMethod(env, jmaskp, Inet4AddressUpdateMID, maskp_jobj);*/
 
 	return r;
   }

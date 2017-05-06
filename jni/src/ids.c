@@ -477,7 +477,8 @@ void SetPcapStatIDs(JNIEnv *env) {
 jclass Inet4AddressClass = NULL;
 jmethodID Inet4AddressValueOfMID = NULL;
 jmethodID Inet4AddressToIntMID = NULL;
-jmethodID Inet4AddressUpdateMID = NULL;
+//jmethodID Inet4AddressUpdateMID = NULL;
+jfieldID Inet4AddressAddressFID = NULL;
 
 void SetInet4AddressIDs(JNIEnv *env) {
 
@@ -502,12 +503,19 @@ void SetInet4AddressIDs(JNIEnv *env) {
 		return;
 	}
 
-	Inet4AddressUpdateMID = (*env)->GetMethodID(env, Inet4AddressClass, "update", "(Lcom/ardikars/jxnet/Inet4Address;)V");
+	/*Inet4AddressUpdateMID = (*env)->GetMethodID(env, Inet4AddressClass, "update", "(Lcom/ardikars/jxnet/Inet4Address;)V");
 
 	if(Inet4AddressToIntMID == NULL) {
 		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method Inet4Address.update(Inet4Address)");
 		return;
-	}
+	}*/
+
+	Inet4AddressAddressFID = (*env)->GetFieldID(env, Inet4AddressClass, "address", "[B");
+
+    if (Inet4AddressAddressFID == NULL) {
+        ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field Inet4Address.address");
+        return;
+    }
 }
 
 jclass PcapDirectionClass = NULL;

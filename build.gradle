@@ -51,7 +51,7 @@ clean {
 	delete fileTree("${rootDir}/jni/src") {
 		include '**/*.o'
 		include '**/*.lo'
-		
+		include '**/*.la'
 	}
 }
 
