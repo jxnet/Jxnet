@@ -70,7 +70,7 @@ public final class MacAddress {
 	 */
 	public static MacAddress valueOf(final String address) {
 		Preconditions.CheckNotNull(address);
-		if (!isValid(address)) throw new IllegalArgumentException();
+		if (!isValidAddress(address)) throw new IllegalArgumentException();
 		final String[] elements = address.split(":|-");
 		Preconditions.CheckArgument((elements.length == MAC_ADDRESS_LENGTH), "Specified MAC Address must contain 12 hex digits");
 		final byte[] b = new byte[MacAddress.MAC_ADDRESS_LENGTH];
@@ -108,7 +108,12 @@ public final class MacAddress {
 		return new MacAddress(bytes);
 	}
 
-	public static boolean isValid(final String address) {
+	/**
+	 * Validate Mac Address.
+	 * @param address string address.
+	 * @return true is valid, false otherwise.
+	 */
+	public static boolean isValidAddress(final String address) {
 		return Pattern.matches("^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$", address);
 	}
 
