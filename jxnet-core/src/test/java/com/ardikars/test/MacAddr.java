@@ -8,5 +8,6 @@ public class MacAddr {
     public void run() {
         MacAddress address = MacAddress.fromNicName(AllTests.deviceName);
         System.out.println(address);
+        System.out.println(MacAddress.isValid("de:ad:be:ef:c0-fe"));
     }
 }

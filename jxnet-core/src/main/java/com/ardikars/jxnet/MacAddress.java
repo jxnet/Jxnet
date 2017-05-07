@@ -21,6 +21,7 @@ import com.ardikars.jxnet.util.FormatUtils;
 import com.ardikars.jxnet.util.Preconditions;
 
 import java.util.Arrays;
+import java.util.regex.Pattern;
 
 /**
  * @author Ardika Rommy Sanjaya
@@ -60,7 +61,7 @@ public final class MacAddress {
 	 * @param nicName NIC name.
 	 * @return MacAddress object.
 	 */
-	public static native MacAddress fromNicName(String nicName);
+	public static native MacAddress fromNicName(final String nicName);
 
 	/**
 	 * Create MacAddress object.
@@ -69,7 +70,8 @@ public final class MacAddress {
 	 */
 	public static MacAddress valueOf(final String address) {
 		Preconditions.CheckNotNull(address);
-		final String[] elements = address.split(":");
+		if (!isValid(address)) throw new IllegalArgumentException();
+		final String[] elements = address.split(":|-");
 		Preconditions.CheckArgument((elements.length == MAC_ADDRESS_LENGTH), "Specified MAC Address must contain 12 hex digits");
 		final byte[] b = new byte[MacAddress.MAC_ADDRESS_LENGTH];
 		for (int i = 0; i < MacAddress.MAC_ADDRESS_LENGTH; i++) {
@@ -104,6 +106,10 @@ public final class MacAddress {
 				(byte) (address >> 8 & 0xff),
 				(byte) (address >> 0 & 0xff)};
 		return new MacAddress(bytes);
+	}
+
+	public static boolean isValid(final String address) {
+		return Pattern.matches("^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$", address);
 	}
 
 	public void update(final MacAddress macAddress) {
