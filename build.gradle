@@ -53,6 +53,16 @@ clean {
 		include '**/*.lo'
 		include '**/*.la'
 	}
+        file("${rootDir}/tools/jni/progs/capsh").delete()
+        file("${rootDir}/tools/jni/progs/getcap").delete()
+        file("${rootDir}/tools/jni/progs/getpcaps").delete()
+        file("${rootDir}/tools/jni/progs/setcap").delete()
+        file("${rootDir}/tools/obj").deleteDir()
+	file("${rootDir}/tools/jni/libcap/libcap.pc").delete()
+        file("${rootDir}/tools/jni/libcap/libcap.so").delete()
+        file("${rootDir}/tools/jni/libcap/libcap.so.2").delete()
+        file("${rootDir}/tools/jni/libcap/libcap.so.2.25").delete()
+	file("${rootDir}/tools/jni/libcap/_makenames").delete()
 }
 
 jar {
