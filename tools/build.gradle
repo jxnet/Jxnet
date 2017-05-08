@@ -1,0 +1,6 @@
+
+task ndkBuildTools(type: Exec) {
+	commandLine "${NDK_HOME}/ndk-build", '-C', "${TOOLS_DIR}",
+			"NDK_LIBS_OUT=${TOOLS_OUT}", "NDK_OUT=${TOOLS_OBJ}"
+}
+
