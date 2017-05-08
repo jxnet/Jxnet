@@ -98,4 +98,7 @@ a.out
 /jni/libpcap-latest/pcap_set_tstamp_precision.3pcap
 /jni/libpcap-latest/pcap_set_tstamp_type.3pcap
 /jni/libpcap-latest/selpolltest
+/jni/libpcap-latest/bpf_filter.c
+/jni/libpcap-latest/net
+/jni/libpcap-latest/libpcap.so.1.7.4
 
