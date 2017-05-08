@@ -13,7 +13,7 @@ LOCAL_SRC_FILES:= \
 
 LOCAL_C_INCLUDES := \
 	$(LOCAL_PATH)/include \
-	$(LOCAL_PATH)/../include/uapi
+	$(LOCAL_PATH)/include/uapi
 
 LOCAL_CFLAGS := -fPIC -Wall
 LOCAL_CFLAGS += -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -Dlinux -Wall 
