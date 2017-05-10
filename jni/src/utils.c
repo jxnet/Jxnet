@@ -27,7 +27,7 @@
 #include <winsock2.h>
 #include <Ws2tcpip.h>
 #include <iphlpapi.h>
-#elif defined(__linux__)
+#else
 #include <sys/socket.h>
 #include <netinet/in.h>
 #endif
