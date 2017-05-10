@@ -9,7 +9,6 @@ LOCAL_SRC_FILES := \
 	src/jxnet.c \
 	src/ids.c \
 	src/utils.c \
-	src/addr_utils.c \
 	src/preconditions.c \
 	src/mac_address.c
 

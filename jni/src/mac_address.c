@@ -79,14 +79,21 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_MacAddress_fromNicName
 				break;
 			}
 			pAdapter = pAdapter->Next;
-        }
-    } else {
-    	(*env)->ReleaseStringUTFChars(env, jnic_name, buf);
-    	ThrowNew(env, JXNET_EXCEPTION, "GetAdaptersInfo failed\n");
+        	}
+	} else {
+		(*env)->ReleaseStringUTFChars(env, jnic_name, buf);
+		ThrowNew(env, JXNET_EXCEPTION, "GetAdaptersInfo failed\n");
 		return NULL;
 	}
 	if (pAdapterInfo)
 		free(pAdapterInfo);
+
+	(*env)->ReleaseStringUTFChars(env, jnic_name, buf);
+        SetMacAddressIDs(env);
+        jobject obj = (*env)->CallStaticObjectMethod(env, MacAddressClass,
+                        MacAddressValueOfMID, hw_addr);
+        return obj;
+
 
 #elif defined(__linux__)
 
@@ -104,10 +111,16 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_MacAddress_fromNicName
 		(*env)->ReleaseStringUTFChars(env, jnic_name, buf);
 		return NULL;
 	}
-	bcopy((u_char *)ifr.ifr_ifru.ifru_hwaddr.sa_data, mac_addr, 6);
+	bcopy((u_char *) ifr.ifr_ifru.ifru_hwaddr.sa_data, mac_addr, 6);
 	hw_addr = (*env)->NewByteArray(env, (jsize) 6);
-	(*env)->SetByteArrayRegion(env, hw_addr,0 , 6, (jbyte *) mac_addr);
+	(*env)->SetByteArrayRegion(env, hw_addr, 0 , 6, (jbyte *) mac_addr);
 	close(sd);
+
+        (*env)->ReleaseStringUTFChars(env, jnic_name, buf);
+        SetMacAddressIDs(env);
+        jobject obj = (*env)->CallStaticObjectMethod(env, MacAddressClass,
+                        MacAddressValueOfMID, hw_addr);
+        return obj;
 
 #elif defined(__FreeBSD__)
 
@@ -141,12 +154,15 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_MacAddress_fromNicName
 	hw_addr = (*env)->NewByteArray(env, (jsize) 6);
 	(*env)->SetByteArrayRegion(env, hw_addr, 0, 6, (jbyte *) ptr);
 
-#endif
-
 	(*env)->ReleaseStringUTFChars(env, jnic_name, buf);
-	SetMacAddressIDs(env);
-	jobject obj = (*env)->CallStaticObjectMethod(env, MacAddressClass,
-			MacAddressValueOfMID, hw_addr);
-  	return obj;
+        SetMacAddressIDs(env);
+        jobject obj = (*env)->CallStaticObjectMethod(env, MacAddressClass,
+                        MacAddressValueOfMID, hw_addr);
+        return obj;
+#else
+	ThrowNew(env, JXNET_EXCEPTION, NULL);
+	return NULL;
+#endif
+  	return NULL;
   }
   
