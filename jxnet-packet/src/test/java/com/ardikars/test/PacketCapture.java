@@ -6,7 +6,6 @@ import com.ardikars.jxnet.packet.Packet;
 import com.ardikars.jxnet.packet.PacketHandler;
 import com.ardikars.jxnet.packet.PacketHelper;
 import com.ardikars.jxnet.packet.ethernet.Ethernet;
-import com.ardikars.jxnet.util.AddrUtils;
 
 public class PacketCapture {
 
@@ -14,7 +13,7 @@ public class PacketCapture {
     public static void main(String[] args) throws Exception {
 
         StringBuilder errbuf = new StringBuilder();
-        String source = AddrUtils.LookupDev(errbuf);
+        String source = Jxnet.PcapLookupDev(errbuf);
         if (source == null) {
             throw new Exception("Failed to find interface.");
         }

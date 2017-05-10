@@ -26,6 +26,7 @@ subprojects.each {
 jar.dependsOn subprojects.tasks['classes']
 
 clean {
+	file("${rootDir}/out").deleteDir()
 	file("${rootDir}/obj").deleteDir()
 	file("${rootDir}/jni/Makefile").delete()
 	file("${rootDir}/jni/src/Makefile").delete()

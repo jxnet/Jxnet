@@ -4,7 +4,6 @@ import static com.ardikars.jxnet.Jxnet.*;
 
 import com.ardikars.jxnet.*;
 import com.ardikars.jxnet.exception.JxnetException;
-import com.ardikars.jxnet.util.AddrUtils;
 import com.ardikars.jxnet.util.Platforms;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -29,7 +28,7 @@ public class AllTests {
 			" 9c22 0000 0000 6002 ffff 1818 0000 0204 " +
 			" 0550";
 
-	public static final String deviceName = AddrUtils.LookupDev(errbuf);
+	public static final String deviceName = Jxnet.PcapLookupDev(errbuf);
 	public static final int snaplen = 1500;
 	public static final int promisc = 1;
 	public static final int to_ms = 500;

@@ -17,7 +17,6 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.util.AddrUtils;
 import com.ardikars.jxnet.util.FormatUtils;
 
 import java.util.ArrayList;
