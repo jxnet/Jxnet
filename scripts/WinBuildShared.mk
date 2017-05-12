@@ -14,21 +14,20 @@ LDFLAGS =
 CFLAGS += -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/win32 -I../include 
 
 ifeq ($(PROCESSOR_ARCHITECTURE), AMD64)
-	LDFLAGS += -L../lib/x64 
+	LDFLAGS += -L../jni/lib/x64 
 endif
 
 ifeq ($(PROCESSOR_ARCHITECTURE), x86)
-	LDFLAGS += -L../lib 
+	LDFLAGS += -L../jni/lib 
 endif
 
 SRC = \
-	jni/src/ids.c \
-	jni/src/preconditions.c \
-	jni/src/bpf.c \
-	jni/src/jxnet.c \
-	jni/src/utils.c \
-	jni/src/addr_utils.c \
-	jni/src/mac_address.c
+	../jni/src/ids.o \
+	../jni/src/preconditions.o \
+	../jni/src/bpf.o \
+	../jni/src/jxnet.o \
+	../jni/src/utils.o \
+	../jni/src/mac_address.o
 
 LIB_NAME = jxnet
 

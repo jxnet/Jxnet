@@ -434,6 +434,7 @@ public final class Jxnet {
 	 * Sets whether monitor mode should be set on a capture handle when the handle is activated.
 	 * If rfmon is non-zero, monitor mode will be set, otherwise it will not be set.
 	 * @param pcap pcap object.
+	 * @param rfmon 1 (true) or 0 (false).
 	 * @return 0 on success or PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.
 	 */
 	public static native int PcapSetRfMon(Pcap pcap, int rfmon);

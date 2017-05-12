@@ -5,19 +5,22 @@ import static com.ardikars.jxnet.Jxnet.*;
 import com.ardikars.jxnet.*;
 import com.ardikars.jxnet.exception.JxnetException;
 import com.ardikars.jxnet.util.Platforms;
+import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 @RunWith(Suite.class)
-@SuiteClasses({ PcapActivate.class, PcapSetFilter.class, PcapDump.class, PcapFindAllDevs.class,
+@SuiteClasses({ PcapActivate.class, PcapSetFilter.class, PcapFindAllDevs.class,
 		PcapLookupDev.class, PcapLookupNet.class, Generic.class, Error.class,
 		PcapNextEx.class, PcapOpenDead.class, PcapOpenLive.class,
 		PcapOpenOffline.class, PcapBreakLoop.class, Blocking.class,
 		PcapDatalink.class, PcapDispatch.class, Preconditions.class,
-		MacAddr.class })
+		MacAddr.class, PcapDump.class })
 public class AllTests {
 
 	private static StringBuilder errbuf = new StringBuilder();
@@ -28,7 +31,7 @@ public class AllTests {
 			" 9c22 0000 0000 6002 ffff 1818 0000 0204 " +
 			" 0550";
 
-	public static final String deviceName = Jxnet.PcapLookupDev(errbuf);
+	public static final String deviceName = lookupDev();
 	public static final int snaplen = 1500;
 	public static final int promisc = 1;
 	public static final int to_ms = 500;
@@ -45,6 +48,7 @@ public class AllTests {
 
 	public static Pcap openHandle() throws JxnetException {
 		StringBuilder errbuf = new StringBuilder();
+		System.out.println("Open " + deviceName + ".");
 		Pcap pcap = PcapCreate(deviceName, errbuf);
 		if (pcap == null) {
 			throw new JxnetException(PcapGetErr(pcap));
@@ -105,6 +109,50 @@ public class AllTests {
 		PcapCompile(pcap, fp, filter, optimize, netmask);
 		PcapSetFilter(pcap, fp);
 		return fp;
+	}
+
+	public static String lookupDev() {
+		StringBuilder errbuf = new StringBuilder();
+		List<PcapIf> alldevsp = new ArrayList<PcapIf>();
+		PcapFindAllDevs(alldevsp, errbuf);
+		String devName = null;
+		for (PcapIf dev : alldevsp) {
+			System.out.println("================================================\n\n");
+			System.out.println("Name                  = " + dev.getName());
+			System.out.println("Description           = " + dev.getDescription());
+			System.out.println("Flags                 = " + dev.getFlags());
+
+			for (PcapAddr addr : dev.getAddresses()) {
+				if (addr.getAddr().getSaFamily() == SockAddr.Family.AF_INET) {
+					System.out.println("------------------------------------------------");
+					System.out.println("IPv4");
+					System.out.println("Addr                   = " + addr.getAddr().toString());
+					System.out.println("Netmask                = " + addr.getNetmask().toString());
+					System.out.println("BroadAddr              = " + addr.getBroadAddr().toString());
+					System.out.println("DstAddr                = " + addr.getDstAddr().toString());
+					System.out.println("------------------------------------------------");
+					if (addr.getAddr().getData() != null) {
+						Inet4Address d = Inet4Address.valueOf(addr.getAddr().getData());
+						if (!d.equals(Inet4Address.LOCALHOST) && !d.equals(Inet4Address.ZERO)) {
+							devName = dev.getName();
+						}
+					}
+				} else if (addr.getAddr().getSaFamily() == SockAddr.Family.AF_INET6) {
+					System.out.println("------------------------------------------------");
+					System.out.println("IPv6");
+					System.out.println("Addr                   = " + addr.getAddr().toString());
+					System.out.println("Netmask                = " + addr.getNetmask().toString());
+					System.out.println("BroadAddr              = " + addr.getBroadAddr().toString());
+					System.out.println("DstAddr                = " + addr.getDstAddr().toString());
+					System.out.println("------------------------------------------------");
+				}
+			}
+			//System.out.println(dev.getAddresses());
+
+			Assert.assertNotEquals(null, dev.getName());
+			System.out.println("================================================\n\n");
+		}
+		return devName;
 	}
 
 	static {

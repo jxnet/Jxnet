@@ -4,3 +4,7 @@ task ndkBuildTools(type: Exec) {
 			"NDK_LIBS_OUT=${TOOLS_OUT}", "NDK_OUT=${TOOLS_OBJ}"
 }
 
+clean {
+	file("${rootDir}/tools/obj").deleteDir()
+	file("${rootDir}/tools/out").deleteDir()
+}

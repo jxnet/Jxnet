@@ -1,10 +1,12 @@
 
 ext {
 	NDK_HOME = "${System.env.NDK_HOME}"
-	JXNET_DIR = "${rootDir}"
 	TOOLS_DIR = "${rootDir}/tools"
 	JXNET_OBJ = "${rootDir}/obj/jxnet"
 	TOOLS_OBJ = "${rootDir}/obj/tools"
 	JXNET_OUT = "${rootDir}/jxnet-core/src/main/resources/lib"
 	TOOLS_OUT = "${rootDir}/jxnet-core/src/main/resources/bin"
+	VERSION = "1.1.2-SNAPSHOT"
+	JUNIT_VERSION = "4.12"
+	LOCAL_MAVEN_REPOSITORY = "${System.env.HOME}/.m2/repository"
 }

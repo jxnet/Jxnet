@@ -1,5 +1,7 @@
 package com.ardikars.test;
 
+import com.ardikars.jxnet.Jxnet;
+
 /**
  * Jxnet Untested function
  *
@@ -13,5 +15,11 @@ package com.ardikars.test;
 
 
 public class Test {
+
+    @org.junit.Test
+    public void run() {
+        StringBuilder errbuf = new StringBuilder();
+        System.out.println(Jxnet.PcapLookupDev(errbuf));
+    }
 
 }

@@ -21,7 +21,6 @@ import com.ardikars.jxnet.exception.NotSupportedPlatformException;
 
 import java.io.*;
 import java.util.regex.Pattern;
-import static com.ardikars.jxnet.util.Preconditions.CheckNotNull;
 
 /**
  * @author Ardika Rommy Sanjaya
@@ -30,11 +29,13 @@ import static com.ardikars.jxnet.util.Preconditions.CheckNotNull;
 public class Loaders {
 
 	/**
-	 * Load library from jar /lib.
-	 * @param path library path.
+	 * Load library from jar.
+	 * @param path library path in jar.
+	 * @throws IllegalArgumentException IllegalArgumentException.
+	 * @throws IOException IOException.
 	 */
 	public static void loadFromInnerJar(String[] path) throws
-			IllegalArgumentException, IOException, FileNotFoundException {
+			IllegalArgumentException, IOException {
 		//checkNotNull(path);
 		for (String lib : path) {
 			loadLibrary(lib);
@@ -43,6 +44,10 @@ public class Loaders {
 
 	/**
 	 * Load library.
+	 * @throws UnsatisfiedLinkError UnsatisfiedLinkError.
+	 * @throws IOException IOException.
+	 * @throws FileNotFoundException FileNotFoundException.
+	 * @throws IllegalArgumentException IllegalArgumentException.
 	 */
 	public static void loadLibrary() throws
 			UnsatisfiedLinkError, IOException, FileNotFoundException, IllegalArgumentException {
