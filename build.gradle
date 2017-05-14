@@ -13,7 +13,7 @@ allprojects {
 	[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 	repositories {
-		mavenCentral()
+		mavenCenter()
 	}
 
 	javadoc {
@@ -50,10 +50,8 @@ allprojects {
 	build {
 		tasks['test'].enabled = false
 	}
-
+	
 }
-
-apply plugin: 'maven'
 
 subprojects.each {
 	subproject -> evaluationDependsOn(subproject.path)
@@ -130,41 +128,5 @@ task ndkBuild(type: Exec) {
 	dependsOn ':jxnet-core:generateJNIHeaders'
 	commandLine "${NDK_HOME}/ndk-build", '-C', "${rootDir}",
 			"NDK_LIBS_OUT=${JXNET_OUT}", "NDK_OUT=${JXNET_OBJ}"
-}
-
-uploadArchives {
-	repositories {
-		mavenDeployer {
-			repository(url: "https://oss.sonatype.org/content/repositories/releases") {
-				authentication(userName: USERNAME, password: PASSWORD)
-			}
-			snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-				authentication(userName: USERNAME, password: PASSWORD)
-			}
-			pom.project {
-				packaging 'jar'
-				url 'http://ardikars.com'
-				scm {
-					connection 'scm:git:git@github.com:ardikars/Jxnet.git'
-					developerConnection 'scm:git:git@github.com:ardikars/Jxnet.git'
-					url 'https://github.com/ardikars/Jxnet.git'
-					tag 'HEAD'
-				}
-				licenses {
-					license {
-						name 'GNU Lesser General Public License, Version 3'
-						url 'http://www.gnu.org/licenses/'
-					}
-				}
-				developers {
-					developer {
-						id 'ardikars'
-						name 'Ardika Rommy Sanjaya'
-						email 'contact@ardikars.com'
-					}
-				}
-			}
-		}
-	}
 }
 

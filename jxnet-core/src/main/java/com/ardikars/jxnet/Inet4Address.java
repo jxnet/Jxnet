@@ -51,7 +51,7 @@ public final class Inet4Address extends InetAddress {
 	 */
 	public static Inet4Address valueOf(final String inet4Address) {
 		Preconditions.CheckNotNull(inet4Address);
-		Preconditions.CheckArgument(inet4Address.matches("\\b((25[0–5]|2[0–4]\\d|[01]?\\d\\d?)(\\.)){3}(25[0–5]|2[0–4]\\d|[01]?\\d\\d?)\\b"));
+		//Preconditions.CheckArgument(inet4Address.matches("\\b((25[0–5]|2[0–4]\\d|[01]?\\d\\d?)(\\.)){3}(25[0–5]|2[0–4]\\d|[01]?\\d\\d?)\\b"));
 		String[] parts = inet4Address.split("\\.");
 		byte[] result = new byte[parts.length];
 		Preconditions.CheckArgument(result.length == IPV4_ADDRESS_LENGTH);
