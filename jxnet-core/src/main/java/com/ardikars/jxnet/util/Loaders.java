@@ -58,7 +58,7 @@ public class Loaders {
 			case LINUX:
 				if (Platforms.isARM()) {
 					if (Platforms.getVersion().equals("v7") || Platforms.getVersion().equals("v6")) {
-						loadLibrary("/system/linux/lib/armeabi-v7l/libjxnet.so");
+						loadLibrary("/system/linux/lib/arm32/libjxnet.so");
 					}
 				} else {
 					if (Platforms.is64Bit()) {
