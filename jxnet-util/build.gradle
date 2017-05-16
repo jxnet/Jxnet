@@ -1,0 +1,10 @@
+
+dependencies {
+    compile project(":jxnet-core")
+    testCompile "junit:junit:${JUNIT_VERSION}"
+}
+
+clean {
+    file("${rootDir}/jxnet-util/obj").deleteDir()
+    file("${rootDir}/jxnet-util/out").deleteDir()
+}
