@@ -4,7 +4,7 @@ allprojects {
 	apply plugin: 'java'
 	apply plugin: 'signing'
 	apply plugin: 'maven'
-	apply from: "${rootDir}/gradle/config.gradle"
+	apply from: "${rootDir}/gradle/configure.gradle"
 
 	group = 'com.ardikars.jxnet'
 	version = "${VERSION}"
