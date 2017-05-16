@@ -17,6 +17,7 @@
 
 package com.ardikars.jxnet.util;
 
+import com.ardikars.jxnet.Inet4Address;
 import com.ardikars.jxnet.exception.NotSupportedPlatformException;
 
 import java.io.BufferedReader;
@@ -29,7 +30,7 @@ import java.io.InputStreamReader;
  */
 public class AddrUtils {
 
-    public static String GetGatewayAddress() throws IOException {
+    public static Inet4Address GetGatewayAddress() throws IOException {
         Process process = null;
         BufferedReader stdIn = null;
         String str = null;
@@ -57,16 +58,7 @@ public class AddrUtils {
                 break;
             }
         }
-        return str;
-    }
-
-    public static void main(String[] args) {
-        try {
-            String str = GetGatewayAddress();
-            System.out.println(str);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return Inet4Address.valueOf(str);
     }
 
 }
