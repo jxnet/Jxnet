@@ -1,5 +1,6 @@
 
 ext {
+
 	NDK_HOME = "${System.env.NDK_HOME}"
 	TOOLS_DIR = "${rootDir}/tools"
 	JXNET_OBJ = "${rootDir}/obj/jxnet"
@@ -7,6 +8,52 @@ ext {
 	JXNET_OUT = "${rootDir}/jxnet-core/src/main/resources/lib"
 	TOOLS_OUT = "${rootDir}/jxnet-core/src/main/resources/bin"
 	VERSION = "1.1.2-SNAPSHOT"
+	JAVA_VERSION = "1.8"
 	JUNIT_VERSION = "4.12"
 	LOCAL_MAVEN_REPOSITORY = "${System.env.HOME}/.m2/repository"
+
+	project_pom = {
+
+		name 'Jxnet'
+		description 'Jxnet is a Java library for capturing and sending custom network packets.'
+		url 'https://github.com/ardikars/Jxnet'
+
+		developers {
+			developer {
+				id 'ardikars'
+				name 'Ardika Rommy Sanjaya'
+				email 'contact@ardikars.com'
+			}
+		}
+
+		licenses {
+			license {
+				name 'GNU Lesser General Public License, Version 3.0'
+				url 'http://www.gnu.org/licenses'
+				distribution 'repo'
+			}
+		}
+
+		scm {
+			url 'https://github.com/ardikars/Jxnet.git'
+			connection 'scm:git:https://github.com/ardikars/Jxnet.git'
+			developerConnection 'scm:git:git@github.com/ardikars/Jxnet.git'
+			tag 'HEAD'
+		}
+
+		organization {
+			name 'ardikars'
+            url 'http://ardikars.com'
+		}
+
+	}
+
+	defaultBlank = { closure ->
+		try {
+			closure()
+		} catch (MissingPropertyException e) {
+			''
+		}
+	}
+
 }
