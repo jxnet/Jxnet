@@ -48,7 +48,7 @@ public class IPProtocolType extends NamedNumber<Byte, IPProtocolType> {
 
     static {
         registry.put(ICMP.getValue(), ICMP);
-        registry.put(ICMP.getValue(), IPV6_ICMP);
+        registry.put(IPV6_ICMP.getValue(), IPV6_ICMP);
         registry.put(IGMP.getValue(), IGMP);
         registry.put(TCP.getValue(), TCP);
         registry.put(UDP.getValue(), UDP);
