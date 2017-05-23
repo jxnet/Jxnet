@@ -965,10 +965,9 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapLookupNet
 
 	char errbuf[PCAP_ERRBUF_SIZE];
 	errbuf[0] = '\0';
-	SetInet4AddressIDs(env);
 
-	bpf_u_int32 netp = (bpf_u_int32)(*env)->CallIntMethod(env, jnetp, Inet4AddressToIntMID);
-	bpf_u_int32 maskp = (bpf_u_int32)(*env)->CallIntMethod(env, jmaskp, Inet4AddressToIntMID);
+	bpf_u_int32 netp; //= (bpf_u_int32)(*env)->CallIntMethod(env, jnetp, Inet4AddressToIntMID);
+	bpf_u_int32 maskp; //= (bpf_u_int32)(*env)->CallIntMethod(env, jmaskp, Inet4AddressToIntMID);
 
 	const char *device = (*env)->GetStringUTFChars(env, jdevice, 0);
 
@@ -978,29 +977,17 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapLookupNet
 
 	SetStringBuilder(env, jerrbuf, errbuf);
 
-	// Swap byte order (big endian to little endian)
-	//swap_order_uint32(&netp);
-	//swap_order_uint32(&maskp);
+	SetInet4AddressIDs(env);
 
-    jbyteArray netp_jarr = (jbyteArray) (*env)->GetObjectField(env, jnetp, Inet4AddressAddressFID);
-    jbyteArray maskp_jarr = (jbyteArray) (*env)->GetObjectField(env, jmaskp, Inet4AddressAddressFID);
+	jbyteArray netp_jarr = (jbyteArray) (*env)->GetObjectField(env, jnetp, Inet4AddressAddressFID);
+	(*env)->SetByteArrayRegion(env, netp_jarr, 0, 4, (void *) &netp);
+	//jbyte *netp_arr = (*env)->GetByteArrayElements(env, netp_jarr, 0);
+	//(*env)->ReleaseByteArrayElements(env, netp_jarr, netp_arr, 0);
 
-    jbyte *netp_arr = (*env)->GetByteArrayElements(env, netp_jarr, 0);
-    jbyte *maskp_arr = (*env)->GetByteArrayElements(env, maskp_jarr, 0);
-
-    memcpy(netp_arr, &netp, 4);
-    memcpy(maskp_arr, &maskp, 4);
-
-    (*env)->ReleaseByteArrayElements(env, netp_jarr, netp_arr, 0);
-    (*env)->ReleaseByteArrayElements(env, maskp_jarr, maskp_arr, 0);
-    /*
-	jobject netp_jobj = (*env)->CallStaticObjectMethod(env, Inet4AddressClass,
-			Inet4AddressValueOfMID, (int) netp);
-	jobject maskp_jobj = (*env)->CallStaticObjectMethod(env, Inet4AddressClass,
-			Inet4AddressValueOfMID, (int) maskp);
-
-	(*env)->CallVoidMethod(env, jnetp, Inet4AddressUpdateMID, netp_jobj);
-	(*env)->CallVoidMethod(env, jmaskp, Inet4AddressUpdateMID, maskp_jobj);*/
+	jbyteArray maskp_jarr = (jbyteArray) (*env)->GetObjectField(env, jmaskp, Inet4AddressAddressFID);
+	(*env)->SetByteArrayRegion(env, maskp_jarr, 0, 4, (void *) &maskp);
+	//jbyte *maskp_arr = (*env)->GetByteArrayElements(env, maskp_jarr, 0);
+	//(*env)->ReleaseByteArrayElements(env, maskp_jarr, maskp_arr, 0);
 
 	return r;
   }

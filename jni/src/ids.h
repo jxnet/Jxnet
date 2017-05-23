@@ -109,7 +109,6 @@ void SetPcapStatIDs(JNIEnv *env);
 extern jclass Inet4AddressClass;
 extern jmethodID Inet4AddressValueOfMID;
 extern jmethodID Inet4AddressToIntMID;
-//extern jmethodID Inet4AddressUpdateMID;
 extern jfieldID Inet4AddressAddressFID;
 
 void SetInet4AddressIDs(JNIEnv *env);
