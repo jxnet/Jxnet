@@ -17,9 +17,12 @@
 
 package com.ardikars.jxnet.util;
 
+import com.ardikars.jxnet.Jxnet;
+import com.ardikars.jxnet.exception.JxnetException;
 import com.ardikars.jxnet.exception.NotSupportedPlatformException;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.util.regex.Pattern;
 
 /**
@@ -29,6 +32,28 @@ import java.util.regex.Pattern;
 public class Loaders {
 
 	/**
+	 * Error Buffer
+	 */
+	private static StringBuilder errbuf = new StringBuilder();
+
+	/**
+	 * Load library from absolute path.
+	 * @param path absolute path.
+	 * @throws Exception exception.
+	 */
+	public static void loadFromAbsolutePath(String path) throws Exception {
+		Preconditions.CheckNotNull(path);
+		try {
+			System.load(path);
+			Field isLoadedField = Jxnet.class.getDeclaredField("isLoaded");
+			isLoadedField.setAccessible(true);
+			isLoadedField.setBoolean(Jxnet.class, true);
+		} catch (Exception ex) {
+			throw new Exception(ex);
+		}
+	}
+
+	/**
 	 * Load library from jar.
 	 * @param path library path in jar.
 	 * @throws IllegalArgumentException IllegalArgumentException.
@@ -36,7 +61,8 @@ public class Loaders {
 	 */
 	public static void loadFromInnerJar(String[] path) throws
 			IllegalArgumentException, IOException {
-		//checkNotNull(path);
+		errbuf.setLength(0);
+		Preconditions.CheckNotNull(path);
 		for (String lib : path) {
 			loadLibrary(lib);
 		}
@@ -46,11 +72,11 @@ public class Loaders {
 	 * Load library.
 	 * @throws UnsatisfiedLinkError UnsatisfiedLinkError.
 	 * @throws IOException IOException.
-	 * @throws FileNotFoundException FileNotFoundException.
 	 * @throws IllegalArgumentException IllegalArgumentException.
 	 */
 	public static void loadLibrary() throws
-			UnsatisfiedLinkError, IOException, FileNotFoundException, IllegalArgumentException {
+			UnsatisfiedLinkError, IOException, IllegalArgumentException {
+		errbuf.setLength(0);
 		if (load()) {
 			return;
 		}
@@ -90,12 +116,13 @@ public class Loaders {
 			System.loadLibrary("jxnet");
 			success = true;
 		} catch (UnsatisfiedLinkError e) {
+			errbuf.append(e.toString()+"\n");
 			success = false;
 		}
 		return success;
 	}
 	
-	private static void loadLibrary(String path) throws IllegalArgumentException, IOException, FileNotFoundException {
+	private static void loadLibrary(String path) throws IllegalArgumentException, IOException {
 		//CheckNotNull(path);
 		if (!path.startsWith("/")) {
 			throw new IllegalArgumentException("The path has to be absolute (start with '/').");
@@ -110,7 +137,8 @@ public class Loaders {
 		int readBytes;
 		InputStream is = Loaders.class.getResourceAsStream(path);
 		if (is == null) {
-			throw new FileNotFoundException(path + " not found.");
+			errbuf.append("Error: " + path + " not found.\n");
+			throw new JxnetException(errbuf.toString());
 		}
 		OutputStream os = new FileOutputStream(temp);
 		while ((readBytes = is.read(buffer)) != -1) {

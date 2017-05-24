@@ -9,7 +9,7 @@ AC_PROG_LIBTOOL(libtool)
 AC_PROG_RANLIB
 AC_PROG_CC
 AC_CONFIG_MACRO_DIR([m4])
-m4_include([m4/ax_jni_include_dir.m4])
+m4_include([m4/root/workspace/TULIP/root/workspace/TULIP/ax_jni_include_dir.m4])
 AC_CANONICAL_HOST
 
 CFLAGS="$CFLAGS -Wall "
@@ -30,7 +30,7 @@ if test "x$JAVA_HOME" != x; then
 	)
 else
 	AX_JNI_INCLUDE_DIR
-	for JNI_INCLUDE_DIR in $JNI_INCLUDE_DIRS
+	for JNI_INCLUDE_DIR/root/workspace/TULIP/root/workspace/TULIP in $JNI_INCLUDE_DIRS
 	do
 		CFLAGS="$CFLAGS -I$JNI_INCLUDE_DIR"
 	done
@@ -43,9 +43,11 @@ AS_CASE([$host_os],
 		AS_CASE([$host_cpu],
 			[amd64|x86_64], [
 				LDFLAGS+="-L../lib/x64 "
+				CFLAGS+="-Wl,--export-all-symbols -Wl,--add-stdcall-alias -m64 "
 			],
 			[i?86|x86], [
 				LDFLAGS+="-L../lib "
+				CFLAGS+="-Wl,--export-all-symbols -Wl,--add-stdcall-alias -m32 "
 			],
 			[*], [
 				AC_MSG_ERROR(["Unknown architecture."])
@@ -62,7 +64,7 @@ AS_CASE([$host_os],
 		])
 	]
 )
-
+-Wl,--export-all-symbols -Wl,--add-stdcall-alias -m64
 AC_CONFIG_FILES([Makefile src/Makefile])
 
 # Checks for typedefs, structures, and compiler characteristics.

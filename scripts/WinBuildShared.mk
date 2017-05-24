@@ -21,7 +21,7 @@ endif
 ifeq ($(PROCESSOR_ARCHITECTURE), x86)
 	CFLAGS += -Wl,--export-all-symbols -Wl,--add-stdcall-alias -m32 -shared 
 	LDFLAGS += -L../jni/lib 
-endif
+endif/root/workspace/TULIP
 
 SRC = \
 	../jni/src/ids.c \
@@ -36,8 +36,7 @@ LIB_NAME = jxnet
 all: $(LIB_NAME)
 
 $(LIB_NAME):
-	$(CC) -shared $(CFLAGS) $(LDFLAGS) $(SRC) -o $@.dll -lwpcap -liphlpapi
+	$(CC) $(CFLAGS) $(LDFLAGS) $(SRC) -o $@.dll -lwpcap -liphlpapi
 	
 clean:
 	rm $(LIB_NAME).*
-
