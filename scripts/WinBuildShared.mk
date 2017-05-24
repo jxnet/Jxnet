@@ -3,23 +3,23 @@ ifneq ($(OS), Windows_NT)
 	$(error This build script just for Windows NT.)
 endif
 
-ifeq ($(JAVA_HOME), )
-	$(error JAVA_HOME environment is not set.)
+ifeq ($(JDK_HOME), )
+	$(error JDK_HOME environment is not set.)
 endif
 
 CC = gcc
 CFLAGS = -Wall 
 LDFLAGS =  
 
-CFLAGS += -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/win32 -I../include 
+CFLAGS += -I$(JDK_HOME)/include -I$(JDK_HOME)/include/win32 -I../jni/include 
 
 ifeq ($(PROCESSOR_ARCHITECTURE), AMD64)
-	CFLAGS += -m64
+	CFLAGS += -Wl,--export-all-symbols -Wl,--add-stdcall-alias -m64 -shared 
 	LDFLAGS += -L../jni/lib/x64 
 endif
 
 ifeq ($(PROCESSOR_ARCHITECTURE), x86)
-	CFLAGS += -m32
+	CFLAGS += -Wl,--export-all-symbols -Wl,--add-stdcall-alias -m32 -shared 
 	LDFLAGS += -L../jni/lib 
 endif
 
@@ -29,7 +29,7 @@ SRC = \
 	../jni/src/bpf.c \
 	../jni/src/jxnet.c \
 	../jni/src/utils.c \
-	../jni/src/mac_address.o
+	../jni/src/mac_address.c
 
 LIB_NAME = jxnet
 
