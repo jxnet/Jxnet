@@ -51,7 +51,7 @@ public class AddrUtils {
             throw new NotSupportedPlatformException();
         }
         if (str == null) return null;
-        String[] strings = str.replaceFirst("0.0.0.0", "").split(" ");
+        String[] strings = str.replaceAll("0.0.0.0", "").split(" ");
         for (String s : strings) {
             if (!s.equals("")) {
                 str = s;

@@ -21,7 +21,7 @@ endif
 ifeq ($(PROCESSOR_ARCHITECTURE), x86)
 	CFLAGS += -Wl,--export-all-symbols -Wl,--add-stdcall-alias -m32 -shared 
 	LDFLAGS += -L../jni/lib 
-endif/root/workspace/TULIP
+endif
 
 SRC = \
 	../jni/src/ids.c \
