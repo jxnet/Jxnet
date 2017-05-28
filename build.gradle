@@ -4,7 +4,6 @@ allprojects {
 	apply plugin: 'java'
 	apply plugin: 'maven'
 	apply plugin: 'signing'
-	apply plugin: 'io.codearte.nexus-staging'
 	apply from: "${rootDir}/gradle/configure.gradle"
 
 	group = 'com.ardikars.jxnet'
@@ -17,10 +16,6 @@ allprojects {
 
 	repositories {
 		mavenCentral()
-	}
-
-	dependencies {
-		classpath 'io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.8.0' 
 	}
 
 	javadoc {
@@ -50,10 +45,6 @@ allprojects {
 		from sourceSets.main.allSource
 	}
 
-	artifacts {
-		archives jar, sourcesJar, javadocJar
-	}
-
 	build {
 		tasks['test'].enabled = false
 	}
@@ -63,8 +54,8 @@ allprojects {
 		sign configurations.archives
 	}
 
-	nexusStaging {
-		packageGroup = project.getGroup()
+	artifacts {
+		archives jar, sourcesJar, javadocJar
 	}
 
 	uploadArchives {	
