@@ -15,7 +15,7 @@ allprojects {
 	[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 	repositories {
-		jcenter()
+		mavenCentral()
 	}
 
 	javadoc {
@@ -54,10 +54,11 @@ allprojects {
 	}
 
 	signing {
+		required { !version.endsWith("SNAPSHOT") && gradle.taskGraph.hasTask('uploadArchives') }
 		sign configurations.archives
 	}
 
-	uploadArchives {
+	uploadArchives {	
 		repositories.mavenDeployer {
 			beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 			repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
