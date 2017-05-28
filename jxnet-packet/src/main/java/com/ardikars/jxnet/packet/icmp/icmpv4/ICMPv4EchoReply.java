@@ -15,28 +15,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet.packet.icmp;
+package com.ardikars.jxnet.packet.icmp.icmpv4;
 
+import com.ardikars.jxnet.packet.icmp.ICMPTypeAndCode;
 import com.ardikars.jxnet.util.TwoKeyMap;
 
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class ICMPv4RouterSolicitation extends ICMPTypeAndCode {
+public class ICMPv4EchoReply extends ICMPTypeAndCode {
 
-    public static final ICMPv4RouterSolicitation ROUTER_DISCOVERY_SELECTION_SOLICITATION =
-            new ICMPv4RouterSolicitation((byte) 0, "Router discovery/selection/solicitation");
+    public static final ICMPv4EchoReply ECHO_REPLY =
+            new ICMPv4EchoReply((byte) 0, "Echo reply (used to ping)");
 
-    protected ICMPv4RouterSolicitation(Byte code, String name) {
-        super((byte) 10, code, name);
+    protected ICMPv4EchoReply(Byte code, String name) {
+        super((byte) 0, code, name);
     }
 
-    public static ICMPv4RouterSolicitation register(Byte code, String name) {
-        TwoKeyMap<Byte, Byte> key = TwoKeyMap.newInstance((byte) 10, code);
-        ICMPv4RouterSolicitation routerSolicitation =
-                new ICMPv4RouterSolicitation(key.getSecondKey(), name);
-        return (ICMPv4RouterSolicitation) ICMPTypeAndCode.registry.put(key, routerSolicitation);
+    public static ICMPv4EchoReply register(Byte code, String name) {
+        TwoKeyMap<Byte, Byte> key = TwoKeyMap.newInstance((byte) 0, code);
+        ICMPv4EchoReply icmPv4EchoReply =
+                new ICMPv4EchoReply(key.getSecondKey(), name);
+        return (ICMPv4EchoReply) ICMPTypeAndCode.registry.put(key, icmPv4EchoReply);
     }
 
     @Override
@@ -45,7 +46,7 @@ public class ICMPv4RouterSolicitation extends ICMPTypeAndCode {
     }
 
     static {
-        ICMPTypeAndCode.registry.put(ROUTER_DISCOVERY_SELECTION_SOLICITATION.getKey(), ROUTER_DISCOVERY_SELECTION_SOLICITATION);
+        ICMPTypeAndCode.registry.put(ECHO_REPLY.getKey(), ECHO_REPLY);
     }
 
 }

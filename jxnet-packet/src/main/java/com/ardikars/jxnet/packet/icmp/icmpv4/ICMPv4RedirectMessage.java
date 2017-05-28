@@ -15,28 +15,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet.packet.icmp;
+package com.ardikars.jxnet.packet.icmp.icmpv4;
 
+import com.ardikars.jxnet.packet.icmp.ICMPTypeAndCode;
 import com.ardikars.jxnet.util.TwoKeyMap;
 
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class ICMPv4EchoReply extends ICMPTypeAndCode {
+public class ICMPv4RedirectMessage extends ICMPTypeAndCode {
 
-    public static final ICMPv4EchoReply ECHO_REPLY =
-            new ICMPv4EchoReply((byte) 0, "Echo reply (used to ping)");
+    public static final ICMPv4RedirectMessage REDIRECT_DATAGRAM_FOR_NETWORK =
+            new ICMPv4RedirectMessage((byte) 0, "Redirect datagram for the network");
 
-    protected ICMPv4EchoReply(Byte code, String name) {
-        super((byte) 0, code, name);
+    protected ICMPv4RedirectMessage(Byte code, String name) {
+        super((byte) 5, code, name);
     }
 
-    public static ICMPv4EchoReply register(Byte code, String name) {
-        TwoKeyMap<Byte, Byte> key = TwoKeyMap.newInstance((byte) 0, code);
-        ICMPv4EchoReply icmPv4EchoReply =
-                new ICMPv4EchoReply(key.getSecondKey(), name);
-        return (ICMPv4EchoReply) ICMPTypeAndCode.registry.put(key, icmPv4EchoReply);
+    public static ICMPv4RedirectMessage register(Byte code, String name) {
+        TwoKeyMap<Byte, Byte> key = TwoKeyMap.newInstance((byte) 5, code);
+        ICMPv4RedirectMessage redirectMessage = new ICMPv4RedirectMessage(key.getSecondKey(), name);
+        return (ICMPv4RedirectMessage) ICMPTypeAndCode.registry.put(key, redirectMessage);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class ICMPv4EchoReply extends ICMPTypeAndCode {
     }
 
     static {
-        ICMPTypeAndCode.registry.put(ECHO_REPLY.getKey(), ECHO_REPLY);
+        ICMPTypeAndCode.registry.put(REDIRECT_DATAGRAM_FOR_NETWORK.getKey(), REDIRECT_DATAGRAM_FOR_NETWORK);
     }
 
 }

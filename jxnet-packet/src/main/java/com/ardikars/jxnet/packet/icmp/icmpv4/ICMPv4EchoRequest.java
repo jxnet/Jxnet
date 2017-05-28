@@ -15,8 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet.packet.icmp;
+package com.ardikars.jxnet.packet.icmp.icmpv4;
 
+import com.ardikars.jxnet.packet.icmp.ICMPTypeAndCode;
 import com.ardikars.jxnet.util.TwoKeyMap;
 
 /**

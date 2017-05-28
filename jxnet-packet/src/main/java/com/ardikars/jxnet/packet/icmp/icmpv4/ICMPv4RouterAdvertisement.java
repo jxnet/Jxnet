@@ -15,27 +15,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet.packet.icmp;
+package com.ardikars.jxnet.packet.icmp.icmpv4;
 
+import com.ardikars.jxnet.packet.icmp.ICMPTypeAndCode;
 import com.ardikars.jxnet.util.TwoKeyMap;
 
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class ICMPv4RedirectMessage extends ICMPTypeAndCode {
+public class ICMPv4RouterAdvertisement extends ICMPTypeAndCode {
 
-    public static final ICMPv4RedirectMessage REDIRECT_DATAGRAM_FOR_NETWORK =
-            new ICMPv4RedirectMessage((byte) 0, "Redirect datagram for the network");
+    public static final ICMPv4RouterAdvertisement ROUTER_ADVERTISEMENT =
+            new ICMPv4RouterAdvertisement((byte) 0, "Router Advertisement");
 
-    protected ICMPv4RedirectMessage(Byte code, String name) {
-        super((byte) 5, code, name);
+    protected ICMPv4RouterAdvertisement(Byte code, String name) {
+        super((byte) 9, code, name);
     }
 
-    public static ICMPv4RedirectMessage register(Byte code, String name) {
-        TwoKeyMap<Byte, Byte> key = TwoKeyMap.newInstance((byte) 5, code);
-        ICMPv4RedirectMessage redirectMessage = new ICMPv4RedirectMessage(key.getSecondKey(), name);
-        return (ICMPv4RedirectMessage) ICMPTypeAndCode.registry.put(key, redirectMessage);
+    public static ICMPv4RouterAdvertisement register(Byte code, String name) {
+        TwoKeyMap<Byte, Byte> key = TwoKeyMap.newInstance((byte) 9, code);
+        ICMPv4RouterAdvertisement routerAdvertisement =
+                new ICMPv4RouterAdvertisement(key.getSecondKey(), name);
+        return (ICMPv4RouterAdvertisement) ICMPTypeAndCode.registry.put(key, routerAdvertisement);
     }
 
     @Override
@@ -44,7 +46,7 @@ public class ICMPv4RedirectMessage extends ICMPTypeAndCode {
     }
 
     static {
-        ICMPTypeAndCode.registry.put(REDIRECT_DATAGRAM_FOR_NETWORK.getKey(), REDIRECT_DATAGRAM_FOR_NETWORK);
+        ICMPTypeAndCode.registry.put(ROUTER_ADVERTISEMENT.getKey(), ROUTER_ADVERTISEMENT);
     }
 
 }
