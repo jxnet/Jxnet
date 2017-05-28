@@ -102,3 +102,4 @@ a.out
 /jni/libpcap-latest/net
 /jni/libpcap-latest/libpcap.so.1.7.4
 /tools/build
+/scripts/jxnet.dll
