@@ -3,6 +3,7 @@ allprojects {
 	
 	apply plugin: 'java'
 	apply plugin: 'maven'
+	apply plugin: 'signing'
 	apply from: "${rootDir}/gradle/configure.gradle"
 
 	group = 'com.ardikars.jxnet'
@@ -52,9 +53,17 @@ allprojects {
 		tasks['test'].enabled = false
 	}
 
+	signing {
+		sign configurations.archives
+	}
+
 	uploadArchives {
 		repositories.mavenDeployer {
-			repository(url: defaultBlank({ deployUrl })) {
+			beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+			repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
+				authentication(userName: defaultBlank({ deployUser }), password: defaultBlank({ deployPass }))
+			}
+			snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
 				authentication(userName: defaultBlank({ deployUser }), password: defaultBlank({ deployPass }))
 			}
 			pom.project project_pom
