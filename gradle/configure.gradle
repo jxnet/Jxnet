@@ -11,6 +11,7 @@ ext {
 	TOOLS_OBJ = "${rootDir}/obj/tools"
 	JXNET_OUT = "${rootDir}/jxnet-core/src/main/resources/lib"
 	TOOLS_OUT = "${rootDir}/jxnet-core/src/main/resources/bin"
+	MAVEN_LOCAL_REPOSITORY = "${rootDir}/build/repository"
 
 	JAVA_VERSION = '1.8'
 	JUNIT_VERSION = '4.12'
@@ -58,3 +59,4 @@ ext {
 	}
 
 }
+

@@ -59,6 +59,7 @@ allprojects {
 	}
 
 	install {
+		System.setProperty('maven.repo.local', "${MAVEN_LOCAL_REPOSITORY}")
 		repositories.mavenInstaller {
 			pom.project pom_project
 		}
@@ -161,14 +162,5 @@ task ndkBuild(type: Exec) {
 task wrapper(type: Wrapper) {
 	gradleVersion = '3.0'
 	distributionUrl = "https://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
-}
-
-task dist(type: Zip) {
-	subprojects.each { subproject ->
-		into(subproject.name) {
-			from subproject.buildDir
-			include 'libs/**'
-		}
-	}
 }
 
