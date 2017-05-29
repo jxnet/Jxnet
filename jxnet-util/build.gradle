@@ -8,3 +8,4 @@ clean {
     file("${rootDir}/jxnet-util/obj").deleteDir()
     file("${rootDir}/jxnet-util/out").deleteDir()
 }
+

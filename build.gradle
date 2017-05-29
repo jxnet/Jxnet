@@ -6,7 +6,7 @@ allprojects {
 	apply plugin: 'signing'
 	apply from: "${rootDir}/gradle/configure.gradle"
 
-	group = 'com.ardikars.jxnet'
+	group = "${GROUP}"
 	version = "${VERSION}"
 
 	sourceCompatibility = "${JAVA_VERSION}"
@@ -25,9 +25,9 @@ allprojects {
 			encoding 'UTF-8'
 			charSet 'UTF-8'
 			author true
-			windowTitle "Jxnet ${project.version}"
-			header "Jxnet ${project.version}"
-			docTitle "Jxnet ${project.version} API Documentation"
+			windowTitle "${NAME} ${project.version}"
+			header "${NAME} ${project.version}"
+			docTitle "${NAME} ${project.version} API Documentation"
 			footer 'https://github.com/ardikars/Jxnet'
 			bottom "Copyright &copy; 2015 - ${currentYear} ardikars.com. All rights reserved."
 			showFromProtected()
@@ -50,12 +50,18 @@ allprojects {
 	}
 
 	signing {
-		required { !version.endsWith("SNAPSHOT") && gradle.taskGraph.hasTask('uploadArchives') }
+		required { !version.endsWith('SNAPSHOT') && gradle.taskGraph.hasTask('uploadArchives') }
 		sign configurations.archives
 	}
 
 	artifacts {
 		archives jar, sourcesJar, javadocJar
+	}
+
+	install {
+		repositories.mavenInstaller {
+			pom.project pom_project
+		}
 	}
 
 	uploadArchives {	
@@ -67,7 +73,7 @@ allprojects {
 			snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
 				authentication(userName: defaultBlank({ deployUser }), password: defaultBlank({ deployPass }))
 			}
-			pom.project project_pom
+			pom.project pom_project
 		}
 	}
 
@@ -155,5 +161,14 @@ task ndkBuild(type: Exec) {
 task wrapper(type: Wrapper) {
 	gradleVersion = '3.0'
 	distributionUrl = "https://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
+}
+
+task dist(type: Zip) {
+	subprojects.each { subproject ->
+		into(subproject.name) {
+			from subproject.buildDir
+			include 'libs/**'
+		}
+	}
 }
 

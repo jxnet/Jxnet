@@ -1,4 +1,4 @@
-rootProject.name = 'jxnet-all'
+rootProject.name = 'jxnet'
 
 include 'jxnet-core'
 include 'jxnet-packet'

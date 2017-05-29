@@ -27,3 +27,4 @@ clean {
 	file("${rootDir}/jxnet-core/obj").deleteDir()
 	file("${rootDir}/jxnet-core/out").deleteDir()
 }
+
