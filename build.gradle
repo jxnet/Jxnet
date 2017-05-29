@@ -1,9 +1,19 @@
 
+buildscript {
+	repositories {
+		jcenter()
+	}
+	dependencies {
+		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+	}
+}
+
 allprojects {
 	
 	apply plugin: 'java'
 	apply plugin: 'maven'
 	apply plugin: 'signing'
+	apply plugin: 'com.jfrog.bintray'
 	apply from: "${rootDir}/gradle/configure.gradle"
 
 	group = "${GROUP}"
@@ -15,7 +25,7 @@ allprojects {
 	[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 	repositories {
-		mavenCentral()
+		jcenter()
 	}
 
 	javadoc {
@@ -69,12 +79,42 @@ allprojects {
 		repositories.mavenDeployer {
 			beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 			repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
-				authentication(userName: defaultBlank({ deployUser }), password: defaultBlank({ deployPass }))
+				authentication(userName: defaultBlank({ sonatypeUser }), password: defaultBlank({ sonatypePass }))
 			}
 			snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
-				authentication(userName: defaultBlank({ deployUser }), password: defaultBlank({ deployPass }))
+				authentication(userName: defaultBlank({ sonatypeUser }), password: defaultBlank({ sonatypePass }))
 			}
 			pom.project pom_project
+		}
+	}
+
+	bintray {
+		user = defaultBlank({ bintrayUser })
+		key = defaultBlank({ bintrayPass })
+		configurations = ['archives']
+		dryRun = false
+		publish = true
+		override = true
+		pkg {
+			repo = 'maven'
+			name = 'com.ardikars.jxnet'
+			desc = 'Jxnet is a java library for capturing and sending network paket.'
+			licenses = ['GNU Lesser General Public License, Version 3.0']
+			vcsUrl = 'https://github.com/ardikars/Jxnet.git'
+			version {
+				name = project.version
+				vcsTag = project.version
+				gpg {
+					sign = true
+					passphrase = defaultBlank({ signing.password })
+				}
+				mavenCentralSync {
+					sync = true
+					user = defaultBlank({ sonatypeUser })
+					password = defaultBlank({ sonatypePass })
+					close = '1'
+				}
+			}
 		}
 	}
 
