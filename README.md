@@ -57,6 +57,8 @@ dependencies {
 }
 ```
 
+*) In Windows you need to intall Npcap with winpcap sopport.
+
 
 License
 =======
