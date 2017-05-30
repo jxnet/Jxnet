@@ -1,4 +1,8 @@
 
+ ##
+ # Copyright (C) 2017  Ardika Rommy Sanjaya
+ ##
+
 ifneq ($(OS), Windows_NT)
 	$(error This build script just for Windows NT.)
 endif
