@@ -2,7 +2,8 @@
 Jxnet
 -----
 
-	Jxnet is a Java library for capturing and sending custom network packet buffers with no copies. Jxnet wraps a native packet capture library (libpcap/winpcap) via JNI (Java Native Interface).
+    Jxnet is a Java library for capturing and sending custom network packet buffers with no copies.
+Jxnet wraps a native packet capture library (libpcap/winpcap) via JNI (Java Native Interface).
 
 
 HOW TO BUILD
@@ -49,9 +50,11 @@ Add a dependency to the pom.xml as like below:
 Add a dependency to the build.gradle as like below:
 
 ```
+dependencies {
     compile 'com.ardikars.jxnet:jxnet-core:1.1.3'
     compile 'com.ardikars.jxnet:jxnet-packet:1.1.3'
     compile 'com.ardikars.jxnet:jxnet-util:1.1.3'
+}
 ```
 
 
