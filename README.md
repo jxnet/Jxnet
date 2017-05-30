@@ -57,7 +57,7 @@ dependencies {
 }
 ```
 
-*) In Windows you need to install Npcap with Winpcap sopport.
+*) In Windows you need to install Npcap with Winpcap support.
 
 
 License
