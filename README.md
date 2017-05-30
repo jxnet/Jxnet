@@ -40,7 +40,7 @@ Add a dependency to the pom.xml as like below:
       <artifactId>jxnet-util</artifactId>
       <version>1.1.4</version>
     </dependency>
-       ...
+    ...
   </dependencies>
   ...
 </project>
@@ -50,11 +50,14 @@ Add a dependency to the pom.xml as like below:
 Add a dependency to the build.gradle as like below:
 
 ```
+...
 dependencies {
-    compile 'com.ardikars.jxnet:jxnet-core:1.1.3'
-    compile 'com.ardikars.jxnet:jxnet-packet:1.1.3'
-    compile 'com.ardikars.jxnet:jxnet-util:1.1.3'
+  compile 'com.ardikars.jxnet:jxnet-core:1.1.3'
+  compile 'com.ardikars.jxnet:jxnet-packet:1.1.3'
+  compile 'com.ardikars.jxnet:jxnet-util:1.1.3'
+  ...
 }
+...
 ```
 
 *) In Windows you need to install Npcap with Winpcap support.
