@@ -1,19 +1,19 @@
 
 Jxnet
------
+=====
 
     Jxnet is a Java library for capturing and sending custom network packet buffers with no copies.
 Jxnet wraps a native packet capture library (libpcap/winpcap) via JNI (Java Native Interface).
 
 
 HOW TO BUILD
-------------
+============
 
 ./gradlew build -x test
 
 
 HOW TO USE
-----------
+==========
 
 #### Maven project ####
 Add a dependency to the pom.xml as like below:
@@ -58,20 +58,20 @@ dependencies {
 ```
 
 
-LICENSE
--------
+License
+=======
 
 GNU Lesser General Public License, Version 3
 
 
 Contact
--------
+=======
 
 Email: contact@ardikars.com
 
 
 Issues
-------
+======
 
 Have a bug? Please create an issue here on GitHub!
 
