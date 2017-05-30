@@ -3,7 +3,7 @@ Jxnet
 =====
 
 Jxnet is a Java library for capturing and sending custom network packet buffers with no copies.
-Jxnet wraps a native packet capture library (libpcap/winpcap) via JNI (Java Native Interface).
+Jxnet wraps a native packet capture library (libpcap/npcap) via JNI (Java Native Interface).
 
 
 HOW TO BUILD
@@ -57,7 +57,7 @@ dependencies {
 }
 ```
 
-*) In Windows you need to install Npcap with winpcap sopport.
+*) In Windows you need to install Npcap with Winpcap sopport.
 
 
 License
