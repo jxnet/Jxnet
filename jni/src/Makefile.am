@@ -1,4 +1,8 @@
 
+ ##
+ # Copyright (C) 2017  Ardika Rommy Sanjaya
+ ##
+
 #noinst_LIBRARIES = libjxnet.a
 lib_LTLIBRARIES = libjxnet.la
 #lib_include = 

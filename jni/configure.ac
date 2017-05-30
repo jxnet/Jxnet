@@ -1,4 +1,8 @@
 
+ ##
+ # Copyright (C) 2017  Ardika Rommy Sanjaya
+ ##
+
 AC_PREREQ(2.69)
 LT_PREREQ(2.4.2)
 

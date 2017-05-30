@@ -1,4 +1,8 @@
 
+ ##
+ # Copyright (C) 2017  Ardika Rommy Sanjaya
+ ##
+
 LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)

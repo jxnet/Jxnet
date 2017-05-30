@@ -1,4 +1,8 @@
 
+/**
+ * Copyright (C) 2017  Ardika Rommy Sanjaya
+ */
+
 dependencies {
     compile project(":jxnet-core")
     testCompile "junit:junit:${JUNIT_VERSION}"
