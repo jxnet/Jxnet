@@ -44,6 +44,7 @@ a.out
 /jxnet-util/.gradle
 /jxnet-util/build
 /jxnet-util/target
+/jni/.gradle/
 /jni/src/.deps
 /jni/src/.libs
 /jni/autom4te.cache/

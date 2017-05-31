@@ -82,7 +82,7 @@ public class Loaders {
 		}
 		switch (Platforms.getName()) {
 			case LINUX:
-				if (Platforms.isARM()) {
+				if (Platforms.isArm()) {
 					if (Platforms.getVersion().equals("v7") || Platforms.getVersion().equals("v6")) {
 						loadLibrary("/system/linux/lib/arm32/libjxnet.so");
 					}

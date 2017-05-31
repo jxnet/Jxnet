@@ -22,60 +22,51 @@ package com.ardikars.jxnet.util;
  * @since 1.0.0
  */
 public class Platforms {
-	
+
+	/**
+	 * Operating System Name
+	 */
 	public enum NAME {
-		LINUX(1, "Linux"), WINDOWS(2, "Windows"), ANDROID(3, "Android"), UNKNOWN(0, "Unknown");
-		
-		private int type;
-		private String name;
-		
-		private NAME(int type, String name) {
-			this.type = type;
-			this.name = name;
-		}
-		
-		public int getType() {
-			return type;
-		}
-		
-		public String getName() {
-			return name;
-		}
-		
+
+		LINUX, WINDOWS, ANDROID, UNKNOWN;
+
 	}
 
-	public enum ARCH {
-		x86(1, "32 Bit"), x86_64(2, "64 Bit");
-		
-		private int type;
-		private String arch;
-		
-		private ARCH(int type, String arch) {
-			this.type = type;
-			this.arch = arch;
-		}
-		
-		public int getType() {
-			return type;
-		}
-		
-		public String getName() {
-			return arch;
-		}
+	/**
+	 * Architecture
+	 */
+	public enum ARCHITECTURE {
+
+		_32_BIT, _64_BIT;
+
 	}
-	
+
+	/**
+	 * Operating System Name
+	 */
 	private static Platforms.NAME NAME;
-	
-	private static Platforms.ARCH ARCH;
-	
+
+	/**
+	 * CPU Architecture (32 bit/64 bit)
+	 */
+	private static Platforms.ARCHITECTURE ARCHITECTURE;
+
+	/**
+	 * Get Operating System Name
+	 * @return Operating System Name
+	 */
 	public static Platforms.NAME getName() {
 		return NAME;
 	}
-	
-	public static Platforms.ARCH getArch() {
-		return ARCH;
+
+	/**
+	 * Get CPU Architecture
+	 * @return CPU Architecture
+	 */
+	public static Platforms.ARCHITECTURE getArchitecture() {
+		return ARCHITECTURE;
 	}
-	
+
 	public static final boolean isWindows() {
 		return NAME == Platforms.NAME.WINDOWS;
 	}
@@ -87,19 +78,32 @@ public class Platforms {
 	public static final boolean isAndroid() {
 		return NAME == Platforms.NAME.ANDROID;
 	}
-	
+
+	public static final boolean is32Bit() {
+		return ARCHITECTURE == Platforms.ARCHITECTURE._32_BIT;
+	}
+
 	public static final boolean is64Bit() {
-		return ARCH == Platforms.ARCH.x86_64;
+		return ARCHITECTURE == Platforms.ARCHITECTURE._64_BIT;
 	}
-	
+
+	public static final boolean isArm() {
+		return (System.getProperty("os.arch").toLowerCase().trim().startsWith("arm"));
+	}
+
 	public static final boolean isIntel() {
-		return (System.getProperty("os.arch").toLowerCase().trim().startsWith("x86") ? true : false);
+		String arch = System.getProperty("os.arch").toLowerCase().trim();
+		return (arch.startsWith("x86") || arch.startsWith("x64"));
 	}
-	
-	public static final boolean isARM() {
-		return (System.getProperty("os.arch").toLowerCase().trim().startsWith("arm") ? true : false);
+
+	public static final boolean isAmd() {
+		return System.getProperty("os.arch").toLowerCase().trim().startsWith("amd");
 	}
-	
+
+	/**
+	 * Get CPU Version
+	 * @return CPU Version
+	 */
 	public static final String getVersion() {
 		String version = System.getProperty("os.version");
 		if (Character.isDigit(version.charAt(version.indexOf("v") + 1))) {
@@ -109,22 +113,21 @@ public class Platforms {
 	}
 	
 	static {
-		String osName = System.getProperty("os.name");
-		String osArch = System.getProperty("os.arch");
-		if (osName.startsWith("Linux")) {
-			if (new String("dalvik").equals(System.getProperty("java.vm.name").toLowerCase())) {
+		String osName = System.getProperty("os.name").toUpperCase().trim();
+		String osArch = System.getProperty("os.arch").toLowerCase().trim();
+		if (osName.startsWith("LINUX")) {
+			if (new String("DALVIK").equals(System.getProperty("java.vm.name").toUpperCase().trim())) {
 				NAME = Platforms.NAME.ANDROID;
 			} else {
 				NAME = Platforms.NAME.LINUX;
 			}
-		} else if (osName.startsWith("Windows")) {
+		} else if (osName.startsWith("WINDOWS")) {
 			NAME = Platforms.NAME.WINDOWS;
 		}
-		osArch = osArch.toLowerCase().trim();
-		if ("i386".equals(osArch) || "i686".equals(osArch)) {
-			ARCH = Platforms.ARCH.x86;
-		} else if ("x86_64".equals(osArch) || "amd64".equals(osArch)) {
-			ARCH = Platforms.ARCH.x86_64;
+		if ("i386".equals(osArch) || "i686".equals(osArch) || "i586".equals(osArch)) {
+			ARCHITECTURE = Platforms.ARCHITECTURE._32_BIT;
+		} else if ("x86_64".equals(osArch) || "amd64".equals(osArch) || "x64".equals(osArch)) {
+			ARCHITECTURE = Platforms.ARCHITECTURE._64_BIT;
 		}
 	}
 	

@@ -63,6 +63,10 @@ allprojects {
 		tasks['test'].enabled = false
 	}
 
+	tasks.withType(JavaCompile) {
+		options.compilerArgs << "-Xlint:unchecked" << "-Werror"
+	}
+
 	signing {
 		required { !version.endsWith('SNAPSHOT') && gradle.taskGraph.hasTask('uploadArchives') }
 		sign configurations.archives

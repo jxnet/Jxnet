@@ -3,30 +3,18 @@
  * Copyright (C) 2017  Ardika Rommy Sanjaya
  */
 
-apply plugin: 'idea'
 apply plugin: 'c'
 
 ext {
-	thirdPartyLibsDir = file('lib')
-	headersDir = file('include/jxnet')
+	thirdPartyLibsDir = file("${rootDir}/jni/lib")
+	headersDir = file("${rootDir}/jni/include/jxnet")
 	currentJvm = org.gradle.internal.jvm.Jvm.current()
 	javaHome = currentJvm.javaHome.absolutePath
 }
 
 model {
+
 	platforms {
-		linux_x86_64 {
-			architecture "x86_64"
-			operatingSystem "linux"
-		}
-		linux_x86 {
-			architecture "i386"
-			operatingSystem "linux"
-		}
-		linux_armv7 {
-			architecture "armv7"
-			operatingSystem "linux"
-		}
 		windows_amd64 {
 			architecture "x86_64"
 			operatingSystem "windows"
@@ -34,19 +22,6 @@ model {
 		windows_x86 {
 			architecture "i386"
 			operatingSystem "windows"
-		}
-	}
-
-	toolChains {
-		gcc(Gcc) {
-			target("armv7") {
-				cppCompiler.withArguments { args ->
-					args << "-m32"
-				}
-				linker.withArguments { args ->
-					args << "-m32"
-				}
-			}
 		}
 	}
 
@@ -58,25 +33,23 @@ model {
 	repositories {
 		libs(PrebuiltLibraries) {
 			jdk {
-				headers.srcDirs "${javaHome}/include", "${javaHome}/include/linux", "${javaHome}/include/win32"
+				headers.srcDirs "${javaHome}/include", "${javaHome}/include/win32"
 			}
 		}
 	}
+
 }
 
 model {
 	components {
 		main(NativeLibrarySpec) {
 		
-			targetPlatform 'linux_x86_64'
-			targetPlatform 'linux_x86'
-			targetPlatform 'linux_armv7'
 			targetPlatform 'windows_amd64'
 			targetPlatform 'windows_x86'
 			
 			sources.c {
 				source {
-					srcDir 'src'
+					srcDir "${rootDir}/jni/src"
 					include '*.c'
 				}
 				lib library: 'jdk', linkage: 'api'
@@ -90,17 +63,12 @@ model {
 					cCompiler.args '-pg', '-g'
 					cCompiler.define 'DEV'
 				} else {
-					cCompiler.args '-O2'
+					cCompiler.args '-02 -Wl,--export-all-symbols -Wl,--add-stdcall-alias -m32 -shared'
 				}
-
-				cCompiler.args '-std=c99' // for all binaries, regardless the platform
 				
 				if (targetPlatform.operatingSystem.windows) {
 					cCompiler.args "-L $thirdPartyLibsDir", "-I$headersDir"
 					linker.args '-lwpcap', '-liphlpapi'
-				} else if (targetPlatform.operatingSystem.linux) {
-					cCompiler.args '-fPIC'
-					linker.args '-lpcap'
 				}
 			}
 		}
