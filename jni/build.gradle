@@ -65,7 +65,7 @@ model {
 				} else {
 					cCompiler.args '-02 -Wl,--export-all-symbols -Wl,--add-stdcall-alias -m32 -shared'
 				}
-				
+
 				if (targetPlatform.operatingSystem.windows) {
 					cCompiler.args "-L $thirdPartyLibsDir", "-I$headersDir"
 					linker.args '-lwpcap', '-liphlpapi'
