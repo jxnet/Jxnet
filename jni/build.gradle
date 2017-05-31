@@ -6,50 +6,19 @@
 apply plugin: 'c'
 
 ext {
-	thirdPartyLibsDir = file("${rootDir}/jni/lib")
-	headersDir = file("${rootDir}/jni/include/jxnet")
 	currentJvm = org.gradle.internal.jvm.Jvm.current()
 	javaHome = currentJvm.javaHome.absolutePath
 }
 
 model {
 
-	platforms {
-		windows_amd64 {
-			architecture "x86_64"
-			operatingSystem "windows"
-		}
-		windows_x86 {
-			architecture "i386"
-			operatingSystem "windows"
-		}
-	}
-
-	buildTypes {
-		debug
-		release
-	}
-
-	repositories {
-		libs(PrebuiltLibraries) {
-			jdk {
-				headers.srcDirs "${javaHome}/include", "${javaHome}/include/win32"
-			}
-		}
-	}
-
-}
-
-model {
 	components {
+
 		main(NativeLibrarySpec) {
-		
-			targetPlatform 'windows_amd64'
-			targetPlatform 'windows_x86'
 			
 			sources.c {
 				source {
-					srcDir "${rootDir}/jni/src"
+					srcDir "${rootDir}/src"
 					include '*.c'
 				}
 				lib library: 'jdk', linkage: 'api'
@@ -59,19 +28,35 @@ model {
 		
 			binaries.all { 
 
-				if (buildType == buildTypes.debug) {
-					cCompiler.args '-pg', '-g'
-					cCompiler.define 'DEV'
+				def os_arch = System.properties['os.arch'].toLowerCase();
+			
+				if (org.gradle.internal.os.OperatingSystem.current().isLinux()) {
+					cCompiler.args '-fPIC'
+					linker.args '-lpcap'
+				} else if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
+					if (os_arch.contains('x64')) {
+						cCompiler.args "-I${rootDir}/include", "-I${rootDir}/include/jxnet"
+						linker.args '-Wl,--export-all-symbols', '-Wl,--add-stdcall-alias', "-L${rootDir}/lib/x64", '-lwpcap', '-liphlpapi'
+					} else {
+						cCompiler.args "-I${rootDir}/include", "-I${rootDir}/include/jxnet"
+						linker.args '-Wl,--export-all-symbols', '-Wl,--add-stdcall-alias', "-L${rootDir}/lib", '-lwpcap', '-liphlpapi'
+					}
 				} else {
-					cCompiler.args '-02 -Wl,--export-all-symbols -Wl,--add-stdcall-alias -m32 -shared'
+					println "UNKNOWN PLATFORM"
 				}
-
-				if (targetPlatform.operatingSystem.windows) {
-					cCompiler.args "-L $thirdPartyLibsDir", "-I$headersDir"
-					linker.args '-lwpcap', '-liphlpapi'
-				}
+			}
+			
+		}
+		
+	}
+	
+	repositories {
+		libs(PrebuiltLibraries) {
+			jdk {
+				headers.srcDirs "${javaHome}/include", "${javaHome}/include/linux", "${javaHome}/include/win32"
 			}
 		}
 	}
+	
 }
 
