@@ -6,6 +6,7 @@
 apply plugin: 'c'
 
 ext {
+	os_arch = System.properties['os.arch'].toLowerCase();
 	currentJvm = org.gradle.internal.jvm.Jvm.current()
 	javaHome = currentJvm.javaHome.absolutePath
 }
@@ -27,9 +28,6 @@ model {
 			binaries.withType(StaticLibraryBinarySpec) { buildable = false } // disable static libs generation
 		
 			binaries.all { 
-
-				def os_arch = System.properties['os.arch'].toLowerCase();
-			
 				if (org.gradle.internal.os.OperatingSystem.current().isLinux()) {
 					cCompiler.args '-fPIC'
 					linker.args '-lpcap'
