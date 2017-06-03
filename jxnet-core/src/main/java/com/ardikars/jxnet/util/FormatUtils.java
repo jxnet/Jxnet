@@ -92,12 +92,27 @@ public class FormatUtils {
 		return sb.toString();
 	}
 	
-	public static String toHexString(byte b) {
-		CheckNotNull(b);
-		String s = Integer.toHexString((b) & 0xFF);
-		if (s.length() == 1)
-			return ("0" + s);
-		return (s);
+	public static String toHexString(byte value) {
+		String srt = Integer.toHexString((value) & 0xFF);
+		if (srt.length() == 1)
+			return ("0" + srt);
+		return (srt);
+	}
+
+	public static String toHexString(short value) {
+		String str = Integer.toHexString(value);
+		String srt = Integer.toHexString((value) & 0xFFFF);
+		if (srt.length() == 1)
+			return ("0" + srt);
+		return (srt);
+	}
+
+	public static String toHexString(int value) {
+		String str = Integer.toHexString(value);
+		String srt = Integer.toHexString(value);
+		if (srt.length() == 1)
+			return ("0" + srt);
+		return (srt);
 	}
 	
 	public static String toAscii(String hexStr) {
