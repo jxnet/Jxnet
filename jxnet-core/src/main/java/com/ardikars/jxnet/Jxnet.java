@@ -26,7 +26,7 @@ import java.util.List;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
-public final class Jxnet {
+public final class Jxnet extends Core {
 
 	public static final int OK = 0;
 	
@@ -474,10 +474,6 @@ public final class Jxnet {
 	 * @return returns  0 on success and -1 on failure.
 	 */
 	public static native int PcapSetDirection(Pcap pcap, PcapDirection direction);
-
-	//public static native int Socket(int af, int type, int protocol);
-	//private static native int SendTo(int socket, ByteBuffer buf, int len, int flags, SockAddr to, int toLen);
-	//private static native int SendTO(int socket, ByteBuffer buf, int len, int flags, int sa_family, byte[] sa_data, int toLen);
 
 	static {
 		if (!isLoaded) {

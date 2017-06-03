@@ -77,7 +77,7 @@ public class AddrUtils {
      * @param dstaddr destination address.
      * @param macAddress mac address.
      * @param description description.
-     * @return
+     * @return interface name.
      */
     public static String LookupNetworkInterface(Inet4Address address,
             Inet4Address netmask,

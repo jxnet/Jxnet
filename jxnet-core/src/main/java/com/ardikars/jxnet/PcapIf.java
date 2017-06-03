@@ -27,22 +27,6 @@ import java.util.List;
  * @since 1.0.0
  */
 public final class PcapIf {
-
-	public enum PromiscuousMode {
-
-		PRIMISCUOUS(1), NON_PROMISCUOUS(0);
-
-		private final int value;
-
-		private PromiscuousMode(final int value) {
-			this.value = value;
-		}
-
-		public int getValue() {
-			return value;
-		}
-
-	}
 	
 	@SuppressWarnings("unused")
 	private volatile PcapIf next;
