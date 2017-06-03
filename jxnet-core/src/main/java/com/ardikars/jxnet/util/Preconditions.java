@@ -29,7 +29,8 @@ import com.ardikars.jxnet.exception.PcapDumperCloseException;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public final class Preconditions {
+public final class
+Preconditions {
 	
 	/**
      * Check argument.
@@ -74,6 +75,7 @@ public final class Preconditions {
      */
     public static native <T> T CheckNotNull(T reference, String errorMessage);
 
+    @Deprecated
 	public static <T> T CheckNotClosed(T obj) {
         T o = CheckNotNull(obj, "");
         if (o instanceof Pcap) {
@@ -96,7 +98,8 @@ public final class Preconditions {
         }
         return o;
     }
-    
+
+    @Deprecated
     public static <T> T CheckNotClosed(T obj, String errorMesssage) {
         T o = CheckNotNull(obj, "");
         if (o instanceof Pcap) {

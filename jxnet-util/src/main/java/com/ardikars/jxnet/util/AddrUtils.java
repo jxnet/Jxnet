@@ -17,12 +17,14 @@
 
 package com.ardikars.jxnet.util;
 
-import com.ardikars.jxnet.Inet4Address;
+import com.ardikars.jxnet.*;
 import com.ardikars.jxnet.exception.NotSupportedPlatformException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Ardika Rommy Sanjaya
@@ -59,6 +61,62 @@ public class AddrUtils {
             }
         }
         return Inet4Address.valueOf(str);
+    }
+
+    public static String LookupNetworkInterface(Inet4Address address,
+            Inet4Address netmask,
+            Inet4Address netaddr,
+            Inet4Address broadaddr,
+            Inet4Address dstaddr,
+            MacAddress macAddress,
+            StringBuilder description) {
+
+        Preconditions.CheckNotNull(address);
+        Preconditions.CheckNotNull(netmask);
+        Preconditions.CheckNotNull(netaddr);
+        Preconditions.CheckNotNull(broadaddr);
+        Preconditions.CheckNotNull(dstaddr);
+        Preconditions.CheckNotNull(description);
+
+        StringBuilder errbuf = new StringBuilder();
+
+        List<PcapIf> ifs = new ArrayList<PcapIf>();
+        if (Jxnet.PcapFindAllDevs(ifs, errbuf) != Jxnet.OK) {
+            return null;
+        }
+
+        description.setLength(0);
+
+        for (PcapIf dev : ifs) {
+            for (PcapAddr addr : dev.getAddresses()) {
+                if (addr.getAddr().getData() == null || addr.getBroadAddr().getData() == null ||
+                        addr.getNetmask().getData() == null) {
+                    continue;
+                }
+                if (addr.getAddr().getSaFamily() == SockAddr.Family.AF_INET &&
+                        !Inet4Address.valueOf(addr.getAddr().getData()).equals(Inet4Address.ZERO) &&
+                        !Inet4Address.valueOf(addr.getAddr().getData()).equals(Inet4Address.LOCALHOST) &&
+                        !Inet4Address.valueOf(addr.getBroadAddr().getData()).equals(Inet4Address.ZERO) &&
+                        !Inet4Address.valueOf(addr.getNetmask().getData()).equals(Inet4Address.ZERO)
+                        ) {
+                    address.update(Inet4Address.valueOf(addr.getAddr().getData()));
+                    netmask.update(Inet4Address.valueOf(addr.getNetmask().getData()));
+                    netaddr.update(Inet4Address.valueOf(address.toInt() & netmask.toInt()));
+                    broadaddr.update(Inet4Address.valueOf(addr.getBroadAddr().getData()));
+                    if (addr.getDstAddr().getData() != null) {
+                        dstaddr.update(Inet4Address.valueOf(addr.getDstAddr().getData()));
+                    } else {
+                        dstaddr.update(Inet4Address.ZERO);
+                    }
+                    macAddress.update(MacAddress.fromNicName(dev.getName()));
+                    if (dev.getDescription() != null) {
+                        description.append(dev.getDescription());
+                    }
+                    return dev.getName();
+                }
+            }
+        }
+        return null;
     }
 
 }
