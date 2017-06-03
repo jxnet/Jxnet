@@ -40,7 +40,7 @@ Add a dependency to the pom.xml as like below:
     <dependency>
       <groupId>com.ardikars.jxnet</groupId>
       <artifactId>jxnet-util</artifactId>
-      <version>1.1.4</version>
+      <version>1.1.3</version>
     </dependency>
     ...
   </dependencies>
@@ -62,7 +62,7 @@ dependencies {
 ...
 ```
 
-*) In Windows you need to install Npcap with Winpcap support.
+*) In Windows you need to install Npcap with WinPcap API-compatible Mode.
 
 
 License
@@ -83,4 +83,3 @@ Issues
 Have a bug? Please create an issue here on GitHub!
 
 https://github.com/ardikars/Jxnet/issues
-
