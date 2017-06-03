@@ -22,6 +22,22 @@ package com.ardikars.jxnet;
  * @since 1.0.0
  */
 public final class BpfProgram {
+
+	public enum BpfCompileMode {
+
+		OPTIMIZE(1), NON_OPTIMIZE(0);
+
+		private final int value;
+
+		private BpfCompileMode(final int value) {
+			this.value = value;
+		}
+
+		public int getValue() {
+			return value;
+		}
+
+	}
 	
 	private native void initBpfProgram();
 
