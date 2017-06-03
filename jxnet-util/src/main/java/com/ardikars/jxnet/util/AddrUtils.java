@@ -32,6 +32,11 @@ import java.util.List;
  */
 public class AddrUtils {
 
+    /**
+     * Get getway address.
+     * @return getway address.
+     * @throws IOException not connected to the network.
+     */
     public static Inet4Address GetGatewayAddress() throws IOException {
         Process process = null;
         BufferedReader stdIn = null;
@@ -63,6 +68,17 @@ public class AddrUtils {
         return Inet4Address.valueOf(str);
     }
 
+    /**
+     * Get network interface information.
+     * @param address ipv4 address.
+     * @param netmask netmask address.
+     * @param netaddr network address.
+     * @param broadaddr broadcast address.
+     * @param dstaddr destination address.
+     * @param macAddress mac address.
+     * @param description description.
+     * @return
+     */
     public static String LookupNetworkInterface(Inet4Address address,
             Inet4Address netmask,
             Inet4Address netaddr,

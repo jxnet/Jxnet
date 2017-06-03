@@ -23,6 +23,10 @@ package com.ardikars.jxnet.util;
  */
 public interface Builder<T> {
 
+    /**
+     * Build packet.
+     * @return packet.
+     */
     T build();
 
 }

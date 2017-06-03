@@ -39,54 +39,112 @@ public class UDP extends Packet {
      */
     private byte[] payload;
 
+    /**
+     * Get source port.
+     * @return source port.
+     */
     public short getSourcePort() {
         return (short) (this.sourcePort & 0xffff);
     }
 
+    /**
+     * Set source port.
+     * @param sourcePort source port.
+     * @return UDP object.
+     */
     public UDP setSourcePort(final short sourcePort) {
         this.sourcePort = (short) (sourcePort & 0xffff);
         return this;
     }
 
+    /**
+     * Get destination port.
+     * @return destination port.
+     */
     public short getDestinationPort() {
         return (short) (this.destinationPort & 0xffff);
     }
 
+    /**
+     * Set destination port.
+     * @param destinationPort destination port.
+     * @return UDP object.
+     */
     public UDP setDestinationPort(final short destinationPort) {
         this.destinationPort = (short) (destinationPort & 0xffff);
         return this;
     }
 
+    /**
+     * Get length.
+     * @return length.
+     */
     public short getLength() {
         return (short) (this.length & 0xffff);
     }
 
+    /**
+     * Set length.
+     * @param length length.
+     * @return UDP object.
+     */
     public UDP setLength(final short length) {
         this.length = (short) (this.length & 0xffff);
         return this;
     }
 
+    /**
+     * Get checksum.
+     * @return checksum.
+     */
     public short getChecksum() {
         return (short) (this.checksum & 0xffff);
     }
 
-    public void setChecksum(short checksum) {
+    /**
+     * Set checksum.
+     * @param checksum checksum.
+     * @return UDP object.
+     */
+    public UDP setChecksum(short checksum) {
         this.checksum = (short) (checksum & 0xffff);
+        return this;
     }
 
+    /**
+     * Get payload.
+     * @return payload.
+     */
     public byte[] getPayload() {
         return this.payload;
     }
 
+    /**
+     * Set payload.
+     * @param payload payload.
+     * @return UDP object.
+     */
     public UDP setPayload(byte[] payload) {
         this.payload = payload;
         return this;
     }
 
+    /**
+     * Crete new UDP object.
+     * @param bytes bytes.
+     * @return UDP object.
+     */
     public static UDP newInstance(final byte[] bytes) {
         return newInstance(bytes, 0, bytes.length);
     }
 
+    /**
+     * Crete new UDP object.
+     * @param bytes bytes.
+     * @param offset offset.
+     * @param length length.
+     * @return UDP object.
+     */
     public static UDP newInstance(final byte[] bytes, final int offset, final int length) {
         ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
         UDP udp = new UDP();
@@ -99,12 +157,20 @@ public class UDP extends Packet {
         return udp;
     }
 
-
+    /**
+     * Set packet.
+     * @param packet payload.
+     * @return UDP instance.
+     */
     @Override
     public Packet setPacket(final Packet packet) {
         return this.setPayload(packet.toBytes());
     }
 
+    /**
+     * Get packet.
+     * @return packet.
+     */
     @Override
     public Packet getPacket() {
         return null;
