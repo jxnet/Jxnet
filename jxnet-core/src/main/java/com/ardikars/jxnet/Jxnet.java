@@ -51,7 +51,7 @@ public final class Jxnet extends Core {
 	 * Open a live capture from the network.
 	 * @param source interface name.
 	 * @param snaplen snapshot length (16 bit)
-	 * @param promisc 1 to enable promiscuosu mode, 0 otherwise.
+	 * @param promisc 1 to enable promiscuous mode, 0 otherwise.
 	 * @param to_ms timeout.
 	 * @param errbuf error buffer.
 	 * @return null on error.
@@ -92,7 +92,6 @@ public final class Jxnet extends Core {
 	 * Save a packet to disk.
 	 * @param pcap_dumper pcap dumper object.
 	 * @param h pcap packet header.
-	 * @param sp packet buffer.
 	 * @param sp packet buffer.
 	 */
 	public static native void PcapDump(PcapDumper pcap_dumper, PcapPktHdr h, ByteBuffer sp);
@@ -160,7 +159,7 @@ public final class Jxnet extends Core {
 
 	/**
 	 * Flushes the output buffer to the ``savefile,'' so that any packets written
-	 * with pcap_dump() but not yet written to the ``savefile'' will be written. -1
+	 * with PcapDump() but not yet written to the ``savefile'' will be written. -1
 	 * is returned on error, 0 on success.
 	 * @param pcap_dumper pcap dumper object.
 	 * @return -1 on error, 0 otherwise.
@@ -190,7 +189,7 @@ public final class Jxnet extends Core {
 	public static native int PcapSetDataLink(Pcap pcap, int dtl);
 
 	/**
-	 * Set a flag that will force pcap_dispatch() or pcap_loop() to return rather than looping.
+	 * Set a flag that will force PcapDispatch() or PcapLoop() to return rather than looping.
 	 * @param pcap pcap object.
 	 */
 	public static native void PcapBreakLoop(Pcap pcap); //
@@ -231,7 +230,7 @@ public final class Jxnet extends Core {
 	public static native int PcapSnapshot(Pcap pcap);
 
 	/**
-	 * Provided in case strerror() isn't available.
+	 * Provided in case StrError() isn't available.
 	 * @param error error code.
 	 * @return error message.
 	 */
@@ -322,7 +321,7 @@ public final class Jxnet extends Core {
 	//public static native File PcapFile(Pcap pcap);
 
 	/**
-	 * Return the standard I/O stream of the 'savefile' opened by pcap_dump_open().
+	 * Return the standard I/O stream of the 'savefile' opened by PcapDumpOpen().
 	 * @param pcap_dumper pcap dumper object.
 	 * @return null on error.
 	 */
@@ -381,7 +380,7 @@ public final class Jxnet extends Core {
 	 * on Linux systems with 2.2 or later kernels, a source argument of "any" or NULL
 	 * can be used to capture packets from all interfaces.
 	 *
-	 * The returned handle must be activated with pcap_activate() before packets can be captured with it;
+	 * The returned handle must be activated with PcapActivate() before packets can be captured with it;
 	 * options for the capture, such as promiscuous mode, can be set on the handle before activating it.
 	 * @param source network device.
 	 * @param errbuf errof buffer.
@@ -394,7 +393,7 @@ public final class Jxnet extends Core {
 	 * Sets the snapshot length to be used on a capture handle when the handle is activated to snaplen.
 	 * @param pcap pcap object.
 	 * @param snaplen snaplen.
-	 * @return 0 on success or PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.
+	 * @return 0 on success.
 	 */
 	public static native int PcapSetSnaplen(Pcap pcap, int snaplen);
 
@@ -403,7 +402,7 @@ public final class Jxnet extends Core {
 	 * If promisc is non-zero, promiscuous mode will be set, otherwise it will not be set.
 	 * @param pcap pcap object.
 	 * @param promisc promisc.
-	 * @return 0 on success or PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.
+	 * @return 0 on success.
 	 */
 	public static native int PcapSetPromisc(Pcap pcap, int promisc);
 
@@ -411,7 +410,7 @@ public final class Jxnet extends Core {
 	 * Sets the packet buffer timeout that will be used on a capture handle when the handle is activated to to_ms, which is in units of milliseconds.
 	 * @param pcap pcap object.
 	 * @param timeout timeout.
-	 * @return 0 on success or PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.
+	 * @return 0 on success.
 	 */
 	public static native int PcapSetTimeout(Pcap pcap, int timeout);
 
@@ -419,7 +418,7 @@ public final class Jxnet extends Core {
 	 * Sets the buffer size that will be used on a capture handle when the handle is activated to buffer_size, which is in units of bytes.
 	 * @param pcap pcap object.
 	 * @param buffer_size buffer size.
-	 * @return 0 on success or PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.
+	 * @return 0 on success.
 	 */
 	public static native int PcapSetBufferSize(Pcap pcap, int buffer_size);
 
@@ -435,7 +434,7 @@ public final class Jxnet extends Core {
 	 * If rfmon is non-zero, monitor mode will be set, otherwise it will not be set.
 	 * @param pcap pcap object.
 	 * @param rfmon 1 (true) or 0 (false).
-	 * @return 0 on success or PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.
+	 * @return 0 on success.
 	 */
 	public static native int PcapSetRfMon(Pcap pcap, int rfmon);
 
@@ -444,7 +443,7 @@ public final class Jxnet extends Core {
 	 * immediate mode will be set, otherwise it will not be set.
 	 * @param pcap pcap object.
 	 * @param immediate_mode immediate_mode.
-	 * @return 0 on success or PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.
+	 * @return 0 on success.
 	 */
 	public static native int PcapSetImmediateMode(Pcap pcap, int immediate_mode);
 
@@ -464,16 +463,32 @@ public final class Jxnet extends Core {
 	 * PCAP_D_INOUT will capture packets received by or sent  by  the  device.
 	 * PCAP_D_INOUT is the default setting if this function is not called.
 	 *
-	 * pcap_setdirection() isn't necessarily fully supported on all platforms;
+	 * PcapSetdirection() isn't necessarily fully supported on all platforms;
 	 * some platforms might return an error for all  values,  and  some  other
 	 * platforms might not support PCAP_D_OUT.
 	 *
 	 * This operation is not supported if a ``savefile'' is being read.
 	 * @param pcap pcap object.
 	 * @param direction direction.
-	 * @return returns  0 on success and -1 on failure.
+	 * @return returns  0 on success and -1 on failure (not supported by operating system).
 	 */
 	public static native int PcapSetDirection(Pcap pcap, PcapDirection direction);
+
+	/**
+	 * Set the time stamp precision returned in captures.
+	 * @param pcap pcap.
+	 * @param tstamp_precision time stamp precision.
+	 * @return 0 on success if specified time stamp precision is expected to be supported
+	 * by operating system.
+	 */
+	//public static native int PcapSetTStampPrecision(Pcap pcap, int tstamp_precision);
+
+	/**
+	 * Get the time stamp precision returned in captures.
+	 * @param pcap pcap object.
+	 * @return the precision of the time stamp returned in packet captures on the pcap descriptor.
+	 */
+	// public static native int PcapGetTStampPrecision(Pcap pcap);
 
 	static {
 		if (!isLoaded) {
