@@ -4,22 +4,26 @@
  */
 
 buildscript {
+
+	apply from: "${rootDir}/gradle/configure.gradle"
+
 	repositories {
 		jcenter()
 	}
+
 	dependencies {
 		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
 	}
+
 }
 
 allprojects {
-	
+
 	apply plugin: 'java'
 	apply plugin: 'maven'
 	apply plugin: 'signing'
-	apply plugin: 'com.jfrog.bintray'
 	apply plugin: 'jacoco'
-	apply from: "${rootDir}/gradle/configure.gradle"
+	apply plugin: 'com.jfrog.bintray'
 
 	group = "${GROUP}"
 	version = "${VERSION}"
@@ -36,14 +40,14 @@ allprojects {
 	configurations.archives.artifacts.with { archives ->
 		def jarArtifact
 		archives.each {
-			if (it.file =~ 'jar' && project.name == 'jxnet') {
+			if (it.file =~ 'jar' && project.name == "${rootProject.name}") {
 				jarArtifact = it
 			}
 		}
 		remove(jarArtifact)
 	}
 
-	if (project.name != 'jxnet') {
+	if (project.name != "${rootProject.name}") {
 
 		javadoc {
 			def currentYear = Calendar.getInstance().get Calendar.YEAR
@@ -182,6 +186,18 @@ dependencies {
 	compile project(':jxnet-util')
 }
 
+task distributions(type: Zip, dependsOn: build) {
+
+	archiveName = "${NAME}-${VERSION}.zip"
+	
+	subprojects.each { subproject ->
+		from subproject.jar.outputs.files
+		from subproject.javadocJar.outputs.files
+		from subproject.sourcesJar.outputs.files
+	}
+
+}
+
 task ndkBuild(type: Exec) {
 	commandLine "${NDK_HOME}/ndk-build", '-C', "${TOOLS_DIR}",
 		"NDK_LIBS_OUT=${TOOLS_OUT}", "NDK_OUT=${TOOLS_OBJ}"
@@ -233,7 +249,6 @@ clean {
 }
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '3.0'
-	distributionUrl = "https://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
+	distributionUrl = "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-all.zip"
 }
 
