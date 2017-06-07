@@ -5,6 +5,8 @@ Jxnet
 Jxnet is a Java library for capturing and sending custom network packet buffers with no copies.
 Jxnet wraps a native packet capture library (libpcap/npcap) via JNI (Java Native Interface).
 
+[![Build Status](https://travis-ci.org/ardikars/Jxnet.svg?branch=master)](https://travis-ci.org/ardikars/Jxnet)
+
 [ ![Download](https://api.bintray.com/packages/ardikars/maven/com.ardikars.jxnet/images/download.svg?version=1.1.3) ](https://bintray.com/ardikars/maven/com.ardikars.jxnet/1.1.3/link)
 
 
