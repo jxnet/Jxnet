@@ -26,8 +26,6 @@ ext {
 
 		description = 'Jxnet is a java library for capturing and sending network paket.'
 
-		packaging 'jar'
-
 		url 'https://github.com/ardikars/Jxnet'
 
 		developers {
