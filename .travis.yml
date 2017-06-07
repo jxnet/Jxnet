@@ -26,6 +26,10 @@ cache:
     - $HOME/.gradle/daemon
     - $HOME/.gradle/caches
 
+branches:
+  only:
+    - master
+
 script:
   - sudo ./gradlew clean build codeCoverageReport -x test --info --no-daemon
 
