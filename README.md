@@ -82,6 +82,7 @@ Email: contact@ardikars.com
 Issues
 ======
 
-Have a bug? Please create an issue here on GitHub!
+Have a question/bug? Please create an issue here on GitHub!
 
 https://github.com/ardikars/Jxnet/issues
+
