@@ -166,8 +166,11 @@ javadocJar {
 }
 
 task codeCoverageReport(type: JacocoReport) {
+	executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
 	subprojects.each { subproject ->
-		sourceSets subproject.sourceSets.main
+		if (subproject.name != "${rootProject.name}") {
+			sourceSets subproject.sourceSets.main
+		}
 	}
 	reports {
 		xml.enabled false
