@@ -1,0 +1,24 @@
+
+language: java
+
+matrix:
+  include:
+    - jdk: oraclejdk8
+  fast_finish: true
+
+cache:
+  directories:
+    - $HOME/.gradle/wrapper
+    - $HOME/.gradle/native
+    - $HOME/.gradle/daemon
+
+script:
+  - sudo ./gradlew build -x test
+
+notifications:
+  email:
+    recipients:
+      - contact@ardikars.com
+    on_success: change
+    on_failure: always
+    
