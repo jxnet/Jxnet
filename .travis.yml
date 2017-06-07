@@ -1,19 +1,33 @@
 
+sudo: required
+
 language: java
 
-matrix:
-  include:
-    - jdk: oraclejdk8
-  fast_finish: true
+dist:
+  - trusty
+
+jdk:
+  - oraclejdk8
+
+os:
+  - linux
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution
 
 cache:
   directories:
     - $HOME/.gradle/wrapper
     - $HOME/.gradle/native
     - $HOME/.gradle/daemon
+    - $HOME/.gradle/caches
 
 script:
   - sudo ./gradlew build -x test
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
 
 notifications:
   email:
@@ -21,4 +35,4 @@ notifications:
       - contact@ardikars.com
     on_success: change
     on_failure: always
-    
+

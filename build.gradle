@@ -18,6 +18,7 @@ allprojects {
 	apply plugin: 'maven'
 	apply plugin: 'signing'
 	apply plugin: 'com.jfrog.bintray'
+	apply plugin: 'jacoco'
 	apply from: "${rootDir}/gradle/configure.gradle"
 
 	group = "${GROUP}"
@@ -47,7 +48,7 @@ allprojects {
 			showFromProtected()
 			addStringOption 'Xdoclint:all,-reference', '-quiet'
 		}
-	}
+	}	
 
 	task javadocJar(type: Jar) {
 		classifier = 'javadoc'
@@ -57,10 +58,6 @@ allprojects {
 	task sourcesJar(type: Jar) {
 		classifier = 'sources'
 		from sourceSets.main.allSource
-	}
-
-	build {
-		tasks['test'].enabled = false
 	}
 
 	tasks.withType(JavaCompile) {
@@ -197,6 +194,21 @@ javadocJar {
 		classifier = 'javadoc'
 		from subproject.javadoc
 	}
+}
+
+task codeCoverageReport(type: JacocoReport) {
+	subprojects.each { subproject ->
+		sourceSets subproject.sourceSets.main
+	}
+	reports {
+		xml.enabled false
+		html.enabled true
+		csv.enabled false
+	}
+}
+
+codeCoverageReport.dependsOn {
+	subprojects*.test
 }
 
 task ndkBuild(type: Exec) {
