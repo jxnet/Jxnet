@@ -4,7 +4,7 @@
  */
 
 dependencies {
-	compile project(":jxnet-core")
+	compile project(':jxnet-core')
 	testCompile "junit:junit:${JUNIT_VERSION}"
 }
 
