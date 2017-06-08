@@ -25,7 +25,7 @@ install:
 platform: Any CPU
 
 build_script:
-  - cmd: gradlew.bat clean build codeCoverageReport -x test --info
+  - cmd: gradlew.bat clean build codeCoverageReport test --info
 
 notifications:
   - provider: Email
