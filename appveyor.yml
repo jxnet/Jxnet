@@ -25,10 +25,10 @@ install:
 platform: Any CPU
 
 build_script:
-  - cmd: gradlew.bat clean build -x test --info --no-deamon
+  - cmd: gradlew.bat clean build -x test --info --no-daemon
 
 test_script:
-  - cmd: gradlew.bat clean test codeCoverageReport --info --no-deamon
+  - cmd: gradlew.bat clean test codeCoverageReport --info --no-daemon
 
 notifications:
   - provider: Email
