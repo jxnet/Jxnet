@@ -21,37 +21,6 @@ HOW TO BUILD
 HOW TO USE
 ==========
 
-#### Maven project ####
-Add a dependency to the pom.xml as like below:
-
-```xml
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  ...
-  <dependencies>
-    <dependency>
-      <groupId>com.ardikars.jxnet</groupId>
-      <artifactId>jxnet-core</artifactId>
-      <version>1.1.3</version>
-    </dependency>
-    <dependency>
-      <groupId>com.ardikars.jxnet</groupId>
-      <artifactId>jxnet-packet</artifactId>
-      <version>1.1.3</version>
-    </dependency>
-    <dependency>
-      <groupId>com.ardikars.jxnet</groupId>
-      <artifactId>jxnet-util</artifactId>
-      <version>1.1.3</version>
-    </dependency>
-    ...
-  </dependencies>
-  ...
-</project>
-```
-
 #### Gradle project ####
 Add a dependency to the build.gradle as like below:
 
@@ -78,13 +47,13 @@ GNU Lesser General Public License, Version 3
 Contact
 =======
 
-Email: contact@ardikars.com
+Email: Ardika Rommy Sanjaya (contact@ardikars.com)
 
 
 Issues
 ======
 
-Have a question/bug? Please create an issue here on GitHub!
+Have a bug? Please create an issue here on GitHub!
 
 https://github.com/ardikars/Jxnet/issues
 
