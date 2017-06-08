@@ -9,7 +9,6 @@ Jxnet wraps a native packet capture library (libpcap/npcap) via JNI (Java Native
 [![CircleCI](https://circleci.com/gh/ardikars/Jxnet/tree/master.svg?style=svg)](https://circleci.com/gh/ardikars/Jxnet/tree/master)
 
 [ ![Download](https://api.bintray.com/packages/ardikars/maven/com.ardikars.jxnet/images/download.svg?version=1.1.3) ](https://bintray.com/ardikars/maven/com.ardikars.jxnet/1.1.3/link)
-[![Maven Central](https://img.shields.io/maven-central/v/org.apache.maven/apache-maven.svg)](http://search.maven.org/#artifactdetails|com.ardikars|jxnet|1.1.3|)
 
 
 HOW TO BUILD

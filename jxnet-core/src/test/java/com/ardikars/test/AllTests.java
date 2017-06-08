@@ -20,7 +20,7 @@ import java.util.List;
 		PcapNextEx.class, PcapOpenDead.class, PcapOpenLive.class,
 		PcapOpenOffline.class, PcapBreakLoop.class, Blocking.class,
 		PcapDatalink.class, PcapDispatch.class, Preconditions.class,
-		MacAddr.class, PcapDump.class })
+		MacAddr.class, PcapDump.class, AddJavaLibraryPath.class })
 public class AllTests {
 
 	private static StringBuilder errbuf = new StringBuilder();

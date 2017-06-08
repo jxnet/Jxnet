@@ -31,7 +31,7 @@ branches:
     - master
 
 script:
-  - sudo ./gradlew clean build codeCoverageReport -x test --info
+  - sudo ./gradlew clean build codeCoverageReport -x test --info --no-daemon
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

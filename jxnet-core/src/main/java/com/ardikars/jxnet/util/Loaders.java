@@ -23,6 +23,7 @@ import com.ardikars.jxnet.exception.NotSupportedPlatformException;
 
 import java.io.*;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 /**
@@ -77,6 +78,7 @@ public class Loaders {
 	public static void loadLibrary() throws
 			UnsatisfiedLinkError, IOException, IllegalArgumentException {
 		errbuf.setLength(0);
+		addJavaLibarayPath("C:\\Windows\\System32\\Npcap");
 		if (load()) {
 			return;
 		}
@@ -149,5 +151,33 @@ public class Loaders {
 		System.load(temp.getAbsolutePath());
 	}
 
+	/**
+	 * Add java.library.path value.
+	 * @param path path.
+	 */
+	public static void addJavaLibarayPath(String path) {
+		String paths = System.getProperty("java.library.path");
+		String pathSparator = File.pathSeparator;
+		String[] libraryPaths = paths.split(pathSparator);
+		for (String str : libraryPaths) {
+			if (str.equals(path)) {
+				return;
+			}
+		}
+		paths = paths.concat(pathSparator + path);
+		System.setProperty("java.library.path", paths);
+		Field sysPathsField = null;
+		try {
+			sysPathsField = ClassLoader.class.getDeclaredField("sys_paths");
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		}
+		sysPathsField.setAccessible(true);
+		try {
+			sysPathsField.set(null, null);
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+	}
 
 }
