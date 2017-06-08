@@ -3,3 +3,7 @@ machine:
   java:
     version: oraclejdk8
 
+test:
+  override:
+      - sudo ./gradlew clean build -x test
+
