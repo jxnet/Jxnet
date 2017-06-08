@@ -1,0 +1,14 @@
+
+machine:
+  java:
+    version: oraclejdk8
+
+general:
+  branches:
+    only:
+    - master
+
+test:
+  override:
+    - sudo sudo ./gradlew clean build codeCoverageReport -x test --info
+
