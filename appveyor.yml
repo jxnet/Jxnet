@@ -4,6 +4,8 @@ version: '{build}-{branch}'
 branches:
   only:
     - master
+  except:
+    - development
 
 skip_tags: true
 
