@@ -20,10 +20,6 @@
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  *
  */
-#ifndef lint
-static const char rcsid[] _U_ =
-    "@(#) $Header: /tcpdump/master/libpcap/grammar.y,v 1.86.2.9 2007/09/12 19:17:25 guy Exp $ (LBL)";
-#endif
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -45,6 +41,7 @@ struct rtentry;
 #endif
 
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #endif /* WIN32 */
 
 #include <stdio.h>
@@ -57,7 +54,9 @@ struct rtentry;
 #include <net/pfvar.h>
 #include <net/if_pflog.h>
 #endif
-#include <pcap-namedb.h>
+#include "llc.h"
+#include "ieee80211.h"
+#include <pcap/namedb.h>
 
 #ifdef HAVE_OS_PROTO_H
 #include "os-proto.h"
@@ -66,6 +65,109 @@ struct rtentry;
 #define QSET(q, p, d, a) (q).proto = (p),\
 			 (q).dir = (d),\
 			 (q).addr = (a)
+
+struct tok {
+	int v;			/* value */
+	const char *s;		/* string */
+};
+
+static const struct tok ieee80211_types[] = {
+	{ IEEE80211_FC0_TYPE_DATA, "data" },
+	{ IEEE80211_FC0_TYPE_MGT, "mgt" },
+	{ IEEE80211_FC0_TYPE_MGT, "management" },
+	{ IEEE80211_FC0_TYPE_CTL, "ctl" },
+	{ IEEE80211_FC0_TYPE_CTL, "control" },
+	{ 0, NULL }
+};
+static const struct tok ieee80211_mgt_subtypes[] = {
+	{ IEEE80211_FC0_SUBTYPE_ASSOC_REQ, "assocreq" },
+	{ IEEE80211_FC0_SUBTYPE_ASSOC_REQ, "assoc-req" },
+	{ IEEE80211_FC0_SUBTYPE_ASSOC_RESP, "assocresp" },
+	{ IEEE80211_FC0_SUBTYPE_ASSOC_RESP, "assoc-resp" },
+	{ IEEE80211_FC0_SUBTYPE_REASSOC_REQ, "reassocreq" },
+	{ IEEE80211_FC0_SUBTYPE_REASSOC_REQ, "reassoc-req" },
+	{ IEEE80211_FC0_SUBTYPE_REASSOC_RESP, "reassocresp" },
+	{ IEEE80211_FC0_SUBTYPE_REASSOC_RESP, "reassoc-resp" },
+	{ IEEE80211_FC0_SUBTYPE_PROBE_REQ, "probereq" },
+	{ IEEE80211_FC0_SUBTYPE_PROBE_REQ, "probe-req" },
+	{ IEEE80211_FC0_SUBTYPE_PROBE_RESP, "proberesp" },
+	{ IEEE80211_FC0_SUBTYPE_PROBE_RESP, "probe-resp" },
+	{ IEEE80211_FC0_SUBTYPE_BEACON, "beacon" },
+	{ IEEE80211_FC0_SUBTYPE_ATIM, "atim" },
+	{ IEEE80211_FC0_SUBTYPE_DISASSOC, "disassoc" },
+	{ IEEE80211_FC0_SUBTYPE_DISASSOC, "disassociation" },
+	{ IEEE80211_FC0_SUBTYPE_AUTH, "auth" },
+	{ IEEE80211_FC0_SUBTYPE_AUTH, "authentication" },
+	{ IEEE80211_FC0_SUBTYPE_DEAUTH, "deauth" },
+	{ IEEE80211_FC0_SUBTYPE_DEAUTH, "deauthentication" },
+	{ 0, NULL }
+};
+static const struct tok ieee80211_ctl_subtypes[] = {
+	{ IEEE80211_FC0_SUBTYPE_PS_POLL, "ps-poll" },
+	{ IEEE80211_FC0_SUBTYPE_RTS, "rts" },
+	{ IEEE80211_FC0_SUBTYPE_CTS, "cts" },
+	{ IEEE80211_FC0_SUBTYPE_ACK, "ack" },
+	{ IEEE80211_FC0_SUBTYPE_CF_END, "cf-end" },
+	{ IEEE80211_FC0_SUBTYPE_CF_END_ACK, "cf-end-ack" },
+	{ 0, NULL }
+};
+static const struct tok ieee80211_data_subtypes[] = {
+	{ IEEE80211_FC0_SUBTYPE_DATA, "data" },
+	{ IEEE80211_FC0_SUBTYPE_CF_ACK, "data-cf-ack" },
+	{ IEEE80211_FC0_SUBTYPE_CF_POLL, "data-cf-poll" },
+	{ IEEE80211_FC0_SUBTYPE_CF_ACPL, "data-cf-ack-poll" },
+	{ IEEE80211_FC0_SUBTYPE_NODATA, "null" },
+	{ IEEE80211_FC0_SUBTYPE_NODATA_CF_ACK, "cf-ack" },
+	{ IEEE80211_FC0_SUBTYPE_NODATA_CF_POLL, "cf-poll"  },
+	{ IEEE80211_FC0_SUBTYPE_NODATA_CF_ACPL, "cf-ack-poll" },
+	{ IEEE80211_FC0_SUBTYPE_QOS|IEEE80211_FC0_SUBTYPE_DATA, "qos-data" },
+	{ IEEE80211_FC0_SUBTYPE_QOS|IEEE80211_FC0_SUBTYPE_CF_ACK, "qos-data-cf-ack" },
+	{ IEEE80211_FC0_SUBTYPE_QOS|IEEE80211_FC0_SUBTYPE_CF_POLL, "qos-data-cf-poll" },
+	{ IEEE80211_FC0_SUBTYPE_QOS|IEEE80211_FC0_SUBTYPE_CF_ACPL, "qos-data-cf-ack-poll" },
+	{ IEEE80211_FC0_SUBTYPE_QOS|IEEE80211_FC0_SUBTYPE_NODATA, "qos" },
+	{ IEEE80211_FC0_SUBTYPE_QOS|IEEE80211_FC0_SUBTYPE_NODATA_CF_POLL, "qos-cf-poll" },
+	{ IEEE80211_FC0_SUBTYPE_QOS|IEEE80211_FC0_SUBTYPE_NODATA_CF_ACPL, "qos-cf-ack-poll" },
+	{ 0, NULL }
+};
+static const struct tok llc_s_subtypes[] = {
+	{ LLC_RR, "rr" },
+	{ LLC_RNR, "rnr" },
+	{ LLC_REJ, "rej" },
+	{ 0, NULL }
+};
+static const struct tok llc_u_subtypes[] = {
+	{ LLC_UI, "ui" },
+	{ LLC_UA, "ua" },
+	{ LLC_DISC, "disc" },
+	{ LLC_DM, "dm" },
+	{ LLC_SABME, "sabme" },
+	{ LLC_TEST, "test" },
+	{ LLC_XID, "xid" },
+	{ LLC_FRMR, "frmr" },
+	{ 0, NULL }
+};
+struct type2tok {
+	int type;
+	const struct tok *tok;
+};
+static const struct type2tok ieee80211_type_subtypes[] = {
+	{ IEEE80211_FC0_TYPE_MGT, ieee80211_mgt_subtypes },
+	{ IEEE80211_FC0_TYPE_CTL, ieee80211_ctl_subtypes },
+	{ IEEE80211_FC0_TYPE_DATA, ieee80211_data_subtypes },
+	{ 0, NULL }
+};
+
+static int
+str2tok(const char *str, const struct tok *toks)
+{
+	int i;
+
+	for (i = 0; toks[i].s != NULL; i++) {
+		if (pcap_strcasecmp(toks[i].s, str) == 0)
+			return (toks[i].v);
+	}
+	return (-1);
+}
 
 int n_errors = 0;
 
@@ -79,7 +181,7 @@ yyerror(const char *msg)
 	/* NOTREACHED */
 }
 
-#ifndef YYBISON
+#ifdef NEED_YYPARSE_WRAPPER
 int yyparse(void);
 
 int
@@ -113,6 +215,16 @@ pfaction_to_num(const char *action)
 	else if (pcap_strcasecmp(action, "drop") == 0 ||
 		pcap_strcasecmp(action, "block") == 0)
 		return (PF_DROP);
+#if HAVE_PF_NAT_THROUGH_PF_NORDR
+	else if (pcap_strcasecmp(action, "rdr") == 0)
+		return (PF_RDR);
+	else if (pcap_strcasecmp(action, "nat") == 0)
+		return (PF_NAT);
+	else if (pcap_strcasecmp(action, "binat") == 0)
+		return (PF_BINAT);
+	else if (pcap_strcasecmp(action, "nordr") == 0)
+		return (PF_NORDR);
+#endif
 	else {
 		bpf_error("unknown PF action");
 		/*NOTREACHED*/
@@ -124,6 +236,9 @@ pfreason_to_num(const char *reason)
 {
 	bpf_error("libpcap was compiled on a machine without pf support");
 	/*NOTREACHED*/
+
+	/* this is to make the VC compiler happy */
+	return -1;
 }
 
 static int
@@ -131,6 +246,9 @@ pfaction_to_num(const char *action)
 {
 	bpf_error("libpcap was compiled on a machine without pf support");
 	/*NOTREACHED*/
+
+	/* this is to make the VC compiler happy */
+	return -1;
 }
 #endif /* HAVE_NET_PFVAR_H */
 %}
@@ -157,7 +275,7 @@ pfaction_to_num(const char *action)
 %type	<a>	arth narth
 %type	<i>	byteop pname pnum relop irelop
 %type	<blk>	and or paren not null prog
-%type	<rblk>	other pfvar
+%type	<rblk>	other pfvar p80211 pllc
 %type	<i>	atmtype atmmultitype
 %type	<blk>	atmfield
 %type	<blk>	atmfieldvalue atmvalue atmlistvalue
@@ -168,11 +286,12 @@ pfaction_to_num(const char *action)
 
 %token  DST SRC HOST GATEWAY
 %token  NET NETMASK PORT PORTRANGE LESS GREATER PROTO PROTOCHAIN CBYTE
-%token  ARP RARP IP SCTP TCP UDP ICMP IGMP IGRP PIM VRRP
+%token  ARP RARP IP SCTP TCP UDP ICMP IGMP IGRP PIM VRRP CARP
 %token  ATALK AARP DECNET LAT SCA MOPRC MOPDL
 %token  TK_BROADCAST TK_MULTICAST
 %token  NUM INBOUND OUTBOUND
 %token  PF_IFNAME PF_RSET PF_RNR PF_SRNR PF_REASON PF_ACTION
+%token	TYPE SUBTYPE DIR ADDR1 ADDR2 ADDR3 ADDR4 RA TA
 %token  LINK
 %token	GEQ LEQ NEQ
 %token	ID EID HID HID6 AID
@@ -180,8 +299,8 @@ pfaction_to_num(const char *action)
 %token  LEN
 %token  IPV6 ICMPV6 AH ESP
 %token	VLAN MPLS
-%token	PPPOED PPPOES
-%token  ISO ESIS CLNP ISIS L1 L2 IIH LSP SNP CSNP PSNP 
+%token	PPPOED PPPOES GENEVE
+%token  ISO ESIS CLNP ISIS L1 L2 IIH LSP SNP CSNP PSNP
 %token  STP
 %token  IPX
 %token  NETBEUI
@@ -189,14 +308,15 @@ pfaction_to_num(const char *action)
 %token	OAM OAMF4 CONNECTMSG METACONNECT
 %token	VPI VCI
 %token	RADIO
-%token	FISU LSSU MSU
-%token	SIO OPC DPC SLS
+%token	FISU LSSU MSU HFISU HLSSU HMSU
+%token	SIO OPC DPC SLS HSIO HOPC HDPC HSLS
+
 
 %type	<s> ID
 %type	<e> EID
 %type	<e> AID
 %type	<s> HID HID6
-%type	<i> NUM action reason
+%type	<i> NUM action reason type subtype type_subtype dir
 
 %left OR AND
 %nonassoc  '!'
@@ -238,6 +358,14 @@ nid:	  ID			{ $$.b = gen_scode($1, $$.q = $<blk>0.q); }
 	| HID			{
 				  /* Decide how to parse HID based on proto */
 				  $$.q = $<blk>0.q;
+				  if ($$.q.addr == Q_PORT)
+				  	bpf_error("'port' modifier applied to ip host");
+				  else if ($$.q.addr == Q_PORTRANGE)
+				  	bpf_error("'portrange' modifier applied to ip host");
+				  else if ($$.q.addr == Q_PROTO)
+				  	bpf_error("'proto' modifier applied to ip host");
+				  else if ($$.q.addr == Q_PROTOCHAIN)
+				  	bpf_error("'protochain' modifier applied to ip host");
 				  $$.b = gen_ncode($1, 0, $$.q);
 				}
 	| HID6 '/' NUM		{
@@ -258,7 +386,7 @@ nid:	  ID			{ $$.b = gen_scode($1, $$.q = $<blk>0.q); }
 					"in this configuration");
 #endif /*INET6*/
 				}
-	| EID			{ 
+	| EID			{
 				  $$.b = gen_ecode($1, $$.q = $<blk>0.q);
 				  /*
 				   * $1 was allocated by "pcap_ether_aton()",
@@ -325,6 +453,12 @@ dqual:	  SRC			{ $$ = Q_SRC; }
 	| DST OR SRC		{ $$ = Q_OR; }
 	| SRC AND DST		{ $$ = Q_AND; }
 	| DST AND SRC		{ $$ = Q_AND; }
+	| ADDR1			{ $$ = Q_ADDR1; }
+	| ADDR2			{ $$ = Q_ADDR2; }
+	| ADDR3			{ $$ = Q_ADDR3; }
+	| ADDR4			{ $$ = Q_ADDR4; }
+	| RA			{ $$ = Q_RA; }
+	| TA			{ $$ = Q_TA; }
 	;
 /* address type qualifiers */
 aqual:	  HOST			{ $$ = Q_HOST; }
@@ -347,6 +481,7 @@ pname:	  LINK			{ $$ = Q_LINK; }
 	| IGRP			{ $$ = Q_IGRP; }
 	| PIM			{ $$ = Q_PIM; }
 	| VRRP			{ $$ = Q_VRRP; }
+	| CARP 			{ $$ = Q_CARP; }
 	| ATALK			{ $$ = Q_ATALK; }
 	| AARP			{ $$ = Q_AARP; }
 	| DECNET		{ $$ = Q_DECNET; }
@@ -386,8 +521,13 @@ other:	  pqual TK_BROADCAST	{ $$ = gen_broadcast($1); }
 	| MPLS pnum		{ $$ = gen_mpls($2); }
 	| MPLS			{ $$ = gen_mpls(-1); }
 	| PPPOED		{ $$ = gen_pppoed(); }
-	| PPPOES		{ $$ = gen_pppoes(); }
+	| PPPOES pnum		{ $$ = gen_pppoes($2); }
+	| PPPOES		{ $$ = gen_pppoes(-1); }
+	| GENEVE pnum		{ $$ = gen_geneve($2); }
+	| GENEVE		{ $$ = gen_geneve(-1); }
 	| pfvar			{ $$ = $1; }
+	| pqual p80211		{ $$ = $2; }
+	| pllc			{ $$ = $1; }
 	;
 
 pfvar:	  PF_IFNAME ID		{ $$ = gen_pf_ifname($2); }
@@ -396,6 +536,104 @@ pfvar:	  PF_IFNAME ID		{ $$ = gen_pf_ifname($2); }
 	| PF_SRNR NUM		{ $$ = gen_pf_srnr($2); }
 	| PF_REASON reason	{ $$ = gen_pf_reason($2); }
 	| PF_ACTION action	{ $$ = gen_pf_action($2); }
+	;
+
+p80211:   TYPE type SUBTYPE subtype
+				{ $$ = gen_p80211_type($2 | $4,
+					IEEE80211_FC0_TYPE_MASK |
+					IEEE80211_FC0_SUBTYPE_MASK);
+				}
+	| TYPE type		{ $$ = gen_p80211_type($2,
+					IEEE80211_FC0_TYPE_MASK);
+				}
+	| SUBTYPE type_subtype	{ $$ = gen_p80211_type($2,
+					IEEE80211_FC0_TYPE_MASK |
+					IEEE80211_FC0_SUBTYPE_MASK);
+				}
+	| DIR dir		{ $$ = gen_p80211_fcdir($2); }
+	;
+
+type:	  NUM
+	| ID			{ $$ = str2tok($1, ieee80211_types);
+				  if ($$ == -1)
+				  	bpf_error("unknown 802.11 type name");
+				}
+	;
+
+subtype:  NUM
+	| ID			{ const struct tok *types = NULL;
+				  int i;
+				  for (i = 0;; i++) {
+				  	if (ieee80211_type_subtypes[i].tok == NULL) {
+				  		/* Ran out of types */
+						bpf_error("unknown 802.11 type");
+						break;
+					}
+					if ($<i>-1 == ieee80211_type_subtypes[i].type) {
+						types = ieee80211_type_subtypes[i].tok;
+						break;
+					}
+				  }
+
+				  $$ = str2tok($1, types);
+				  if ($$ == -1)
+					bpf_error("unknown 802.11 subtype name");
+				}
+	;
+
+type_subtype:	ID		{ int i;
+				  for (i = 0;; i++) {
+				  	if (ieee80211_type_subtypes[i].tok == NULL) {
+				  		/* Ran out of types */
+						bpf_error("unknown 802.11 type name");
+						break;
+					}
+					$$ = str2tok($1, ieee80211_type_subtypes[i].tok);
+					if ($$ != -1) {
+						$$ |= ieee80211_type_subtypes[i].type;
+						break;
+					}
+				  }
+				}
+		;
+
+pllc:	LLC			{ $$ = gen_llc(); }
+	| LLC ID		{ if (pcap_strcasecmp($2, "i") == 0)
+					$$ = gen_llc_i();
+				  else if (pcap_strcasecmp($2, "s") == 0)
+					$$ = gen_llc_s();
+				  else if (pcap_strcasecmp($2, "u") == 0)
+					$$ = gen_llc_u();
+				  else {
+				  	u_int subtype;
+
+					subtype = str2tok($2, llc_s_subtypes);
+					if (subtype != -1)
+						$$ = gen_llc_s_subtype(subtype);
+					else {
+						subtype = str2tok($2, llc_u_subtypes);
+						if (subtype == -1)
+					  		bpf_error("unknown LLC type name \"%s\"", $2);
+						$$ = gen_llc_u_subtype(subtype);
+					}
+				  }
+				}
+				/* sigh, "rnr" is already a keyword for PF */
+	| LLC PF_RNR		{ $$ = gen_llc_s_subtype(LLC_RNR); }
+	;
+
+dir:	  NUM
+	| ID			{ if (pcap_strcasecmp($1, "nods") == 0)
+					$$ = IEEE80211_FC1_DIR_NODS;
+				  else if (pcap_strcasecmp($1, "tods") == 0)
+					$$ = IEEE80211_FC1_DIR_TODS;
+				  else if (pcap_strcasecmp($1, "fromds") == 0)
+					$$ = IEEE80211_FC1_DIR_FROMDS;
+				  else if (pcap_strcasecmp($1, "dstods") == 0)
+					$$ = IEEE80211_FC1_DIR_DSTODS;
+				  else
+					bpf_error("unknown 802.11 direction");
+				}
 	;
 
 reason:	  NUM			{ $$ = $1; }
@@ -422,8 +660,10 @@ narth:	  pname '[' arth ']'		{ $$ = gen_load($1, $3, 1); }
 	| arth '-' arth			{ $$ = gen_arth(BPF_SUB, $1, $3); }
 	| arth '*' arth			{ $$ = gen_arth(BPF_MUL, $1, $3); }
 	| arth '/' arth			{ $$ = gen_arth(BPF_DIV, $1, $3); }
+	| arth '%' arth			{ $$ = gen_arth(BPF_MOD, $1, $3); }
 	| arth '&' arth			{ $$ = gen_arth(BPF_AND, $1, $3); }
 	| arth '|' arth			{ $$ = gen_arth(BPF_OR, $1, $3); }
+	| arth '^' arth			{ $$ = gen_arth(BPF_XOR, $1, $3); }
 	| arth LSH arth			{ $$ = gen_arth(BPF_LSH, $1, $3); }
 	| arth RSH arth			{ $$ = gen_arth(BPF_RSH, $1, $3); }
 	| '-' arth %prec UMINUS		{ $$ = gen_neg($2); }
@@ -440,7 +680,6 @@ pnum:	  NUM
 	| paren pnum ')'	{ $$ = $2; }
 	;
 atmtype: LANE			{ $$ = A_LANE; }
-	| LLC			{ $$ = A_LLC; }
 	| METAC			{ $$ = A_METAC;	}
 	| BCC			{ $$ = A_BCC; }
 	| OAMF4EC		{ $$ = A_OAMF4EC; }
@@ -476,12 +715,19 @@ atmlistvalue: atmfieldvalue
 mtp2type: FISU			{ $$ = M_FISU; }
 	| LSSU			{ $$ = M_LSSU; }
 	| MSU			{ $$ = M_MSU; }
+	| HFISU			{ $$ = MH_FISU; }
+	| HLSSU			{ $$ = MH_LSSU; }
+	| HMSU			{ $$ = MH_MSU; }
 	;
 	/* MTP3 field types quantifier */
 mtp3field: SIO			{ $$.mtp3fieldtype = M_SIO; }
 	| OPC			{ $$.mtp3fieldtype = M_OPC; }
 	| DPC			{ $$.mtp3fieldtype = M_DPC; }
 	| SLS                   { $$.mtp3fieldtype = M_SLS; }
+	| HSIO			{ $$.mtp3fieldtype = MH_SIO; }
+	| HOPC			{ $$.mtp3fieldtype = MH_OPC; }
+	| HDPC			{ $$.mtp3fieldtype = MH_DPC; }
+	| HSLS                  { $$.mtp3fieldtype = MH_SLS; }
 	;
 mtp3value: mtp3fieldvalue
 	| relop NUM		{ $$.b = gen_mtp3field_code($<blk>0.mtp3fieldtype, (u_int)$2, (u_int)$1, 0); }
@@ -493,7 +739,11 @@ mtp3fieldvalue: NUM {
 	if ($$.mtp3fieldtype == M_SIO ||
 	    $$.mtp3fieldtype == M_OPC ||
 	    $$.mtp3fieldtype == M_DPC ||
-	    $$.mtp3fieldtype == M_SLS )
+	    $$.mtp3fieldtype == M_SLS ||
+	    $$.mtp3fieldtype == MH_SIO ||
+	    $$.mtp3fieldtype == MH_OPC ||
+	    $$.mtp3fieldtype == MH_DPC ||
+	    $$.mtp3fieldtype == MH_SLS)
 		$$.b = gen_mtp3field_code($$.mtp3fieldtype, (u_int) $1, BPF_JEQ, 0);
 	}
 	;

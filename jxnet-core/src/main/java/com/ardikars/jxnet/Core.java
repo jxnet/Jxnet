@@ -17,6 +17,13 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.jxnet.util.FormatUtils;
+import com.ardikars.jxnet.util.Preconditions;
+
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.4
@@ -65,9 +72,9 @@ class Core {
      * @param netmask netmask.
      * @return -1 on error.
      */
-    public static int PcapCompileNoPcap(short snaplen_arp, DataLinkType linkType, BpfProgram program,
+    public static int PcapCompileNoPcap(short snaplen_arg, DataLinkType linkType, BpfProgram program,
                                   String buf, BpfProgram.BpfCompileMode optimize, Inet4Address netmask) {
-        return Jxnet.PcapCompileNoPcap(snaplen_arp, linkType.getValue(), program, buf,
+        return Jxnet.PcapCompileNoPcap(snaplen_arg, linkType.getValue(), program, buf,
                 optimize.getValue(), netmask.toInt());
     }
 
@@ -99,6 +106,86 @@ class Core {
      */
     public static Pcap PcapOpenDead(DataLinkType linkType, short snaplen) {
         return Jxnet.PcapOpenDead(linkType.getValue(), snaplen);
+    }
+
+    /**
+     * Send packet buffer to the network.
+     * @param pcap pcap object.
+     * @param buffer packet buffer.
+     * @return 0 on success.
+     */
+    public static int PcapSendPacket(Pcap pcap, ByteBuffer buffer) {
+        if (buffer.isDirect()) {
+            return Jxnet.PcapSendPacket(pcap, buffer, buffer.capacity());
+        }
+        ByteBuffer byteBuffer = FormatUtils.toDirectBuffer(buffer);
+        return Jxnet.PcapSendPacket(pcap, byteBuffer, byteBuffer.capacity());
+    }
+
+    /**
+     * Send packet buffer to the network.
+     * @param pcap pcap object.
+     * @param buffer packet buffer.
+     * @return 0 on success.
+     */
+    public static int PcapSendPacket(Pcap pcap, byte[] buffer) {
+        return PcapSendPacket(pcap, buffer, 0, buffer.length);
+    }
+
+    /**
+     * Send packet buffer to the network.
+     * @param pcap pcap.
+     * @param buffer packet buffer.
+     * @param offset offset.
+     * @param length length.
+     * @return 0 on success.
+     */
+    public static int PcapSendPacket(Pcap pcap, byte[] buffer, int offset, int length) {
+        int len = buffer.length;
+        int l = len - (len - offset + length);
+        Preconditions.CheckArgument(offset < len);
+        Preconditions.CheckArgument(l <= length);
+        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(l);
+        byteBuffer.put(buffer);
+        return Jxnet.PcapSendPacket(pcap, byteBuffer, l);
+    }
+
+    /**
+     * Removes all of the elements.
+     * @param pcapIf PcapIf object.
+     */
+    public static void PcapFreeAllDevs(List<PcapIf> pcapIf) {
+        if (!pcapIf.isEmpty()) {
+            pcapIf.clear();
+        }
+    }
+
+    /**
+     * Return the first connected device to the network.
+     * @param errbuf error buffer.
+     * @return PcapIf object.
+     */
+    public static PcapIf LookupNetworkInterface(StringBuilder errbuf) {
+        Preconditions.CheckNotNull(errbuf);
+        List<PcapIf> pcapIfs = new ArrayList<>();
+        if (Jxnet.PcapFindAllDevs(pcapIfs, errbuf) != Jxnet.OK) {
+            return null;
+        }
+        for (PcapIf pcapIf : pcapIfs) {
+            for (PcapAddr pcapAddr : pcapIf.getAddresses()) {
+                if (pcapAddr.getAddr().getSaFamily() == SockAddr.Family.AF_INET) {
+                    Inet4Address address = Inet4Address.valueOf(pcapAddr.getAddr().getData());
+                    Inet4Address netmask = Inet4Address.valueOf(pcapAddr.getNetmask().getData());;
+                    Inet4Address bcastaddr = Inet4Address.valueOf(pcapAddr.getBroadAddr().getData());
+                    //Inet4Address dstaddr = Inet4Address.valueOf(pcapAddr.getDstAddr().getData());;
+                    if (!address.equals(Inet4Address.ZERO) && !address.equals(Inet4Address.LOCALHOST)
+                            && !netmask.equals(Inet4Address.ZERO) && !bcastaddr.equals(Inet4Address.ZERO)) {
+                        return pcapIf;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
 }

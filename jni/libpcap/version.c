@@ -1,1 +1,1 @@
-char pcap_version[] = "0.9.8";
+char pcap_version[] = "1.7.4";

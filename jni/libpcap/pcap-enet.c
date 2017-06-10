@@ -6,10 +6,6 @@
  *
  * Rayan Zachariassen, CA*Net
  */
-#ifndef lint
-static const char rcsid[] _U_ =
-    "@(#) $Header: /tcpdump/master/libpcap/pcap-enet.c,v 1.8 2003/11/15 23:24:02 guy Exp $";
-#endif
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -22,7 +18,7 @@ static const char rcsid[] _U_ =
 #include <sys/socket.h>
 
 #include <net/if.h>
-#include <pcap-bpf.h>
+#include <pcap/bpf.h>
 #include <net/enet.h>
 
 #include <netinet/in.h>
