@@ -17,6 +17,9 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.jxnet.util.FormatUtils;
+import com.ardikars.jxnet.util.Preconditions;
+
 import java.nio.ByteBuffer;
 
 /**
@@ -103,10 +106,46 @@ class Core {
         return Jxnet.PcapOpenDead(linkType.getValue(), snaplen);
     }
 
-    public static int PcapSendPacket(Pcap pcap, byte[] buffer) {
-        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(buffer.length);
-        byteBuffer.put(buffer);
+    /**
+     * Send packet buffer to the network.
+     * @param pcap pcap object.
+     * @param buffer packet buffer.
+     * @return 0 on success.
+     */
+    public static int PcapSendPacket(Pcap pcap, ByteBuffer buffer) {
+        if (buffer.isDirect()) {
+            return Jxnet.PcapSendPacket(pcap, buffer, buffer.capacity());
+        }
+        ByteBuffer byteBuffer = FormatUtils.toDirectBuffer(buffer);
         return Jxnet.PcapSendPacket(pcap, byteBuffer, byteBuffer.capacity());
+    }
+
+    /**
+     * Send packet buffer to the network.
+     * @param pcap pcap object.
+     * @param buffer packet buffer.
+     * @return 0 on success.
+     */
+    public static int PcapSendPacket(Pcap pcap, byte[] buffer) {
+        return PcapSendPacket(pcap, buffer, 0, buffer.length);
+    }
+
+    /**
+     * Send packet buffer to the network.
+     * @param pcap pcap.
+     * @param buffer packet buffer.
+     * @param offset offset.
+     * @param length length.
+     * @return 0 on success.
+     */
+    public static int PcapSendPacket(Pcap pcap, byte[] buffer, int offset, int length) {
+        int len = buffer.length;
+        int l = len - (len - offset + length);
+        Preconditions.CheckArgument(offset < len);
+        Preconditions.CheckArgument(l <= length);
+        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(l);
+        byteBuffer.put(buffer);
+        return Jxnet.PcapSendPacket(pcap, byteBuffer, l);
     }
 
 }
