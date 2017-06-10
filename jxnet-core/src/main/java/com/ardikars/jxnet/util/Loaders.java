@@ -78,7 +78,9 @@ public class Loaders {
 	public static void loadLibrary() throws
 			UnsatisfiedLinkError, IOException, IllegalArgumentException {
 		errbuf.setLength(0);
-		addJavaLibarayPath("C:\\Windows\\System32\\Npcap");
+		if (Platforms.isWindows()) {
+			addJavaLibarayPath("C:\\Windows\\System32\\Npcap");
+		}
 		if (load()) {
 			return;
 		}
