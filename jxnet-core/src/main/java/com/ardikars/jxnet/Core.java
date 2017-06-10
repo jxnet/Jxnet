@@ -21,6 +21,8 @@ import com.ardikars.jxnet.util.FormatUtils;
 import com.ardikars.jxnet.util.Preconditions;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Ardika Rommy Sanjaya
@@ -146,6 +148,44 @@ class Core {
         ByteBuffer byteBuffer = ByteBuffer.allocateDirect(l);
         byteBuffer.put(buffer);
         return Jxnet.PcapSendPacket(pcap, byteBuffer, l);
+    }
+
+    /**
+     * Removes all of the elements.
+     * @param pcapIf PcapIf object.
+     */
+    public static void PcapFreeAllDevs(List<PcapIf> pcapIf) {
+        if (!pcapIf.isEmpty()) {
+            pcapIf.clear();
+        }
+    }
+
+    /**
+     * Return the first connected device to the network.
+     * @param errbuf error buffer.
+     * @return PcapIf object.
+     */
+    public static PcapIf LookupNetworkInterface(StringBuilder errbuf) {
+        Preconditions.CheckNotNull(errbuf);
+        List<PcapIf> pcapIfs = new ArrayList<>();
+        if (Jxnet.PcapFindAllDevs(pcapIfs, errbuf) != Jxnet.OK) {
+            return null;
+        }
+        for (PcapIf pcapIf : pcapIfs) {
+            for (PcapAddr pcapAddr : pcapIf.getAddresses()) {
+                if (pcapAddr.getAddr().getSaFamily() == SockAddr.Family.AF_INET) {
+                    Inet4Address address = Inet4Address.valueOf(pcapAddr.getAddr().getData());
+                    Inet4Address netmask = Inet4Address.valueOf(pcapAddr.getNetmask().getData());;
+                    Inet4Address bcastaddr = Inet4Address.valueOf(pcapAddr.getBroadAddr().getData());
+                    //Inet4Address dstaddr = Inet4Address.valueOf(pcapAddr.getDstAddr().getData());;
+                    if (!address.equals(Inet4Address.ZERO) && !address.equals(Inet4Address.LOCALHOST)
+                            && !netmask.equals(Inet4Address.ZERO) && !bcastaddr.equals(Inet4Address.ZERO)) {
+                        return pcapIf;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
 }
