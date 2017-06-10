@@ -14,11 +14,6 @@
  * (+961 3 485243)
  */
 
-#ifndef lint
-static const char rcsid[] _U_ =
-    "@(#) $Header: /tcpdump/master/libpcap/pcap-septel.c,v 1.1.2.2 2005/06/21 01:03:23 guy Exp $";
-#endif
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -38,32 +33,24 @@ static const char rcsid[] _U_ =
 #include <sys/types.h>
 #include <unistd.h>
 
-#ifdef HAVE_SEPTEL_API
 #include <msg.h>
 #include <ss7_inc.h>
 #include <sysgct.h>
 #include <pack.h>
 #include <system.h>
-#endif /* HAVE_SEPTEL_API */
 
-#ifdef SEPTEL_ONLY
-/* This code is required when compiling for a Septel device only. */
 #include "pcap-septel.h"
-
-/* Replace dag function names with pcap equivalent. */
-#define septel_open_live pcap_open_live
-#define septel_platform_finddevs pcap_platform_finddevs
-#endif /* SEPTEL_ONLY */
 
 static int septel_setfilter(pcap_t *p, struct bpf_program *fp);
 static int septel_stats(pcap_t *p, struct pcap_stat *ps);
 static int septel_setnonblock(pcap_t *p, int nonblock, char *errbuf);
 
-static void septel_platform_close(pcap_t *p) {
-
+/*
+ * Private data for capturing on Septel devices.
+ */
+struct pcap_septel {
+	struct pcap_stat stat;
 }
-
-
 
 /*
  *  Read at most max_packets from the capture queue and call the callback
@@ -72,6 +59,7 @@ static void septel_platform_close(pcap_t *p) {
  */
 static int septel_read(pcap_t *p, int cnt, pcap_handler callback, u_char *user) {
 
+  struct pcap_septel *ps = p->priv;
   HDR *h;
   MSG *m;
   int processed = 0 ;
@@ -169,7 +157,7 @@ loop:
         pcap_header.len = packet_len;
 
         /* Count the packet. */
-        p->md.stat.ps_recv++;
+        ps->stat.ps_recv++;
 
         /* Call the user supplied callback function */
         callback(user, &pcap_header, dp);
@@ -199,30 +187,16 @@ septel_inject(pcap_t *handle, const void *buf _U_, size_t size _U_)
 }
 
 /*
- *  Get a handle for a live capture from the given Septel device.  Always pass a NULL device
+ *  Activate a handle for a live capture from the given Septel device.  Always pass a NULL device
  *  The promisc flag is ignored because Septel cards have built-in tracing.
- *  The to_ms parameter is also ignored as it is
- *  not supported in hardware.
+ *  The timeout is also ignored as it is not supported in hardware.
  *
  *  See also pcap(3).
  */
-pcap_t *septel_open_live(const char *device, int snaplen, int promisc, int to_ms, char *ebuf) {
-  pcap_t *handle;
-
-  handle = malloc(sizeof(*handle));
-  if (handle == NULL) {
-    snprintf(ebuf, PCAP_ERRBUF_SIZE, "malloc %s: %s", device, pcap_strerror(errno));
-    return NULL;
-  }
-
+static pcap_t *septel_activate(pcap_t* handle) {
   /* Initialize some components of the pcap structure. */
-  
-  memset(handle, 0, sizeof(*handle));
-  
-  handle->snapshot = snaplen;
-
   handle->linktype = DLT_MTP2;
-  
+
   handle->bufsize = 0;
 
   /*
@@ -237,38 +211,51 @@ pcap_t *septel_open_live(const char *device, int snaplen, int promisc, int to_ms
   handle->getnonblock_op = pcap_getnonblock_fd;
   handle->setnonblock_op = septel_setnonblock;
   handle->stats_op = septel_stats;
-  handle->close_op = septel_platform_close;
 
-  return handle;
+  return 0;
+}
 
-fail:
-  if (handle != NULL) {
-    free(handle);
-  }
+pcap_t *septel_create(const char *device, char *ebuf, int *is_ours) {
+	const char *cp;
+	pcap_t *p;
 
-  return NULL;
+	/* Does this look like the Septel device? */
+	cp = strrchr(device, '/');
+	if (cp == NULL)
+		cp = device;
+	if (strcmp(cp, "septel") != 0) {
+		/* Nope, it's not "septel" */
+		*is_ours = 0;
+		return NULL;
+	}
+
+	/* OK, it's probably ours. */
+	*is_ours = 1;
+
+	p = pcap_create_common(device, ebuf, sizeof (struct pcap_septel));
+	if (p == NULL)
+		return NULL;
+
+	p->activate_op = septel_activate;
+	return p;
 }
 
 static int septel_stats(pcap_t *p, struct pcap_stat *ps) {
-  /*p->md.stat.ps_recv = 0;*/
-  /*p->md.stat.ps_drop = 0;*/
-  
-  *ps = p->md.stat;
- 
+  struct pcap_septel *handlep = p->priv;
+  /*handlep->stat.ps_recv = 0;*/
+  /*handlep->stat.ps_drop = 0;*/
+
+  *ps = handlep->stat;
+
   return 0;
 }
 
 
 int
-septel_platform_finddevs(pcap_if_t **devlistp, char *errbuf)
+septel_findalldevs(pcap_if_t **devlistp, char *errbuf)
 {
-unsigned char *p;
-  const char description[512]= "Intel/Septel device";
-  char name[512]="septel" ;
-  int ret = 0;
-  pcap_add_if(devlistp,name,0,description,errbuf);
-
-  return (ret); 
+  return (pcap_add_if(devlistp,"septel",0,
+                      "Intel/Septel device",errbuf));
 }
 
 
@@ -294,8 +281,6 @@ static int septel_setfilter(pcap_t *p, struct bpf_program *fp) {
     return -1;
   }
 
-  p->md.use_bpf = 0;
-
   return (0);
 }
 
@@ -303,5 +288,6 @@ static int septel_setfilter(pcap_t *p, struct bpf_program *fp) {
 static int
 septel_setnonblock(pcap_t *p, int nonblock, char *errbuf)
 {
-  return (0);
+  fprintf(errbuf, PCAP_ERRBUF_SIZE, "Non-blocking mode not supported on Septel devices");
+  return (-1);
 }

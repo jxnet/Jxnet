@@ -19,16 +19,23 @@
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-#ifndef lint
-static const char rcsid[] _U_ =
-    "@(#) $Header: /tcpdump/master/libpcap/etherent.c,v 1.22 2003/11/15 23:23:57 guy Exp $ (LBL)";
-#endif
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
+#ifdef WIN32
+#include <pcap-stdinc.h>
+#else /* WIN32 */
+#if HAVE_INTTYPES_H
+#include <inttypes.h>
+#elif HAVE_STDINT_H
+#include <stdint.h>
+#endif
+#ifdef HAVE_SYS_BITYPES_H
+#include <sys/bitypes.h>
+#endif
 #include <sys/types.h>
+#endif /* WIN32 */
 
 #include <ctype.h>
 #include <memory.h>
@@ -37,7 +44,7 @@ static const char rcsid[] _U_ =
 
 #include "pcap-int.h"
 
-#include <pcap-namedb.h>
+#include <pcap/namedb.h>
 
 #ifdef HAVE_OS_PROTO_H
 #include "os-proto.h"

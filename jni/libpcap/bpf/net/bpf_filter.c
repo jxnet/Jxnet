@@ -38,11 +38,6 @@
  *	@(#)bpf.c	7.5 (Berkeley) 7/15/91
  */
 
-#if !(defined(lint) || defined(KERNEL) || defined(_KERNEL))
-static const char rcsid[] _U_ =
-    "@(#) $Header: /tcpdump/master/libpcap/bpf/net/bpf_filter.c,v 1.44 2003/11/15 23:24:07 guy Exp $ (LBL)";
-#endif
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -52,6 +47,15 @@ static const char rcsid[] _U_ =
 #include <pcap-stdinc.h>
 
 #else /* WIN32 */
+
+#if HAVE_INTTYPES_H
+#include <inttypes.h>
+#elif HAVE_STDINT_H
+#include <stdint.h>
+#endif
+#ifdef HAVE_SYS_BITYPES_H
+#include <sys/bitypes.h>
+#endif
 
 #include <sys/param.h>
 #include <sys/types.h>
@@ -65,13 +69,13 @@ static const char rcsid[] _U_ =
 # define	m_next	b_cont
 # define	MLEN(m)	((m)->b_wptr - (m)->b_rptr)
 # define	mtod(m,t)	((t)(m)->b_rptr)
-#else
+#else /* defined(__hpux) || SOLARIS */
 # define	MLEN(m)	((m)->m_len)
-#endif
+#endif /* defined(__hpux) || SOLARIS */
 
 #endif /* WIN32 */
 
-#include <pcap-bpf.h>
+#include <pcap/bpf.h>
 
 #if !defined(KERNEL) && !defined(_KERNEL)
 #include <stdlib.h>
@@ -191,23 +195,39 @@ m_xhalf(m, k, err)
 }
 #endif
 
+#ifdef __linux__
+#include <linux/types.h>
+#include <linux/if_packet.h>
+#include <linux/filter.h>
+#endif
+
+enum {
+        BPF_S_ANC_NONE,
+        BPF_S_ANC_VLAN_TAG,
+        BPF_S_ANC_VLAN_TAG_PRESENT,
+};
+
 /*
  * Execute the filter program starting at pc on the packet p
  * wirelen is the length of the original packet
  * buflen is the amount of data present
+ * aux_data is auxiliary data, currently used only when interpreting
+ * filters intended for the Linux kernel in cases where the kernel
+ * rejects the filter; it contains VLAN tag information
  * For the kernel, p is assumed to be a pointer to an mbuf if buflen is 0,
  * in all other cases, p is a pointer to a buffer and buflen is its size.
  */
 u_int
-bpf_filter(pc, p, wirelen, buflen)
-	register struct bpf_insn *pc;
-	register u_char *p;
+bpf_filter_with_aux_data(pc, p, wirelen, buflen, aux_data)
+	register const struct bpf_insn *pc;
+	register const u_char *p;
 	u_int wirelen;
 	register u_int buflen;
+	register const struct bpf_aux_data *aux_data;
 {
 	register u_int32 A, X;
-	register int k;
-	int32 mem[BPF_MEMWORDS];
+	register bpf_u_int32 k;
+	u_int32 mem[BPF_MEMWORDS];
 #if defined(KERNEL) || defined(_KERNEL)
 	struct mbuf *m, *n;
 	int merr, len;
@@ -246,7 +266,7 @@ bpf_filter(pc, p, wirelen, buflen)
 
 		case BPF_LD|BPF_W|BPF_ABS:
 			k = pc->k;
-			if (k + sizeof(int32) > buflen) {
+			if (k > buflen || sizeof(int32_t) > buflen - k) {
 #if defined(KERNEL) || defined(_KERNEL)
 				if (m == NULL)
 					return 0;
@@ -263,7 +283,7 @@ bpf_filter(pc, p, wirelen, buflen)
 
 		case BPF_LD|BPF_H|BPF_ABS:
 			k = pc->k;
-			if (k + sizeof(short) > buflen) {
+			if (k > buflen || sizeof(int16_t) > buflen - k) {
 #if defined(KERNEL) || defined(_KERNEL)
 				if (m == NULL)
 					return 0;
@@ -279,22 +299,50 @@ bpf_filter(pc, p, wirelen, buflen)
 			continue;
 
 		case BPF_LD|BPF_B|BPF_ABS:
-			k = pc->k;
-			if (k >= buflen) {
-#if defined(KERNEL) || defined(_KERNEL)
-				if (m == NULL)
-					return 0;
-				n = m;
-				MINDEX(len, n, k);
-				A = mtod(n, u_char *)[k];
-				continue;
-#else
-				return 0;
-#endif
-			}
-			A = p[k];
-			continue;
+			{
+#if defined(SKF_AD_VLAN_TAG) && defined(SKF_AD_VLAN_TAG_PRESENT)
+				int code = BPF_S_ANC_NONE;
+#define ANCILLARY(CODE) case SKF_AD_OFF + SKF_AD_##CODE:		\
+				code = BPF_S_ANC_##CODE;		\
+                                        if (!aux_data)                  \
+                                                return 0;               \
+                                        break;
 
+				switch (pc->k) {
+					ANCILLARY(VLAN_TAG);
+					ANCILLARY(VLAN_TAG_PRESENT);
+				default :
+#endif
+					k = pc->k;
+					if (k >= buflen) {
+#if defined(KERNEL) || defined(_KERNEL)
+						if (m == NULL)
+							return 0;
+						n = m;
+						MINDEX(len, n, k);
+						A = mtod(n, u_char *)[k];
+						continue;
+#else
+						return 0;
+#endif
+					}
+					A = p[k];
+#if defined(SKF_AD_VLAN_TAG) && defined(SKF_AD_VLAN_TAG_PRESENT)
+				}
+				switch (code) {
+				case BPF_S_ANC_VLAN_TAG:
+					if (aux_data)
+						A = aux_data->vlan_tag;
+					break;
+
+				case BPF_S_ANC_VLAN_TAG_PRESENT:
+					if (aux_data)
+						A = aux_data->vlan_tag_present;
+					break;
+				}
+#endif
+				continue;
+			}
 		case BPF_LD|BPF_W|BPF_LEN:
 			A = wirelen;
 			continue;
@@ -305,7 +353,8 @@ bpf_filter(pc, p, wirelen, buflen)
 
 		case BPF_LD|BPF_W|BPF_IND:
 			k = X + pc->k;
-			if (k + sizeof(int32) > buflen) {
+			if (pc->k > buflen || X > buflen - pc->k ||
+			    sizeof(int32_t) > buflen - k) {
 #if defined(KERNEL) || defined(_KERNEL)
 				if (m == NULL)
 					return 0;
@@ -322,7 +371,8 @@ bpf_filter(pc, p, wirelen, buflen)
 
 		case BPF_LD|BPF_H|BPF_IND:
 			k = X + pc->k;
-			if (k + sizeof(short) > buflen) {
+			if (X > buflen || pc->k > buflen - X ||
+			    sizeof(int16_t) > buflen - k) {
 #if defined(KERNEL) || defined(_KERNEL)
 				if (m == NULL)
 					return 0;
@@ -339,7 +389,7 @@ bpf_filter(pc, p, wirelen, buflen)
 
 		case BPF_LD|BPF_B|BPF_IND:
 			k = X + pc->k;
-			if (k >= buflen) {
+			if (pc->k >= buflen || X >= buflen - pc->k) {
 #if defined(KERNEL) || defined(_KERNEL)
 				if (m == NULL)
 					return 0;
@@ -396,7 +446,18 @@ bpf_filter(pc, p, wirelen, buflen)
 			continue;
 
 		case BPF_JMP|BPF_JA:
+#if defined(KERNEL) || defined(_KERNEL)
+			/*
+			 * No backward jumps allowed.
+			 */
 			pc += pc->k;
+#else
+			/*
+			 * XXX - we currently implement "ip6 protochain"
+			 * with backward jumps, so sign-extend pc->k.
+			 */
+			pc += (bpf_int32)pc->k;
+#endif
 			continue;
 
 		case BPF_JMP|BPF_JGT|BPF_K:
@@ -449,12 +510,22 @@ bpf_filter(pc, p, wirelen, buflen)
 			A /= X;
 			continue;
 
+		case BPF_ALU|BPF_MOD|BPF_X:
+			if (X == 0)
+				return 0;
+			A %= X;
+			continue;
+
 		case BPF_ALU|BPF_AND|BPF_X:
 			A &= X;
 			continue;
 
 		case BPF_ALU|BPF_OR|BPF_X:
 			A |= X;
+			continue;
+
+		case BPF_ALU|BPF_XOR|BPF_X:
+			A ^= X;
 			continue;
 
 		case BPF_ALU|BPF_LSH|BPF_X:
@@ -481,12 +552,20 @@ bpf_filter(pc, p, wirelen, buflen)
 			A /= pc->k;
 			continue;
 
+		case BPF_ALU|BPF_MOD|BPF_K:
+			A %= pc->k;
+			continue;
+
 		case BPF_ALU|BPF_AND|BPF_K:
 			A &= pc->k;
 			continue;
 
 		case BPF_ALU|BPF_OR|BPF_K:
 			A |= pc->k;
+			continue;
+
+		case BPF_ALU|BPF_XOR|BPF_K:
+			A ^= pc->k;
 			continue;
 
 		case BPF_ALU|BPF_LSH|BPF_K:
@@ -512,54 +591,169 @@ bpf_filter(pc, p, wirelen, buflen)
 	}
 }
 
+u_int
+bpf_filter(pc, p, wirelen, buflen)
+	register const struct bpf_insn *pc;
+	register const u_char *p;
+	u_int wirelen;
+	register u_int buflen;
+{
+	return bpf_filter_with_aux_data(pc, p, wirelen, buflen, NULL);
+}
+
 
 /*
  * Return true if the 'fcode' is a valid filter program.
  * The constraints are that each jump be forward and to a valid
- * code.  The code must terminate with either an accept or reject.
- * 'valid' is an array for use by the routine (it must be at least
- * 'len' bytes long).
+ * code, that memory accesses are within valid ranges (to the
+ * extent that this can be checked statically; loads of packet
+ * data have to be, and are, also checked at run time), and that
+ * the code terminates with either an accept or reject.
  *
  * The kernel needs to be able to verify an application's filter code.
  * Otherwise, a bogus program could easily crash the system.
  */
 int
 bpf_validate(f, len)
-	struct bpf_insn *f;
+	const struct bpf_insn *f;
 	int len;
 {
-	register int i;
-	register struct bpf_insn *p;
+	u_int i, from;
+	const struct bpf_insn *p;
+
+	if (len < 1)
+		return 0;
+	/*
+	 * There's no maximum program length in userland.
+	 */
+#if defined(KERNEL) || defined(_KERNEL)
+	if (len > BPF_MAXINSNS)
+		return 0;
+#endif
 
 	for (i = 0; i < len; ++i) {
-		/*
-		 * Check that that jumps are forward, and within
-		 * the code block.
-		 */
 		p = &f[i];
-		if (BPF_CLASS(p->code) == BPF_JMP) {
-			register int from = i + 1;
-
-			if (BPF_OP(p->code) == BPF_JA) {
-				if (from + p->k >= (unsigned)len)
-					return 0;
-			}
-			else if (from + p->jt >= len || from + p->jf >= len)
-				return 0;
-		}
+		switch (BPF_CLASS(p->code)) {
 		/*
 		 * Check that memory operations use valid addresses.
 		 */
-		if ((BPF_CLASS(p->code) == BPF_ST ||
-		     (BPF_CLASS(p->code) == BPF_LD &&
-		      (p->code & 0xe0) == BPF_MEM)) &&
-		    (p->k >= BPF_MEMWORDS || p->k < 0))
+		case BPF_LD:
+		case BPF_LDX:
+			switch (BPF_MODE(p->code)) {
+			case BPF_IMM:
+				break;
+			case BPF_ABS:
+			case BPF_IND:
+			case BPF_MSH:
+				/*
+				 * There's no maximum packet data size
+				 * in userland.  The runtime packet length
+				 * check suffices.
+				 */
+#if defined(KERNEL) || defined(_KERNEL)
+				/*
+				 * More strict check with actual packet length
+				 * is done runtime.
+				 */
+				if (p->k >= bpf_maxbufsize)
+					return 0;
+#endif
+				break;
+			case BPF_MEM:
+				if (p->k >= BPF_MEMWORDS)
+					return 0;
+				break;
+			case BPF_LEN:
+				break;
+			default:
+				return 0;
+			}
+			break;
+		case BPF_ST:
+		case BPF_STX:
+			if (p->k >= BPF_MEMWORDS)
+				return 0;
+			break;
+		case BPF_ALU:
+			switch (BPF_OP(p->code)) {
+			case BPF_ADD:
+			case BPF_SUB:
+			case BPF_MUL:
+			case BPF_OR:
+			case BPF_AND:
+			case BPF_XOR:
+			case BPF_LSH:
+			case BPF_RSH:
+			case BPF_NEG:
+				break;
+			case BPF_DIV:
+			case BPF_MOD:
+				/*
+				 * Check for constant division or modulus
+				 * by 0.
+				 */
+				if (BPF_SRC(p->code) == BPF_K && p->k == 0)
+					return 0;
+				break;
+			default:
+				return 0;
+			}
+			break;
+		case BPF_JMP:
+			/*
+			 * Check that jumps are within the code block,
+			 * and that unconditional branches don't go
+			 * backwards as a result of an overflow.
+			 * Unconditional branches have a 32-bit offset,
+			 * so they could overflow; we check to make
+			 * sure they don't.  Conditional branches have
+			 * an 8-bit offset, and the from address is <=
+			 * BPF_MAXINSNS, and we assume that BPF_MAXINSNS
+			 * is sufficiently small that adding 255 to it
+			 * won't overflow.
+			 *
+			 * We know that len is <= BPF_MAXINSNS, and we
+			 * assume that BPF_MAXINSNS is < the maximum size
+			 * of a u_int, so that i + 1 doesn't overflow.
+			 *
+			 * For userland, we don't know that the from
+			 * or len are <= BPF_MAXINSNS, but we know that
+			 * from <= len, and, except on a 64-bit system,
+			 * it's unlikely that len, if it truly reflects
+			 * the size of the program we've been handed,
+			 * will be anywhere near the maximum size of
+			 * a u_int.  We also don't check for backward
+			 * branches, as we currently support them in
+			 * userland for the protochain operation.
+			 */
+			from = i + 1;
+			switch (BPF_OP(p->code)) {
+			case BPF_JA:
+#if defined(KERNEL) || defined(_KERNEL)
+				if (from + p->k < from || from + p->k >= len)
+#else
+				if (from + p->k >= len)
+#endif
+					return 0;
+				break;
+			case BPF_JEQ:
+			case BPF_JGT:
+			case BPF_JGE:
+			case BPF_JSET:
+				if (from + p->jt >= len || from + p->jf >= len)
+					return 0;
+				break;
+			default:
+				return 0;
+			}
+			break;
+		case BPF_RET:
+			break;
+		case BPF_MISC:
+			break;
+		default:
 			return 0;
-		/*
-		 * Check for constant division by 0.
-		 */
-		if (p->code == (BPF_ALU|BPF_DIV|BPF_K) && p->k == 0)
-			return 0;
+		}
 	}
 	return BPF_CLASS(f[len - 1].code) == BPF_RET;
 }

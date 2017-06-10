@@ -18,6 +18,6 @@ LOCAL_SRC_FILES := \
 
 LOCAL_STATIC_LIBRARIES := libpcap
 
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/libpcap-latest
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/libpcap
 include $(BUILD_SHARED_LIBRARY)
-include $(LOCAL_PATH)/libpcap-latest/Android.mk
+include $(LOCAL_PATH)/libpcap/Android.mk
