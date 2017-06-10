@@ -72,9 +72,9 @@ class Core {
      * @param netmask netmask.
      * @return -1 on error.
      */
-    public static int PcapCompileNoPcap(short snaplen_arp, DataLinkType linkType, BpfProgram program,
+    public static int PcapCompileNoPcap(short snaplen_arg, DataLinkType linkType, BpfProgram program,
                                   String buf, BpfProgram.BpfCompileMode optimize, Inet4Address netmask) {
-        return Jxnet.PcapCompileNoPcap(snaplen_arp, linkType.getValue(), program, buf,
+        return Jxnet.PcapCompileNoPcap(snaplen_arg, linkType.getValue(), program, buf,
                 optimize.getValue(), netmask.toInt());
     }
 
