@@ -17,6 +17,8 @@
 
 package com.ardikars.jxnet;
 
+import java.nio.ByteBuffer;
+
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.4
@@ -99,6 +101,12 @@ class Core {
      */
     public static Pcap PcapOpenDead(DataLinkType linkType, short snaplen) {
         return Jxnet.PcapOpenDead(linkType.getValue(), snaplen);
+    }
+
+    public static int PcapSendPacket(Pcap pcap, byte[] buffer) {
+        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(buffer.length);
+        byteBuffer.put(buffer);
+        return Jxnet.PcapSendPacket(pcap, byteBuffer, byteBuffer.capacity());
     }
 
 }
