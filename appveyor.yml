@@ -20,7 +20,8 @@ cache:
   - C:\Users\appveyor\.gradle\caches
 
 install:
-  - cmd: choco install -y winpcap
+  - ps: (new-object net.webclient).DownloadFile('https://nmap.org/npcap/dist/npcap-0.91.exe', 'npcap.exe')
+  - ps: npcap.exe /S /npf_startup=yes /loopback_support=yes /dlt_null=no /admin_only=no /dot11_support=no /vlan_support=no /winpcap_mode=yes
 
 platform: Any CPU
 

@@ -166,7 +166,7 @@ class Core {
      * @return PcapIf object.
      */
     public static PcapIf LookupNetworkInterface(StringBuilder errbuf) {
-        Preconditions.CheckNotNull(errbuf);
+        if (errbuf == null) throw new NullPointerException();
         List<PcapIf> pcapIfs = new ArrayList<>();
         if (Jxnet.PcapFindAllDevs(pcapIfs, errbuf) != Jxnet.OK) {
             return null;
@@ -174,10 +174,17 @@ class Core {
         for (PcapIf pcapIf : pcapIfs) {
             for (PcapAddr pcapAddr : pcapIf.getAddresses()) {
                 if (pcapAddr.getAddr().getSaFamily() == SockAddr.Family.AF_INET) {
-                    Inet4Address address = Inet4Address.valueOf(pcapAddr.getAddr().getData());
-                    Inet4Address netmask = Inet4Address.valueOf(pcapAddr.getNetmask().getData());;
-                    Inet4Address bcastaddr = Inet4Address.valueOf(pcapAddr.getBroadAddr().getData());
-                    //Inet4Address dstaddr = Inet4Address.valueOf(pcapAddr.getDstAddr().getData());;
+                    Inet4Address address = Inet4Address.valueOf(0);
+                    Inet4Address netmask = Inet4Address.valueOf(0);
+                    Inet4Address bcastaddr = Inet4Address.valueOf(0);
+                    try {
+                        address = Inet4Address.valueOf(pcapAddr.getAddr().getData());
+                        netmask = Inet4Address.valueOf(pcapAddr.getNetmask().getData());
+                        bcastaddr = Inet4Address.valueOf(pcapAddr.getBroadAddr().getData());
+                        //Inet4Address dstaddr = Inet4Address.valueOf(pcapAddr.getDstAddr().getData());;
+                    } catch (Exception e) {
+                        //
+                    }
                     if (!address.equals(Inet4Address.ZERO) && !address.equals(Inet4Address.LOCALHOST)
                             && !netmask.equals(Inet4Address.ZERO) && !bcastaddr.equals(Inet4Address.ZERO)) {
                         return pcapIf;
