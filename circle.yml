@@ -10,5 +10,5 @@ general:
 
 test:
   override:
-    - sudo sudo ./gradlew clean test codeCoverageReport --info --no-daemon
+    - sudo ./gradlew clean test codeCoverageReport --info --no-daemon
 
