@@ -64,7 +64,7 @@ class Core {
      * Compile a packet filter without the need of opening an adapter.
      * This function converts an high level filtering expression (see Filtering expression syntax)
      * in a program that can be interpreted by the kernel-level filtering engine.
-     * @param snaplen_arp snapshot length.
+     * @param snaplen_arg snapshot length.
      * @param linkType datalink type.
      * @param program bpf.
      * @param buf filter.
