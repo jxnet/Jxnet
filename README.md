@@ -8,7 +8,7 @@ Jxnet wraps a native packet capture library (libpcap/npcap) via JNI (Java Native
 [![Build status](https://ci.appveyor.com/api/projects/status/cdhg247wftehh8xe?svg=true)](https://ci.appveyor.com/project/ardikars/jxnet)
 [![CircleCI](https://circleci.com/gh/ardikars/Jxnet/tree/master.svg?style=svg)](https://circleci.com/gh/ardikars/Jxnet/tree/master)
 
-[ ![Download](https://api.bintray.com/packages/ardikars/maven/com.ardikars.jxnet/images/download.svg?version=1.1.3) ](https://bintray.com/ardikars/maven/com.ardikars.jxnet/1.1.3/link)
+[ ![Download](https://api.bintray.com/packages/ardikars/maven/com.ardikars.jxnet/images/download.svg?version=1.1.4) ](https://bintray.com/ardikars/maven/com.ardikars.jxnet/1.1.4/link)
 
 
 HOW TO BUILD
@@ -26,9 +26,9 @@ Add a dependency to the build.gradle as like below:
 ```
 ...
 dependencies {
-  compile 'com.ardikars.jxnet:jxnet-core:1.1.3'
-  compile 'com.ardikars.jxnet:jxnet-packet:1.1.3'
-  compile 'com.ardikars.jxnet:jxnet-util:1.1.3'
+  compile 'com.ardikars.jxnet:jxnet-core:1.1.4'
+  compile 'com.ardikars.jxnet:jxnet-packet:1.1.4'
+  compile 'com.ardikars.jxnet:jxnet-util:1.1.4'
   ...
 }
 ...
