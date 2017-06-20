@@ -17,15 +17,15 @@
 
 package com.ardikars.jxnet.packet;
 
-import com.ardikars.jxnet.DataLinkType;
-import com.ardikars.jxnet.Pcap;
-import com.ardikars.jxnet.PcapHandler;
-import com.ardikars.jxnet.PcapPktHdr;
+import com.ardikars.jxnet.*;
 import com.ardikars.jxnet.packet.radiotap.RadioTap;
 import com.ardikars.jxnet.packet.sll.SLL;
+import com.ardikars.jxnet.packet.tcp.TCP;
 import com.ardikars.jxnet.util.FormatUtils;
 import com.ardikars.jxnet.packet.ethernet.Ethernet;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,6 +45,25 @@ public class PacketHelper {
             tPacketHandler.nextPacket(arg, pcapPktHdr, parsePacket(datalinkType, FormatUtils.toBytes(buffer)));
         };
         return PcapLoop(pcap, count, callback, handler);
+    }
+
+    public static <T extends Packet> int loop(Pcap pcap, int count, PacketDecoder<T> decoder) {
+        try {
+            final String className = ((ParameterizedType) decoder.getClass().getGenericSuperclass()).getActualTypeArguments()[0].getTypeName();
+            final Class<T> clazz = (Class<T>) Class.forName(className);
+            PacketHandler<PacketDecoder<T>> callback = (coder, pktHdr, packets) -> {
+                if (clazz != null) {
+                    Packet packet = packets.get(clazz);
+                    if (packet != null) {
+                        coder.read(pcap, pktHdr, (T) packet);
+                    }
+                }
+            };
+            return PacketHelper.loop(pcap, count, callback, decoder);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     public static Map<Class, Packet> next(Pcap pcap, PcapPktHdr pcapPktHdr) {

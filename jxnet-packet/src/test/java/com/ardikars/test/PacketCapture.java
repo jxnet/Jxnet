@@ -2,10 +2,16 @@ package com.ardikars.test;
 
 import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
+import com.ardikars.jxnet.PcapPktHdr;
 import com.ardikars.jxnet.packet.Packet;
+import com.ardikars.jxnet.packet.PacketDecoder;
 import com.ardikars.jxnet.packet.PacketHandler;
 import com.ardikars.jxnet.packet.PacketHelper;
 import com.ardikars.jxnet.packet.ethernet.Ethernet;
+import com.ardikars.jxnet.packet.icmp.ICMP;
+import com.ardikars.jxnet.packet.tcp.TCP;
+
+import java.util.Map;
 
 public class PacketCapture {
 
@@ -21,7 +27,7 @@ public class PacketCapture {
         if (pcap == null) {
             throw new Exception("Failed to open handler to " + source);
         }
-        PacketHandler<String> callback = (arg, h, packets) -> {
+        /*PacketHandler<String> callback = (arg, h, packets) -> {
             Ethernet ethernet = (Ethernet) packets.get(Ethernet.class);
             if (ethernet != null) {
                 System.out.println("{");
@@ -33,8 +39,10 @@ public class PacketCapture {
                 }
                 System.out.println("}");
             }
-        };
-        if (PacketHelper.loop(pcap, -1, callback, null) != 0) {
+        };*/
+        TCPDecoder callback = new TCPDecoder();
+
+        if (PacketHelper.loop(pcap, -1, callback) != 0) {
             String err = Jxnet.PcapGetErr(pcap);
             Jxnet.PcapClose(pcap);
             throw new Exception(err);
