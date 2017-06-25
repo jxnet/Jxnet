@@ -21,49 +21,18 @@ package com.ardikars.jxnet;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
-public final class Pcap {
+public enum PromiscuousMode {
 
-	private long address;
+    PRIMISCUOUS(1), NON_PROMISCUOUS(0);
 
-	private Pcap() {
-		//
-	}
+    private final int value;
 
-	public synchronized long getAddress() {
-		return this.address;
-	}
+    private PromiscuousMode(final int value) {
+        this.value = value;
+    }
 
-	public boolean isClosed() {
-		if (this.address == 0) {
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == this)
-			return true;
-		if (obj.getClass() != this.getClass())
-			return false;
-		if (obj instanceof Pcap) {
-			Pcap pcap = (Pcap) obj;
-			return address  == pcap.getAddress();
-		}
-		return false;
-	}
-
-	@Override
-	public int hashCode() {
-		return 17 * 37 +
-				((int) (this.address ^ (this.address >> 32)));
-	}
-
-	@Override
-	public String toString() {
-		return new StringBuilder().append("[Pointer Address: ")
-				.append(address)
-				.append("]").toString();
-	}
+    public int getValue() {
+        return value;
+    }
 
 }

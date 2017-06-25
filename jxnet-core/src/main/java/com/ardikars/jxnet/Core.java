@@ -42,7 +42,7 @@ class Core {
      * @param errbuf error buffer.
      * @return pcap object.
      */
-    public static Pcap PcapOpenLive(PcapIf source, short snaplen, Pcap.PromiscuousMode promisc,
+    public static Pcap PcapOpenLive(PcapIf source, short snaplen, PromiscuousMode promisc,
                                     int timeout, StringBuilder errbuf) {
         return Jxnet.PcapOpenLive(source.getName(), snaplen, promisc.getValue(), timeout, errbuf);
     }
