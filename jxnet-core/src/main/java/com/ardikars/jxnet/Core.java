@@ -20,6 +20,9 @@ package com.ardikars.jxnet;
 import com.ardikars.jxnet.util.FormatUtils;
 import com.ardikars.jxnet.util.Preconditions;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -183,7 +186,7 @@ class Core {
                         bcastaddr = Inet4Address.valueOf(pcapAddr.getBroadAddr().getData());
                         //Inet4Address dstaddr = Inet4Address.valueOf(pcapAddr.getDstAddr().getData());;
                     } catch (Exception e) {
-                        //
+                        errbuf.append(e.getMessage() + "\n");
                     }
                     if (!address.equals(Inet4Address.ZERO) && !address.equals(Inet4Address.LOCALHOST)
                             && !netmask.equals(Inet4Address.ZERO) && !bcastaddr.equals(Inet4Address.ZERO)) {
@@ -192,7 +195,39 @@ class Core {
                 }
             }
         }
+        errbuf.append("Check your network connection.\n");
         return null;
+    }
+
+    public static PcapIf SelectNetowrkInterface(StringBuilder errbuf) {
+        if (errbuf == null) throw new NullPointerException();
+        List<PcapIf> pcapIfs = new ArrayList<>();
+        if (Jxnet.PcapFindAllDevs(pcapIfs, errbuf) != Jxnet.OK) {
+            return null;
+        }
+        StringBuilder sb = new StringBuilder();
+        int i=0;
+        for (PcapIf pcapIf : pcapIfs) {
+            sb.append("NO[" + ++i +"]\t=> ");
+            sb.append("NAME: " + pcapIf.getName() + " (" + pcapIf.getDescription() + " )\n");
+            for (PcapAddr pcapAddr : pcapIf.getAddresses()) {
+                sb.append("\t\tADDRESS: " + pcapAddr.getAddr().toString() + "\n");
+            }
+        }
+        System.out.println(sb.toString());
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        while (true) {
+            System.out.print("Select a device number, or enter 'q' to quit -> ");
+            String input;
+            try {
+                input = reader.readLine();
+                i = Integer.parseInt(input);
+            } catch (IOException e) {
+                errbuf.append(e.toString());
+                return null;
+            }
+            return pcapIfs.get(i-1);
+        }
     }
 
 }

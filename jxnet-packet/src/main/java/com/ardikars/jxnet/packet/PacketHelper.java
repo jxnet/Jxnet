@@ -47,6 +47,7 @@ public class PacketHelper {
         return PcapLoop(pcap, count, callback, handler);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T extends Packet> int loop(Pcap pcap, int count, PacketDecoder<T> decoder) {
         try {
             final String className = ((ParameterizedType) decoder.getClass().getGenericSuperclass()).getActualTypeArguments()[0].getTypeName();
