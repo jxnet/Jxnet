@@ -17,7 +17,7 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.util.FormatUtils;
+import com.ardikars.jxnet.util.BufferUtils;
 import com.ardikars.jxnet.util.Preconditions;
 
 import java.io.BufferedReader;
@@ -121,7 +121,7 @@ class Core {
         if (buffer.isDirect()) {
             return Jxnet.PcapSendPacket(pcap, buffer, buffer.capacity());
         }
-        ByteBuffer byteBuffer = FormatUtils.toDirectBuffer(buffer);
+        ByteBuffer byteBuffer = BufferUtils.toDirectByteBuffer(buffer);
         return Jxnet.PcapSendPacket(pcap, byteBuffer, byteBuffer.capacity());
     }
 
@@ -199,6 +199,11 @@ class Core {
         return null;
     }
 
+    /**
+     * Select network interface.
+     * @param errbuf errbuf.
+     * @return PcapIf.
+     */
     public static PcapIf SelectNetowrkInterface(StringBuilder errbuf) {
         if (errbuf == null) throw new NullPointerException();
         List<PcapIf> pcapIfs = new ArrayList<>();
