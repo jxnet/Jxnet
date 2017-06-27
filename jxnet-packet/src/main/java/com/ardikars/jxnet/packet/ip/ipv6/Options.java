@@ -19,48 +19,40 @@ package com.ardikars.jxnet.packet.ip.ipv6;
 
 /**
  * @author Ardika Rommy Sanjaya
- * @since 1.1.0
+ * @since 1.1.5
  */
-public class Fragment extends IPv6ExtensionHeader {
+public class Options extends IPv6ExtensionHeader {
 
     private byte nextHeader;
-    private short fragmentOffset;
-    private byte moreFragment;
-    private int identification;
+    private byte extensionLength;
+    private byte[] options;
+
+    protected byte type;
 
     public byte getNextHeader() {
         return this.nextHeader;
     }
 
-    public Fragment setNextHeader(final byte nextHeader) {
+    public Options setNextHeader(final byte nextHeader) {
         this.nextHeader = nextHeader;
         return this;
     }
 
-    public short getFragmentOffset() {
-        return this.fragmentOffset;
+    public byte getExtensionLength() {
+        return this.extensionLength;
     }
 
-    public Fragment setFragmentOffset(final short fragmentOffset) {
-        this.fragmentOffset = fragmentOffset;
+    public Options setExtensionLength(final byte extensionLength) {
+        this.extensionLength = extensionLength;
         return this;
     }
 
-    public byte getMoreFragment() {
-        return this.moreFragment;
+    public byte[] getOptions() {
+        return this.options;
     }
 
-    public Fragment setMoreFragment(final byte moreFragment) {
-        this.moreFragment = moreFragment;
-        return this;
-    }
-
-    public int getIdentification() {
-        return this.identification;
-    }
-
-    public Fragment setIdentification(final int identification) {
-        this.identification = identification;
+    public Options setOptions(final byte[] options) {
+        this.options = options;
         return this;
     }
 

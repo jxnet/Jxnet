@@ -19,9 +19,12 @@ package com.ardikars.jxnet.packet.ip.ipv6;
 
 /**
  * @author Ardika Rommy Sanjaya
- * @since 1.1.0
+ * @since 1.1.5
  */
-public abstract class IPv6ExtensionHeader  {
+public class HopByHopOptions extends Options {
 
+    public HopByHopOptions() {
+        type = (byte) 0x00;
+    }
 
 }

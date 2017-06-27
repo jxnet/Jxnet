@@ -19,48 +19,59 @@ package com.ardikars.jxnet.packet.ip.ipv6;
 
 /**
  * @author Ardika Rommy Sanjaya
- * @since 1.1.0
+ * @since 1.1.5
  */
-public class Fragment extends IPv6ExtensionHeader {
+public class Routing extends IPv6ExtensionHeader {
 
     private byte nextHeader;
-    private short fragmentOffset;
-    private byte moreFragment;
-    private int identification;
+    private byte extensionLength;
+    private byte routingType;
+    private byte segmentLeft;
+
+    private byte[] routingData;
 
     public byte getNextHeader() {
         return this.nextHeader;
     }
 
-    public Fragment setNextHeader(final byte nextHeader) {
+    public Routing setNextHeader(final byte nextHeader) {
         this.nextHeader = nextHeader;
         return this;
     }
 
-    public short getFragmentOffset() {
-        return this.fragmentOffset;
+    public byte getExtensionLength() {
+        return this.extensionLength;
     }
 
-    public Fragment setFragmentOffset(final short fragmentOffset) {
-        this.fragmentOffset = fragmentOffset;
+    public Routing setExtensionLength(final byte extensionLength) {
+        this.extensionLength = extensionLength;
         return this;
     }
 
-    public byte getMoreFragment() {
-        return this.moreFragment;
+    public byte getRoutingType() {
+        return this.routingType;
     }
 
-    public Fragment setMoreFragment(final byte moreFragment) {
-        this.moreFragment = moreFragment;
+    public Routing setRoutingType(final byte routingType) {
+        this.routingType = routingType;
         return this;
     }
 
-    public int getIdentification() {
-        return this.identification;
+    public byte getSegmentLeft() {
+        return this.segmentLeft;
     }
 
-    public Fragment setIdentification(final int identification) {
-        this.identification = identification;
+    public Routing setSegmentLeft(final byte segmentLeft) {
+        this.segmentLeft = segmentLeft;
+        return this;
+    }
+
+    public byte[] getRoutingData() {
+        return this.routingData;
+    }
+
+    public Routing setRoutingData(final byte[] routingData) {
+        this.routingData = routingData;
         return this;
     }
 
