@@ -19,16 +19,81 @@ package com.ardikars.jxnet.packet;
 
 import com.ardikars.jxnet.util.Builder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
 public abstract class Packet implements Builder<Packet> {
 
+    /**
+     * Set payload.
+     * @param packet paket.
+     * @return packet.
+     */
     public abstract Packet setPacket(final Packet packet);
 
+    /**
+     * Get payload.
+     * @return packet.
+     */
     public abstract Packet getPacket();
 
+    /**
+     * Return packet in byte array.
+     * @return byte array.
+     */
     public abstract byte[] toBytes();
+
+    /**
+     * Packet builder.
+     * @return Instance of PacketBuilder.
+     */
+    public static PacketBuilder PacketBuilder() {
+        return new PacketBuilder();
+    }
+
+    public static class PacketBuilder implements Builder<Packet> {
+
+        /**
+         * Packet list.
+         */
+        private List<Packet> packets = new ArrayList<Packet>();
+
+        /**
+         * Add payload.
+         * @param packet paket.
+         * @return PacketBuilder.
+         */
+        public PacketBuilder add(Packet packet) {
+            packets.add(packet);
+            return this;
+        }
+
+        /**
+         * Remove packet.
+         * @param packetNumber packet number.
+         * @return PacketBuilder.
+         */
+        public PacketBuilder remove(int packetNumber) {
+            this.packets.remove(packetNumber - 1);
+            return this;
+        }
+
+        /**
+         * Build packet with payloads.
+         * @return packets.
+         */
+        @Override
+        public Packet build() {
+            for (int i=packets.size(); i>1; i--) {
+                packets.get(i - 2).setPacket(packets.get(i-1));
+            }
+            return packets.get(0);
+        }
+
+    }
 
 }

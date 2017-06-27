@@ -27,6 +27,7 @@ import static com.ardikars.jxnet.util.Preconditions.CheckArgument;
  */
 public class FormatUtils {
 
+	@Deprecated
 	public static ByteBuffer toDirectBuffer(ByteBuffer byteBuffer) {
 		CheckNotNull(byteBuffer);
 		if (byteBuffer.isDirect())
@@ -35,7 +36,8 @@ public class FormatUtils {
 				allocateDirect(byteBuffer.capacity());
 		return buffer.put(byteBuffer);
 	}
-	
+
+	@Deprecated
 	public static ByteBuffer toDirectBuffer(byte[] bytes) {
 		CheckNotNull(bytes);
 		ByteBuffer buffer = ByteBuffer.
@@ -43,6 +45,7 @@ public class FormatUtils {
 		return buffer.put(bytes);
 	}
 
+	@Deprecated
 	public static byte[] toBytes(ByteBuffer byteBuffer) {
 		CheckNotNull(byteBuffer);
 		if (!byteBuffer.hasRemaining()) {
@@ -53,6 +56,7 @@ public class FormatUtils {
 		return buffer;
 	}
 
+	@Deprecated
 	public static byte[] toBytes(String hexStr) {
 		CheckNotNull(hexStr);
 		String src = hexStr.replaceAll("\\s+", "").trim();
@@ -72,10 +76,12 @@ public class FormatUtils {
 		return bb.getLong();
 	}
 
+	@Deprecated
 	public static String toHexString(byte[] data) {
 		return toHexString(data, 0, data.length);
 	}
-	
+
+	@Deprecated
 	public static String toHexString(byte[] data, int offset, int length) {
 		CheckNotNull(data);
 		CheckArgument(offset >= 0 && length > 0);
@@ -91,7 +97,8 @@ public class FormatUtils {
 		}
 		return sb.toString();
 	}
-	
+
+	@Deprecated
 	public static String toHexString(byte value) {
 		String srt = Integer.toHexString((value) & 0xFF);
 		if (srt.length() == 1)
@@ -99,6 +106,7 @@ public class FormatUtils {
 		return (srt);
 	}
 
+	@Deprecated
 	public static String toHexString(short value) {
 		String str = Integer.toHexString(value);
 		String srt = Integer.toHexString((value) & 0xFFFF);
@@ -107,6 +115,7 @@ public class FormatUtils {
 		return (srt);
 	}
 
+	@Deprecated
 	public static String toHexString(int value) {
 		String str = Integer.toHexString(value);
 		String srt = Integer.toHexString(value);
@@ -124,5 +133,5 @@ public class FormatUtils {
 		}
 		return sb.toString();
 	}
-	
+
 }

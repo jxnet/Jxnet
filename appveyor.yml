@@ -33,7 +33,7 @@ test_script:
 
 notifications:
   - provider: Email
-    to: contact@ardikars.com
+    to: ardikars@gmail.com
     on_build_success: false
     on_build_failure: true
 

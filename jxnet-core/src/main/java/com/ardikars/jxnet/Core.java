@@ -17,11 +17,16 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.util.FormatUtils;
+import com.ardikars.jxnet.util.ArrayUtils;
+import com.ardikars.jxnet.util.BufferUtils;
 import com.ardikars.jxnet.util.Preconditions;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -39,9 +44,48 @@ class Core {
      * @param errbuf error buffer.
      * @return pcap object.
      */
-    public static Pcap PcapOpenLive(PcapIf source, short snaplen, Pcap.PromiscuousMode promisc,
+    public static Pcap PcapOpenLive(PcapIf source, int snaplen, PromiscuousMode promisc,
                                     int timeout, StringBuilder errbuf) {
         return Jxnet.PcapOpenLive(source.getName(), snaplen, promisc.getValue(), timeout, errbuf);
+    }
+
+    /**
+     * Is used to create a packet capture handle to look at packets on the network.
+     * Source is a string that specifies the network device to open;
+     * on Linux systems with 2.2 or later kernels, a source argument of "any" or NULL
+     * can be used to capture packets from all interfaces.
+     *
+     * The returned handle must be activated with PcapActivate() before packets can be captured with it;
+     * options for the capture, such as promiscuous mode, can be set on the handle before activating it.
+     * @param source network device.
+     * @param errbuf errof buffer.
+     * @return returns a pcap_t * on success and NULL on failure. If NULL is returned, errbuf is filled in with an
+     * appropriate error message.
+     */
+    public static Pcap PcapCreate(PcapIf source, StringBuilder errbuf) {
+        return Jxnet.PcapCreate(source.getName(), errbuf);
+    }
+
+    /**
+     * sets whether promiscuous mode should be set on a capture handle when the handle is activated.
+     * If promisc is non-zero, promiscuous mode will be set, otherwise it will not be set.
+     * @param pcap pcap object.
+     * @param promiscuousMode promisc mode.
+     * @return 0 on success.
+     */
+    public static int PcapSetPromisc(Pcap pcap, PromiscuousMode promiscuousMode) {
+        return Jxnet.PcapSetPromisc(pcap, promiscuousMode.getValue());
+    }
+
+    /**
+     * Sets whether immediate mode should be set on a capture handle when the handle is activated. If immediate_mode is non-zero,
+     * immediate mode will be set, otherwise it will not be set.
+     * @param pcap pcap object.
+     * @param immediateMode immediate_mode.
+     * @return 0 on success.
+     */
+    public static int PcapSetImmediateMode(Pcap pcap, ImmediateMode immediateMode) {
+        return Jxnet.PcapSetImmediateMode(pcap, immediateMode.getValue());
     }
 
     /**
@@ -72,7 +116,7 @@ class Core {
      * @param netmask netmask.
      * @return -1 on error.
      */
-    public static int PcapCompileNoPcap(short snaplen_arg, DataLinkType linkType, BpfProgram program,
+    public static int PcapCompileNoPcap(int snaplen_arg, DataLinkType linkType, BpfProgram program,
                                   String buf, BpfProgram.BpfCompileMode optimize, Inet4Address netmask) {
         return Jxnet.PcapCompileNoPcap(snaplen_arg, linkType.getValue(), program, buf,
                 optimize.getValue(), netmask.toInt());
@@ -104,7 +148,7 @@ class Core {
      * @param snaplen snapshot length.
      * @return pcap object.
      */
-    public static Pcap PcapOpenDead(DataLinkType linkType, short snaplen) {
+    public static Pcap PcapOpenDead(DataLinkType linkType, int snaplen) {
         return Jxnet.PcapOpenDead(linkType.getValue(), snaplen);
     }
 
@@ -118,7 +162,7 @@ class Core {
         if (buffer.isDirect()) {
             return Jxnet.PcapSendPacket(pcap, buffer, buffer.capacity());
         }
-        ByteBuffer byteBuffer = FormatUtils.toDirectBuffer(buffer);
+        ByteBuffer byteBuffer = BufferUtils.toDirectByteBuffer(buffer);
         return Jxnet.PcapSendPacket(pcap, byteBuffer, byteBuffer.capacity());
     }
 
@@ -141,13 +185,10 @@ class Core {
      * @return 0 on success.
      */
     public static int PcapSendPacket(Pcap pcap, byte[] buffer, int offset, int length) {
-        int len = buffer.length;
-        int l = len - (len - offset + length);
-        Preconditions.CheckArgument(offset < len);
-        Preconditions.CheckArgument(l <= length);
-        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(l);
-        byteBuffer.put(buffer);
-        return Jxnet.PcapSendPacket(pcap, byteBuffer, l);
+        ArrayUtils.validateBounds(buffer, offset, length);
+        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(length);
+        byteBuffer.put(Arrays.copyOfRange(buffer, offset, length));
+        return Jxnet.PcapSendPacket(pcap, byteBuffer, length);
     }
 
     /**
@@ -183,7 +224,7 @@ class Core {
                         bcastaddr = Inet4Address.valueOf(pcapAddr.getBroadAddr().getData());
                         //Inet4Address dstaddr = Inet4Address.valueOf(pcapAddr.getDstAddr().getData());;
                     } catch (Exception e) {
-                        //
+                        errbuf.append(e.getMessage() + "\n");
                     }
                     if (!address.equals(Inet4Address.ZERO) && !address.equals(Inet4Address.LOCALHOST)
                             && !netmask.equals(Inet4Address.ZERO) && !bcastaddr.equals(Inet4Address.ZERO)) {
@@ -192,7 +233,44 @@ class Core {
                 }
             }
         }
+        errbuf.append("Check your network connection.\n");
         return null;
+    }
+
+    /**
+     * Select network interface.
+     * @param errbuf errbuf.
+     * @return PcapIf.
+     */
+    public static PcapIf SelectNetowrkInterface(StringBuilder errbuf) {
+        if (errbuf == null) throw new NullPointerException();
+        List<PcapIf> pcapIfs = new ArrayList<>();
+        if (Jxnet.PcapFindAllDevs(pcapIfs, errbuf) != Jxnet.OK) {
+            return null;
+        }
+        StringBuilder sb = new StringBuilder();
+        int i=0;
+        for (PcapIf pcapIf : pcapIfs) {
+            sb.append("NO[" + ++i +"]\t=> ");
+            sb.append("NAME: " + pcapIf.getName() + " (" + pcapIf.getDescription() + " )\n");
+            for (PcapAddr pcapAddr : pcapIf.getAddresses()) {
+                sb.append("\t\tADDRESS: " + pcapAddr.getAddr().toString() + "\n");
+            }
+        }
+        System.out.println(sb.toString());
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        while (true) {
+            System.out.print("Select a device number, or enter 'q' to quit -> ");
+            String input;
+            try {
+                input = reader.readLine();
+                i = Integer.parseInt(input);
+            } catch (IOException e) {
+                errbuf.append(e.toString());
+                return null;
+            }
+            return pcapIfs.get(i-1);
+        }
     }
 
 }

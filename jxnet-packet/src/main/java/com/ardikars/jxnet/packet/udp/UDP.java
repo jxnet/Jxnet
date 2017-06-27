@@ -18,6 +18,7 @@
 package com.ardikars.jxnet.packet.udp;
 
 import com.ardikars.jxnet.packet.Packet;
+import com.ardikars.jxnet.packet.UnknownPacket;
 
 import java.nio.ByteBuffer;
 
@@ -173,7 +174,7 @@ public class UDP extends Packet {
      */
     @Override
     public Packet getPacket() {
-        return null;
+        return UnknownPacket.newInstance(this.getPayload());
     }
 
     @Override

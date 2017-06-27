@@ -18,6 +18,7 @@
 package com.ardikars.jxnet.packet.sll;
 
 import com.ardikars.jxnet.packet.Packet;
+import com.ardikars.jxnet.packet.UnknownPacket;
 import com.ardikars.jxnet.packet.arp.ARP;
 import com.ardikars.jxnet.packet.ethernet.ProtocolType;
 import com.ardikars.jxnet.packet.ip.IPv4;
@@ -133,8 +134,8 @@ public class SLL extends Packet {
             case 0x0806: return ARP.newInstance(this.getPayload());
             case 0x0800: return IPv4.newInstance(this.getPayload());
             case 0x86dd: return IPv6.newInstance(this.getPayload());
+            default: return UnknownPacket.newInstance(this.getPayload());
         }
-        return null;
     }
 
     @Override

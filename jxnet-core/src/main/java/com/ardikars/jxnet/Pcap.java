@@ -23,22 +23,6 @@ package com.ardikars.jxnet;
  */
 public final class Pcap {
 
-	public enum PromiscuousMode {
-
-		PRIMISCUOUS(1), NON_PROMISCUOUS(0);
-
-		private final int value;
-
-		private PromiscuousMode(final int value) {
-			this.value = value;
-		}
-
-		public int getValue() {
-			return value;
-		}
-
-	}
-
 	private long address;
 
 	private Pcap() {

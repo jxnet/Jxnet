@@ -1,0 +1,18 @@
+
+/**
+ * Copyright (C) 2017  Ardika Rommy Sanjaya
+ */
+
+group 'com.ardikars.jxnet.example'
+
+dependencies {
+    compile project(':jxnet-core')
+    compile project(':jxnet-packet')
+    compile project(':jxnet-util')
+    testCompile "junit:junit:${JUNIT_VERSION}"
+}
+
+clean {
+    file("${rootDir}/example/obj").deleteDir()
+    file("${rootDir}/example/out").deleteDir()
+}

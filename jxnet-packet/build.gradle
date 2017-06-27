@@ -12,4 +12,3 @@ clean {
 	file("${rootDir}/jxnet-packet/obj").deleteDir()
 	file("${rootDir}/jxnet-packet/out").deleteDir()
 }
-
