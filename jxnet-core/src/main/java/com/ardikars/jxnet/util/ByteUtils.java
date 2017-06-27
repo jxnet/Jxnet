@@ -17,7 +17,10 @@
 
 package com.ardikars.jxnet.util;
 
+import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+
+import static com.ardikars.jxnet.util.Preconditions.CheckNotNull;
 
 /**
  * @author Ardika Rommy Sanjaya
@@ -292,6 +295,21 @@ public class ByteUtils {
             }
             return array;
         }
+    }
+
+    /**
+     * ByteBuffer to byte array.
+     * @param byteBuffer ByteBuffer.
+     * @return byte array.
+     */
+    public static byte[] toByteArray(final ByteBuffer byteBuffer) {
+        CheckNotNull(byteBuffer);
+        if (!byteBuffer.hasRemaining()) {
+            byteBuffer.flip();
+        }
+        byte[] buffer = new byte[byteBuffer.remaining()];
+        byteBuffer.get(buffer);
+        return buffer;
     }
 
 }

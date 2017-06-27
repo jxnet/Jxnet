@@ -18,6 +18,7 @@
 package com.ardikars.jxnet.packet.tcp;
 
 import com.ardikars.jxnet.packet.Packet;
+import com.ardikars.jxnet.packet.UnknownPacket;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -188,7 +189,7 @@ public class TCP extends Packet {
 
     @Override
     public Packet getPacket() {
-        return null;
+        return UnknownPacket.newInstance(this.getPayload());
     }
 
     @Override

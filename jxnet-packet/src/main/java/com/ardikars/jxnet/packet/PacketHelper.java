@@ -20,12 +20,10 @@ package com.ardikars.jxnet.packet;
 import com.ardikars.jxnet.*;
 import com.ardikars.jxnet.packet.radiotap.RadioTap;
 import com.ardikars.jxnet.packet.sll.SLL;
-import com.ardikars.jxnet.packet.tcp.TCP;
-import com.ardikars.jxnet.util.FormatUtils;
 import com.ardikars.jxnet.packet.ethernet.Ethernet;
+import com.ardikars.jxnet.util.ByteUtils;
 
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +40,7 @@ public class PacketHelper {
         DataLinkType datalinkType = DataLinkType.valueOf((short)PcapDataLink(pcap));
         PcapHandler<PacketHandler<T>> callback = (tPacketHandler, pcapPktHdr, buffer) -> {
             if (pcapPktHdr == null || buffer == null) return;
-            tPacketHandler.nextPacket(arg, pcapPktHdr, parsePacket(datalinkType, FormatUtils.toBytes(buffer)));
+            tPacketHandler.nextPacket(arg, pcapPktHdr, parsePacket(datalinkType, ByteUtils.toByteArray(buffer)));
         };
         return PcapLoop(pcap, count, callback, handler);
     }
@@ -71,7 +69,7 @@ public class PacketHelper {
         DataLinkType datalinkType = DataLinkType.valueOf((short) PcapDataLink(pcap));
         ByteBuffer buffer = PcapNext(pcap, pcapPktHdr);
         if (buffer == null) return null;
-        return parsePacket(datalinkType, FormatUtils.toBytes(buffer));
+        return parsePacket(datalinkType, ByteUtils.toByteArray(buffer));
     }
 
     public static int nextEx(Pcap pcap, PcapPktHdr pktHdr, HashMap<Class, Packet> packets) {
@@ -80,7 +78,7 @@ public class PacketHelper {
         ByteBuffer buffer = ByteBuffer.allocateDirect(3600);
         int ret = PcapNextEx(pcap, pktHdr, buffer);
         if (pktHdr == null || buffer == null) return -1;
-        Map<Class, Packet> pkts = parsePacket(datalinkType, FormatUtils.toBytes(buffer));
+        Map<Class, Packet> pkts = parsePacket(datalinkType, ByteUtils.toByteArray(buffer));
         packets.putAll(pkts);
         return ret;
     }
@@ -101,7 +99,8 @@ public class PacketHelper {
                 packet = SLL.newInstance(bytes);
                 pkts.put(packet.getClass(), packet);
                 break;
-
+            default:
+                packet = UnknownPacket.newInstance(bytes);
         }
         while ((packet = packet.getPacket()) != null) {
             pkts.put(packet.getClass(), packet);

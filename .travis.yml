@@ -39,7 +39,7 @@ after_success:
 notifications:
   email:
     recipients:
-      - contact@ardikars.com
+      - ardikars@gmail.com
     on_success: change
     on_failure: always
 

@@ -7,7 +7,7 @@ ext {
 
 	NAME = 'Jxnet'
 	GROUP = 'com.ardikars.jxnet'
-	VERSION = '1.1.4'
+	VERSION = '1.1.5'
 
 	NDK_HOME = "${System.env.NDK_HOME}"
 	TOOLS_DIR = "${rootDir}/tools"
@@ -68,4 +68,3 @@ ext {
 	}
 
 }
-

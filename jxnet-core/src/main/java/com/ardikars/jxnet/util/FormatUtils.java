@@ -45,6 +45,7 @@ public class FormatUtils {
 		return buffer.put(bytes);
 	}
 
+	@Deprecated
 	public static byte[] toBytes(ByteBuffer byteBuffer) {
 		CheckNotNull(byteBuffer);
 		if (!byteBuffer.hasRemaining()) {
@@ -55,6 +56,7 @@ public class FormatUtils {
 		return buffer;
 	}
 
+	@Deprecated
 	public static byte[] toBytes(String hexStr) {
 		CheckNotNull(hexStr);
 		String src = hexStr.replaceAll("\\s+", "").trim();

@@ -17,11 +17,18 @@
 
 package com.ardikars.jxnet.util;
 
+import java.util.regex.Pattern;
+
+import static com.ardikars.jxnet.util.Preconditions.CheckNotNull;
+
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.5
  */
 public class HexUtils {
+
+    private static final Pattern NO_SEPARATOR_HEX_STRING_PATTERN
+            = Pattern.compile("\\A([0-9a-fA-F][0-9a-fA-F])+\\z");
 
     private static final String HEADER =
             "         +-------------------------------------------------+\n" +
@@ -196,6 +203,29 @@ public class HexUtils {
         }
         result.append(FOOTER);
         return result.toString();
+    }
+
+    /**
+     * Hex stream to byte array.
+     * @param hexStream hex stream.
+     * @return byte array.
+     */
+    public static byte[] parseHex(String hexStream) {
+        CheckNotNull(hexStream);
+        if (hexStream.startsWith("0x")) {
+            hexStream = hexStream.substring(2);
+        }
+        hexStream = hexStream.replaceAll("\\s+", "").trim();
+        if (!NO_SEPARATOR_HEX_STRING_PATTERN.matcher(hexStream).matches()) {
+            throw new IllegalArgumentException();
+        }
+        int len = hexStream.length();
+        byte[] data = new byte[len >> 1];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(hexStream.charAt(i), 16) << 4)
+                    + Character.digit(hexStream.charAt(i+1), 16));
+        }
+        return data;
     }
 
 }
