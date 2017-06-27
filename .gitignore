@@ -44,6 +44,9 @@ a.out
 /jxnet-util/.gradle
 /jxnet-util/build
 /jxnet-util/target
+/example/.gradle
+/example/build/
+/example/target
 /jni/.gradle/
 /jni/build
 /jni/out
