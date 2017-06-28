@@ -15,18 +15,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet.util;
+package com.ardikars.jxnet.packet;
+
+import com.ardikars.jxnet.PcapPktHdr;
 
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public interface Builder<T> {
+@FunctionalInterface
+public interface PacketListener<T> {
 
     /**
-     * Build object.
-     * @return object.
+     * Next available packet.
+     * @param arg user argument.
+     * @param pktHdr PcapPktHdr.
+     * @param packet packet.
      */
-    T build();
+    void nextPacket(T arg, PcapPktHdr pktHdr, Packet packet);
 
 }

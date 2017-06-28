@@ -17,6 +17,8 @@
 
 package com.ardikars.jxnet.packet.ip.ipv6;
 
+import com.ardikars.jxnet.packet.Packet;
+
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.5
@@ -56,4 +58,23 @@ public class Options extends IPv6ExtensionHeader {
         return this;
     }
 
+    @Override
+    public Packet build() {
+        return null;
+    }
+
+    @Override
+    public Packet setPacket(Packet packet) {
+        return null;
+    }
+
+    @Override
+    public Packet getPacket() {
+        return null;
+    }
+
+    @Override
+    public byte[] toBytes() {
+        return new byte[0];
+    }
 }

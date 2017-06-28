@@ -12,6 +12,7 @@ import com.ardikars.jxnet.packet.ip.IPProtocolType;
 import com.ardikars.jxnet.packet.ip.IPv4;
 import com.ardikars.jxnet.packet.tcp.TCP;
 import com.ardikars.jxnet.util.FormatUtils;
+import com.ardikars.jxnet.util.HexUtils;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -45,8 +46,8 @@ public class Ethernet_IPv4_TCP {
         PacketHandler<String> callback = (arg, pktHdr, packets) -> {
             Ethernet eth = (Ethernet) packets.get(Ethernet.class);
             if (eth != null) {
-                if (!FormatUtils.toHexString(eth.toBytes()).equals(hexStream[index])) {
-                    System.out.println(index+": "+FormatUtils.toHexString(eth.toBytes()));
+                if (!HexUtils.toHex(eth.toBytes()).equals(hexStream[index])) {
+                    System.out.println(index+": "+HexUtils.toHex(eth.toBytes()));
                 } else {
                     Ethernet ethernet = new Ethernet()
                             .setDestinationMacAddress(eth.getDestinationMacAddress())

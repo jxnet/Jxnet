@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.ardikars.jxnet.util;
 
 import static com.ardikars.jxnet.util.Preconditions.CheckArgument;
@@ -375,6 +376,62 @@ public class ArrayUtils {
         System.arraycopy(arr1, 0, result, 0, arr1.length);
         System.arraycopy(arr2, 0, result, arr1.length, arr2.length);
         return result;
+    }
+
+    /**
+     * Copy array.
+     * @param data byte array.
+     * @param offset offset.
+     * @param length length.
+     * @return byte array.
+     */
+    public static byte[] copyOfRange(byte[] data, int offset, int length) {
+        validateBounds(data, offset, length);
+        byte[] bytes = new byte[length];
+        System.arraycopy(data, offset, bytes, 0, length);
+        return bytes;
+    }
+
+    /**
+     * Copy array.
+     * @param data short array.
+     * @param offset offset.
+     * @param length length.
+     * @return short array.
+     */
+    public static short[] copyOfRange(short[] data, int offset, int length) {
+        validateBounds(data, offset, length);
+        short[] shorts = new short[length];
+        System.arraycopy(data, offset, shorts, 0, length);
+        return shorts;
+    }
+
+    /**
+     * Copy array.
+     * @param data int array.
+     * @param offset offset.
+     * @param length length.
+     * @return int array.
+     */
+    public static int[] copyOfRange(int[] data, int offset, int length) {
+        validateBounds(data, offset, length);
+        int[] ints = new int[length];
+        System.arraycopy(data, offset, ints, 0, length);
+        return ints;
+    }
+
+    /**
+     * Copy array.
+     * @param data long array.
+     * @param offset offset.
+     * @param length length.
+     * @return long array.
+     */
+    public static long[] copyOfRange(long[] data, int offset, int length) {
+        validateBounds(data, offset, length);
+        long[] longs = new long[length];
+        System.arraycopy(data, offset, longs, 0, length);
+        return longs;
     }
 
 }

@@ -17,11 +17,13 @@
 
 package com.ardikars.jxnet.packet.ip.ipv6;
 
+import com.ardikars.jxnet.packet.Packet;
+
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public abstract class IPv6ExtensionHeader  {
+public abstract class IPv6ExtensionHeader extends Packet {
 
 
 }

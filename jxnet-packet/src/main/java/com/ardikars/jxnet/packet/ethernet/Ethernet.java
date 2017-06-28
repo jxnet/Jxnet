@@ -188,13 +188,7 @@ public class Ethernet extends Packet {
 
     @Override
     public Packet getPacket() {
-        if (this.getEthernetType() == null) return null;
-        switch (this.getEthernetType().getValue() & 0xffff) {
-            case 0x0806: return ARP.newInstance(this.getPayload());
-            case 0x0800: return IPv4.newInstance(this.getPayload());
-            case 0x86dd: return IPv6.newInstance(this.getPayload());
-            default: return UnknownPacket.newInstance(this.getPayload());
-        }
+        return this.getEthernetType().decode(this.getPayload());
     }
 
     @Override

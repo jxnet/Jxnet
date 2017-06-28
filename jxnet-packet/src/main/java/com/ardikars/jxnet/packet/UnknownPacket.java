@@ -20,7 +20,7 @@ package com.ardikars.jxnet.packet;
 import com.ardikars.jxnet.util.ArrayUtils;
 import com.ardikars.jxnet.util.HexUtils;
 
-import java.util.Arrays;
+import java.nio.ByteBuffer;
 
 /**
  * @author Ardika Rommy Sanjaya
@@ -36,8 +36,10 @@ public class UnknownPacket extends Packet {
 
     public static UnknownPacket newInstance(final byte[] bytes, final int offset, final int length) {
         ArrayUtils.validateBounds(bytes, offset, length);
+        ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
         UnknownPacket unknownPacket = new UnknownPacket();
-        unknownPacket.setData(Arrays.copyOfRange(bytes, offset, length));
+        unknownPacket.data = new byte[buffer.limit()];
+        buffer.get(unknownPacket.data, 0, unknownPacket.data.length);
         return unknownPacket;
     }
 
@@ -57,7 +59,7 @@ public class UnknownPacket extends Packet {
 
     @Override
     public Packet getPacket() {
-        return this;
+        return null;
     }
 
     @Override
@@ -72,7 +74,7 @@ public class UnknownPacket extends Packet {
 
     @Override
     public String toString() {
-        return HexUtils.toPrettyHexDump(getData());
+        return "[Unknown: 0x" + HexUtils.toHex(this.getData()) + "]";
     }
 
 }

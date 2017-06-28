@@ -17,6 +17,10 @@
 
 package com.ardikars.jxnet.packet.ethernet;
 
+import com.ardikars.jxnet.util.Decoder;
+import com.ardikars.jxnet.packet.Packet;
+import com.ardikars.jxnet.packet.ip.IPv4;
+import com.ardikars.jxnet.packet.ip.IPv6;
 import com.ardikars.jxnet.util.NamedNumber;
 
 import java.util.HashMap;
@@ -26,7 +30,7 @@ import java.util.Map;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public final class ProtocolType extends NamedNumber<Short, ProtocolType> {
+public final class ProtocolType extends NamedNumber<Short, ProtocolType> implements Decoder<Packet, byte[]> {
 
     /**
      * MTU Size (1500)
@@ -131,6 +135,29 @@ public final class ProtocolType extends NamedNumber<Short, ProtocolType> {
             return new ProtocolType(value, "-");
         } else {
             return UNKNOWN;
+        }
+    }
+
+    /**
+     * Decode payload.
+     * @param data byte array.
+     * @return packet.
+     */
+    @Override
+    public Packet decode(final byte[] data) {
+        if (data == null || data.length == 0) {
+            return null;
+        }
+        int value = super.getValue();
+        switch (value) {
+            case 0x0800:
+                return IPv4.newInstance(data);
+            case 0x0806:
+                return com.ardikars.jxnet.packet.arp.ARP.newInstance(data);
+            case 0x86dd:
+                return IPv6.newInstance(data);
+            default:
+                return null;
         }
     }
 

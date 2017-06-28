@@ -19,14 +19,15 @@ package com.ardikars.jxnet.util;
 
 /**
  * @author Ardika Rommy Sanjaya
- * @since 1.1.0
+ * @since 1.1.5
  */
-public interface Builder<T> {
+public interface Decoder<T, V> {
 
     /**
-     * Build object.
-     * @return object.
+     * Decode data.
+     * @param data data.
+     * @return decoded data.
      */
-    T build();
+    public T decode(V data);
 
 }
