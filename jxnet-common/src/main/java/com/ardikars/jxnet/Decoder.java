@@ -15,18 +15,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet.util;
+package com.ardikars.jxnet;
 
 /**
  * @author Ardika Rommy Sanjaya
- * @since 1.1.0
+ * @since 1.1.5
  */
-public interface Builder<T> {
+public interface Decoder<T, V> {
 
     /**
-     * Build object.
-     * @return object.
+     * Decode data.
+     * @param data data.
+     * @return decoded data.
      */
-    T build();
+    public T decode(V data);
 
 }

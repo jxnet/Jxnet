@@ -18,8 +18,8 @@
 package com.ardikars.jxnet.util;
 
 import java.nio.ByteBuffer;
-import static com.ardikars.jxnet.util.Preconditions.CheckNotNull;
-import static com.ardikars.jxnet.util.Preconditions.CheckArgument;
+import static com.ardikars.jxnet.Validate.CheckNotNull;
+import static com.ardikars.jxnet.Validate.CheckArgument;
 
 /**
  * @author Ardika Rommy Sanjaya

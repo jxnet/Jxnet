@@ -17,7 +17,7 @@
 
 package com.ardikars.jxnet.packet;
 
-import com.ardikars.jxnet.util.Builder;
+import com.ardikars.jxnet.Builder;
 
 import java.util.ArrayList;
 import java.util.List;

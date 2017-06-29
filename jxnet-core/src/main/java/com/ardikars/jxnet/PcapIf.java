@@ -17,9 +17,8 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.util.FormatUtils;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -90,9 +89,7 @@ public final class PcapIf {
 
 	@Override
 	public int hashCode() {
-		return Long.hashCode(FormatUtils.toLong(
-				toString().getBytes()
-		));
+		return Arrays.hashCode(toString().getBytes());
 	}
 
 	@Override

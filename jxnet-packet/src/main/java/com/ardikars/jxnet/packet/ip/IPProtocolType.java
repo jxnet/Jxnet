@@ -17,13 +17,13 @@
 
 package com.ardikars.jxnet.packet.ip;
 
-import com.ardikars.jxnet.util.Decoder;
+import com.ardikars.jxnet.Decoder;
 import com.ardikars.jxnet.packet.Packet;
 import com.ardikars.jxnet.packet.icmp.ICMPv4;
 import com.ardikars.jxnet.packet.icmp.ICMPv6;
 import com.ardikars.jxnet.packet.ip.ipv6.Fragment;
 import com.ardikars.jxnet.packet.ip.ipv6.Routing;
-import com.ardikars.jxnet.util.NamedNumber;
+import com.ardikars.jxnet.NamedNumber;
 
 import java.util.HashMap;
 import java.util.Map;

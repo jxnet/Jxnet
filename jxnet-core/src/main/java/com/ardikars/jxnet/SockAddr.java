@@ -17,8 +17,6 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.util.FormatUtils;
-
 import java.util.Arrays;
 
 /**
@@ -121,7 +119,7 @@ public final class SockAddr {
 
     @Override
     public int hashCode() {
-        return Long.hashCode(FormatUtils.toLong(this.data));
+        return Arrays.hashCode(getData());
     }
 
     @Override

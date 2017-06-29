@@ -17,8 +17,8 @@
 
 package com.ardikars.jxnet.util;
 
-import static com.ardikars.jxnet.util.Preconditions.CheckArgument;
-import static com.ardikars.jxnet.util.Preconditions.CheckNotNull;
+import static com.ardikars.jxnet.Validate.CheckArgument;
+import static com.ardikars.jxnet.Validate.CheckNotNull;
 
 /**
  * @author Ardika Rommy Sanjaya

@@ -15,32 +15,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet.util;
+package com.ardikars.jxnet;
 
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class TwoKeyMap<T, U> {
+public abstract class NamedNumber<T extends Number, U extends NamedNumber<T, ?>> {
 
-    private final T firstKey;
-    private final U secondKey;
+    private final T value;
+    private final String name;
 
-    private TwoKeyMap(T firstKey, U secondKey) {
-        this.firstKey = firstKey;
-        this.secondKey = secondKey;
+    protected NamedNumber(T value, String name) {
+        this.value = value;
+        this.name = name;
     }
 
-    public static <T, U> TwoKeyMap<T, U> newInstance(T firstKey, U secondKey) {
-        return new TwoKeyMap<T, U>(firstKey, secondKey);
+    public T getValue() {
+        return this.value;
     }
 
-    public T getFirstKey() {
-        return this.firstKey;
-    }
-
-    public U getSecondKey() {
-        return this.secondKey;
+    public String getName() {
+        return this.name;
     }
 
     @Override
@@ -51,23 +47,23 @@ public class TwoKeyMap<T, U> {
         if (obj.getClass() != this.getClass()) {
             return false;
         }
-        if (!(obj instanceof TwoKeyMap)) {
+        if (!(obj instanceof NamedNumber)) {
             return false;
         }
-        return (this.firstKey.equals(this.getClass().cast(obj).getFirstKey()) &&
-                this.secondKey.equals(this.getClass().cast(obj).getSecondKey()));
+        return this.value.equals(this.getClass().cast(obj).getValue());
     }
 
     @Override
     public int hashCode() {
-        return 17 * 37 + this.getFirstKey().hashCode() + this.getSecondKey().hashCode();
+        return value.hashCode();
     }
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("[First Key: ").append(this.getFirstKey().toString())
-                .append(", Second Key: ").append(this.getSecondKey().toString())
+        return new StringBuffer("[Value: ")
+                .append(this.value.toString())
+                .append(", Name: ")
+                .append(this.name.toString())
                 .append("]").toString();
     }
 

@@ -1,12 +1,11 @@
 package com.ardikars.jxnet.packet;
 
-import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
 import com.ardikars.jxnet.PcapPktHdr;
 import com.ardikars.jxnet.packet.ethernet.Ethernet;
 import com.ardikars.jxnet.packet.radiotap.RadioTap;
 import com.ardikars.jxnet.packet.sll.SLL;
-import com.ardikars.jxnet.util.Decoder;
+import com.ardikars.jxnet.Decoder;
 
 import java.lang.reflect.ParameterizedType;
 
@@ -17,10 +16,6 @@ public abstract class AbstractPacketListener<T, V extends Packet> implements Dec
     private T arg;
 
     public abstract void nextPacket(T arg, PcapPktHdr pcapPktHdr, V packet);
-
-    public void send(Packet packet) {
-        Jxnet.PcapSendPacket(getPcap(), packet.toBytes());
-    }
 
     public Pcap getPcap() {
         return pcap;

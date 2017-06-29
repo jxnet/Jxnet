@@ -15,19 +15,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet.util;
+package com.ardikars.jxnet;
 
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.5
  */
-public interface Decoder<T, V> {
+public class Validate {
 
-    /**
-     * Decode data.
-     * @param data data.
-     * @return decoded data.
-     */
-    public T decode(V data);
+    public static void CheckArgument(boolean expression) {
+        if (!expression) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public static void CheckArgument(boolean expression, String errorMessage) {
+        if (!expression) {
+            throw new IllegalArgumentException(errorMessage);
+        }
+    }
+
+    public static <T> T CheckNotNull(T reference) {
+        if (reference == null) {
+            throw new NullPointerException();
+        }
+        return reference;
+    }
+
+    public static <T> T CheckNotNull(T reference, String errorMessage) {
+        if (reference == null) {
+            throw new NullPointerException(errorMessage);
+        }
+        return reference;
+    }
 
 }

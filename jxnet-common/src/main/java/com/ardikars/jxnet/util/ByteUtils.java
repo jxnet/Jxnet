@@ -20,7 +20,7 @@ package com.ardikars.jxnet.util;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import static com.ardikars.jxnet.util.Preconditions.CheckNotNull;
+import static com.ardikars.jxnet.Validate.CheckNotNull;
 
 /**
  * @author Ardika Rommy Sanjaya

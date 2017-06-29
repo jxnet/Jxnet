@@ -15,28 +15,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet.util;
+package com.ardikars.jxnet;
 
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public abstract class NamedNumber<T extends Number, U extends NamedNumber<T, ?>> {
+public class TwoKeyMap<T, U> {
 
-    private final T value;
-    private final String name;
+    private final T firstKey;
+    private final U secondKey;
 
-    protected NamedNumber(T value, String name) {
-        this.value = value;
-        this.name = name;
+    private TwoKeyMap(T firstKey, U secondKey) {
+        this.firstKey = firstKey;
+        this.secondKey = secondKey;
     }
 
-    public T getValue() {
-        return this.value;
+    public static <T, U> TwoKeyMap<T, U> newInstance(T firstKey, U secondKey) {
+        return new TwoKeyMap<T, U>(firstKey, secondKey);
     }
 
-    public String getName() {
-        return this.name;
+    public T getFirstKey() {
+        return this.firstKey;
+    }
+
+    public U getSecondKey() {
+        return this.secondKey;
     }
 
     @Override
@@ -47,23 +51,23 @@ public abstract class NamedNumber<T extends Number, U extends NamedNumber<T, ?>>
         if (obj.getClass() != this.getClass()) {
             return false;
         }
-        if (!(obj instanceof NamedNumber)) {
+        if (!(obj instanceof TwoKeyMap)) {
             return false;
         }
-        return this.value.equals(this.getClass().cast(obj).getValue());
+        return (this.firstKey.equals(this.getClass().cast(obj).getFirstKey()) &&
+                this.secondKey.equals(this.getClass().cast(obj).getSecondKey()));
     }
 
     @Override
     public int hashCode() {
-        return value.hashCode();
+        return 17 * 37 + this.getFirstKey().hashCode() + this.getSecondKey().hashCode();
     }
 
     @Override
     public String toString() {
-        return new StringBuffer("[Value: ")
-                .append(this.value.toString())
-                .append(", Name: ")
-                .append(this.name.toString())
+        return new StringBuilder()
+                .append("[First Key: ").append(this.getFirstKey().toString())
+                .append(", Second Key: ").append(this.getSecondKey().toString())
                 .append("]").toString();
     }
 

@@ -10,6 +10,7 @@ import com.ardikars.jxnet.packet.arp.ARPOperationCode;
 import com.ardikars.jxnet.packet.ethernet.Ethernet;
 import com.ardikars.jxnet.packet.ethernet.ProtocolType;
 import com.ardikars.jxnet.util.AddrUtils;
+import com.ardikars.jxnet.util.BufferUtils;
 import com.ardikars.jxnet.util.Platforms;
 
 import java.io.IOException;
@@ -85,7 +86,8 @@ public class ArpReq {
         for (int i=0; i<100; i++) {
             if (gwMac == null) {
                 packet = Packet.PacketBuilder().add(ethernet).add(arp).build();
-                Jxnet.PcapSendPacket(handle, packet.toBytes());
+                byte[] pkt = packet.toBytes();
+                Jxnet.PcapSendPacket(handle, BufferUtils.toDirectByteBuffer(pkt), pkt.length);
                 Map<Class, Packet> packetMap = PacketHelper.next(handle, pktHdr);
                 ARP arpC = (ARP) packetMap.get(ARP.class);
                 if (arpC != null) {
