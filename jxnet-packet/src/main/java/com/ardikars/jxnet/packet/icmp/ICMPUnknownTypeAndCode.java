@@ -17,7 +17,7 @@
 
 package com.ardikars.jxnet.packet.icmp;
 
-import com.ardikars.jxnet.util.TwoKeyMap;
+import com.ardikars.jxnet.TwoKeyMap;
 
 /**
  * @author Ardika Rommy Sanjaya

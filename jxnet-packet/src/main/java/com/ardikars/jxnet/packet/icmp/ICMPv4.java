@@ -18,7 +18,6 @@
 package com.ardikars.jxnet.packet.icmp;
 
 import com.ardikars.jxnet.packet.Packet;
-import com.ardikars.jxnet.util.Builder;
 
 import java.nio.ByteBuffer;
 

@@ -17,16 +17,10 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.util.ArrayUtils;
-import com.ardikars.jxnet.util.BufferUtils;
-import com.ardikars.jxnet.util.Preconditions;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -150,45 +144,6 @@ class Core {
      */
     public static Pcap PcapOpenDead(DataLinkType linkType, int snaplen) {
         return Jxnet.PcapOpenDead(linkType.getValue(), snaplen);
-    }
-
-    /**
-     * Send packet buffer to the network.
-     * @param pcap pcap object.
-     * @param buffer packet buffer.
-     * @return 0 on success.
-     */
-    public static int PcapSendPacket(Pcap pcap, ByteBuffer buffer) {
-        if (buffer.isDirect()) {
-            return Jxnet.PcapSendPacket(pcap, buffer, buffer.capacity());
-        }
-        ByteBuffer byteBuffer = BufferUtils.toDirectByteBuffer(buffer);
-        return Jxnet.PcapSendPacket(pcap, byteBuffer, byteBuffer.capacity());
-    }
-
-    /**
-     * Send packet buffer to the network.
-     * @param pcap pcap object.
-     * @param buffer packet buffer.
-     * @return 0 on success.
-     */
-    public static int PcapSendPacket(Pcap pcap, byte[] buffer) {
-        return PcapSendPacket(pcap, buffer, 0, buffer.length);
-    }
-
-    /**
-     * Send packet buffer to the network.
-     * @param pcap pcap.
-     * @param buffer packet buffer.
-     * @param offset offset.
-     * @param length length.
-     * @return 0 on success.
-     */
-    public static int PcapSendPacket(Pcap pcap, byte[] buffer, int offset, int length) {
-        ArrayUtils.validateBounds(buffer, offset, length);
-        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(length);
-        byteBuffer.put(Arrays.copyOfRange(buffer, offset, length));
-        return Jxnet.PcapSendPacket(pcap, byteBuffer, length);
     }
 
     /**

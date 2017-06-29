@@ -17,7 +17,7 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.util.FormatUtils;
+import java.util.Arrays;
 
 /**
  * @author Ardika Rommy Sanjaya
@@ -88,9 +88,7 @@ public final class PcapAddr {
 
 	@Override
 	public int hashCode() {
-		return Long.hashCode(FormatUtils.toLong(
-				this.toString().getBytes()
-		));
+		return Arrays.hashCode(toString().getBytes());
 	}
 
 	@Override

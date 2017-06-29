@@ -23,14 +23,32 @@ package com.ardikars.jxnet;
  */
 public final class Pcap {
 
+	private DataLinkType dataLinkType;
+
+	private int snapshotLength;
+
 	private long address;
 
 	private Pcap() {
-		//
+
 	}
 
 	public synchronized long getAddress() {
 		return this.address;
+	}
+
+	public DataLinkType getDataLinkType() {
+		if (!this.isClosed() && this.dataLinkType == null) {
+			this.dataLinkType = DataLinkType.valueOf((short) Jxnet.PcapDataLink(this));
+		}
+		return this.dataLinkType;
+	}
+
+	public int getSnapshotLength() {
+		if (!this.isClosed() && this.snapshotLength == 0) {
+			this.snapshotLength = Jxnet.PcapSnapshot(this);
+		}
+		return this.snapshotLength;
 	}
 
 	public boolean isClosed() {

@@ -15,15 +15,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet.packet.ip.ipv6;
+package com.ardikars.jxnet.packet;
 
-import com.ardikars.jxnet.packet.Packet;
+import com.ardikars.jxnet.PcapPktHdr;
 
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public abstract class IPv6ExtensionHeader extends Packet {
+@FunctionalInterface
+public interface PacketListener<T> {
 
+    /**
+     * Next available packet.
+     * @param arg user argument.
+     * @param pktHdr PcapPktHdr.
+     * @param packet packet.
+     */
+    void nextPacket(T arg, PcapPktHdr pktHdr, Packet packet);
 
 }

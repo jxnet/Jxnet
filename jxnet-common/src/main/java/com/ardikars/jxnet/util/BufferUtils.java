@@ -20,7 +20,7 @@ package com.ardikars.jxnet.util;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-import static com.ardikars.jxnet.util.Preconditions.CheckNotNull;
+import static com.ardikars.jxnet.Validate.CheckNotNull;
 
 /**
  * @author Ardika Rommy Sanjaya
@@ -58,7 +58,7 @@ public class BufferUtils {
      * @param bytes byte array.
      * @return DirectByteBuffer.
      */
-    public static ByteBuffer toDirectBuffer(final byte[] bytes) {
+    public static ByteBuffer toDirectByteBuffer(final byte[] bytes) {
         CheckNotNull(bytes);
         return toDirectByteBuffer(bytes, 0, bytes.length);
     }

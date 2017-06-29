@@ -17,7 +17,7 @@
 
 package com.ardikars.jxnet.packet.arp;
 
-import com.ardikars.jxnet.util.NamedNumber;
+import com.ardikars.jxnet.NamedNumber;
 
 import java.util.HashMap;
 import java.util.Map;

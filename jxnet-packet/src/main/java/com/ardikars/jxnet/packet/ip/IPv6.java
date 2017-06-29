@@ -19,7 +19,6 @@ package com.ardikars.jxnet.packet.ip;
 
 import com.ardikars.jxnet.Inet6Address;
 import com.ardikars.jxnet.packet.Packet;
-import com.ardikars.jxnet.packet.UnknownPacket;
 import com.ardikars.jxnet.packet.icmp.ICMPv6;
 import com.ardikars.jxnet.packet.tcp.TCP;
 import com.ardikars.jxnet.packet.udp.UDP;
@@ -299,11 +298,7 @@ public class IPv6 extends Packet implements IP {
 
     @Override
     public Packet getPacket() {
-        switch (this.getNextHeader().getValue()) {
-            case 6: return TCP.newInstance(this.getPayload());
-            case 17: return UDP.newInstance(this.getPayload());
-            default: return UnknownPacket.newInstance(this.getPayload());
-        }
+        return this.getNextHeader().decode(this.getPayload());
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.ardikars.jxnet.packet.PacketHandler;
 import com.ardikars.jxnet.packet.PacketHelper;
 import com.ardikars.jxnet.packet.ethernet.Ethernet;
 import com.ardikars.jxnet.util.FormatUtils;
+import com.ardikars.jxnet.util.HexUtils;
 import org.junit.Test;
 
 public class Ethernet_ARP {
@@ -35,8 +36,8 @@ public class Ethernet_ARP {
         PacketHandler<String> callback = (arg, pktHdr, packets) -> {
             Ethernet eth = (Ethernet) packets.get(Ethernet.class);
             if (eth != null) {
-                if (!FormatUtils.toHexString(eth.toBytes()).equals(hexStream[index])) {
-                    System.out.println(index+": "+FormatUtils.toHexString(eth.toBytes()));
+                if (!HexUtils.toHex(eth.toBytes()).equals(hexStream[index])) {
+                    System.out.println(index+": "+HexUtils.toHex(eth.toBytes()));
                 }
                 index++;
             }

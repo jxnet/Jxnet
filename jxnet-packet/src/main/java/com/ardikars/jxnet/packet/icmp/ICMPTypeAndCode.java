@@ -17,8 +17,8 @@
 
 package com.ardikars.jxnet.packet.icmp;
 
-import com.ardikars.jxnet.util.NamedTwoKeyMap;
-import com.ardikars.jxnet.util.TwoKeyMap;
+import com.ardikars.jxnet.NamedTwoKeyMap;
+import com.ardikars.jxnet.TwoKeyMap;
 
 import java.util.HashMap;
 import java.util.Map;

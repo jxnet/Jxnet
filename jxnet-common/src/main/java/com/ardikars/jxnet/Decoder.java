@@ -15,15 +15,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet.packet.ip.ipv6;
-
-import com.ardikars.jxnet.packet.Packet;
+package com.ardikars.jxnet;
 
 /**
  * @author Ardika Rommy Sanjaya
- * @since 1.1.0
+ * @since 1.1.5
  */
-public abstract class IPv6ExtensionHeader extends Packet {
+public interface Decoder<T, V> {
 
+    /**
+     * Decode data.
+     * @param data data.
+     * @return decoded data.
+     */
+    public T decode(V data);
 
 }

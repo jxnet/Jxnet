@@ -17,8 +17,6 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.util.FormatUtils;
-import com.ardikars.jxnet.util.HexUtils;
 import com.ardikars.jxnet.util.Preconditions;
 
 import java.util.Arrays;
@@ -202,7 +200,8 @@ public final class MacAddress {
 			if (sb.length() > 0) {
 				sb.append(":");
 			}
-			sb.append(HexUtils.toHex(b));
+			String hex = Integer.toHexString(b);
+			sb.append(hex.length() == 1 ? "0" + hex : hex);
 		}
 		return sb.toString();
 	}

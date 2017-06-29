@@ -18,12 +18,13 @@
 package com.ardikars.jxnet.packet;
 
 import com.ardikars.jxnet.*;
+import com.ardikars.jxnet.annotation.Type;
 import com.ardikars.jxnet.packet.radiotap.RadioTap;
 import com.ardikars.jxnet.packet.sll.SLL;
 import com.ardikars.jxnet.packet.ethernet.Ethernet;
 import com.ardikars.jxnet.util.ByteUtils;
 
-import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Parameter;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +38,7 @@ import static com.ardikars.jxnet.Jxnet.*;
 public class PacketHelper {
 
     public static <T> int loop(Pcap pcap, int count, PacketHandler<T> handler, T arg) {
-        DataLinkType datalinkType = DataLinkType.valueOf((short)PcapDataLink(pcap));
+        DataLinkType datalinkType = pcap.getDataLinkType();
         PcapHandler<PacketHandler<T>> callback = (tPacketHandler, pcapPktHdr, buffer) -> {
             if (pcapPktHdr == null || buffer == null) return;
             tPacketHandler.nextPacket(arg, pcapPktHdr, parsePacket(datalinkType, ByteUtils.toByteArray(buffer)));
@@ -45,28 +46,37 @@ public class PacketHelper {
         return PcapLoop(pcap, count, callback, handler);
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T extends Packet> int loop(Pcap pcap, int count, PacketDecoder<T> decoder) {
+    public static <T> int loop(Pcap pcap, int count, PacketListener<T> handler, T arg) {
+        DataLinkType datalinkType = pcap.getDataLinkType();
         try {
-            final String className = ((ParameterizedType) decoder.getClass().getGenericSuperclass()).getActualTypeArguments()[0].getTypeName();
-            final Class<T> clazz = (Class<T>) Class.forName(className);
-            PacketHandler<PacketDecoder<T>> callback = (coder, pktHdr, packets) -> {
-                if (clazz != null) {
-                    Packet packet = packets.get(clazz);
-                    if (packet != null) {
-                        coder.read(pcap, pktHdr, (T) packet);
-                    }
+            Parameter parameter = handler.getClass().getMethod("nextPacket", Object.class, PcapPktHdr.class, Packet.class).getParameters()[2];
+            PcapHandler<PacketListener<T>> callback = (tPacketHandler, pcapPktHdr, buffer) -> {
+                if (pcapPktHdr == null || buffer == null) return;
+                Type type = null;
+                if (parameter.getAnnotations().length != 0) {
+                    type = (Type) parameter.getAnnotations()[0];
                 }
+                tPacketHandler.nextPacket(arg, pcapPktHdr, parsePacket(datalinkType, ByteUtils.toByteArray(buffer), type));
             };
-            return PacketHelper.loop(pcap, count, callback, decoder);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            return PcapLoop(pcap, count, callback, handler);
+        } catch (NoSuchMethodException e) {
+            return -1;
         }
-        return -1;
+    }
+
+    public static <T, V extends Packet> int loop(Pcap pcap, int count, AbstractPacketListener<T, V> handler, T arg) {
+        PcapHandler<AbstractPacketListener<T, V>> callback = (user, h, bytes) -> {
+            user.setPcap(pcap);
+            user.setPcapPktHdr(h);
+            user.setArg(arg);
+            user.decode(ByteUtils.toByteArray(bytes));
+
+        };
+        return Jxnet.PcapLoop(pcap, count, callback, handler);
     }
 
     public static Map<Class, Packet> next(Pcap pcap, PcapPktHdr pcapPktHdr) {
-        DataLinkType datalinkType = DataLinkType.valueOf((short) PcapDataLink(pcap));
+        DataLinkType datalinkType = pcap.getDataLinkType();
         ByteBuffer buffer = PcapNext(pcap, pcapPktHdr);
         if (buffer == null) return null;
         return parsePacket(datalinkType, ByteUtils.toByteArray(buffer));
@@ -74,13 +84,87 @@ public class PacketHelper {
 
     public static int nextEx(Pcap pcap, PcapPktHdr pktHdr, HashMap<Class, Packet> packets) {
         packets.clear();
-        DataLinkType datalinkType = DataLinkType.valueOf((short)PcapDataLink(pcap));
-        ByteBuffer buffer = ByteBuffer.allocateDirect(3600);
+        DataLinkType datalinkType = pcap.getDataLinkType();
+        ByteBuffer buffer = ByteBuffer.allocateDirect(pcap.getSnapshotLength());
         int ret = PcapNextEx(pcap, pktHdr, buffer);
         if (pktHdr == null || buffer == null) return -1;
         Map<Class, Packet> pkts = parsePacket(datalinkType, ByteUtils.toByteArray(buffer));
         packets.putAll(pkts);
         return ret;
+    }
+
+    private static Packet parsePacket(DataLinkType dataLinkType, byte[] bytes, Type type) {
+        Packet packet = null;
+        Packet result = null;
+        int packetNumber = 1;
+        int typeNumber = 0;
+        if (type != null) {
+            typeNumber = type.number();
+        }
+        switch (dataLinkType) {
+            case EN10MB:
+                packet = Ethernet.newInstance(bytes);
+                if (type == null) {
+                    return packet;
+                }
+                while (packet != null) {
+                    if (packet.getClass() == type.value()) {
+                        if (typeNumber == 0) {
+                            result = packet;
+                        } else {
+                            if (packetNumber == typeNumber) {
+                                return packet;
+                            } else {
+                                packetNumber = packetNumber + 1;
+                            }
+                        }
+                    }
+                    packet = packet.getPacket();
+                }
+                return result;
+            case IEEE802_11_RADIO:
+                packet = RadioTap.newInstance(bytes);
+                if (type == null) {
+                    return packet;
+                }
+                while (packet != null) {
+                    if (packet.getClass() == type.value()) {
+                        if (typeNumber == 0) {
+                            result = packet;
+                        } else {
+                            if (packetNumber == typeNumber) {
+                                return packet;
+                            } else {
+                                packetNumber = packetNumber + 1;
+                            }
+                        }
+                    }
+                    packet = packet.getPacket();
+                }
+                return result;
+            case LINUX_SLL:
+                packet = SLL.newInstance(bytes);
+                if (type == null) {
+                    return packet;
+                }
+                while (packet != null) {
+                    if (packet.getClass() == type.value()) {
+                        if (typeNumber == 0) {
+                            result = packet;
+                        } else {
+                            if (packetNumber == typeNumber) {
+                                return packet;
+                            } else {
+                                packetNumber = packetNumber + 1;
+                            }
+                        }
+                    }
+                    packet = packet.getPacket();
+                }
+                return result;
+            default:
+                return UnknownPacket.newInstance(bytes);
+        }
     }
 
     private static Map<Class, Packet> parsePacket(DataLinkType datalinkType, byte[] bytes) {

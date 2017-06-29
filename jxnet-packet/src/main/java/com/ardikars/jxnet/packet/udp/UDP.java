@@ -174,6 +174,7 @@ public class UDP extends Packet {
      */
     @Override
     public Packet getPacket() {
+        if (this.getPayload() == null || this.getPayload().length == 0) return null;
         return UnknownPacket.newInstance(this.getPayload());
     }
 
