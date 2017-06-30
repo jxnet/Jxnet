@@ -81,6 +81,9 @@ public class ICMPv6 extends Packet implements ICMP, Builder<Packet> {
 
     @Override
     public Packet setPacket(final Packet packet) {
+        if (packet == null) {
+            return this;
+        }
         return this.setPayload(packet.toBytes());
     }
 

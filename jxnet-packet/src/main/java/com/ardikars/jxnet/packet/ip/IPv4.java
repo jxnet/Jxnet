@@ -250,7 +250,9 @@ public class IPv4 extends Packet implements IP {
 
     @Override
     public Packet setPacket(final Packet packet) {
-
+        if (packet == null) {
+            return this;
+        }
         ByteBuffer bb;
         int length = 0;
         int accumulation = 0;

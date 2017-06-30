@@ -1112,7 +1112,7 @@ AC_DEFUN(AC_LBL_LIBRARY_NET, [
     ])
 
 dnl
-dnl Test for __attribute__
+dnl test.Test for __attribute__
 dnl
 
 AC_DEFUN(AC_C___ATTRIBUTE__, [
@@ -1151,7 +1151,7 @@ AC_MSG_RESULT($ac_cv___attribute__)
 ])
 
 dnl
-dnl Test whether __attribute__((unused)) can be used without warnings
+dnl test.Test whether __attribute__((unused)) can be used without warnings
 dnl
 
 AC_DEFUN(AC_C___ATTRIBUTE___UNUSED, [
@@ -1183,7 +1183,7 @@ AC_MSG_RESULT($ac_cv___attribute___unused)
 ])
 
 dnl
-dnl Test whether __attribute__((format)) can be used without warnings
+dnl test.Test whether __attribute__((format)) can be used without warnings
 dnl
 
 AC_DEFUN(AC_C___ATTRIBUTE___FORMAT, [

@@ -169,6 +169,9 @@ public class Ethernet extends Packet {
 
     @Override
     public Packet setPacket(final Packet packet) {
+        if (packet == null) {
+            return this;
+        }
         switch (packet.getClass().getName()) {
             case "com.ardikars.jxnet.packet.ip.IPv4":
                 IPv4 ipv4 = (IPv4) packet;

@@ -505,7 +505,7 @@ Disconnect (DISC) U PDUs
 Set Asynchronous Balanced Mode Extended (SABME) U PDUs
 .TP
 \fBtest\fR
-Test (TEST) U PDUs
+test.Test (TEST) U PDUs
 .TP
 \fBxid\fR
 Exchange Identification (XID) U PDUs

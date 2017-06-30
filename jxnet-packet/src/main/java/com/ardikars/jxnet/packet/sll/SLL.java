@@ -120,6 +120,9 @@ public class SLL extends Packet {
 
     @Override
     public Packet setPacket(final Packet packet) {
+        if (packet == null) {
+            return this;
+        }
         return this.setPayload(packet.toBytes());
     }
 
