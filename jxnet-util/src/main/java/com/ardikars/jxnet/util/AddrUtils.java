@@ -17,7 +17,13 @@
 
 package com.ardikars.jxnet.util;
 
-import com.ardikars.jxnet.*;
+import com.ardikars.jxnet.Inet4Address;
+import com.ardikars.jxnet.Jxnet;
+import com.ardikars.jxnet.MacAddress;
+import com.ardikars.jxnet.PcapIf;
+import com.ardikars.jxnet.PcapAddr;
+import com.ardikars.jxnet.SockAddr;
+import static com.ardikars.jxnet.Validate.CheckNotNull;
 import com.ardikars.jxnet.exception.NotSupportedPlatformException;
 
 import java.io.BufferedReader;
@@ -79,6 +85,7 @@ public class AddrUtils {
      * @param description description.
      * @return interface name.
      */
+    @Deprecated
     public static String LookupNetworkInterface(Inet4Address address,
             Inet4Address netmask,
             Inet4Address netaddr,
@@ -87,12 +94,12 @@ public class AddrUtils {
             MacAddress macAddress,
             StringBuilder description) {
 
-        Preconditions.CheckNotNull(address);
-        Preconditions.CheckNotNull(netmask);
-        Preconditions.CheckNotNull(netaddr);
-        Preconditions.CheckNotNull(broadaddr);
-        Preconditions.CheckNotNull(dstaddr);
-        Preconditions.CheckNotNull(description);
+        CheckNotNull(address);
+        CheckNotNull(netmask);
+        CheckNotNull(netaddr);
+        CheckNotNull(broadaddr);
+        CheckNotNull(dstaddr);
+        CheckNotNull(description);
 
         StringBuilder errbuf = new StringBuilder();
 
@@ -147,6 +154,7 @@ public class AddrUtils {
      * @param description description.
      * @return interface name.
      */
+    @Deprecated
     public static String LookupNetworkInterface(String source, Inet4Address address,
                                                 Inet4Address netmask,
                                                 Inet4Address netaddr,
@@ -155,13 +163,13 @@ public class AddrUtils {
                                                 MacAddress macAddress,
                                                 StringBuilder description) {
 
-        Preconditions.CheckNotNull(source);
-        Preconditions.CheckNotNull(address);
-        Preconditions.CheckNotNull(netmask);
-        Preconditions.CheckNotNull(netaddr);
-        Preconditions.CheckNotNull(broadaddr);
-        Preconditions.CheckNotNull(dstaddr);
-        Preconditions.CheckNotNull(description);
+        CheckNotNull(source);
+        CheckNotNull(address);
+        CheckNotNull(netmask);
+        CheckNotNull(netaddr);
+        CheckNotNull(broadaddr);
+        CheckNotNull(dstaddr);
+        CheckNotNull(description);
 
         StringBuilder errbuf = new StringBuilder();
 

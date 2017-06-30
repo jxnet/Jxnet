@@ -527,7 +527,7 @@ pcap-config: $(srcdir)/pcap-config.in ./config.status
 	chmod a+x $@
 
 #
-# Test programs - not built by default, and not installed.
+# test.Test programs - not built by default, and not installed.
 #
 tests: $(TESTS)
 
