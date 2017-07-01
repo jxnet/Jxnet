@@ -28,7 +28,7 @@ import java.nio.ByteBuffer;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class IPv4 extends Packet implements IP {
+public class IPv4 extends IP {
 
     public static final int IPV4_HEADER_LENGTH = 20;
 
@@ -260,9 +260,8 @@ public class IPv4 extends Packet implements IP {
                 if (tcp.getChecksum() == 0) {
                     bb = ByteBuffer.wrap(tcp.toBytes());
                     length += tcp.getDataOffset() << 2;
-                    byte[] tcpPaylad = tcp.getPacket().toBytes();
-                    if (tcpPaylad!= null) {
-                        length += tcpPaylad.length;
+                    if (tcp.getPacket() != null) {
+                        length += tcp.getPacket().toBytes().length;
                     }
                     accumulation += (this.getSourceAddress().toInt() >> 16 & 0xffff)
                             + (this.getSourceAddress().toInt() & 0xffff);
@@ -289,8 +288,10 @@ public class IPv4 extends Packet implements IP {
                 UDP udp = (UDP) packet;
                 if (udp.getChecksum() == 0) {
                     bb = ByteBuffer.wrap(udp.toBytes());
-                    byte[] udpPayload = udp.getPacket().toBytes();
-                    length += udp.getLength() + ((udpPayload == null) ? 0 : udpPayload.length);
+                    if (udp.getPacket() != null) {
+                        byte[] udpPayload = udp.getPacket().toBytes();
+                        length += udp.getLength() + ((udpPayload == null) ? 0 : udpPayload.length);
+                    }
                     if (udp.getChecksum() == 0) {
                         accumulation += (this.getSourceAddress().toInt() >> 16 & 0xffff)
                                 + (this.getSourceAddress().toInt() & 0xffff);

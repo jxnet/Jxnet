@@ -44,8 +44,4 @@ public class ICMPv4RedirectMessage extends ICMPTypeAndCode {
         return super.toString();
     }
 
-    static {
-        ICMPTypeAndCode.registry.put(REDIRECT_DATAGRAM_FOR_NETWORK.getKey(), REDIRECT_DATAGRAM_FOR_NETWORK);
-    }
-
 }

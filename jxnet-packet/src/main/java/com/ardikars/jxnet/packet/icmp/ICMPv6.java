@@ -18,7 +18,6 @@
 package com.ardikars.jxnet.packet.icmp;
 
 import com.ardikars.jxnet.packet.Packet;
-import com.ardikars.jxnet.Builder;
 
 import java.nio.ByteBuffer;
 
@@ -26,30 +25,7 @@ import java.nio.ByteBuffer;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class ICMPv6 extends Packet implements ICMP, Builder<Packet> {
-
-    public static int ICMP_HEADER_LENGTH = 4;
-
-    private ICMPTypeAndCode typeAndCode;
-    private short checksum;
-
-    public ICMPTypeAndCode getTypeAndCode() {
-        return this.typeAndCode;
-    }
-
-    public ICMPv6 setTypeAndCode(final ICMPTypeAndCode typeAndCode) {
-        this.typeAndCode = typeAndCode;
-        return this;
-    }
-
-    public short getChecksum() {
-        return (short) (this.checksum & 0xffff);
-    }
-
-    public ICMPv6 setChecksum(final short checksum) {
-        this.checksum = (short) (checksum & 0xffff);
-        return this;
-    }
+public class ICMPv6 extends ICMP {
 
     @Deprecated
     public byte[] getPayload() {
@@ -69,7 +45,7 @@ public class ICMPv6 extends Packet implements ICMP, Builder<Packet> {
     public static ICMPv6 newInstance(final byte[] bytes, final int offset, final int length) {
         ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
         ICMPv6 icmp = new ICMPv6();
-        icmp.setTypeAndCode(ICMPTypeAndCode.getInstance(buffer.get(), buffer.get()));
+        icmp.setTypeAndCode(ICMPTypeAndCode.getTypeAndCode(buffer.get(), buffer.get()));
         icmp.setChecksum(buffer.getShort());
         icmp.nextPacket = new byte[buffer.limit() - ICMP_HEADER_LENGTH];
         buffer.get(icmp.nextPacket);
@@ -99,12 +75,6 @@ public class ICMPv6 extends Packet implements ICMP, Builder<Packet> {
             buffer.put(this.nextPacket);
         }
         return data;
-    }
-
-    @Override
-    public String toString() {
-        return new StringBuilder()
-                .append(this.getTypeAndCode().toString()).toString();
     }
 
 }

@@ -42,11 +42,11 @@ public class Ethernet_IPv4_UDP {
                 if (!HexUtils.toHexString(eth.toBytes()).equals(hexStream[index])) {
                     System.out.println(index+": "+HexUtils.toHexString(eth.toBytes()));
                 } else {
-                    Ethernet ethernet = new Ethernet()
+                    Ethernet ethernet = (Ethernet) new Ethernet()
                             .setDestinationMacAddress(eth.getDestinationMacAddress())
                             .setSourceMacAddress(eth.getSourceMacAddress())
                             .setEthernetType(eth.getEthernetType())
-                            .setPayload(eth.getPayload());
+                            .setPacket(eth.getPacket());
                     if (Arrays.equals(eth.toBytes(), ethernet.toBytes())) {
                         System.out.println("Valid ethernet.");
                     }
@@ -67,7 +67,7 @@ public class Ethernet_IPv4_UDP {
                         ip.setSourceAddress(ipv4.getSourceAddress());
                         ip.setDestinationAddress(ipv4.getDestinationAddress());
                         ip.setOptions(ipv4.getOptions());
-                        ip.setPayload(ipv4.getPayload());
+                        ip.setPacket(ipv4.getPacket());
                         if (Arrays.equals(ipv4.toBytes(), ip.toBytes())) {
                             System.out.println("Valid ipv4.");
                         }
@@ -78,7 +78,7 @@ public class Ethernet_IPv4_UDP {
                             u.setDestinationPort(udp.getDestinationPort());
                             u.setLength(udp.getLength());
                             u.setChecksum(udp.getChecksum());
-                            u.setPayload(udp.getPayload());
+                            u.setPacket(udp.getPacket());
                             if (Arrays.equals(udp.toBytes(), u.toBytes())) {
                                 System.out.println("Valid udp.");
                             }

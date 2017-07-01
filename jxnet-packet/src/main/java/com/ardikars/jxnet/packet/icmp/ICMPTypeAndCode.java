@@ -19,6 +19,8 @@ package com.ardikars.jxnet.packet.icmp;
 
 import com.ardikars.jxnet.NamedTwoKeyMap;
 import com.ardikars.jxnet.TwoKeyMap;
+import com.ardikars.jxnet.packet.icmp.icmpv4.*;
+import com.ardikars.jxnet.packet.icmp.icmpv6.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +38,15 @@ public abstract class ICMPTypeAndCode extends NamedTwoKeyMap<Byte, Byte, ICMPTyp
         super(firstKey, secondKey, name);
     }
 
-    public static ICMPTypeAndCode getInstance(Byte type, Byte code) {
+    public static ICMPTypeAndCode register(ICMPTypeAndCode typeAndCode) {
+        return registry.put(typeAndCode.getKey(), typeAndCode);
+    }
+
+    public static ICMPTypeAndCode unregister(ICMPTypeAndCode typeAndCode) {
+        return registry.remove(typeAndCode.getKey());
+    }
+
+    public static ICMPTypeAndCode getTypeAndCode(Byte type, Byte code) {
         TwoKeyMap<Byte, Byte> key = TwoKeyMap.newInstance(type, code);
         ICMPTypeAndCode typeAndCode = registry.get(key);
         if (typeAndCode == null) {
@@ -58,6 +68,73 @@ public abstract class ICMPTypeAndCode extends NamedTwoKeyMap<Byte, Byte, ICMPTyp
                 .append("[Type: " + this.getType())
                 .append(", Code: " + this.getCode())
                 .append("]").toString();
+    }
+
+    static {
+        if (registry.size() == 0) {
+            register(ICMPv4DestinationUnreachable.DESTINATION_NETWORK_UNREACHABLE);
+            register(ICMPv4DestinationUnreachable.DESTINATION_HOST_UNREACHABLE);
+            register(ICMPv4DestinationUnreachable.DESTINATION_PROTOCOL_UNREACHABLE);
+            register(ICMPv4DestinationUnreachable.DESTINATION_PORT_UNREACHABLE);
+            register(ICMPv4DestinationUnreachable.FRAGMENTATION_REQUIRED);
+            register(ICMPv4DestinationUnreachable.SOURCE_ROUTE_FAILED);
+            register(ICMPv4DestinationUnreachable.DESTINATION_NETWORK_UNKNOWN);
+            register(ICMPv4DestinationUnreachable.DESTINATION_HOST_UNKOWN);
+            register(ICMPv4DestinationUnreachable.SOURCE_HOST_ISOLATED);
+            register(ICMPv4DestinationUnreachable.NETWORK_ADMINISTRATIVELY_PROHIBITED);
+            register(ICMPv4DestinationUnreachable.HOST_ADMINISTRATIVELY_PROHIBITED);
+            register(ICMPv4DestinationUnreachable.NETWORK_UNREACHABLE_FOR_TOS);
+            register(ICMPv4DestinationUnreachable.HOST_UNREACHABLE_FOR_TOS);
+            register(ICMPv4DestinationUnreachable.COMMUNICATION_ADMINISTRATIVELY_PROHIBITED);
+            register(ICMPv4DestinationUnreachable.HOST_PRECEDENCE_VIOLATION);
+            register(ICMPv4DestinationUnreachable.PRECEDENCE_CUTOFF_IN_EFFECT);
+
+            register(ICMPv4EchoReply.ECHO_REPLY);
+
+            register(ICMPv4EchoRequest.ECHO_REQUEST);
+
+            register(ICMPv4ParameterProblem.POINTER_INDICATES_THE_ERROR);
+            register(ICMPv4ParameterProblem.MISSING_REQUIRED_OPTION);
+            register(ICMPv4ParameterProblem.BAD_LENGTH);
+
+            register(ICMPv4RedirectMessage.REDIRECT_DATAGRAM_FOR_NETWORK);
+
+            register(ICMPv4RouterAdvertisement.ROUTER_ADVERTISEMENT);
+
+            register(ICMPv4RouterSolicitation.ROUTER_DISCOVERY_SELECTION_SOLICITATION);
+
+            register(ICMPv4TimeExceeded.TTL_EXPIRED_IN_TRANSIT);
+            register(ICMPv4TimeExceeded.FRAGMENT_REASSEMBLY_TIME_EXEEDED);
+
+            register(ICMPv4Timestamp.TIMESTAMP);
+
+            register(ICMPv4TimestampReply.TIMESTAMP_REPLY);
+
+            // ICMPv6
+
+            register(ICMPv6EchoRequest.ECHO_REQUEST);
+
+            register(ICMPv6EchoReply.ECHO_REPLY);
+
+            register(ICMPv6DestinationUnreachable.NO_ROUTE_TO_DESTINATION);
+            register(ICMPv6DestinationUnreachable.COMMUNICATION_WITH_DESTINATION_ADMINIS_TRATIVELY_PROHIBITED);
+            register(ICMPv6DestinationUnreachable.BEYOND_SCOPE_OF_SOURCE_ADDRESS);
+            register(ICMPv6DestinationUnreachable.ADDRESS_UNREACHABLE);
+            register(ICMPv6DestinationUnreachable.PORT_UNREACHABLE);
+            register(ICMPv6DestinationUnreachable.SOURCE_ADDRESS_FAILED);
+            register(ICMPv6DestinationUnreachable.REJECT_ROUTE_TO_DESTINATION);
+            register(ICMPv6DestinationUnreachable.ERROR_IN_SOURCE_ROUTING_HEADER);
+
+            register(ICMPv6PacketTooBigMessage.PACKET_TOO_BIG_MESSAGE);
+
+            register(ICMPv6ParameterProblem.ERRORNEOUS_HEADER_FIELD_ENCOUTERED);
+            register(ICMPv6ParameterProblem.UNRECOGNIZED_NEXT_HEADER_TYPE_ENCOUNTERED);
+            register(ICMPv6ParameterProblem.UNRECOGNIZED_IPV6_OPTION_ENCOUNTERED);
+
+            register(ICMPv6TimeExceeded.HOP_LIMIT_EXCEEDED_IN_TRANSIT);
+            register(ICMPv6TimeExceeded.FRAGMENT_REASSEMBLY_TIME_EXCEEDED);
+
+        }
     }
 
 }

@@ -29,7 +29,7 @@ import java.nio.ByteBuffer;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class IPv6 extends Packet implements IP {
+public class IPv6 extends IP {
 
     public static final int IPV6_HEADER_LENGTH = 40;
 
@@ -183,9 +183,8 @@ public class IPv6 extends Packet implements IP {
                 if (tcp.getChecksum() == 0) {
                     bb = ByteBuffer.wrap(tcp.toBytes());
                     length += tcp.getDataOffset() << 2;
-                    byte[] tcpPayload = tcp.getPacket().toBytes();
-                    if (tcpPayload != null) {
-                        length += tcpPayload.length;
+                    if (tcp.getPacket() != null) {
+                        length += tcp.getPacket().toBytes().length;
                     }
                     final int bbLength =
                             Inet6Address.IPV6_ADDRESS_LENGTH * 2 // IPv6 src, dst
@@ -221,9 +220,8 @@ public class IPv6 extends Packet implements IP {
                 if (udp.getChecksum() == 0) {
                     bb = ByteBuffer.wrap(udp.toBytes());
                     length += UDP.UDP_HEADER_LENGTH;
-                    byte[] udpPayload = udp.getPacket().toBytes();
-                    if (udpPayload != null) {
-                        length += udpPayload.length;
+                    if (udp.getPacket() != null) {
+                        length += udp.getPacket().toBytes().length;
                     }
                     final int bbLength =
                             Inet6Address.IPV6_ADDRESS_LENGTH * 2 // IPv6 src, dst
@@ -258,7 +256,10 @@ public class IPv6 extends Packet implements IP {
                 ICMPv6 icmp = (ICMPv6) packet;
                 if (icmp.getChecksum() == 0) {
                     bb = ByteBuffer.wrap(icmp.toBytes());
-                    byte[] icmpPayload = icmp.getPacket().toBytes();
+                    byte[] icmpPayload = new byte[0];
+                    if (icmp.getPacket() != null) {
+                        icmpPayload = icmp.getPacket().toBytes();
+                    }
                     final int bbLength =
                             IPV6_HEADER_LENGTH + ICMPv6.ICMP_HEADER_LENGTH +
                             icmpPayload.length;

@@ -44,11 +44,11 @@ public class Ethernet_IPv4_TCP {
                 if (!HexUtils.toHexString(eth.toBytes()).equals(hexStream[index])) {
                     System.out.println(index+": "+HexUtils.toHexString(eth.toBytes()));
                 } else {
-                    Ethernet ethernet = new Ethernet()
+                    Ethernet ethernet = (Ethernet) new Ethernet()
                             .setDestinationMacAddress(eth.getDestinationMacAddress())
                             .setSourceMacAddress(eth.getSourceMacAddress())
                             .setEthernetType(eth.getEthernetType())
-                            .setPayload(eth.getPayload());
+                            .setPacket(eth.getPacket());
                     if (Arrays.equals(eth.toBytes(), ethernet.toBytes())) {
                         System.out.println("Valid ethernet.");
                     }
@@ -70,7 +70,7 @@ public class Ethernet_IPv4_TCP {
                         ip.setSourceAddress(ipv4.getSourceAddress());
                         ip.setDestinationAddress(ipv4.getDestinationAddress());
                         ip.setOptions(ipv4.getOptions());
-                        ip.setPayload(ipv4.getPayload());
+                        ip.setPacket(ipv4.getPacket());
                         if (Arrays.equals(ipv4.toBytes(), ip.toBytes())) {
                             System.out.println("Valid ipv4.");
                         }
@@ -88,7 +88,7 @@ public class Ethernet_IPv4_TCP {
                             t.setChecksum(tcp.getChecksum());
                             t.setUrgentPointer(tcp.getUrgentPointer());
                             t.setOptions(tcp.getOptions());
-                            t.setPayload(tcp.getPayload());
+                            t.setPacket(tcp.getPacket());
                             if (Arrays.equals(tcp.toBytes(), t.toBytes())) {
                                 System.out.println("Valid tcp.");
                             }

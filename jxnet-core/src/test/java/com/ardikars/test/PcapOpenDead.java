@@ -8,9 +8,6 @@ import com.ardikars.jxnet.PcapDumper;
 import com.ardikars.jxnet.PcapPktHdr;
 import com.ardikars.jxnet.exception.PcapCloseException;
 import com.ardikars.jxnet.exception.JxnetException;
-import com.ardikars.jxnet.util.FormatUtils;
-import com.ardikars.jxnet.util.HexUtils;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.nio.ByteBuffer;
@@ -20,7 +17,7 @@ public class PcapOpenDead {
 	@Test
 	public void run() throws PcapCloseException {
 		int linktype = 1;
-		byte[] packets = HexUtils.parseHex(AllTests.rawData);
+		byte[] packets = HexUtils4Test.parseHex(AllTests.rawData);
 		Pcap handler = PcapOpenDead(linktype, AllTests.snaplen);
 		if (handler == null) {
 			throw new JxnetException("Failed to open pcap dead handle.");

@@ -25,30 +25,7 @@ import java.nio.ByteBuffer;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class ICMPv4 extends Packet implements ICMP {
-
-    public static int ICMP_HEADER_LENGTH = 4;
-
-    private ICMPTypeAndCode typeAndCode;
-    private short checksum;
-
-    public ICMPTypeAndCode getTypeAndCode() {
-        return this.typeAndCode;
-    }
-
-    public ICMPv4 setTypeAndCode(final ICMPTypeAndCode typeAndCode) {
-        this.typeAndCode = typeAndCode;
-        return this;
-    }
-
-    public short getChecksum() {
-        return (short) (this.checksum & 0xffff);
-    }
-
-    public ICMPv4 setChecksum(final short checksum) {
-        this.checksum = (short) (checksum & 0xffff);
-        return this;
-    }
+public class ICMPv4 extends ICMP {
 
     @Deprecated
     public byte[] getPayload() {
@@ -68,7 +45,7 @@ public class ICMPv4 extends Packet implements ICMP {
     public static ICMPv4 newInstance(final byte[] bytes, final int offset, final int length) {
         ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
         ICMPv4 icmp = new ICMPv4();
-        icmp.setTypeAndCode(ICMPTypeAndCode.getInstance(buffer.get(), buffer.get()));
+        icmp.setTypeAndCode(ICMPTypeAndCode.getTypeAndCode(buffer.get(), buffer.get()));
         icmp.setChecksum(buffer.getShort());
         icmp.nextPacket = new byte[buffer.limit() - ICMP_HEADER_LENGTH];
         buffer.get(icmp.nextPacket);
@@ -110,16 +87,10 @@ public class ICMPv4 extends Packet implements ICMP {
 
             accumulation = (accumulation >> 16 & 0xffff)
                     + (accumulation & 0xffff);
-            this.checksum = (short) (~accumulation & 0xffff);
-            buffer.putShort(2, this.checksum);
+            this.setChecksum((short) (~accumulation & 0xffff));
+            buffer.putShort(2, this.getChecksum());
         }
         return data;
-    }
-
-    @Override
-    public String toString() {
-        return new StringBuilder()
-                .append(this.getTypeAndCode().toString()).toString();
     }
 
 }

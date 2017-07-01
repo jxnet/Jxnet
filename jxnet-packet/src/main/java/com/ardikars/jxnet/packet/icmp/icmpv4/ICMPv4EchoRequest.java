@@ -45,8 +45,4 @@ public class ICMPv4EchoRequest extends ICMPTypeAndCode {
         return super.toString();
     }
 
-    static {
-        ICMPTypeAndCode.registry.put(ECHO_REQUEST.getKey(), ECHO_REQUEST);
-    }
-
 }

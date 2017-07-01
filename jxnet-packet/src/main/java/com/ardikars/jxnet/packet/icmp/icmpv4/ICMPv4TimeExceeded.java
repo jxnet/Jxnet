@@ -48,9 +48,4 @@ public class ICMPv4TimeExceeded extends ICMPTypeAndCode {
         return super.toString();
     }
 
-    static {
-        ICMPTypeAndCode.registry.put(TTL_EXPIRED_IN_TRANSIT.getKey(), TTL_EXPIRED_IN_TRANSIT);
-        ICMPTypeAndCode.registry.put(FRAGMENT_REASSEMBLY_TIME_EXEEDED.getKey(), FRAGMENT_REASSEMBLY_TIME_EXEEDED);
-    }
-
 }
