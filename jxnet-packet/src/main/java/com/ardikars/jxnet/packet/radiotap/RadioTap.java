@@ -34,8 +34,6 @@ public class RadioTap extends Packet {
     private short length;
     private int present;
 
-    private byte[] payload;
-
     public byte getVersion() {
         return (byte) (this.version & 0xff);
     }
@@ -67,9 +65,17 @@ public class RadioTap extends Packet {
         return (byte) (this.present & 0xffffffffL);
     }
 
+    /*
+    @Deprecated
     public byte[] getPayload() {
-        return this.payload;
+        return this.nextPacket;
     }
+
+    @Deprecated
+    public RadioTap setPayload(final byte[] payload) {
+        this.nextPacket = payload;
+        return this;
+    }*/
 
     public RadioTap setPresent(final int present) {
         this.present = (byte) (present & 0xffffffffL);
@@ -87,40 +93,35 @@ public class RadioTap extends Packet {
         radioTap.setPadding(buffer.get());
         radioTap.setLength(buffer.getShort());
         radioTap.setPresent(buffer.getInt());
-        radioTap.payload = new byte[buffer.limit() - RADIO_TAP_HEADER];
-        buffer.get(radioTap.payload);
+        radioTap.nextPacket = new byte[buffer.limit() - RADIO_TAP_HEADER];
+        buffer.get(radioTap.nextPacket);
         return radioTap;
     }
 
-    public RadioTap setPayload(final byte[] payload) {
-        this.payload = payload;
-        return this;
-    }
 
     @Override
     public Packet setPacket(final Packet packet) {
         if (packet == null) {
             return this;
         }
-        return this.setPayload(packet.toBytes());
-    }
-
-    @Override
-    public Packet getPacket() {
-        return null;
+        switch (packet.getClass().getName()) {
+            default:
+                this.nextPacket = packet.toBytes();
+                return this;
+        }
     }
 
     @Override
     public byte[] toBytes() {
         byte[] data = new byte[RADIO_TAP_HEADER +
-                ((this.getPayload() == null) ? 0 : this.getPayload().length)];
+                ((this.nextPacket == null) ? 0 : this.nextPacket.length)];
         ByteBuffer buffer = ByteBuffer.wrap(data);
         buffer.put(this.getVersion());
         buffer.put(this.getPadding());
         buffer.putShort(this.getLength());
         buffer.putInt(this.getPresent());
-        if (this.getPayload() != null) {
-            buffer.put(this.getPayload());
+        if (this.nextPacket!= null) {
+            buffer.put(this.nextPacket);
         }
         return data;
     }

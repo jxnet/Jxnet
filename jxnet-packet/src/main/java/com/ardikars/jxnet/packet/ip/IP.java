@@ -17,14 +17,23 @@
 
 package com.ardikars.jxnet.packet.ip;
 
+import com.ardikars.jxnet.packet.Packet;
+
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public interface IP {
+abstract class IP extends Packet {
 
-    byte getVersion();
+    protected byte version;
 
-    IP setVersion(final byte version);
+    public byte getVersion() {
+        return this.version;
+    }
+
+    public IP setVersion(final byte version) {
+        this.version = version;
+        return this;
+    }
 
 }

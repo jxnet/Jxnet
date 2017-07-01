@@ -17,14 +17,41 @@
 
 package com.ardikars.jxnet.packet.icmp;
 
+import com.ardikars.jxnet.packet.Packet;
+
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public interface ICMP {
+abstract class ICMP extends Packet {
 
-    ICMPTypeAndCode getTypeAndCode();
+    public static int ICMP_HEADER_LENGTH = 4;
 
-    ICMP setTypeAndCode(final ICMPTypeAndCode typeAndCode);
+    private ICMPTypeAndCode typeAndCode;
+    private short checksum;
+
+    public ICMPTypeAndCode getTypeAndCode() {
+        return this.typeAndCode;
+    }
+
+    public ICMP setTypeAndCode(final ICMPTypeAndCode typeAndCode) {
+        this.typeAndCode = typeAndCode;
+        return this;
+    }
+
+    public short getChecksum() {
+        return this.checksum;
+    }
+
+    public ICMP setChecksum(final short checksum) {
+        this.checksum = checksum;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder()
+                .append(this.getTypeAndCode().toString()).toString();
+    }
 
 }

@@ -24,7 +24,7 @@ import com.ardikars.jxnet.packet.icmp.ICMPTypeAndCode;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.5
  */
-public class PacketTooBigMessage extends ICMPTypeAndCode {
+public class ICMPv6PacketTooBigMessage extends ICMPTypeAndCode {
 
     /**
      * A Packet Too Big MUST be sent by a router in response to a packet
@@ -39,27 +39,23 @@ public class PacketTooBigMessage extends ICMPTypeAndCode {
      * link-layer broadcast address.
      */
 
-    public static final PacketTooBigMessage PACKET_TOO_BIG_MESSAGE =
-            new PacketTooBigMessage((byte) 0, "Packet too big message");
+    public static final ICMPv6PacketTooBigMessage PACKET_TOO_BIG_MESSAGE =
+            new ICMPv6PacketTooBigMessage((byte) 0, "Packet too big message");
 
-    protected PacketTooBigMessage(Byte code, String name) {
+    protected ICMPv6PacketTooBigMessage(Byte code, String name) {
         super((byte) 2, code, name);
     }
 
-    public static PacketTooBigMessage register(Byte code, String name) {
+    public static ICMPv6PacketTooBigMessage register(Byte code, String name) {
         TwoKeyMap<Byte, Byte> key = TwoKeyMap.newInstance((byte) 2, code);
-        PacketTooBigMessage packetTooBigMessage =
-                new PacketTooBigMessage(key.getSecondKey(), name);
-        return (PacketTooBigMessage) ICMPTypeAndCode.registry.put(key, packetTooBigMessage);
+        ICMPv6PacketTooBigMessage packetTooBigMessage =
+                new ICMPv6PacketTooBigMessage(key.getSecondKey(), name);
+        return (ICMPv6PacketTooBigMessage) ICMPTypeAndCode.registry.put(key, packetTooBigMessage);
     }
 
     @Override
     public String toString() {
         return super.toString();
-    }
-
-    static {
-        ICMPTypeAndCode.registry.put(PACKET_TOO_BIG_MESSAGE.getKey(), PACKET_TOO_BIG_MESSAGE);
     }
 
 }

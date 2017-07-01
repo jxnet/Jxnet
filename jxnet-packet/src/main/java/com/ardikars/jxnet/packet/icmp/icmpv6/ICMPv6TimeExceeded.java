@@ -24,33 +24,28 @@ import com.ardikars.jxnet.packet.icmp.ICMPTypeAndCode;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.5
  */
-public class TimeExceeded extends ICMPTypeAndCode {
+public class ICMPv6TimeExceeded extends ICMPTypeAndCode {
 
-    public static TimeExceeded HOP_LIMIT_EXCEEDED_IN_TRANSIT =
-            new TimeExceeded((byte) 0, "Hop limit exceeded in transit");
+    public static ICMPv6TimeExceeded HOP_LIMIT_EXCEEDED_IN_TRANSIT =
+            new ICMPv6TimeExceeded((byte) 0, "Hop limit exceeded in transit");
 
-    public static TimeExceeded FRAGMENT_REASSEMBLY_TIME_EXCEEDE =
-            new TimeExceeded((byte) 1, "Fragment reassembly time exceeded");
+    public static ICMPv6TimeExceeded FRAGMENT_REASSEMBLY_TIME_EXCEEDED =
+            new ICMPv6TimeExceeded((byte) 1, "Fragment reassembly time exceeded");
 
-    protected TimeExceeded(Byte code, String name) {
+    protected ICMPv6TimeExceeded(Byte code, String name) {
         super((byte) 3, code, name);
     }
 
-    public static TimeExceeded register(Byte code, String name) {
+    public static ICMPv6TimeExceeded register(Byte code, String name) {
         TwoKeyMap<Byte, Byte> key = TwoKeyMap.newInstance((byte) 3, code);
-        TimeExceeded timeExceeded =
-                new TimeExceeded(key.getSecondKey(), name);
-        return (TimeExceeded) ICMPTypeAndCode.registry.put(key, timeExceeded);
+        ICMPv6TimeExceeded timeExceeded =
+                new ICMPv6TimeExceeded(key.getSecondKey(), name);
+        return (ICMPv6TimeExceeded) ICMPTypeAndCode.registry.put(key, timeExceeded);
     }
 
     @Override
     public String toString() {
         return super.toString();
-    }
-
-    static {
-        ICMPTypeAndCode.registry.put(HOP_LIMIT_EXCEEDED_IN_TRANSIT.getKey(), HOP_LIMIT_EXCEEDED_IN_TRANSIT);
-        ICMPTypeAndCode.registry.put(FRAGMENT_REASSEMBLY_TIME_EXCEEDE.getKey(), FRAGMENT_REASSEMBLY_TIME_EXCEEDE);
     }
 
 }

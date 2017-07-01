@@ -77,16 +77,4 @@ public class ICMPv6DestinationUnreachable extends ICMPTypeAndCode {
         return super.toString();
     }
 
-    static {
-        ICMPTypeAndCode.registry.put(NO_ROUTE_TO_DESTINATION.getKey(), NO_ROUTE_TO_DESTINATION);
-        ICMPTypeAndCode.registry.put(COMMUNICATION_WITH_DESTINATION_ADMINIS_TRATIVELY_PROHIBITED.getKey(),
-                COMMUNICATION_WITH_DESTINATION_ADMINIS_TRATIVELY_PROHIBITED);
-        ICMPTypeAndCode.registry.put(BEYOND_SCOPE_OF_SOURCE_ADDRESS.getKey(), BEYOND_SCOPE_OF_SOURCE_ADDRESS);
-        ICMPTypeAndCode.registry.put(ADDRESS_UNREACHABLE.getKey(), ADDRESS_UNREACHABLE);
-        ICMPTypeAndCode.registry.put(PORT_UNREACHABLE.getKey(), PORT_UNREACHABLE);
-        ICMPTypeAndCode.registry.put(SOURCE_ADDRESS_FAILED.getKey(), SOURCE_ADDRESS_FAILED);
-        ICMPTypeAndCode.registry.put(REJECT_ROUTE_TO_DESTINATION.getKey(), REJECT_ROUTE_TO_DESTINATION);
-        ICMPTypeAndCode.registry.put(ERROR_IN_SOURCE_ROUTING_HEADER.getKey(), ERROR_IN_SOURCE_ROUTING_HEADER);
-    }
-
 }

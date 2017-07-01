@@ -45,8 +45,4 @@ public class ICMPv4RouterAdvertisement extends ICMPTypeAndCode {
         return super.toString();
     }
 
-    static {
-        ICMPTypeAndCode.registry.put(ROUTER_ADVERTISEMENT.getKey(), ROUTER_ADVERTISEMENT);
-    }
-
 }

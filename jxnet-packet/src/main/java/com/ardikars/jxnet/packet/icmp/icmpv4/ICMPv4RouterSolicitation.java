@@ -45,8 +45,4 @@ public class ICMPv4RouterSolicitation extends ICMPTypeAndCode {
         return super.toString();
     }
 
-    static {
-        ICMPTypeAndCode.registry.put(ROUTER_DISCOVERY_SELECTION_SOLICITATION.getKey(), ROUTER_DISCOVERY_SELECTION_SOLICITATION);
-    }
-
 }

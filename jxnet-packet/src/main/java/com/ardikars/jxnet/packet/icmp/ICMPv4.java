@@ -25,42 +25,16 @@ import java.nio.ByteBuffer;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class ICMPv4 extends Packet implements ICMP {
+public class ICMPv4 extends ICMP {
 
-    public static int ICMP_HEADER_LENGTH = 4;
-
-    private ICMPTypeAndCode typeAndCode;
-    private short checksum;
-
-    /**
-     * ICMPv4 payload
-     */
-    private byte[] payload;
-
-    public ICMPTypeAndCode getTypeAndCode() {
-        return this.typeAndCode;
-    }
-
-    public ICMPv4 setTypeAndCode(final ICMPTypeAndCode typeAndCode) {
-        this.typeAndCode = typeAndCode;
-        return this;
-    }
-
-    public short getChecksum() {
-        return (short) (this.checksum & 0xffff);
-    }
-
-    public ICMPv4 setChecksum(final short checksum) {
-        this.checksum = (short) (checksum & 0xffff);
-        return this;
-    }
-
+    @Deprecated
     public byte[] getPayload() {
-        return this.payload;
+        return this.nextPacket;
     }
 
+    @Deprecated
     public ICMPv4 setPayload(final byte[] payload) {
-        this.payload = payload;
+        this.nextPacket = payload;
         return this;
     }
 
@@ -71,10 +45,10 @@ public class ICMPv4 extends Packet implements ICMP {
     public static ICMPv4 newInstance(final byte[] bytes, final int offset, final int length) {
         ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
         ICMPv4 icmp = new ICMPv4();
-        icmp.setTypeAndCode(ICMPTypeAndCode.getInstance(buffer.get(), buffer.get()));
+        icmp.setTypeAndCode(ICMPTypeAndCode.getTypeAndCode(buffer.get(), buffer.get()));
         icmp.setChecksum(buffer.getShort());
-        icmp.payload = new byte[buffer.limit() - ICMP_HEADER_LENGTH];
-        buffer.get(icmp.payload);
+        icmp.nextPacket = new byte[buffer.limit() - ICMP_HEADER_LENGTH];
+        buffer.get(icmp.nextPacket);
         return icmp;
     }
 
@@ -83,23 +57,22 @@ public class ICMPv4 extends Packet implements ICMP {
         if (packet == null) {
             return this;
         }
-        return this.setPayload(packet.toBytes());
-    }
-
-    @Override
-    public Packet getPacket() {
-        return null;
+        switch (packet.getClass().getName()) {
+            default:
+                this.nextPacket = packet.toBytes();
+                return this;
+        }
     }
 
     @Override
     public byte[] toBytes() {
-        byte[] data = new byte[ICMP_HEADER_LENGTH + ((this.getPayload() == null) ? 0 : this.getPayload().length)];
+        byte[] data = new byte[ICMP_HEADER_LENGTH + ((this.nextPacket == null) ? 0 : this.nextPacket.length)];
         ByteBuffer buffer = ByteBuffer.wrap(data);
         buffer.put(this.getTypeAndCode().getType());
         buffer.put(this.getTypeAndCode().getCode());
         buffer.putShort(this.getChecksum());
-        if (this.getPayload() != null) {
-            buffer.put(this.getPayload());
+        if (this.nextPacket != null) {
+            buffer.put(this.nextPacket);
         }
         if (this.getChecksum() == 0) {
             buffer.rewind();
@@ -114,16 +87,10 @@ public class ICMPv4 extends Packet implements ICMP {
 
             accumulation = (accumulation >> 16 & 0xffff)
                     + (accumulation & 0xffff);
-            this.checksum = (short) (~accumulation & 0xffff);
-            buffer.putShort(2, this.checksum);
+            this.setChecksum((short) (~accumulation & 0xffff));
+            buffer.putShort(2, this.getChecksum());
         }
         return data;
-    }
-
-    @Override
-    public String toString() {
-        return new StringBuilder()
-                .append(this.getTypeAndCode().toString()).toString();
     }
 
 }

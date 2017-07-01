@@ -28,18 +28,24 @@ import java.util.List;
  */
 public abstract class Packet implements Builder<Packet> {
 
+    protected byte[] nextPacket;
+
     /**
      * Set payload.
      * @param packet paket.
      * @return packet.
      */
-    public abstract Packet setPacket(final Packet packet);
+    public Packet setPacket(final Packet packet) {
+        return this;
+    }
 
     /**
      * Get payload.
      * @return packet.
      */
-    public abstract Packet getPacket();
+    public Packet getPacket() {
+        return null;
+    }
 
     /**
      * Return packet in byte array.

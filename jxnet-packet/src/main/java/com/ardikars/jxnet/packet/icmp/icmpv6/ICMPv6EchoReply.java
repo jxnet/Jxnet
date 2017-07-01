@@ -24,29 +24,25 @@ import com.ardikars.jxnet.packet.icmp.ICMPTypeAndCode;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.5
  */
-public class EchoReply extends ICMPTypeAndCode {
+public class ICMPv6EchoReply extends ICMPTypeAndCode {
 
-    public static final EchoReply ECHO_REPLY =
-            new EchoReply((byte) 0, "Echo  reply");
+    public static final ICMPv6EchoReply ECHO_REPLY =
+            new ICMPv6EchoReply((byte) 0, "Echo  reply");
 
-    protected EchoReply(Byte code, String name) {
+    protected ICMPv6EchoReply(Byte code, String name) {
         super((byte) 129, code, name);
     }
 
-    public static EchoReply register(Byte code, String name) {
+    public static ICMPv6EchoReply register(Byte code, String name) {
         TwoKeyMap<Byte, Byte> key = TwoKeyMap.newInstance((byte) 129, code);
-        EchoReply echoReply =
-                new EchoReply(key.getSecondKey(), name);
-        return (EchoReply) ICMPTypeAndCode.registry.put(key, echoReply);
+        ICMPv6EchoReply echoReply =
+                new ICMPv6EchoReply(key.getSecondKey(), name);
+        return (ICMPv6EchoReply) ICMPTypeAndCode.registry.put(key, echoReply);
     }
 
     @Override
     public String toString() {
         return super.toString();
-    }
-
-    static {
-        ICMPTypeAndCode.registry.put(ECHO_REPLY.getKey(), ECHO_REPLY);
     }
 
 }

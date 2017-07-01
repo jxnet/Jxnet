@@ -45,8 +45,4 @@ public class ICMPv4TimestampReply extends ICMPTypeAndCode {
         return super.toString();
     }
 
-    static {
-        ICMPTypeAndCode.registry.put(TIMESTAMP_REPLY.getKey(), TIMESTAMP_REPLY);
-    }
-
 }

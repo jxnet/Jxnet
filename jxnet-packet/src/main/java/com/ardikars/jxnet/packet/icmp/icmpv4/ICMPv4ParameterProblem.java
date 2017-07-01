@@ -51,10 +51,4 @@ public class ICMPv4ParameterProblem extends ICMPTypeAndCode {
         return super.toString();
     }
 
-    static {
-        ICMPTypeAndCode.registry.put(POINTER_INDICATES_THE_ERROR.getKey(), POINTER_INDICATES_THE_ERROR);
-        ICMPTypeAndCode.registry.put(MISSING_REQUIRED_OPTION.getKey(), MISSING_REQUIRED_OPTION);
-        ICMPTypeAndCode.registry.put(BAD_LENGTH.getKey(), BAD_LENGTH);
-    }
-
 }

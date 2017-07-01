@@ -28,7 +28,7 @@ import java.nio.ByteBuffer;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class IPv4 extends Packet implements IP {
+public class IPv4 extends IP {
 
     public static final int IPV4_HEADER_LENGTH = 20;
 
@@ -62,13 +62,8 @@ public class IPv4 extends Packet implements IP {
         this.setSourceAddress(Inet4Address.LOCALHOST);
         this.setDestinationAddress(Inet4Address.LOCALHOST);
         this.setOptions(null);
-        this.setPayload(null);
+        this.nextPacket = null;
     }
-
-    /**
-     * IPv4 payload
-     */
-    private byte[] payload;
 
     public byte getVersion() {
         return (byte) (this.version & 0xf);
@@ -195,15 +190,17 @@ public class IPv4 extends Packet implements IP {
         this.options = options;
         return this;
     }
-
+/*
+    @Deprecated
     public byte[] getPayload() {
-        return this.payload;
+        return this.nextPacket;
     }
 
+    @Deprecated
     public IPv4 setPayload(final byte[] payload) {
-        this.payload = payload;
+        this.nextPacket = payload;
         return this;
-    }
+    }*/
 
     public static IPv4 newInstance(final byte[] bytes) {
         return newInstance(bytes, 0, bytes.length);
@@ -239,11 +236,11 @@ public class IPv4 extends Packet implements IP {
             int optionsLength = (ipv4.getHeaderLength() - 5) * 4;
             ipv4.options = new byte[optionsLength];
             buffer.get(ipv4.options);
-            ipv4.payload = new byte[(buffer.limit() - (optionsLength + IPV4_HEADER_LENGTH))];
-            buffer.get(ipv4.payload);
+            ipv4.nextPacket = new byte[(buffer.limit() - (optionsLength + IPV4_HEADER_LENGTH))];
+            buffer.get(ipv4.nextPacket);
         } else {
-            ipv4.payload = new byte[(buffer.limit() - (IPV4_HEADER_LENGTH))];
-            buffer.get(ipv4.payload);
+            ipv4.nextPacket = new byte[(buffer.limit() - (IPV4_HEADER_LENGTH))];
+            buffer.get(ipv4.nextPacket);
         }
         return ipv4;
     }
@@ -263,8 +260,8 @@ public class IPv4 extends Packet implements IP {
                 if (tcp.getChecksum() == 0) {
                     bb = ByteBuffer.wrap(tcp.toBytes());
                     length += tcp.getDataOffset() << 2;
-                    if (tcp.getPayload() != null) {
-                        length += tcp.getPayload().length;
+                    if (tcp.getPacket() != null) {
+                        length += tcp.getPacket().toBytes().length;
                     }
                     accumulation += (this.getSourceAddress().toInt() >> 16 & 0xffff)
                             + (this.getSourceAddress().toInt() & 0xffff);
@@ -285,12 +282,16 @@ public class IPv4 extends Packet implements IP {
                     tcp.setChecksum((short) (~accumulation & 0xffff));
                 }
                 this.setProtocol(IPProtocolType.TCP);
-                return this.setPayload(tcp.toBytes());
+                this.nextPacket = tcp.toBytes();
+                return this;
             case "com.ardikars.jxnet.packet.tcp.UDP":
                 UDP udp = (UDP) packet;
                 if (udp.getChecksum() == 0) {
                     bb = ByteBuffer.wrap(udp.toBytes());
-                    length += udp.getLength() + ((udp.getPayload() == null) ? 0 : udp.getPayload().length);
+                    if (udp.getPacket() != null) {
+                        byte[] udpPayload = udp.getPacket().toBytes();
+                        length += udp.getLength() + ((udpPayload == null) ? 0 : udpPayload.length);
+                    }
                     if (udp.getChecksum() == 0) {
                         accumulation += (this.getSourceAddress().toInt() >> 16 & 0xffff)
                                 + (this.getSourceAddress().toInt() & 0xffff);
@@ -310,17 +311,19 @@ public class IPv4 extends Packet implements IP {
                     udp.setChecksum((short) (~accumulation & 0xffff));
                 }
                 this.setProtocol(IPProtocolType.UDP);
-                return this.setPayload(udp.toBytes());
+                this.nextPacket = udp.toBytes();
+                return this;
             case "com.ardikars.jxnet.packet.icmp.ICMPv4":
                 this.setProtocol(IPProtocolType.ICMP);
-                return this.setPayload(packet.toBytes());
+                this.nextPacket = packet.toBytes();
+                return this;
         }
         return this;
     }
 
     @Override
     public Packet getPacket() {
-        return this.getProtocol().decode(this.getPayload());
+        return this.getProtocol().decode(this.nextPacket);
     }
 
     @Override
@@ -331,8 +334,8 @@ public class IPv4 extends Packet implements IP {
             optionsLength = this.getOptions().length / 4;
         }
         this.setHeaderLength((byte) (5 + optionsLength));
-        this.setTotalLength((short) (this.getHeaderLength() * 4 + (this.getPayload() == null ? 0
-                : this.getPayload().length)));
+        this.setTotalLength((short) (this.getHeaderLength() * 4 + (this.nextPacket == null ? 0
+                : this.nextPacket.length)));
 
         byte[] data = new byte[this.getTotalLength()];
 
@@ -361,8 +364,8 @@ public class IPv4 extends Packet implements IP {
             this.checksum = ((short) (~accumulation & 0xffff));
             buffer.putShort(10, (short) (this.getChecksum() & 0xffff));
         }
-        if (this.getPayload() != null) {
-            buffer.put(this.getPayload());
+        if (this.nextPacket != null) {
+            buffer.put(this.nextPacket);
         }
         return data;
     }
