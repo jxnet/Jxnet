@@ -17,7 +17,6 @@
 
 package com.ardikars.jxnet.packet.ip;
 
-import com.ardikars.jxnet.Decoder;
 import com.ardikars.jxnet.packet.Packet;
 import com.ardikars.jxnet.packet.icmp.ICMPv4;
 import com.ardikars.jxnet.packet.icmp.ICMPv6;
@@ -32,7 +31,7 @@ import java.util.Map;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class IPProtocolType extends NamedNumber<Byte, IPProtocolType> implements Decoder<Packet, byte[]> {
+public class IPProtocolType extends NamedNumber<Byte, IPProtocolType> {
 
     public static final IPProtocolType ICMP = new IPProtocolType((byte) 1, "Internet Control Message Protocol Version 4");
 
@@ -98,7 +97,6 @@ public class IPProtocolType extends NamedNumber<Byte, IPProtocolType> implements
      * @param data byte array.
      * @return packet.
      */
-    @Override
     public Packet decode(final byte[] data) {
         if (data == null || data.length == 0) {
             return null;

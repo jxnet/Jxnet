@@ -64,13 +64,12 @@ public class PacketHelper {
         }
     }
 
+    private static int packetNumber;
     public static <T, V extends Packet> int loop(Pcap pcap, int count, AbstractPacketListener<T, V> handler, T arg) {
+        packetNumber = 0;
         PcapHandler<AbstractPacketListener<T, V>> callback = (user, h, bytes) -> {
-            user.setPcap(pcap);
-            user.setPcapPktHdr(h);
-            user.setArg(arg);
+            user.initialize(++packetNumber, arg, pcap, h);
             user.decode(ByteUtils.toByteArray(bytes));
-
         };
         return Jxnet.PcapLoop(pcap, count, callback, handler);
     }

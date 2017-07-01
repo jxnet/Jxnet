@@ -47,6 +47,11 @@ public abstract class Packet implements Builder<Packet> {
      */
     public abstract byte[] toBytes();
 
+    @Override
+    public Packet build() {
+        return this;
+    }
+
     /**
      * Packet builder.
      * @return Instance of PacketBuilder.

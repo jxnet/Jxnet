@@ -147,11 +147,6 @@ public class SLL extends Packet {
     }
 
     @Override
-    public Packet build() {
-        return this;
-    }
-
-    @Override
     public String toString() {
         return new StringBuilder()
                 .append("[Packet Type: ").append(this.getPacketType())

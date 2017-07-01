@@ -21,6 +21,7 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 import static com.ardikars.jxnet.Validate.CheckNotNull;
+import static com.ardikars.jxnet.Validate.CheckBounds;
 
 /**
  * @author Ardika Rommy Sanjaya
@@ -71,7 +72,7 @@ public class BufferUtils {
      * @return DirectByteBuffer.
      */
     public static ByteBuffer toDirectByteBuffer(final byte[] bytes, final int offset, final int length) {
-        ArrayUtils.validateBounds(bytes, offset, length);
+        CheckBounds(bytes, offset, length);
         ByteBuffer buffer = ByteBuffer.allocateDirect(length);
         buffer.put(Arrays.copyOfRange(bytes, offset, length));
         return buffer;

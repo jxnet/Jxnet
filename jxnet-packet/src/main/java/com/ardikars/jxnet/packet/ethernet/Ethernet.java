@@ -219,11 +219,6 @@ public class Ethernet extends Packet {
     }
 
     @Override
-    public Packet build() {
-        return this;
-    }
-
-    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder()
             .append("[").append("Destination: " + this.getDestinationMacAddress().toString())

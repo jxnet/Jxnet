@@ -20,6 +20,7 @@ package com.ardikars.jxnet.util;
 import java.util.regex.Pattern;
 
 import static com.ardikars.jxnet.Validate.CheckNotNull;
+import static com.ardikars.jxnet.Validate.CheckBounds;
 
 /**
  * @author Ardika Rommy Sanjaya
@@ -30,12 +31,12 @@ public class HexUtils {
     private static final Pattern NO_SEPARATOR_HEX_STRING_PATTERN
             = Pattern.compile("\\A([0-9a-fA-F][0-9a-fA-F])+\\z");
 
-    private static final String HEADER =
+    private static final String HEXDUMP_PRETTY_HEADER =
             "         +-------------------------------------------------+\n" +
             "         |  0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f |\n" +
             "+--------+-------------------------------------------------+----------------+\n";
 
-    private static final String FOOTER =
+    private static final String HEXDUMP_PRETTY_FOOTER =
             "+--------+-------------------------------------------------+----------------+";
 
     /**
@@ -43,7 +44,7 @@ public class HexUtils {
      * @param value value.
      * @return hex format.
      */
-    public static String toHex(final byte value) {
+    public static String toHexString(final byte value) {
         String srt = Integer.toHexString((value) & 0xff);
         if (srt.length() == 1)
             return ("0" + srt);
@@ -55,8 +56,8 @@ public class HexUtils {
      * @param data byte array.
      * @return hex stream.
      */
-    public static String toHex(final byte[] data) {
-        return toHex(data, 0, data.length);
+    public static String toHexString(final byte[] data) {
+        return toHexString(data, 0, data.length);
     }
 
     /**
@@ -66,8 +67,8 @@ public class HexUtils {
      * @param length length.
      * @return hex stream.
      */
-    public static String toHex(final byte[] data, final int offset, final int length) {
-        ArrayUtils.validateBounds(data, offset, length);
+    public static String toHexString(final byte[] data, final int offset, final int length) {
+        CheckBounds(data, offset, length);
         StringBuilder sb = new StringBuilder();
         int l;
         if(data.length != length) {
@@ -76,7 +77,7 @@ public class HexUtils {
             l = length;
         }
         for(int i=offset; i<l; i++) {
-            sb.append(toHex(data[i]));
+            sb.append(toHexString(data[i]));
         }
         return sb.toString();
     }
@@ -86,7 +87,7 @@ public class HexUtils {
      * @param value short array.
      * @return hex stream.
      */
-    public static String toHex(final short value) {
+    public static String toHexString(final short value) {
         String srt = Integer.toHexString((value) & 0xFFFF);
         if (srt.length() == 1)
             return ("0" + srt);
@@ -98,8 +99,8 @@ public class HexUtils {
      * @param values short array.
      * @return hex stream.
      */
-    public static String toHex(final short[] values) {
-        return toHex(values, 0, values.length);
+    public static String toHexString(final short[] values) {
+        return toHexString(values, 0, values.length);
     }
 
     /**
@@ -109,11 +110,11 @@ public class HexUtils {
      * @param length length.
      * @return hex stream.
      */
-    public static String toHex(final short[] values, final int offset, final int length) {
-        ArrayUtils.validateBounds(values, offset, length);
+    public static String toHexString(final short[] values, final int offset, final int length) {
+        CheckBounds(values, offset, length);
         StringBuilder sb = new StringBuilder();
         for (short value : values) {
-            sb.append(toHex(value));
+            sb.append(toHexString(value));
         }
         return sb.toString();
     }
@@ -123,7 +124,7 @@ public class HexUtils {
      * @param value integer value.
      * @return hex stream.
      */
-    public static String toHex(final int value) {
+    public static String toHexString(final int value) {
         String srt = Integer.toHexString(value);
         if (srt.length() == 1)
             return ("0" + srt);
@@ -135,8 +136,8 @@ public class HexUtils {
      * @param values int array.
      * @return hex stream.
      */
-    public static String toHex(final int[] values) {
-        return toHex(values, 0, values.length);
+    public static String toHexString(final int[] values) {
+        return toHexString(values, 0, values.length);
     }
 
     /**
@@ -146,11 +147,11 @@ public class HexUtils {
      * @param length length.
      * @return hex stream.
      */
-    public static String toHex(final int[] values, final int offset, final int length) {
-        ArrayUtils.validateBounds(values, offset, length);
+    public static String toHexString(final int[] values, final int offset, final int length) {
+        CheckBounds(values, offset, length);
         StringBuilder sb = new StringBuilder();
         for (int value : values) {
-            sb.append(toHex(value));
+            sb.append(toHexString(value));
         }
         return sb.toString();
     }
@@ -172,18 +173,18 @@ public class HexUtils {
      * @return hex dump format.
      */
     public static String toPrettyHexDump(final byte[] data, final int offset, final int length) {
-        ArrayUtils.validateBounds(data, offset, length);
+        CheckBounds(data, offset, length);
         StringBuilder result = new StringBuilder();
         StringBuilder builder = new StringBuilder();
         int pos = offset;
         int max = length;
         int lineNumber = 0;
-        builder.append(HEADER);
+        builder.append(HEXDUMP_PRETTY_HEADER);
         while (pos < max) {
             builder.append(String.format("%08d", lineNumber++) + " | ");
             int lineMax = Math.min(max - pos, 16);
             for (int i=0; i<lineMax; i++) {
-                builder.append(toHex(data[pos+i]));
+                builder.append(toHexString(data[pos+i]));
                 builder.append(" ");
             }
             while (builder.length() < 48) {
@@ -201,7 +202,7 @@ public class HexUtils {
             builder.setLength(0);
             pos += 16;
         }
-        result.append(FOOTER);
+        result.append(HEXDUMP_PRETTY_FOOTER);
         return result.toString();
     }
 

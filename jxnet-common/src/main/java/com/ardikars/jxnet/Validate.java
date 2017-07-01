@@ -23,18 +23,33 @@ package com.ardikars.jxnet;
  */
 public class Validate {
 
+    /**
+     * Validate argument.
+     * @param expression expression.
+     */
     public static void CheckArgument(boolean expression) {
         if (!expression) {
             throw new IllegalArgumentException();
         }
     }
 
+    /**
+     * Validate argument.
+     * @param expression expression.
+     * @param errorMessage error message.
+     */
     public static void CheckArgument(boolean expression, String errorMessage) {
         if (!expression) {
             throw new IllegalArgumentException(errorMessage);
         }
     }
 
+    /**
+     * Check not null.
+     * @param reference reference.
+     * @param <T> type.
+     * @return reference.
+     */
     public static <T> T CheckNotNull(T reference) {
         if (reference == null) {
             throw new NullPointerException();
@@ -42,11 +57,138 @@ public class Validate {
         return reference;
     }
 
+    /**
+     * Check not null.
+     * @param reference reference.
+     * @param errorMessage error message.
+     * @param <T> type.
+     * @return reference.
+     */
     public static <T> T CheckNotNull(T reference, String errorMessage) {
         if (reference == null) {
             throw new NullPointerException(errorMessage);
         }
         return reference;
+    }
+
+    /**
+     * Validate bounds.
+     * @param array array.
+     * @param offset offset.
+     * @param length length.
+     */
+    public static void CheckBounds(byte[] array, int offset, int length) {
+        CheckNotNull(array, "array is null.");
+        CheckArgument(array.length > 0, "array is empty.");
+        CheckArgument(length > 0, "length is zero.");
+        if (offset < 0 || length < 0 || length > array.length || offset > array.length) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+    }
+
+    /**
+     * Validate bounds.
+     * @param array array.
+     * @param offset offset.
+     * @param length length.
+     */
+    public static void CheckBounds(char[] array, int offset, int length) {
+        CheckNotNull(array, "array is null.");
+        CheckArgument(array.length > 0, "array is empty.");
+        CheckArgument(length > 0, "length is zero.");
+        if (offset < 0 || length < 0 || length > array.length || offset > array.length) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+    }
+
+    /**
+     * Validate bounds.
+     * @param array array.
+     * @param offset offset.
+     * @param length length.
+     */
+    public static void CheckBounds(short[] array, int offset, int length) {
+        CheckNotNull(array, "array is null.");
+        CheckArgument(array.length > 0, "array is empty.");
+        CheckArgument(length > 0, "length is zero.");
+        if (offset < 0 || length < 0 || length > array.length || offset > array.length) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+    }
+
+    /**
+     * Validate bounds.
+     * @param array array.
+     * @param offset offset.
+     * @param length length.
+     */
+    public static void CheckBounds(int[] array, int offset, int length) {
+        CheckNotNull(array, "array is null.");
+        CheckArgument(array.length > 0, "array is empty.");
+        CheckArgument(length > 0, "length is zero.");
+        if (offset < 0 || length < 0 || length > array.length || offset > array.length) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+    }
+
+    /**
+     * Validate bounds.
+     * @param array array.
+     * @param offset offset.
+     * @param length length.
+     */
+    public static void CheckBounds(float[] array, int offset, int length) {
+        CheckNotNull(array, "array is null.");
+        CheckArgument(array.length > 0, "array is empty.");
+        CheckArgument(length > 0, "length is zero.");
+        if (offset < 0 || length < 0 || length > array.length || offset > array.length) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+    }
+
+    /**
+     * Validate bounds.
+     * @param array array.
+     * @param offset offset.
+     * @param length length.
+     */
+    public static void CheckBounds(long[] array, int offset, int length) {
+        CheckNotNull(array, "array is null.");
+        CheckArgument(array.length > 0, "array is empty.");
+        CheckArgument(length > 0, "length is zero.");
+        if (offset < 0 || length < 0 || length > array.length || offset > array.length) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+    }
+
+    /**
+     * Validate bounds.
+     * @param array array.
+     * @param offset offset.
+     * @param length length.
+     */
+    public static void CheckBounds(double[] array, int offset, int length) {
+        CheckNotNull(array, "array is null.");
+        CheckArgument(array.length > 0, "array is empty.");
+        CheckArgument(length > 0, "length is zero.");
+        if (offset < 0 || length < 0 || length > array.length || offset > array.length) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+    }
+
+    /**
+     * Validate bounds.
+     * @param array array.
+     * @param offset offset.
+     * @param length length.
+     */
+    public static void CheckBounds(Object[] array, int offset, int length) {
+        CheckNotNull(array, "array is null.");
+        CheckArgument(array.length > 0, "array is empty.");
+        CheckArgument(length > 0, "length is zero.");
+        if (offset < 0 || length < 0 || length > array.length || offset > array.length) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
     }
 
 }
