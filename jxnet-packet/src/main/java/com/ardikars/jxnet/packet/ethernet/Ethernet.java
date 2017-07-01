@@ -43,11 +43,6 @@ public class Ethernet extends Packet {
     private ProtocolType ethernetType;
 
     /**
-     * Ethernet paylaod
-     */
-    private byte[] payload;
-
-    /**
      * If needed
      */
     private boolean padding;
@@ -118,13 +113,14 @@ public class Ethernet extends Packet {
         return this;
     }
 
+    @Deprecated
     public byte[] getPayload() {
-        return this.payload;
+        return this.nextPacket;
     }
 
+    @Deprecated
     public Ethernet setPayload(final byte[] payload) {
-        this.payload = payload;
-
+        this.nextPacket = payload;
         return this;
     }
 
@@ -158,11 +154,11 @@ public class Ethernet extends Packet {
         }
         ethernet.setEthernetType(ethernetType);
         if (ethernet.getVlanIdentifier() != (short) 0xffff) {
-            ethernet.payload = new byte[(buffer.limit() - (ETHERNET_HEADER_LENGTH + VLAN_HEADER_LENGTH))];
-            buffer.get(ethernet.payload);
+            ethernet.nextPacket = new byte[(buffer.limit() - (ETHERNET_HEADER_LENGTH + VLAN_HEADER_LENGTH))];
+            buffer.get(ethernet.nextPacket);
         } else {
-            ethernet.payload = new byte[(buffer.limit() - ETHERNET_HEADER_LENGTH)];
-            buffer.get(ethernet.payload);
+            ethernet.nextPacket = new byte[(buffer.limit() - ETHERNET_HEADER_LENGTH)];
+            buffer.get(ethernet.nextPacket);
         }
         return ethernet;
     }
@@ -176,29 +172,34 @@ public class Ethernet extends Packet {
             case "com.ardikars.jxnet.packet.ip.IPv4":
                 IPv4 ipv4 = (IPv4) packet;
                 this.setEthernetType(ProtocolType.IPV4);
-                return this.setPayload(ipv4.toBytes());
+                this.nextPacket = ipv4.toBytes();
+                return this;
             case "com.ardikars.jxnet.packet.ip.IPv6":
                 IPv6 ipv6 = (IPv6) packet;
                 this.setEthernetType(ProtocolType.IPV6);
-                return this.setPayload(ipv6.toBytes());
+                this.nextPacket = ipv6.toBytes();
+                return this;
             case "com.ardikars.jxnet.packet.arp.ARP":
                 ARP arp = (ARP) packet;
                 this.setEthernetType(ProtocolType.ARP);
-                return this.setPayload(arp.toBytes());
+                this.nextPacket = arp.toBytes();
+                return this;
+            default:
+                this.nextPacket = packet.toBytes();
+                return this;
         }
-        return setPayload(packet.toBytes());
     }
 
     @Override
     public Packet getPacket() {
-        return this.getEthernetType().decode(this.getPayload());
+        return this.getEthernetType().decode(this.nextPacket);
     }
 
     @Override
     public byte[] toBytes() {
         int headerLength = ETHERNET_HEADER_LENGTH +
                 ((this.getVlanIdentifier() != (short) 0xffff) ? VLAN_HEADER_LENGTH : 0) +
-                ((this.getPayload() == null) ? 0 : this.getPayload().length);
+                ((this.nextPacket == null) ? 0 : this.nextPacket.length);
         if ((this.padding == true) && (headerLength < 60)) {
             headerLength = 60;
         }
@@ -212,8 +213,8 @@ public class Ethernet extends Packet {
                     | ((this.getCanonicalFormatIndicator() << 14) & 0x01) | (this.getVlanIdentifier() & 0x0fff)));
         }
         buffer.putShort((short) (this.getEthernetType().getValue() & 0xffff));
-        if (this.getPayload() != null) {
-            buffer.put(this.getPayload());
+        if (this.nextPacket != null) {
+            buffer.put(this.nextPacket);
         }
         return data;
     }

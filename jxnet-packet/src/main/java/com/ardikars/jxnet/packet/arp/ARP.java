@@ -168,16 +168,6 @@ public class ARP extends Packet {
     }
 
     @Override
-    public Packet setPacket(final Packet packet) {
-        return null;
-    }
-
-    @Override
-    public Packet getPacket() {
-        return null;
-    }
-
-    @Override
     public byte[] toBytes() {
         byte[] data = new byte[ARP_HEADER_LENGTH];
         ByteBuffer buffer = ByteBuffer.wrap(data);

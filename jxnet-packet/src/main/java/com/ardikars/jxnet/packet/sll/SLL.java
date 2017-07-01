@@ -37,11 +37,6 @@ public class SLL extends Packet {
     private byte[] address;
     private ProtocolType protocol;
 
-    /**
-     * SLL payload
-     */
-    private byte[] payload;
-
     public SLL() {
         this.address = new byte[8];
     }
@@ -91,12 +86,14 @@ public class SLL extends Packet {
         return this;
     }
 
+    @Deprecated
     public byte[] getPayload() {
-        return this.payload;
+        return this.nextPacket;
     }
 
+    @Deprecated
     public SLL setPayload(final byte[] payload) {
-        this.payload = payload;
+        this.nextPacket = payload;
         return this;
     }
 
@@ -113,8 +110,8 @@ public class SLL extends Packet {
         sll.address = new byte[8];
         buffer.get(sll.address);
         sll.setProtocol(ProtocolType.getInstance(buffer.getShort()));
-        sll.payload = new byte[buffer.limit() - SLL_HEADER_LENGTH];
-        buffer.get(sll.payload);
+        sll.nextPacket = new byte[buffer.limit() - SLL_HEADER_LENGTH];
+        buffer.get(sll.nextPacket);
         return sll;
     }
 
@@ -123,25 +120,29 @@ public class SLL extends Packet {
         if (packet == null) {
             return this;
         }
-        return this.setPayload(packet.toBytes());
+        switch (packet.getClass().getName()) {
+            default:
+                this.nextPacket = packet.toBytes();
+                return this;
+        }
     }
 
     @Override
     public Packet getPacket() {
-        return this.getProtocol().decode(this.getPayload());
+        return this.getProtocol().decode(this.nextPacket);
     }
 
     @Override
     public byte[] toBytes() {
-        byte[] data = new byte[SLL_HEADER_LENGTH + ((this.getPayload() != null) ? 0 : this.getPayload().length)];
+        byte[] data = new byte[SLL_HEADER_LENGTH + ((this.nextPacket != null) ? 0 : this.nextPacket.length)];
         ByteBuffer buffer = ByteBuffer.wrap(data);
         buffer.putShort(this.getPacketType());
         buffer.putShort(this.getHardwareAddressType());
         buffer.putShort(this.getHardwareAddressLength());
         buffer.put(this.getAddress());
         buffer.putShort((short) (this.getProtocol().getValue() & 0xffff));
-        if (this.getPayload() != null) {
-            buffer.put(this.getPayload());
+        if (this.nextPacket != null) {
+            buffer.put(this.nextPacket);
         }
         return data;
     }

@@ -42,8 +42,6 @@ public class TCP extends Packet {
     private short urgentPointer;
     private byte[] options;
 
-    private byte[] payload;
-
     public TCP() {
         this.flags = TCPFlags.newInstance();
     }
@@ -138,12 +136,14 @@ public class TCP extends Packet {
         return this;
     }
 
+    @Deprecated
     public byte[] getPayload() {
-        return this.payload;
+        return this.nextPacket;
     }
 
+    @Deprecated
     public TCP setPayload(final byte[] payload) {
-        this.payload = payload;
+        this.nextPacket = payload;
         return this;
     }
 
@@ -171,12 +171,12 @@ public class TCP extends Packet {
             }
             tcp.options = new byte[optionLength];
             buffer.get(tcp.options, 0, optionLength);
-            tcp.payload = new byte[(buffer.limit() - (TCP_HEADER_LENGTH + optionLength))];
-            buffer.get(tcp.payload);
+            tcp.nextPacket = new byte[(buffer.limit() - (TCP_HEADER_LENGTH + optionLength))];
+            buffer.get(tcp.nextPacket);
         } else {
             tcp.setOptions(null);
-            tcp.payload = new byte[(buffer.limit() - TCP_HEADER_LENGTH)];
-            buffer.get(tcp.payload);
+            tcp.nextPacket = new byte[(buffer.limit() - TCP_HEADER_LENGTH)];
+            buffer.get(tcp.nextPacket);
         }
         return tcp;
     }
@@ -186,20 +186,23 @@ public class TCP extends Packet {
         if (packet == null) {
             return this;
         }
-        this.payload = packet.toBytes();
-        return this;
+        switch (packet.getClass().getName()) {
+            default:
+                this.nextPacket = packet.toBytes();
+                return this;
+        }
     }
 
     @Override
     public Packet getPacket() {
-        if (this.getPayload() == null || this.getPayload().length == 0) return null;
-        return UnknownPacket.newInstance(this.getPayload());
+        if (this.nextPacket == null || this.nextPacket.length == 0) return null;
+        return UnknownPacket.newInstance(this.nextPacket);
     }
 
     @Override
     public byte[] toBytes() {
         byte[] data = new byte[TCP_HEADER_LENGTH + ((options == null) ? 0 : options.length) +
-                ((this.getPayload() == null) ? 0 : this.getPayload().length)];
+                ((this.nextPacket == null) ? 0 : this.nextPacket.length)];
         ByteBuffer buffer = ByteBuffer.wrap(data);
         buffer.putShort(this.getSourcePort());
         buffer.putShort(this.getDestinationPort());
@@ -211,8 +214,8 @@ public class TCP extends Packet {
         buffer.putShort(this.getUrgentPointer());
         if (this.getOptions() != null)
             buffer.put(this.getOptions());
-        if (this.getPayload() != null)
-            buffer.put(this.getPayload());
+        if (this.nextPacket != null)
+            buffer.put(this.nextPacket);
         return data;
     }
 

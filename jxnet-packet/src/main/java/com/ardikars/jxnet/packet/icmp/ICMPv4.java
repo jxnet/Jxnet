@@ -32,11 +32,6 @@ public class ICMPv4 extends Packet implements ICMP {
     private ICMPTypeAndCode typeAndCode;
     private short checksum;
 
-    /**
-     * ICMPv4 payload
-     */
-    private byte[] payload;
-
     public ICMPTypeAndCode getTypeAndCode() {
         return this.typeAndCode;
     }
@@ -55,12 +50,14 @@ public class ICMPv4 extends Packet implements ICMP {
         return this;
     }
 
+    @Deprecated
     public byte[] getPayload() {
-        return this.payload;
+        return this.nextPacket;
     }
 
+    @Deprecated
     public ICMPv4 setPayload(final byte[] payload) {
-        this.payload = payload;
+        this.nextPacket = payload;
         return this;
     }
 
@@ -73,8 +70,8 @@ public class ICMPv4 extends Packet implements ICMP {
         ICMPv4 icmp = new ICMPv4();
         icmp.setTypeAndCode(ICMPTypeAndCode.getInstance(buffer.get(), buffer.get()));
         icmp.setChecksum(buffer.getShort());
-        icmp.payload = new byte[buffer.limit() - ICMP_HEADER_LENGTH];
-        buffer.get(icmp.payload);
+        icmp.nextPacket = new byte[buffer.limit() - ICMP_HEADER_LENGTH];
+        buffer.get(icmp.nextPacket);
         return icmp;
     }
 
@@ -83,23 +80,22 @@ public class ICMPv4 extends Packet implements ICMP {
         if (packet == null) {
             return this;
         }
-        return this.setPayload(packet.toBytes());
-    }
-
-    @Override
-    public Packet getPacket() {
-        return null;
+        switch (packet.getClass().getName()) {
+            default:
+                this.nextPacket = packet.toBytes();
+                return this;
+        }
     }
 
     @Override
     public byte[] toBytes() {
-        byte[] data = new byte[ICMP_HEADER_LENGTH + ((this.getPayload() == null) ? 0 : this.getPayload().length)];
+        byte[] data = new byte[ICMP_HEADER_LENGTH + ((this.nextPacket == null) ? 0 : this.nextPacket.length)];
         ByteBuffer buffer = ByteBuffer.wrap(data);
         buffer.put(this.getTypeAndCode().getType());
         buffer.put(this.getTypeAndCode().getCode());
         buffer.putShort(this.getChecksum());
-        if (this.getPayload() != null) {
-            buffer.put(this.getPayload());
+        if (this.nextPacket != null) {
+            buffer.put(this.nextPacket);
         }
         if (this.getChecksum() == 0) {
             buffer.rewind();
