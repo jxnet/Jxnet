@@ -21,13 +21,13 @@ package com.ardikars.jxnet;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.5
  */
-public interface Decoder<T, V> {
+public interface Encoder<T, V> {
 
     /**
      * Decode data.
      * @param data data.
      * @return decoded data.
      */
-    T decode(V data);
+    T encode(V data);
 
 }

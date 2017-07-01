@@ -17,7 +17,7 @@
 
 package com.ardikars.jxnet.util;
 
-import static com.ardikars.jxnet.Validate.CheckArgument;
+import static com.ardikars.jxnet.Validate.CheckBounds;
 import static com.ardikars.jxnet.Validate.CheckNotNull;
 
 /**
@@ -25,126 +25,6 @@ import static com.ardikars.jxnet.Validate.CheckNotNull;
  * @since 1.1.5
  */
 public class ArrayUtils {
-
-    /**
-     * Validate bounds.
-     * @param array array.
-     * @param offset offset.
-     * @param length length.
-     */
-    public static void validateBounds(byte[] array, int offset, int length) {
-        CheckNotNull(array, "array is null.");
-        CheckArgument(array.length > 0, "array is empty.");
-        CheckArgument(length > 0, "length is zero.");
-        if (offset < 0 || length < 0 || length > array.length || offset > array.length) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
-    }
-
-    /**
-     * Validate bounds.
-     * @param array array.
-     * @param offset offset.
-     * @param length length.
-     */
-    public static void validateBounds(char[] array, int offset, int length) {
-        CheckNotNull(array, "array is null.");
-        CheckArgument(array.length > 0, "array is empty.");
-        CheckArgument(length > 0, "length is zero.");
-        if (offset < 0 || length < 0 || length > array.length || offset > array.length) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
-    }
-
-    /**
-     * Validate bounds.
-     * @param array array.
-     * @param offset offset.
-     * @param length length.
-     */
-    public static void validateBounds(short[] array, int offset, int length) {
-        CheckNotNull(array, "array is null.");
-        CheckArgument(array.length > 0, "array is empty.");
-        CheckArgument(length > 0, "length is zero.");
-        if (offset < 0 || length < 0 || length > array.length || offset > array.length) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
-    }
-
-    /**
-     * Validate bounds.
-     * @param array array.
-     * @param offset offset.
-     * @param length length.
-     */
-    public static void validateBounds(int[] array, int offset, int length) {
-        CheckNotNull(array, "array is null.");
-        CheckArgument(array.length > 0, "array is empty.");
-        CheckArgument(length > 0, "length is zero.");
-        if (offset < 0 || length < 0 || length > array.length || offset > array.length) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
-    }
-
-    /**
-     * Validate bounds.
-     * @param array array.
-     * @param offset offset.
-     * @param length length.
-     */
-    public static void validateBounds(float[] array, int offset, int length) {
-        CheckNotNull(array, "array is null.");
-        CheckArgument(array.length > 0, "array is empty.");
-        CheckArgument(length > 0, "length is zero.");
-        if (offset < 0 || length < 0 || length > array.length || offset > array.length) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
-    }
-
-    /**
-     * Validate bounds.
-     * @param array array.
-     * @param offset offset.
-     * @param length length.
-     */
-    public static void validateBounds(long[] array, int offset, int length) {
-        CheckNotNull(array, "array is null.");
-        CheckArgument(array.length > 0, "array is empty.");
-        CheckArgument(length > 0, "length is zero.");
-        if (offset < 0 || length < 0 || length > array.length || offset > array.length) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
-    }
-
-    /**
-     * Validate bounds.
-     * @param array array.
-     * @param offset offset.
-     * @param length length.
-     */
-    public static void validateBounds(double[] array, int offset, int length) {
-        CheckNotNull(array, "array is null.");
-        CheckArgument(array.length > 0, "array is empty.");
-        CheckArgument(length > 0, "length is zero.");
-        if (offset < 0 || length < 0 || length > array.length || offset > array.length) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
-    }
-
-    /**
-     * Validate bounds.
-     * @param array array.
-     * @param offset offset.
-     * @param length length.
-     */
-    public static void validateBounds(Object[] array, int offset, int length) {
-        CheckNotNull(array, "array is null.");
-        CheckArgument(array.length > 0, "array is empty.");
-        CheckArgument(length > 0, "length is zero.");
-        if (offset < 0 || length < 0 || length > array.length || offset > array.length) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
-    }
 
     /**
      * Reverse order.
@@ -386,7 +266,7 @@ public class ArrayUtils {
      * @return byte array.
      */
     public static byte[] copyOfRange(byte[] data, int offset, int length) {
-        validateBounds(data, offset, length);
+        CheckBounds(data, offset, length);
         byte[] bytes = new byte[length];
         System.arraycopy(data, offset, bytes, 0, length);
         return bytes;
@@ -400,7 +280,7 @@ public class ArrayUtils {
      * @return short array.
      */
     public static short[] copyOfRange(short[] data, int offset, int length) {
-        validateBounds(data, offset, length);
+        CheckBounds(data, offset, length);
         short[] shorts = new short[length];
         System.arraycopy(data, offset, shorts, 0, length);
         return shorts;
@@ -414,7 +294,7 @@ public class ArrayUtils {
      * @return int array.
      */
     public static int[] copyOfRange(int[] data, int offset, int length) {
-        validateBounds(data, offset, length);
+        CheckBounds(data, offset, length);
         int[] ints = new int[length];
         System.arraycopy(data, offset, ints, 0, length);
         return ints;
@@ -428,7 +308,7 @@ public class ArrayUtils {
      * @return long array.
      */
     public static long[] copyOfRange(long[] data, int offset, int length) {
-        validateBounds(data, offset, length);
+        CheckBounds(data, offset, length);
         long[] longs = new long[length];
         System.arraycopy(data, offset, longs, 0, length);
         return longs;

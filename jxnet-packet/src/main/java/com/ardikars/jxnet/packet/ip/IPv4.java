@@ -368,11 +368,6 @@ public class IPv4 extends Packet implements IP {
     }
 
     @Override
-    public Packet build() {
-        return this;
-    }
-
-    @Override
     public String toString() {
         return new StringBuilder()
                 .append("[")

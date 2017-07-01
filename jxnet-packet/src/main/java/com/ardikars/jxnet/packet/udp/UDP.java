@@ -196,11 +196,6 @@ public class UDP extends Packet {
     }
 
     @Override
-    public Packet build() {
-        return this;
-    }
-
-    @Override
     public String toString() {
         return new StringBuilder()
                 .append("[Source Port: " + this.getSourcePort())

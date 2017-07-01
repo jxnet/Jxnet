@@ -17,7 +17,6 @@
 
 package com.ardikars.jxnet.packet.ethernet;
 
-import com.ardikars.jxnet.Decoder;
 import com.ardikars.jxnet.packet.Packet;
 import com.ardikars.jxnet.packet.ip.IPv4;
 import com.ardikars.jxnet.packet.ip.IPv6;
@@ -30,7 +29,7 @@ import java.util.Map;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public final class ProtocolType extends NamedNumber<Short, ProtocolType> implements Decoder<Packet, byte[]> {
+public final class ProtocolType extends NamedNumber<Short, ProtocolType> {
 
     /**
      * MTU Size (1500)
@@ -143,7 +142,6 @@ public final class ProtocolType extends NamedNumber<Short, ProtocolType> impleme
      * @param data byte array.
      * @return packet.
      */
-    @Override
     public Packet decode(final byte[] data) {
         if (data == null || data.length == 0) {
             return null;

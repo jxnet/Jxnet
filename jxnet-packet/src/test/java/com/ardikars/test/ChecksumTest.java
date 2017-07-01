@@ -6,10 +6,8 @@ import com.ardikars.jxnet.packet.ip.IPv4;
 import com.ardikars.jxnet.packet.ip.IPv6;
 import com.ardikars.jxnet.packet.tcp.TCP;
 import com.ardikars.jxnet.packet.tcp.TCPFlags;
-import com.ardikars.jxnet.util.FormatUtils;
 import com.ardikars.jxnet.util.HexUtils;
 
-import javax.crypto.Mac;
 import java.nio.ByteBuffer;
 
 public class ChecksumTest {
@@ -43,7 +41,7 @@ public class ChecksumTest {
                 .setUrgentPointer((short) 0)
                 .setOptions(HexUtils.parseHex("0101080a000b228e5c026753"));
 
-        System.out.println(HexUtils.toHex(tcp.toBytes()));
+        System.out.println(HexUtils.toHexString(tcp.toBytes()));
 
         iPv4.setPacket(tcp);
         ethernet.setPacket(iPv4);

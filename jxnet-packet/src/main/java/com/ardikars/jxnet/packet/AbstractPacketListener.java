@@ -1,44 +1,69 @@
 package com.ardikars.jxnet.packet;
 
-import com.ardikars.jxnet.Pcap;
-import com.ardikars.jxnet.PcapPktHdr;
+import com.ardikars.jxnet.*;
+import com.ardikars.jxnet.exception.JxnetException;
+import com.ardikars.jxnet.exception.PcapCloseException;
 import com.ardikars.jxnet.packet.ethernet.Ethernet;
 import com.ardikars.jxnet.packet.radiotap.RadioTap;
 import com.ardikars.jxnet.packet.sll.SLL;
-import com.ardikars.jxnet.Decoder;
 
 import java.lang.reflect.ParameterizedType;
+import java.nio.ByteBuffer;
 
-public abstract class AbstractPacketListener<T, V extends Packet> implements Decoder<V, byte[]> {
+public abstract class AbstractPacketListener<T, V extends Packet> implements Encoder<byte[], Packet>, Decoder<V, byte[]> {
 
+    private int packetNumber;
     private Pcap pcap;
+    private T userArgument;
     private PcapPktHdr pcapPktHdr;
-    private T arg;
+
+    protected void initialize(int packetNumber, T userArgument, Pcap pcap, PcapPktHdr pktHdr) {
+        this.packetNumber = packetNumber;
+        this.pcap = pcap;
+        this.pcapPktHdr = pktHdr;
+        this.userArgument = userArgument;
+    }
 
     public abstract void nextPacket(T arg, PcapPktHdr pcapPktHdr, V packet);
 
-    public Pcap getPcap() {
-        return pcap;
+    public int getPacketNumber() {
+        return this.packetNumber;
     }
 
-    public void setPcap(Pcap pcap) {
-        this.pcap = pcap;
+    public void exceptionCaught(Exception e) {
+        e.printStackTrace();
     }
 
-    public PcapPktHdr getPcapPktHdr() {
-        return pcapPktHdr;
+    public void sendPacket(Packet packet) {
+        byte[] data = encode(packet);
+        ByteBuffer buffer = ByteBuffer.allocateDirect(data.length);
+        buffer.put(data);
+        if (!this.pcap.isClosed()) {
+            if (Jxnet.PcapSendPacket(this.pcap, buffer, buffer.capacity()) != Jxnet.OK) {
+                exceptionCaught(new JxnetException(Jxnet.PcapGetErr(this.pcap)));
+            }
+        } else {
+            exceptionCaught(new PcapCloseException());
+        }
     }
 
-    public void setPcapPktHdr(PcapPktHdr pcapPktHdr) {
-        this.pcapPktHdr = pcapPktHdr;
+    public void stop() {
+        Jxnet.PcapBreakLoop(this.pcap);
     }
 
-    public T getArg() {
-        return arg;
+    public PcapStat status() {
+        PcapStat stat = new PcapStat();
+        Jxnet.PcapStats(this.pcap, stat);
+        return stat;
     }
 
-    public void setArg(T arg) {
-        this.arg = arg;
+    @Override
+    public byte[] encode(Packet data) {
+        if (data == null) {
+            return null;
+        } else {
+            return data.toBytes();
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -57,7 +82,7 @@ public abstract class AbstractPacketListener<T, V extends Packet> implements Dec
                 packet = Ethernet.newInstance(data);
                 while (packet != null) {
                     if (packet.getClass() == clazz) {
-                        nextPacket(getArg(), getPcapPktHdr(), (V) packet);
+                        nextPacket(this.userArgument, this.pcapPktHdr, (V) packet);
                         return (V) packet;
                     }
                     packet = packet.getPacket();
@@ -66,7 +91,7 @@ public abstract class AbstractPacketListener<T, V extends Packet> implements Dec
                 packet = RadioTap.newInstance(data);
                 while (packet != null) {
                     if (packet.getClass() == clazz) {
-                        nextPacket(getArg(), getPcapPktHdr(), (V) packet);
+                        nextPacket(this.userArgument, this.pcapPktHdr, (V) packet);
                         return (V) packet;
                     }
                     packet = packet.getPacket();
@@ -75,13 +100,13 @@ public abstract class AbstractPacketListener<T, V extends Packet> implements Dec
                 packet = SLL.newInstance(data);
                 while (packet != null) {
                     if (packet.getClass() == clazz) {
-                        nextPacket(getArg(), getPcapPktHdr(), (V) packet);
+                        nextPacket(this.userArgument, this.pcapPktHdr, (V) packet);
                         return (V) packet;
                     }
                     packet = packet.getPacket();
                 }
             default:
-                nextPacket(getArg(), getPcapPktHdr(), null);
+                nextPacket(this.userArgument, this.pcapPktHdr, null);
                 return null;
         }
     }

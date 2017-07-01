@@ -121,11 +121,6 @@ public class ICMPv4 extends Packet implements ICMP {
     }
 
     @Override
-    public Packet build() {
-        return this;
-    }
-
-    @Override
     public String toString() {
         return new StringBuilder()
                 .append(this.getTypeAndCode().toString()).toString();
