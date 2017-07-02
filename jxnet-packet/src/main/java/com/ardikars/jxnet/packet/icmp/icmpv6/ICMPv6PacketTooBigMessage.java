@@ -33,7 +33,7 @@ public class ICMPv6PacketTooBigMessage extends ICMPTypeAndCode {
      * of the Path MTU Discovery process [PMTU].
      *
      * Originating a Packet Too Big Message makes an exception to one of the
-     * rules as to when to originate an ICMPv6 error message.  Unlike other
+     * rules as to when to originate an ICMPv6InverseNeighborDiscoverySolicitation error message.  Unlike other
      * messages, it is sent in response to a packet received with an IPv6
      * multicast destination address, or with a link-layer multicast or
      * link-layer broadcast address.

@@ -110,7 +110,7 @@ public abstract class ICMPTypeAndCode extends NamedTwoKeyMap<Byte, Byte, ICMPTyp
 
             register(ICMPv4TimestampReply.TIMESTAMP_REPLY);
 
-            // ICMPv6
+            // ICMPv6InverseNeighborDiscoverySolicitation
 
             register(ICMPv6EchoRequest.ECHO_REQUEST);
 
@@ -161,6 +161,14 @@ public abstract class ICMPTypeAndCode extends NamedTwoKeyMap<Byte, Byte, ICMPTyp
             register(ICMPv6NodeInformationResponse.SUCCESSFULL_REPLY);
             register(ICMPv6NodeInformationResponse.RESPONDER_REFUSES_TO_SUPPLY_THE_ASWER);
             register(ICMPv6NodeInformationResponse.QTYPE_OF_THE_QUERY_IS_UNKNOWN_TO_THE_RESPONDER);
+
+            register(ICMPv6InverseNeighborDiscoverySolicitation.INVERSE_NEIGHBOR_DISCOVERY_SOLICITATION);
+
+            register(ICMPv6InverseNeighborDiscoveryAdvertisement.INVERSE_NEIGHBOR_DISCOVERY_ADVERTISEMENT);
+
+            register(ICMPv6HomeAgentAddressDiscoveryRequest.HOME_AGENT_ADDRESS_DISCOVERY_REQUEST);
+
+            register(ICMPv6HomeAgentAddressDiscoveryReply.HOME_AGENT_ADDRESS_DISCOVERY_REPLY);
 
         }
     }
