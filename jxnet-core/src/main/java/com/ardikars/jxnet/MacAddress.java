@@ -200,7 +200,7 @@ public final class MacAddress {
 			if (sb.length() > 0) {
 				sb.append(":");
 			}
-			String hex = Integer.toHexString(b);
+			String hex = Integer.toHexString(b & 0xff);
 			sb.append(hex.length() == 1 ? "0" + hex : hex);
 		}
 		return sb.toString();
