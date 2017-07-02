@@ -170,6 +170,10 @@ public abstract class ICMPTypeAndCode extends NamedTwoKeyMap<Byte, Byte, ICMPTyp
 
             register(ICMPv6HomeAgentAddressDiscoveryReply.HOME_AGENT_ADDRESS_DISCOVERY_REPLY);
 
+            register(ICMPv6MobilePrefixSolicitation.MOBILE_PREFIX_SOLICITATION);
+
+            register(ICMPv6MobilePrefixAdvertisement.MOBILE_PREFIX_ADVERTISEMENT);
+
         }
     }
 
