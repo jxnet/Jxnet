@@ -134,6 +134,34 @@ public abstract class ICMPTypeAndCode extends NamedTwoKeyMap<Byte, Byte, ICMPTyp
             register(ICMPv6TimeExceeded.HOP_LIMIT_EXCEEDED_IN_TRANSIT);
             register(ICMPv6TimeExceeded.FRAGMENT_REASSEMBLY_TIME_EXCEEDED);
 
+            register(ICMPv6MulticastListenerQuery.MULTICAST_LISTENER_QUERY);
+
+            register(ICMPv6MulticastListenerReport.MULTICAST_LISTENER_REPORT);
+
+            register(ICMPv6MulticastListenerDone.MULTICAST_LISTENER_DONE);
+
+            register(ICMPv6RouterSolicitation.ROUTER_SOLICITATION);
+
+            register(ICMPv6RouterAdvertisement.ROUTER_ADVERTISEMENT);
+
+            register(ICMPv6NeighborSolicitation.NEIGHBOR_SOLICITATION);
+
+            register(ICMPv6NeighborAdvertisement.NEIGHBOR_ADVERTISEMENT);
+
+            register(ICMPv6RedirectMessage.REDIRECT_MESSAGE);
+
+            register(ICMPv6RouterRenumbering.ROUTER_RENUMBERING_COMMAND);
+            register(ICMPv6RouterRenumbering.ROUTER_RENUMBERING_RESULT);
+            register(ICMPv6RouterRenumbering.SEQUENCE_NUMBER_RESET);
+
+            register(ICMPv6NodeInformationQuery.DATA_FIELD_CONTAINS_IPV6_ADDRESS);
+            register(ICMPv6NodeInformationQuery.DATA_FIELD_CONTAIONS_NAME);
+            register(ICMPv6NodeInformationQuery.DATA_FIELD_CONTAINS_IPV4_ADDRESS);
+
+            register(ICMPv6NodeInformationResponse.SUCCESSFULL_REPLY);
+            register(ICMPv6NodeInformationResponse.RESPONDER_REFUSES_TO_SUPPLY_THE_ASWER);
+            register(ICMPv6NodeInformationResponse.QTYPE_OF_THE_QUERY_IS_UNKNOWN_TO_THE_RESPONDER);
+
         }
     }
 
