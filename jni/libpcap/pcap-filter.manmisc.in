@@ -849,7 +849,7 @@ length of the packet.
 
 For example, `\fBether[0] & 1 != 0\fP' catches all multicast traffic.
 The expression `\fBip[0] & 0xf != 5\fP'
-catches all IPv4 packets with options.
+catches all IPv4 packets with neighborDiscoveryOptions.
 The expression
 `\fBip[6:2] & 0x1fff = 0\fP'
 catches only unfragmented IPv4 datagrams and frag zero of fragmented

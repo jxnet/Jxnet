@@ -33,7 +33,7 @@ int pcap_activate(pcap_t *p);
 .SH DESCRIPTION
 .B pcap_activate()
 is used to activate a packet capture handle to look
-at packets on the network, with the options that were set on the handle
+at packets on the network, with the neighborDiscoveryOptions that were set on the handle
 being in effect.
 .SH RETURN VALUE
 .B pcap_activate()

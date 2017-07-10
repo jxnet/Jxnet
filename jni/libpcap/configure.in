@@ -851,7 +851,7 @@ if test $ac_cv_lbl_dag_api = no; then
 	if test "$V_PCAP" = dag; then
 		# User requested "dag" capture type but the DAG API wasn't
 		# found.
-		AC_MSG_ERROR([Specifying the capture type as "dag" requires the DAG API to be present; use the --with-dag options to specify the location. (Try "./configure --help" for more information.)])
+		AC_MSG_ERROR([Specifying the capture type as "dag" requires the DAG API to be present; use the --with-dag neighborDiscoveryOptions to specify the location. (Try "./configure --help" for more information.)])
 	fi
 else
 	AC_MSG_RESULT(yes)

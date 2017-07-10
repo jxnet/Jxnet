@@ -228,7 +228,7 @@ else
 
 	trap "rm -f ${dsttmp}" 0 &&
 
-# and set any options; do chmod last to preserve setuid bits
+# and set any neighborDiscoveryOptions; do chmod last to preserve setuid bits
 
 # If any of these fail, we abort the whole thing.  If we want to
 # ignore errors from any of these, just make sure not to ignore

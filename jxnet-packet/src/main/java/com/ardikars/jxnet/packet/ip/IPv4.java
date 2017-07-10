@@ -387,7 +387,7 @@ public class IPv4 extends IP {
                 .append(", Header Checksum: " + this.getChecksum())
                 .append(", Source Address: " + this.getSourceAddress().toString())
                 .append(", Destination Address: " + this.getDestinationAddress().toString())
-                .append(", Options: " + this.getOptions())
+                .append(", NeighborDiscoveryOptions: " + this.getOptions())
                 .append("]").toString();
     }
 
