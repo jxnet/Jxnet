@@ -21,6 +21,7 @@ import com.ardikars.jxnet.Inet6Address;
 import com.ardikars.jxnet.packet.Packet;
 
 import java.nio.ByteBuffer;
+import java.util.List;
 
 /**
  * @author Ardika Rommy Sanjaya
@@ -30,7 +31,7 @@ public class NeighborSolicitation extends Packet {
 
     private Inet6Address targetAddress;
 
-    private NeighborDiscoveryOptions neighborDiscoveryOptions;
+    private NeighborDiscoveryOptions options;
 
     public Inet6Address getTargetAddress() {
         return this.targetAddress;
@@ -41,20 +42,20 @@ public class NeighborSolicitation extends Packet {
         return this;
     }
 
-    public NeighborDiscoveryOptions options() {
-        return this.neighborDiscoveryOptions;
+    public List<NeighborDiscoveryOptions.Option> getOptions() {
+        return this.options.getOptions();
     }
 
     public NeighborSolicitation setOptions(final NeighborDiscoveryOptions options) {
-        this.neighborDiscoveryOptions = options;
+        this.options = options;
         return this;
     }
 
     public NeighborSolicitation addOption(final NeighborDiscoveryOptions.OptionType type, final byte[] data) {
-        if (this.neighborDiscoveryOptions != null) {
-            this.neighborDiscoveryOptions.addOptions(type, data);
+        if (this.options != null) {
+            this.options.addOptions(type, data);
         } else {
-            this.neighborDiscoveryOptions = new NeighborDiscoveryOptions();
+            this.options = new NeighborDiscoveryOptions();
         }
         return this;
     }
@@ -77,7 +78,7 @@ public class NeighborSolicitation extends Packet {
 
     @Override
     public byte[] toBytes() {
-        byte[] opBuf = this.options().toBytes();
+        byte[] opBuf = this.options.toBytes();
         byte[] data = new byte[Inet6Address.IPV6_ADDRESS_LENGTH + opBuf.length];
         ByteBuffer buffer = ByteBuffer.wrap(data);
         buffer.put(this.getTargetAddress().toBytes());

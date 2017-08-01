@@ -17,12 +17,11 @@
 
 package com.ardikars.jxnet.packet.ndp;
 
+import com.ardikars.jxnet.NamedNumber;
 import com.ardikars.jxnet.packet.Packet;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Ardika Rommy Sanjaya
@@ -32,31 +31,36 @@ public class NeighborDiscoveryOptions extends Packet {
 
     private List<Option> options = new ArrayList<Option>();
 
-    public enum OptionType {
+    public static class OptionType extends NamedNumber<Byte, OptionType> {
 
-        SOURCE_LINK_LAYER_ADDRESS((byte)1),
-        TARGET_LINK_LAYER_ADDRESS((byte)2),
-        PREFIX_INFORMATION((byte)3),
-        REDIRECT_HEADER((byte)4),
-        MTU((byte)5);
+        public static OptionType SOURCE_LINK_LAYER_ADDRESS =
+                new OptionType((byte) 1, "Source link layer addresss");
 
-        private byte type;
+        public static OptionType TARGET_LINK_LAYER_ADDRESS =
+                new OptionType((byte) 2, "Target link layer addresss");
 
-        private OptionType(byte type) {
-            this.type = type;
+        public static OptionType PREFIX_INFORMATION =
+                new OptionType((byte) 3, "Prefix information");
+
+        public static OptionType REDIRECT_HEADER =
+                new OptionType((byte) 4, "Redirect header");
+
+        public static OptionType MTU =
+                new OptionType((byte) 5, "MTU");
+
+        protected OptionType(Byte value, String name) {
+            super(value, name);
         }
 
-        public byte getValue() {
-            return this.type;
-        }
+        private static Map<Byte, OptionType> registry =
+                new HashMap<Byte, OptionType>();
 
-        public static OptionType valueOf(final byte type) {
-            for (OptionType optionType : values()) {
-                if (optionType.type == type) {
-                    return optionType;
-                }
-            }
-            return null;
+        static {
+            registry.put(SOURCE_LINK_LAYER_ADDRESS.getValue(), SOURCE_LINK_LAYER_ADDRESS);
+            registry.put(TARGET_LINK_LAYER_ADDRESS.getValue(), TARGET_LINK_LAYER_ADDRESS);
+            registry.put(PREFIX_INFORMATION.getValue(), PREFIX_INFORMATION);
+            registry.put(REDIRECT_HEADER.getValue(), REDIRECT_HEADER);
+            registry.put(MTU.getValue(), MTU);
         }
 
     }
@@ -110,7 +114,7 @@ public class NeighborDiscoveryOptions extends Packet {
         NeighborDiscoveryOptions neighborDiscoveryOptions = new NeighborDiscoveryOptions();
         ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
         while (buffer.hasRemaining()) {
-            OptionType type = OptionType.valueOf(buffer.get());
+            OptionType type = OptionType.registry.get(buffer.get());
             if (!buffer.hasRemaining()) {
                 break;
             }
