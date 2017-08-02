@@ -21,7 +21,7 @@ import com.ardikars.jxnet.DataLinkType;
 import com.ardikars.jxnet.Inet4Address;
 import com.ardikars.jxnet.MacAddress;
 import com.ardikars.jxnet.packet.Packet;
-import com.ardikars.jxnet.packet.ethernet.ProtocolType;
+import com.ardikars.jxnet.packet.ProtocolType;
 
 import java.nio.ByteBuffer;
 

@@ -15,9 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet.packet.ethernet;
+package com.ardikars.jxnet.packet;
 
-import com.ardikars.jxnet.packet.Packet;
 import com.ardikars.jxnet.packet.ip.IPv4;
 import com.ardikars.jxnet.packet.ip.IPv6;
 import com.ardikars.jxnet.NamedNumber;
@@ -29,7 +28,6 @@ import java.util.Map;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-@Deprecated
 public final class ProtocolType extends NamedNumber<Short, ProtocolType> {
 
     /**
