@@ -46,7 +46,7 @@ public class HexUtils {
      */
     public static String toHexString(final byte value) {
         String srt = Integer.toHexString((value) & 0xff);
-        if (srt.length() == 1)
+        if (srt.length() % 2 == 1)
             return ("0" + srt);
         return (srt);
     }
@@ -89,7 +89,7 @@ public class HexUtils {
      */
     public static String toHexString(final short value) {
         String srt = Integer.toHexString((value) & 0xFFFF);
-        if (srt.length() == 1)
+        if (srt.length() % 2 == 1)
             return ("0" + srt);
         return (srt);
     }
@@ -126,7 +126,7 @@ public class HexUtils {
      */
     public static String toHexString(final int value) {
         String srt = Integer.toHexString(value);
-        if (srt.length() == 1)
+        if (srt.length() % 2 == 1)
             return ("0" + srt);
         return (srt);
     }

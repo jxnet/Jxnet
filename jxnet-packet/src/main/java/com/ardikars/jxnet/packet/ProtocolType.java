@@ -20,6 +20,7 @@ package com.ardikars.jxnet.packet;
 import com.ardikars.jxnet.packet.ip.IPv4;
 import com.ardikars.jxnet.packet.ip.IPv6;
 import com.ardikars.jxnet.NamedNumber;
+import com.ardikars.jxnet.util.HexUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -145,13 +146,13 @@ public final class ProtocolType extends NamedNumber<Short, ProtocolType> {
         if (data == null || data.length == 0) {
             return null;
         }
-        int value = super.getValue();
-        switch (value) {
-            case 0x0800:
+        String v = HexUtils.toHexString(super.getValue());
+        switch (v) {
+            case "0800":
                 return IPv4.newInstance(data);
-            case 0x0806:
+            case "0806":
                 return com.ardikars.jxnet.packet.arp.ARP.newInstance(data);
-            case 0x86dd:
+            case "86dd":
                 return IPv6.newInstance(data);
             default:
                 return null;

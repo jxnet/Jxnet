@@ -29,7 +29,7 @@ public class MainTest {
         Ethernet ethernet = new Ethernet()
                 .setDestinationMacAddress(MacAddress.BROADCAST)
                 .setSourceMacAddress(MacAddress.DUMMY)
-                .setEthernetType(ProtocolType.IPV6);
+                .setEthernetType(com.ardikars.jxnet.packet.ProtocolType.IPV6);
 
         IPv6 iPv6 = new IPv6()
                 .setNextHeader(IPProtocolType.IPV6_ICMP)

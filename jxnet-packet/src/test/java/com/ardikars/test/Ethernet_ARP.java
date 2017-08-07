@@ -37,6 +37,8 @@ public class Ethernet_ARP {
             if (eth != null) {
                 if (!HexUtils.toHexString(eth.toBytes()).equals(hexStream[index])) {
                     System.out.println(index+": "+HexUtils.toHexString(eth.toBytes()));
+                } else {
+                    System.out.println("looking good");
                 }
                 index++;
             }
