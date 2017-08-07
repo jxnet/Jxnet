@@ -19,8 +19,8 @@ package com.ardikars.jxnet.util;
 
 import java.util.regex.Pattern;
 
-import static com.ardikars.jxnet.Validate.CheckNotNull;
-import static com.ardikars.jxnet.Validate.CheckBounds;
+import static com.ardikars.jxnet.util.Validate.CheckNotNull;
+import static com.ardikars.jxnet.util.Validate.CheckBounds;
 
 /**
  * @author Ardika Rommy Sanjaya
@@ -68,7 +68,7 @@ public class HexUtils {
      * @return hex stream.
      */
     public static String toHexString(final byte[] data, final int offset, final int length) {
-        CheckBounds(data, offset, length);
+        Validate.bounds(data, offset, length);
         StringBuilder sb = new StringBuilder();
         int l;
         if(data.length != length) {
@@ -111,7 +111,7 @@ public class HexUtils {
      * @return hex stream.
      */
     public static String toHexString(final short[] values, final int offset, final int length) {
-        CheckBounds(values, offset, length);
+        Validate.bounds(values, offset, length);
         StringBuilder sb = new StringBuilder();
         for (short value : values) {
             sb.append(toHexString(value));
@@ -148,7 +148,7 @@ public class HexUtils {
      * @return hex stream.
      */
     public static String toHexString(final int[] values, final int offset, final int length) {
-        CheckBounds(values, offset, length);
+        Validate.bounds(values, offset, length);
         StringBuilder sb = new StringBuilder();
         for (int value : values) {
             sb.append(toHexString(value));
@@ -173,7 +173,7 @@ public class HexUtils {
      * @return hex dump format.
      */
     public static String toPrettyHexDump(final byte[] data, final int offset, final int length) {
-        CheckBounds(data, offset, length);
+        Validate.bounds(data, offset, length);
         StringBuilder result = new StringBuilder();
         StringBuilder builder = new StringBuilder();
         int pos = offset;
@@ -212,7 +212,7 @@ public class HexUtils {
      * @return byte array.
      */
     public static byte[] parseHex(String hexStream) {
-        CheckNotNull(hexStream);
+        notNull(hexStream);
         if (hexStream.startsWith("0x")) {
             hexStream = hexStream.substring(2);
         }

@@ -17,8 +17,8 @@
 
 package com.ardikars.jxnet.util;
 
-import static com.ardikars.jxnet.Validate.CheckBounds;
-import static com.ardikars.jxnet.Validate.CheckNotNull;
+import static com.ardikars.jxnet.util.Validate.CheckBounds;
+import static com.ardikars.jxnet.util.Validate.CheckNotNull;
 
 /**
  * @author Ardika Rommy Sanjaya
@@ -32,7 +32,7 @@ public class ArrayUtils {
      * @return array in reverse order.
      */
     public static byte[] reverse(byte[] value) {
-        CheckNotNull(value);
+        notNull(value);
         byte[] array = new byte[value.length];
         for (int i=0; i<value.length; i++) {
             array[i] = value[value.length - i -1];
@@ -46,7 +46,7 @@ public class ArrayUtils {
      * @return array in reverse order.
      */
     public static char[] reverse(char[] value) {
-        CheckNotNull(value);
+        notNull(value);
         char[] array = new char[value.length];
         for (int i=0; i<value.length; i++) {
             array[i] = value[value.length - i -1];
@@ -60,7 +60,7 @@ public class ArrayUtils {
      * @return array in reverse order.
      */
     public static short[] reverse(short[] value) {
-        CheckNotNull(value);
+        notNull(value);
         short[] array = new short[value.length];
         for (int i=0; i<value.length; i++) {
             array[i] = value[value.length - i -1];
@@ -74,7 +74,7 @@ public class ArrayUtils {
      * @return array in reverse order.
      */
     public static int[] reverse(int[] value) {
-        CheckNotNull(value);
+        notNull(value);
         int[] array = new int[value.length];
         for (int i=0; i<value.length; i++) {
             array[i] = value[value.length - i -1];
@@ -88,7 +88,7 @@ public class ArrayUtils {
      * @return array in reverse order.
      */
     public static float[] reverse(float[] value) {
-        CheckNotNull(value);
+        notNull(value);
         float[] array = new float[value.length];
         for (int i=0; i<value.length; i++) {
             array[i] = value[value.length - i -1];
@@ -102,7 +102,7 @@ public class ArrayUtils {
      * @return array in reverse order.
      */
     public static long[] reverse(long[] value) {
-        CheckNotNull(value);
+        notNull(value);
         long[] array = new long[value.length];
         for (int i=0; i<value.length; i++) {
             array[i] = value[value.length - i -1];
@@ -116,7 +116,7 @@ public class ArrayUtils {
      * @return array in reverse order.
      */
     public static double[] reverse(double[] value) {
-        CheckNotNull(value);
+        notNull(value);
         double[] array = new double[value.length];
         for (int i=0; i<value.length; i++) {
             array[i] = value[value.length - i -1];
@@ -130,7 +130,7 @@ public class ArrayUtils {
      * @return array in reverse order.
      */
     public static Object[] reverse(Object[] value) {
-        CheckNotNull(value);
+        notNull(value);
         Object[] array = new Object[value.length];
         for (int i=0; i<value.length; i++) {
             array[i] = value[value.length - i -1];
@@ -145,8 +145,8 @@ public class ArrayUtils {
      * @return array 1 + array 2.
      */
     public static byte[] concatenate(byte[] arr1, byte[] arr2) {
-        CheckNotNull(arr1);
-        CheckNotNull(arr2);
+        notNull(arr1);
+        notNull(arr2);
         byte[] result = new byte[arr1.length + arr2.length];
         System.arraycopy(arr1, 0, result, 0, arr1.length);
         System.arraycopy(arr2, 0, result, arr1.length, arr2.length);
@@ -160,8 +160,8 @@ public class ArrayUtils {
      * @return array 1 + array 2.
      */
     public static char[] concatenate(char[] arr1, char[] arr2) {
-        CheckNotNull(arr1);
-        CheckNotNull(arr2);
+        notNull(arr1);
+        notNull(arr2);
         char[] result = new char[arr1.length + arr2.length];
         System.arraycopy(arr1, 0, result, 0, arr1.length);
         System.arraycopy(arr2, 0, result, arr1.length, arr2.length);
@@ -175,8 +175,8 @@ public class ArrayUtils {
      * @return array 1 + array 2.
      */
     public static short[] concatenate(short[] arr1, short[] arr2) {
-        CheckNotNull(arr1);
-        CheckNotNull(arr2);
+        notNull(arr1);
+        notNull(arr2);
         short[] result = new short[arr1.length + arr2.length];
         System.arraycopy(arr1, 0, result, 0, arr1.length);
         System.arraycopy(arr2, 0, result, arr1.length, arr2.length);
@@ -190,8 +190,8 @@ public class ArrayUtils {
      * @return array 1 + array 2.
      */
     public static int[] concatenate(int[] arr1, int[] arr2) {
-        CheckNotNull(arr1);
-        CheckNotNull(arr2);
+        notNull(arr1);
+        notNull(arr2);
         int[] result = new int[arr1.length + arr2.length];
         System.arraycopy(arr1, 0, result, 0, arr1.length);
         System.arraycopy(arr2, 0, result, arr1.length, arr2.length);
@@ -205,8 +205,8 @@ public class ArrayUtils {
      * @return array 1 + array 2.
      */
     public static float[] concatenate(float[] arr1, float[] arr2) {
-        CheckNotNull(arr1);
-        CheckNotNull(arr2);
+        notNull(arr1);
+        notNull(arr2);
         float[] result = new float[arr1.length + arr2.length];
         System.arraycopy(arr1, 0, result, 0, arr1.length);
         System.arraycopy(arr2, 0, result, arr1.length, arr2.length);
@@ -220,8 +220,8 @@ public class ArrayUtils {
      * @return array 1 + array 2.
      */
     public static long[] concatenate(long[] arr1, long[] arr2) {
-        CheckNotNull(arr1);
-        CheckNotNull(arr2);
+        notNull(arr1);
+        notNull(arr2);
         long[] result = new long[arr1.length + arr2.length];
         System.arraycopy(arr1, 0, result, 0, arr1.length);
         System.arraycopy(arr2, 0, result, arr1.length, arr2.length);
@@ -235,8 +235,8 @@ public class ArrayUtils {
      * @return array 1 + array 2.
      */
     public static double[] concatenate(double[] arr1, double[] arr2) {
-        CheckNotNull(arr1);
-        CheckNotNull(arr2);
+        notNull(arr1);
+        notNull(arr2);
         double[] result = new double[arr1.length + arr2.length];
         System.arraycopy(arr1, 0, result, 0, arr1.length);
         System.arraycopy(arr2, 0, result, arr1.length, arr2.length);
@@ -250,8 +250,8 @@ public class ArrayUtils {
      * @return array 1 + array 2.
      */
     public static Object[] concatenate(Object[] arr1, Object[] arr2) {
-        CheckNotNull(arr1);
-        CheckNotNull(arr2);
+        notNull(arr1);
+        notNull(arr2);
         Object[] result = new Object[arr1.length + arr2.length];
         System.arraycopy(arr1, 0, result, 0, arr1.length);
         System.arraycopy(arr2, 0, result, arr1.length, arr2.length);
@@ -266,7 +266,7 @@ public class ArrayUtils {
      * @return byte array.
      */
     public static byte[] copyOfRange(byte[] data, int offset, int length) {
-        CheckBounds(data, offset, length);
+        Validate.bounds(data, offset, length);
         byte[] bytes = new byte[length];
         System.arraycopy(data, offset, bytes, 0, length);
         return bytes;
@@ -280,7 +280,7 @@ public class ArrayUtils {
      * @return short array.
      */
     public static short[] copyOfRange(short[] data, int offset, int length) {
-        CheckBounds(data, offset, length);
+        Validate.bounds(data, offset, length);
         short[] shorts = new short[length];
         System.arraycopy(data, offset, shorts, 0, length);
         return shorts;
@@ -294,7 +294,7 @@ public class ArrayUtils {
      * @return int array.
      */
     public static int[] copyOfRange(int[] data, int offset, int length) {
-        CheckBounds(data, offset, length);
+        Validate.bounds(data, offset, length);
         int[] ints = new int[length];
         System.arraycopy(data, offset, ints, 0, length);
         return ints;
@@ -308,7 +308,7 @@ public class ArrayUtils {
      * @return long array.
      */
     public static long[] copyOfRange(long[] data, int offset, int length) {
-        CheckBounds(data, offset, length);
+        Validate.bounds(data, offset, length);
         long[] longs = new long[length];
         System.arraycopy(data, offset, longs, 0, length);
         return longs;

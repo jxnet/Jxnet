@@ -20,8 +20,8 @@ package com.ardikars.jxnet.util;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import static com.ardikars.jxnet.Validate.CheckNotNull;
-import static com.ardikars.jxnet.Validate.CheckBounds;
+import static com.ardikars.jxnet.util.Validate.CheckNotNull;
+import static com.ardikars.jxnet.util.Validate.CheckBounds;
 
 /**
  * @author Ardika Rommy Sanjaya
@@ -89,7 +89,7 @@ public class ByteUtils {
      * @return byte array.
      */
     public static byte[] toByteArray(final short[] value, final int offset, final int length, final ByteOrder bo) {
-        CheckBounds(value, offset, length);
+        Validate.bounds(value, offset, length);
         byte[] array = new byte[length << 1];
         if (bo.equals(ByteOrder.BIG_ENDIAN)) {
             for (int i=offset; i<length; i++) {
@@ -171,7 +171,7 @@ public class ByteUtils {
      * @return byte array.
      */
     public static byte[] toByteArray(final int[] value, final int offset, final int length, final ByteOrder bo) {
-        CheckBounds(value, offset, length);
+        Validate.bounds(value, offset, length);
         byte[] array = new byte[length << 2];
         if (bo.equals(ByteOrder.BIG_ENDIAN)) {
             for (int i = offset; i < length; i++) {
@@ -265,7 +265,7 @@ public class ByteUtils {
      * @return byte array.
      */
     public static byte[] toByteArray(final long[] value, final int offset, final int length, final ByteOrder bo) {
-        CheckBounds(value, offset, length);
+        Validate.bounds(value, offset, length);
         byte[] array = new byte[length << 3];
         if (bo.equals(ByteOrder.BIG_ENDIAN)) {
             for (int i = offset; i < length; i++) {
@@ -304,7 +304,7 @@ public class ByteUtils {
      * @return byte array.
      */
     public static byte[] toByteArray(final ByteBuffer byteBuffer) {
-        CheckNotNull(byteBuffer);
+        notNull(byteBuffer);
         if (!byteBuffer.hasRemaining()) {
             byteBuffer.flip();
         }
