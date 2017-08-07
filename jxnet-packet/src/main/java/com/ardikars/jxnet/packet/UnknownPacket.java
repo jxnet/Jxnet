@@ -17,7 +17,6 @@
 
 package com.ardikars.jxnet.packet;
 
-import static com.ardikars.jxnet.util.Validate.CheckBounds;
 import com.ardikars.jxnet.util.HexUtils;
 import com.ardikars.jxnet.util.Validate;
 

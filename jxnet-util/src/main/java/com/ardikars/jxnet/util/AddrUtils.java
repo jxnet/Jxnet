@@ -23,7 +23,6 @@ import com.ardikars.jxnet.MacAddress;
 import com.ardikars.jxnet.PcapIf;
 import com.ardikars.jxnet.PcapAddr;
 import com.ardikars.jxnet.SockAddr;
-import static com.ardikars.jxnet.util.Validate.CheckNotNull;
 import com.ardikars.jxnet.exception.NotSupportedPlatformException;
 
 import java.io.BufferedReader;
@@ -94,12 +93,12 @@ public class AddrUtils {
             MacAddress macAddress,
             StringBuilder description) {
 
-        notNull(address);
-        notNull(netmask);
-        notNull(netaddr);
-        notNull(broadaddr);
-        notNull(dstaddr);
-        notNull(description);
+        Validate.notNull(address);
+        Validate.notNull(netmask);
+        Validate.notNull(netaddr);
+        Validate.notNull(broadaddr);
+        Validate.notNull(dstaddr);
+        Validate.notNull(description);
 
         StringBuilder errbuf = new StringBuilder();
 
@@ -163,13 +162,13 @@ public class AddrUtils {
                                                 MacAddress macAddress,
                                                 StringBuilder description) {
 
-        notNull(source);
-        notNull(address);
-        notNull(netmask);
-        notNull(netaddr);
-        notNull(broadaddr);
-        notNull(dstaddr);
-        notNull(description);
+        Validate.notNull(source);
+        Validate.notNull(address);
+        Validate.notNull(netmask);
+        Validate.notNull(netaddr);
+        Validate.notNull(broadaddr);
+        Validate.notNull(dstaddr);
+        Validate.notNull(description);
 
         StringBuilder errbuf = new StringBuilder();
 
