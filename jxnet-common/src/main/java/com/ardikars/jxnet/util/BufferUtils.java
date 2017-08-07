@@ -20,9 +20,6 @@ package com.ardikars.jxnet.util;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-import static com.ardikars.jxnet.util.Validate.CheckNotNull;
-import static com.ardikars.jxnet.util.Validate.CheckBounds;
-
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.5
@@ -35,7 +32,7 @@ public class BufferUtils {
      * @return DirectByteBuffer.
      */
     public static ByteBuffer toDirectByteBuffer(final ByteBuffer byteBuffer) {
-        notNull(byteBuffer);
+        Validate.notNull(byteBuffer);
         if (byteBuffer.isDirect())
             return byteBuffer;
         ByteBuffer buffer = ByteBuffer.
@@ -60,7 +57,7 @@ public class BufferUtils {
      * @return DirectByteBuffer.
      */
     public static ByteBuffer toDirectByteBuffer(final byte[] bytes) {
-        notNull(bytes);
+        Validate.notNull(bytes);
         return toDirectByteBuffer(bytes, 0, bytes.length);
     }
 

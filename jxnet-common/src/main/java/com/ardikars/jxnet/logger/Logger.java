@@ -27,7 +27,7 @@ public class Logger {
 
         INFO(Printer.Color.WHITE),
         WARN(Printer.Color.YELLOW),
-        DEBUG(Printer.Color.GREEN),
+        DEBUG(Printer.Color.BLUE),
         ERROR(Printer.Color.RED);
 
         private Printer.Color color;

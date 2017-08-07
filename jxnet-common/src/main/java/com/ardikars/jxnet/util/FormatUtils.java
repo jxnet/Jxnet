@@ -18,8 +18,6 @@
 package com.ardikars.jxnet.util;
 
 import java.nio.ByteBuffer;
-import static com.ardikars.jxnet.util.Validate.CheckNotNull;
-import static com.ardikars.jxnet.util.Validate.CheckArgument;
 
 /**
  * @author Ardika Rommy Sanjaya
@@ -29,7 +27,7 @@ public class FormatUtils {
 
 	@Deprecated
 	public static ByteBuffer toDirectBuffer(ByteBuffer byteBuffer) {
-		notNull(byteBuffer);
+		Validate.notNull(byteBuffer);
 		if (byteBuffer.isDirect())
 			return byteBuffer;
 		ByteBuffer buffer = ByteBuffer.
@@ -39,7 +37,7 @@ public class FormatUtils {
 
 	@Deprecated
 	public static ByteBuffer toDirectBuffer(byte[] bytes) {
-		notNull(bytes);
+		Validate.notNull(bytes);
 		ByteBuffer buffer = ByteBuffer.
 				allocateDirect(bytes.length);
 		return buffer.put(bytes);
@@ -47,7 +45,7 @@ public class FormatUtils {
 
 	@Deprecated
 	public static byte[] toBytes(ByteBuffer byteBuffer) {
-		notNull(byteBuffer);
+		Validate.notNull(byteBuffer);
 		if (!byteBuffer.hasRemaining()) {
 			byteBuffer.flip();
 		}
@@ -58,7 +56,7 @@ public class FormatUtils {
 
 	@Deprecated
 	public static byte[] toBytes(String hexStr) {
-		notNull(hexStr);
+		Validate.notNull(hexStr);
 		String src = hexStr.replaceAll("\\s+", "").trim();
 		int len = src.length();
 		byte[] data = new byte[len / 2];
@@ -70,7 +68,7 @@ public class FormatUtils {
 	}
 
 	public static long toLong(byte[] bytes) {
-		notNull(bytes);
+		Validate.notNull(bytes);
 		ByteBuffer bb = ByteBuffer.allocate(bytes.length);
 		bb.put(bytes);
 		return bb.getLong();
@@ -83,8 +81,8 @@ public class FormatUtils {
 
 	@Deprecated
 	public static String toHexString(byte[] data, int offset, int length) {
-		notNull(data);
-		argument(offset >= 0 && length > 0);
+		Validate.notNull(data);
+		Validate.argument(offset >= 0 && length > 0);
 		StringBuilder sb = new StringBuilder();
 		int l;
 		if(data.length != length) {
@@ -125,7 +123,7 @@ public class FormatUtils {
 	}
 	
 	public static String toAscii(String hexStr) {
-		notNull(hexStr);
+		Validate.notNull(hexStr);
 		StringBuilder sb = new StringBuilder("");
 		for (int i = 0; i < hexStr.length(); i += 2) {
 			String str = hexStr.substring(i, i + 2);

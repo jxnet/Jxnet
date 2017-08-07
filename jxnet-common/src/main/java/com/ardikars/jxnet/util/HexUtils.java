@@ -19,9 +19,6 @@ package com.ardikars.jxnet.util;
 
 import java.util.regex.Pattern;
 
-import static com.ardikars.jxnet.util.Validate.CheckNotNull;
-import static com.ardikars.jxnet.util.Validate.CheckBounds;
-
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.5
@@ -212,7 +209,7 @@ public class HexUtils {
      * @return byte array.
      */
     public static byte[] parseHex(String hexStream) {
-        notNull(hexStream);
+        Validate.notNull(hexStream);
         if (hexStream.startsWith("0x")) {
             hexStream = hexStream.substring(2);
         }

@@ -20,8 +20,6 @@ package com.ardikars.jxnet.util;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import static com.ardikars.jxnet.util.Validate.CheckNotNull;
-import static com.ardikars.jxnet.util.Validate.CheckBounds;
 
 /**
  * @author Ardika Rommy Sanjaya
@@ -304,7 +302,7 @@ public class ByteUtils {
      * @return byte array.
      */
     public static byte[] toByteArray(final ByteBuffer byteBuffer) {
-        notNull(byteBuffer);
+        Validate.notNull(byteBuffer);
         if (!byteBuffer.hasRemaining()) {
             byteBuffer.flip();
         }
