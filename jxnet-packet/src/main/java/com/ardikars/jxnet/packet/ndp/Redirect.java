@@ -95,4 +95,13 @@ public class Redirect extends Packet {
         return data;
     }
 
+    @Override
+    public String toString() {
+        return "Redirect{" +
+                "targetAddress=" + targetAddress +
+                ", destinationAddress=" + destinationAddress +
+                ", options=" + options +
+                '}';
+    }
+
 }

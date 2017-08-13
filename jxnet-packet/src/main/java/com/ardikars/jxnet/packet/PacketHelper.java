@@ -28,6 +28,7 @@ import java.lang.reflect.Parameter;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executor;
 
 import static com.ardikars.jxnet.Jxnet.*;
 
@@ -36,6 +37,24 @@ import static com.ardikars.jxnet.Jxnet.*;
  * @since 1.1.0
  */
 public class PacketHelper {
+
+    public static <T> int loop(Pcap pcap, int count, PcapHandler<T> pcapHandler, T arg, Executor executor) {
+        PcapHandler<PcapHandler<T>> handler = (user, h, bytes) ->
+                executor.execute(()
+                        -> user.nextPacket(arg, h, bytes));
+        return Jxnet.PcapLoop(pcap, count, handler, pcapHandler);
+    }
+
+    public static <T> int loop(Pcap pcap, int count, PacketHandler<T> handler, T arg, Executor executor) {
+        DataLinkType datalinkType = pcap.getDataLinkType();
+        PcapHandler<PacketHandler<T>> callback = (tPacketHandler, pcapPktHdr, buffer) -> {
+            if (pcapPktHdr == null || buffer == null) return;
+            executor.execute(() ->
+                    tPacketHandler.nextPacket(arg, pcapPktHdr,
+                        parsePacket(datalinkType, ByteUtils.toByteArray(buffer))));
+        };
+        return PcapLoop(pcap, count, callback, handler);
+    }
 
     public static <T> int loop(Pcap pcap, int count, PacketHandler<T> handler, T arg) {
         DataLinkType datalinkType = pcap.getDataLinkType();

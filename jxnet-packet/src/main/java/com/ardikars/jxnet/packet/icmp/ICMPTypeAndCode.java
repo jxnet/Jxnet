@@ -17,10 +17,13 @@
 
 package com.ardikars.jxnet.packet.icmp;
 
+import com.ardikars.jxnet.Decoder;
 import com.ardikars.jxnet.NamedTwoKeyMap;
 import com.ardikars.jxnet.TwoKeyMap;
+import com.ardikars.jxnet.packet.Packet;
 import com.ardikars.jxnet.packet.icmp.icmpv4.*;
 import com.ardikars.jxnet.packet.icmp.icmpv6.*;
+import com.ardikars.jxnet.packet.ndp.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +32,7 @@ import java.util.Map;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public abstract class ICMPTypeAndCode extends NamedTwoKeyMap<Byte, Byte, ICMPTypeAndCode> {
+public abstract class ICMPTypeAndCode extends NamedTwoKeyMap<Byte, Byte, ICMPTypeAndCode> implements Decoder<Packet, byte[]> {
 
     protected static Map<TwoKeyMap<Byte, Byte>, ICMPTypeAndCode> registry =
             new HashMap<TwoKeyMap<Byte, Byte>, ICMPTypeAndCode>();
@@ -68,6 +71,41 @@ public abstract class ICMPTypeAndCode extends NamedTwoKeyMap<Byte, Byte, ICMPTyp
                 .append("[Type: " + this.getType())
                 .append(", Code: " + this.getCode())
                 .append("]").toString();
+    }
+
+    @Override
+    public Packet decode(byte[] data) {
+        int type = getType() & 0xff;
+        int code = getCode() & 0xff;
+        switch (type) {
+            case 133:
+                switch (code) {
+                    case 0: return RouterSolicitation.newInstance(data);
+                    default: return null;
+
+                }
+            case 134:
+                switch (code) {
+                    case 0: return RouterAdvertisement.newInstance(data);
+                    default: return null;
+                }
+            case 135:
+                switch (code) {
+                    case 0: return NeighborSolicitation.newInstance(data);
+                    default: return null;
+                }
+            case 136:
+                switch (code) {
+                    case 0: return NeighborAdvertisement.newInstance(data);
+                    default: return null;
+                }
+            case 137:
+                switch (code) {
+                    case 0: return Redirect.newInstance(data);
+                    default: return null;
+                }
+            default: return null;
+        }
     }
 
     static {

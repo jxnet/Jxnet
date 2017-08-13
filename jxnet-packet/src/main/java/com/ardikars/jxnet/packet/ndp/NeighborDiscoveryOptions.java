@@ -162,4 +162,11 @@ public class NeighborDiscoveryOptions extends Packet {
         return data;
     }
 
+    @Override
+    public String toString() {
+        return "NeighborDiscoveryOptions{" +
+                "options=" + options +
+                '}';
+    }
+
 }

@@ -65,4 +65,11 @@ public class RouterSolicitation extends Packet {
         return data;
     }
 
+    @Override
+    public String toString() {
+        return "RouterSolicitation{" +
+                "options=" + options +
+                '}';
+    }
+
 }

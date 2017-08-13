@@ -118,4 +118,15 @@ public class NeighborAdvertisement extends Packet {
         return data;
     }
 
+    @Override
+    public String toString() {
+        return "NeighborAdvertisement{" +
+                "routerFlag=" + routerFlag +
+                ", solicitedFlag=" + solicitedFlag +
+                ", overrideFlag=" + overrideFlag +
+                ", targetAddress=" + targetAddress +
+                ", options=" + options +
+                '}';
+    }
+
 }

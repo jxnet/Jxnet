@@ -271,6 +271,20 @@ public class ArrayUtils {
 
     /**
      * Copy array.
+     * @param data char array.
+     * @param offset offset.
+     * @param length length.
+     * @return char array.
+     */
+    public static char[] copyOfRange(char[] data, int offset, int length) {
+        Validate.bounds(data, offset, length);
+        char[] chars = new char[length];
+        System.arraycopy(data, offset, chars, 0, length);
+        return chars;
+    }
+
+    /**
+     * Copy array.
      * @param data short array.
      * @param offset offset.
      * @param length length.
@@ -299,6 +313,20 @@ public class ArrayUtils {
 
     /**
      * Copy array.
+     * @param data float array.
+     * @param offset offset.
+     * @param length length.
+     * @return float array.
+     */
+    public static float[] copyOfRange(float[] data, int offset, int length) {
+        Validate.bounds(data, offset, length);
+        float[] floats = new float[length];
+        System.arraycopy(data, offset, floats, 0, length);
+        return floats;
+    }
+
+    /**
+     * Copy array.
      * @param data long array.
      * @param offset offset.
      * @param length length.
@@ -309,6 +337,20 @@ public class ArrayUtils {
         long[] longs = new long[length];
         System.arraycopy(data, offset, longs, 0, length);
         return longs;
+    }
+
+    /**
+     * Copy array.
+     * @param data double array.
+     * @param offset offset.
+     * @param length length.
+     * @return double array.
+     */
+    public static double[] copyOfRange(double[] data, int offset, int length) {
+        Validate.bounds(data, offset, length);
+        double[] doubles = new double[length];
+        System.arraycopy(data, offset, doubles, 0, length);
+        return doubles;
     }
 
 }

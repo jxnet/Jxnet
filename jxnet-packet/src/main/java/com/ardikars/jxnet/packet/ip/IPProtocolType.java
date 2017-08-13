@@ -23,6 +23,7 @@ import com.ardikars.jxnet.packet.icmp.ICMPv6;
 import com.ardikars.jxnet.packet.ip.ipv6.Fragment;
 import com.ardikars.jxnet.packet.ip.ipv6.Routing;
 import com.ardikars.jxnet.NamedNumber;
+import com.ardikars.jxnet.packet.ndp.*;
 
 import java.util.HashMap;
 import java.util.Map;

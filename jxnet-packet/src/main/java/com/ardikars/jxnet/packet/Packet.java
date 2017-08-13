@@ -20,13 +20,17 @@ package com.ardikars.jxnet.packet;
 import com.ardikars.jxnet.Builder;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public abstract class Packet implements Builder<Packet> {
+public abstract class Packet implements Iterator<Packet>, Builder<Packet> {
+
+    private Packet next = this;
 
     protected byte[] nextPacket;
 
@@ -105,6 +109,21 @@ public abstract class Packet implements Builder<Packet> {
             return packets.get(0);
         }
 
+    }
+
+    @Override
+    public boolean hasNext() {
+        return next != null;
+    }
+
+    @Override
+    public Packet next() {
+        if (next == null) {
+            throw new NoSuchElementException();
+        }
+        Packet current = next;
+        next = current.getPacket();
+        return current;
     }
 
 }

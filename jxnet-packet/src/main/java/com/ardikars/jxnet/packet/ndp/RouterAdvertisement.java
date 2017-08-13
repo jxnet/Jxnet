@@ -138,4 +138,17 @@ public class RouterAdvertisement extends Packet {
         return data;
     }
 
+    @Override
+    public String toString() {
+        return "RouterAdvertisement{" +
+                "currentHopLimit=" + currentHopLimit +
+                ", manageFlag=" + manageFlag +
+                ", otherFlag=" + otherFlag +
+                ", routerLifetime=" + routerLifetime +
+                ", reachableTime=" + reachableTime +
+                ", retransmitTimer=" + retransmitTimer +
+                ", options=" + options +
+                '}';
+    }
+
 }

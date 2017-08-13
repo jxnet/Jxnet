@@ -86,4 +86,12 @@ public class NeighborSolicitation extends Packet {
         return data;
     }
 
+    @Override
+    public String toString() {
+        return "NeighborSolicitation{" +
+                "targetAddress=" + targetAddress +
+                ", options=" + options +
+                '}';
+    }
+
 }

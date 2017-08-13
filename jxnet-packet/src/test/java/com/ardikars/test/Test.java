@@ -13,6 +13,7 @@ import com.ardikars.jxnet.packet.ip.IPv6;
 import com.ardikars.jxnet.packet.tcp.TCP;
 
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class Test {
 
@@ -23,13 +24,8 @@ public class Test {
             @Override
             public void nextPacket(String arg, PcapPktHdr pktHdr, Map<Class, Packet> packets) {
                 Ethernet ethernet = (Ethernet) packets.get(Ethernet.class);
-                /*if (ethernet.getPacket() instanceof IPv6) {
-                    IPv6 iPv6 = (IPv6) ethernet.getPacket();
-                    System.out.println(iPv6);
-                } else {
-                    System.out.println(ethernet);
-                }*/
-                System.out.println(ethernet.getPacket());
+                ethernet.forEachRemaining(packet -> System.out.println(packet));
+                System.out.println("===========================");
             }
         };
 
