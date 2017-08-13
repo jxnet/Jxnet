@@ -68,8 +68,8 @@ public abstract class ICMPTypeAndCode extends NamedTwoKeyMap<Byte, Byte, ICMPTyp
     @Override
     public String toString() {
         return new StringBuilder()
-                .append("[Type: " + this.getType())
-                .append(", Code: " + this.getCode())
+                .append("[Type: " + (this.getType() & 0xff))
+                .append(", Code: " + (this.getCode() & 0xff))
                 .append("]").toString();
     }
 
