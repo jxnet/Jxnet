@@ -2,7 +2,6 @@ package com.ardikars.test;
 
 import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
-import com.ardikars.jxnet.packet.PacketHandler;
 import com.ardikars.jxnet.packet.PacketHelper;
 import com.ardikars.jxnet.packet.ethernet.Ethernet;
 import com.ardikars.jxnet.util.HexUtils;

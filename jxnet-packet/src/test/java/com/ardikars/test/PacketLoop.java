@@ -2,12 +2,7 @@ package com.ardikars.test;
 
 import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
-import com.ardikars.jxnet.PcapPktHdr;
-import com.ardikars.jxnet.packet.Packet;
-import com.ardikars.jxnet.packet.PacketHandler;
 import com.ardikars.jxnet.packet.PacketHelper;
-
-import java.util.Map;
 
 public class PacketLoop {
 
