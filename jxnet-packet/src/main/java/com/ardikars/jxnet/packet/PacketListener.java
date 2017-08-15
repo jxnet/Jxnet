@@ -19,6 +19,8 @@ package com.ardikars.jxnet.packet;
 
 import com.ardikars.jxnet.PcapPktHdr;
 
+import java.util.List;
+
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
@@ -32,6 +34,6 @@ public interface PacketListener<T> {
      * @param pktHdr PcapPktHdr.
      * @param packet packet.
      */
-    void nextPacket(T arg, PcapPktHdr pktHdr, Packet packet);
+    void nextPacket(T arg, PcapPktHdr pktHdr, List<Packet> packet);
 
 }
