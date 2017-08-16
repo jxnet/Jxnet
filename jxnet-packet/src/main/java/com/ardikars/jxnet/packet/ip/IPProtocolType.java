@@ -23,6 +23,7 @@ import com.ardikars.jxnet.packet.icmp.ICMPv6;
 import com.ardikars.jxnet.packet.ip.ipv6.Fragment;
 import com.ardikars.jxnet.packet.ip.ipv6.Routing;
 import com.ardikars.jxnet.NamedNumber;
+import com.ardikars.jxnet.packet.ndp.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,9 +44,9 @@ public class IPProtocolType extends NamedNumber<Byte, IPProtocolType> {
 
     public static final IPProtocolType IPV6_FRAGMENT = new IPProtocolType((byte) 44, "Fragment Header for IPv6.");
 
-    public static final IPProtocolType IPV6_HOPOPT = new IPProtocolType((byte) 0, "IPv6 Hop by Hop Options.");
+    public static final IPProtocolType IPV6_HOPOPT = new IPProtocolType((byte) 0, "IPv6 Hop by Hop NeighborDiscoveryOptions.");
 
-    public static final IPProtocolType IPV6_DSTOPT = new IPProtocolType((byte) 60, "IPv6 Destination Options.");
+    public static final IPProtocolType IPV6_DSTOPT = new IPProtocolType((byte) 60, "IPv6 Destination NeighborDiscoveryOptions.");
 
     public static final IPProtocolType IPV6_ESP = new IPProtocolType((byte) 50, "IPv6 ESP.");
 

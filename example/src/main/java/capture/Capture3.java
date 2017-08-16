@@ -1,15 +1,14 @@
 package capture;
 
-import static com.ardikars.jxnet.Jxnet.*;
-
 import com.ardikars.jxnet.*;
 import com.ardikars.jxnet.packet.Packet;
-import com.ardikars.jxnet.packet.PacketHelper;
+import com.ardikars.jxnet.packet.PacketListener;
 import com.ardikars.jxnet.packet.ip.IPv4;
 import com.ardikars.jxnet.util.Platforms;
 
-import java.nio.ByteBuffer;
 import java.util.Map;
+
+import static com.ardikars.jxnet.Jxnet.*;
 
 
 /**
@@ -43,7 +42,7 @@ public class Capture3 {
         Map<Class, Packet> packet;
         PcapPktHdr pktHdr = new PcapPktHdr();
         for (int i=0; i<10; i++) {
-            packet = PacketHelper.next(handle, pktHdr);
+            packet = PacketListener.nextMap(handle, pktHdr);
             System.out.println(packet.get(IPv4.class));
         }
         PcapStat stat = new PcapStat();

@@ -532,9 +532,9 @@ v0.4 Sat Jul 25 12:40:09 PDT 1998
 - Fix alignment problem with FDDI under DLPI. This was causing core
   dumps under Solaris.
 
-- Added configure options to disable flex and bison. Resulted from a
+- Added configure neighborDiscoveryOptions to disable flex and bison. Resulted from a
   bug report by barnett@grymoire.crd.ge.com (Bruce Barnett). Also added
-  options to disable gcc and to force a particular packet capture type.
+  neighborDiscoveryOptions to disable gcc and to force a particular packet capture type.
 
 - Added support for Fore ATM interfaces (qaa and fa) under IRIX. Thanks
   to John Hawkinson (jhawk@mit.edu)

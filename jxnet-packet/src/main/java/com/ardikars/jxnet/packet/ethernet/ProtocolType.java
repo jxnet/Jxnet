@@ -29,6 +29,7 @@ import java.util.Map;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
+@Deprecated
 public final class ProtocolType extends NamedNumber<Short, ProtocolType> {
 
     /**

@@ -123,7 +123,7 @@ while ls -ld "$_cur" 2>/dev/null | grep " -> " >/dev/null; do
         _slink=`ls -ld "$_cur" | sed 's/.* -> //'`
         case "$_slink" in
         /*) _cur="$_slink";;
-        # 'X' avoids triggering unwanted echo options.
+        # 'X' avoids triggering unwanted echo neighborDiscoveryOptions.
         *) _cur=`echo "X$_cur" | sed -e 's/^X//' -e 's:[[^/]]*$::'`"$_slink";;
         esac
         AC_MSG_RESULT([$_cur])

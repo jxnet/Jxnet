@@ -18,7 +18,7 @@
 package com.ardikars.jxnet.packet.sll;
 
 import com.ardikars.jxnet.packet.Packet;
-import com.ardikars.jxnet.packet.ethernet.ProtocolType;
+import com.ardikars.jxnet.packet.ProtocolType;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;

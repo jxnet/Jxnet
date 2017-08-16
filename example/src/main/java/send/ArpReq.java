@@ -1,20 +1,20 @@
 package send;
 
-import static com.ardikars.jxnet.Jxnet.*;
-
 import com.ardikars.jxnet.*;
 import com.ardikars.jxnet.packet.Packet;
-import com.ardikars.jxnet.packet.PacketHelper;
+import com.ardikars.jxnet.packet.PacketListener;
+import com.ardikars.jxnet.packet.ProtocolType;
 import com.ardikars.jxnet.packet.arp.ARP;
 import com.ardikars.jxnet.packet.arp.ARPOperationCode;
 import com.ardikars.jxnet.packet.ethernet.Ethernet;
-import com.ardikars.jxnet.packet.ethernet.ProtocolType;
 import com.ardikars.jxnet.util.AddrUtils;
 import com.ardikars.jxnet.util.BufferUtils;
 import com.ardikars.jxnet.util.Platforms;
 
 import java.io.IOException;
 import java.util.Map;
+
+import static com.ardikars.jxnet.Jxnet.*;
 
 
 /**
@@ -88,7 +88,7 @@ public class ArpReq {
                 packet = Packet.PacketBuilder().add(ethernet).add(arp).build();
                 byte[] pkt = packet.toBytes();
                 Jxnet.PcapSendPacket(handle, BufferUtils.toDirectByteBuffer(pkt), pkt.length);
-                Map<Class, Packet> packetMap = PacketHelper.next(handle, pktHdr);
+                Map<Class, Packet> packetMap = PacketListener.nextMap(handle, pktHdr);
                 ARP arpC = (ARP) packetMap.get(ARP.class);
                 if (arpC != null) {
                     gwMac = arpC.getSenderHardwareAddress();

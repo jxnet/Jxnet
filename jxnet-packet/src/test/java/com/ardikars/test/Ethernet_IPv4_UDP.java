@@ -2,8 +2,8 @@ package com.ardikars.test;
 
 import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
-import com.ardikars.jxnet.packet.PacketHandler;
 import com.ardikars.jxnet.packet.PacketHelper;
+import com.ardikars.jxnet.packet.PacketListener;
 import com.ardikars.jxnet.packet.ethernet.Ethernet;
 import com.ardikars.jxnet.packet.ip.IPv4;
 import com.ardikars.jxnet.packet.udp.UDP;
@@ -36,7 +36,7 @@ public class Ethernet_IPv4_UDP {
             return;
         }
 
-        PacketHandler<String> callback = (arg, pktHdr, packets) -> {
+        PacketListener.Map<String> callback = (arg, pktHdr, packets) -> {
             Ethernet eth = (Ethernet) packets.get(Ethernet.class);
             if (eth != null) {
                 if (!HexUtils.toHexString(eth.toBytes()).equals(hexStream[index])) {
@@ -90,7 +90,7 @@ public class Ethernet_IPv4_UDP {
             }
         };
 
-        PacketHelper.loop(pcap, -1, callback, null);
+        PacketListener.loop(pcap, -1, callback, null);
 
         Jxnet.PcapClose(pcap);
 

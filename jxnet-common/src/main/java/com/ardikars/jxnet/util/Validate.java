@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet;
+package com.ardikars.jxnet.util;
 
 /**
  * @author Ardika Rommy Sanjaya
@@ -27,7 +27,7 @@ public class Validate {
      * Validate argument.
      * @param expression expression.
      */
-    public static void CheckArgument(boolean expression) {
+    public static void argument(boolean expression) {
         if (!expression) {
             throw new IllegalArgumentException();
         }
@@ -38,7 +38,7 @@ public class Validate {
      * @param expression expression.
      * @param errorMessage error message.
      */
-    public static void CheckArgument(boolean expression, String errorMessage) {
+    public static void argument(boolean expression, String errorMessage) {
         if (!expression) {
             throw new IllegalArgumentException(errorMessage);
         }
@@ -50,7 +50,7 @@ public class Validate {
      * @param <T> type.
      * @return reference.
      */
-    public static <T> T CheckNotNull(T reference) {
+    public static <T> T notNull(T reference) {
         if (reference == null) {
             throw new NullPointerException();
         }
@@ -64,7 +64,7 @@ public class Validate {
      * @param <T> type.
      * @return reference.
      */
-    public static <T> T CheckNotNull(T reference, String errorMessage) {
+    public static <T> T notNull(T reference, String errorMessage) {
         if (reference == null) {
             throw new NullPointerException(errorMessage);
         }
@@ -77,10 +77,10 @@ public class Validate {
      * @param offset offset.
      * @param length length.
      */
-    public static void CheckBounds(byte[] array, int offset, int length) {
-        CheckNotNull(array, "array is null.");
-        CheckArgument(array.length > 0, "array is empty.");
-        CheckArgument(length > 0, "length is zero.");
+    public static void bounds(byte[] array, int offset, int length) {
+        notNull(array, "array is null.");
+        argument(array.length > 0, "array is empty.");
+        argument(length > 0, "length is zero.");
         if (offset < 0 || length < 0 || length > array.length || offset > array.length) {
             throw new ArrayIndexOutOfBoundsException();
         }
@@ -92,10 +92,10 @@ public class Validate {
      * @param offset offset.
      * @param length length.
      */
-    public static void CheckBounds(char[] array, int offset, int length) {
-        CheckNotNull(array, "array is null.");
-        CheckArgument(array.length > 0, "array is empty.");
-        CheckArgument(length > 0, "length is zero.");
+    public static void bounds(char[] array, int offset, int length) {
+        notNull(array, "array is null.");
+        argument(array.length > 0, "array is empty.");
+        argument(length > 0, "length is zero.");
         if (offset < 0 || length < 0 || length > array.length || offset > array.length) {
             throw new ArrayIndexOutOfBoundsException();
         }
@@ -107,10 +107,10 @@ public class Validate {
      * @param offset offset.
      * @param length length.
      */
-    public static void CheckBounds(short[] array, int offset, int length) {
-        CheckNotNull(array, "array is null.");
-        CheckArgument(array.length > 0, "array is empty.");
-        CheckArgument(length > 0, "length is zero.");
+    public static void bounds(short[] array, int offset, int length) {
+        notNull(array, "array is null.");
+        argument(array.length > 0, "array is empty.");
+        argument(length > 0, "length is zero.");
         if (offset < 0 || length < 0 || length > array.length || offset > array.length) {
             throw new ArrayIndexOutOfBoundsException();
         }
@@ -122,10 +122,10 @@ public class Validate {
      * @param offset offset.
      * @param length length.
      */
-    public static void CheckBounds(int[] array, int offset, int length) {
-        CheckNotNull(array, "array is null.");
-        CheckArgument(array.length > 0, "array is empty.");
-        CheckArgument(length > 0, "length is zero.");
+    public static void bounds(int[] array, int offset, int length) {
+        notNull(array, "array is null.");
+        argument(array.length > 0, "array is empty.");
+        argument(length > 0, "length is zero.");
         if (offset < 0 || length < 0 || length > array.length || offset > array.length) {
             throw new ArrayIndexOutOfBoundsException();
         }
@@ -137,10 +137,10 @@ public class Validate {
      * @param offset offset.
      * @param length length.
      */
-    public static void CheckBounds(float[] array, int offset, int length) {
-        CheckNotNull(array, "array is null.");
-        CheckArgument(array.length > 0, "array is empty.");
-        CheckArgument(length > 0, "length is zero.");
+    public static void bounds(float[] array, int offset, int length) {
+        notNull(array, "array is null.");
+        argument(array.length > 0, "array is empty.");
+        argument(length > 0, "length is zero.");
         if (offset < 0 || length < 0 || length > array.length || offset > array.length) {
             throw new ArrayIndexOutOfBoundsException();
         }
@@ -152,10 +152,10 @@ public class Validate {
      * @param offset offset.
      * @param length length.
      */
-    public static void CheckBounds(long[] array, int offset, int length) {
-        CheckNotNull(array, "array is null.");
-        CheckArgument(array.length > 0, "array is empty.");
-        CheckArgument(length > 0, "length is zero.");
+    public static void bounds(long[] array, int offset, int length) {
+        notNull(array, "array is null.");
+        argument(array.length > 0, "array is empty.");
+        argument(length > 0, "length is zero.");
         if (offset < 0 || length < 0 || length > array.length || offset > array.length) {
             throw new ArrayIndexOutOfBoundsException();
         }
@@ -167,10 +167,10 @@ public class Validate {
      * @param offset offset.
      * @param length length.
      */
-    public static void CheckBounds(double[] array, int offset, int length) {
-        CheckNotNull(array, "array is null.");
-        CheckArgument(array.length > 0, "array is empty.");
-        CheckArgument(length > 0, "length is zero.");
+    public static void bounds(double[] array, int offset, int length) {
+        notNull(array, "array is null.");
+        argument(array.length > 0, "array is empty.");
+        argument(length > 0, "length is zero.");
         if (offset < 0 || length < 0 || length > array.length || offset > array.length) {
             throw new ArrayIndexOutOfBoundsException();
         }
@@ -182,10 +182,10 @@ public class Validate {
      * @param offset offset.
      * @param length length.
      */
-    public static void CheckBounds(Object[] array, int offset, int length) {
-        CheckNotNull(array, "array is null.");
-        CheckArgument(array.length > 0, "array is empty.");
-        CheckArgument(length > 0, "length is zero.");
+    public static void bounds(Object[] array, int offset, int length) {
+        notNull(array, "array is null.");
+        argument(array.length > 0, "array is empty.");
+        argument(length > 0, "length is zero.");
         if (offset < 0 || length < 0 || length > array.length || offset > array.length) {
             throw new ArrayIndexOutOfBoundsException();
         }

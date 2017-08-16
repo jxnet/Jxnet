@@ -19,9 +19,6 @@ package com.ardikars.jxnet.util;
 
 import java.util.regex.Pattern;
 
-import static com.ardikars.jxnet.Validate.CheckNotNull;
-import static com.ardikars.jxnet.Validate.CheckBounds;
-
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.5
@@ -46,7 +43,7 @@ public class HexUtils {
      */
     public static String toHexString(final byte value) {
         String srt = Integer.toHexString((value) & 0xff);
-        if (srt.length() == 1)
+        if (srt.length() % 2 == 1)
             return ("0" + srt);
         return (srt);
     }
@@ -68,7 +65,7 @@ public class HexUtils {
      * @return hex stream.
      */
     public static String toHexString(final byte[] data, final int offset, final int length) {
-        CheckBounds(data, offset, length);
+        Validate.bounds(data, offset, length);
         StringBuilder sb = new StringBuilder();
         int l;
         if(data.length != length) {
@@ -89,7 +86,7 @@ public class HexUtils {
      */
     public static String toHexString(final short value) {
         String srt = Integer.toHexString((value) & 0xFFFF);
-        if (srt.length() == 1)
+        if (srt.length() % 2 == 1)
             return ("0" + srt);
         return (srt);
     }
@@ -111,7 +108,7 @@ public class HexUtils {
      * @return hex stream.
      */
     public static String toHexString(final short[] values, final int offset, final int length) {
-        CheckBounds(values, offset, length);
+        Validate.bounds(values, offset, length);
         StringBuilder sb = new StringBuilder();
         for (short value : values) {
             sb.append(toHexString(value));
@@ -126,7 +123,7 @@ public class HexUtils {
      */
     public static String toHexString(final int value) {
         String srt = Integer.toHexString(value);
-        if (srt.length() == 1)
+        if (srt.length() % 2 == 1)
             return ("0" + srt);
         return (srt);
     }
@@ -148,7 +145,7 @@ public class HexUtils {
      * @return hex stream.
      */
     public static String toHexString(final int[] values, final int offset, final int length) {
-        CheckBounds(values, offset, length);
+        Validate.bounds(values, offset, length);
         StringBuilder sb = new StringBuilder();
         for (int value : values) {
             sb.append(toHexString(value));
@@ -173,7 +170,7 @@ public class HexUtils {
      * @return hex dump format.
      */
     public static String toPrettyHexDump(final byte[] data, final int offset, final int length) {
-        CheckBounds(data, offset, length);
+        Validate.bounds(data, offset, length);
         StringBuilder result = new StringBuilder();
         StringBuilder builder = new StringBuilder();
         int pos = offset;
@@ -212,7 +209,7 @@ public class HexUtils {
      * @return byte array.
      */
     public static byte[] parseHex(String hexStream) {
-        CheckNotNull(hexStream);
+        Validate.notNull(hexStream);
         if (hexStream.startsWith("0x")) {
             hexStream = hexStream.substring(2);
         }

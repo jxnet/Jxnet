@@ -17,14 +17,16 @@
 
 package com.ardikars.jxnet.packet;
 
-import com.ardikars.jxnet.*;
+import com.ardikars.jxnet.DataLinkType;
+import com.ardikars.jxnet.Pcap;
+import com.ardikars.jxnet.PcapHandler;
+import com.ardikars.jxnet.PcapPktHdr;
 import com.ardikars.jxnet.annotation.Type;
+import com.ardikars.jxnet.packet.ethernet.Ethernet;
 import com.ardikars.jxnet.packet.radiotap.RadioTap;
 import com.ardikars.jxnet.packet.sll.SLL;
-import com.ardikars.jxnet.packet.ethernet.Ethernet;
 import com.ardikars.jxnet.util.ByteUtils;
 
-import java.lang.reflect.Parameter;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +37,7 @@ import static com.ardikars.jxnet.Jxnet.*;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
+@Deprecated
 public class PacketHelper {
 
     public static <T> int loop(Pcap pcap, int count, PacketHandler<T> handler, T arg) {
@@ -44,34 +47,6 @@ public class PacketHelper {
             tPacketHandler.nextPacket(arg, pcapPktHdr, parsePacket(datalinkType, ByteUtils.toByteArray(buffer)));
         };
         return PcapLoop(pcap, count, callback, handler);
-    }
-
-    public static <T> int loop(Pcap pcap, int count, PacketListener<T> handler, T arg) {
-        DataLinkType datalinkType = pcap.getDataLinkType();
-        try {
-            Parameter parameter = handler.getClass().getMethod("nextPacket", Object.class, PcapPktHdr.class, Packet.class).getParameters()[2];
-            PcapHandler<PacketListener<T>> callback = (tPacketHandler, pcapPktHdr, buffer) -> {
-                if (pcapPktHdr == null || buffer == null) return;
-                Type type = null;
-                if (parameter.getAnnotations().length != 0) {
-                    type = (Type) parameter.getAnnotations()[0];
-                }
-                tPacketHandler.nextPacket(arg, pcapPktHdr, parsePacket(datalinkType, ByteUtils.toByteArray(buffer), type));
-            };
-            return PcapLoop(pcap, count, callback, handler);
-        } catch (NoSuchMethodException e) {
-            return -1;
-        }
-    }
-
-    private static int packetNumber;
-    public static <T, V extends Packet> int loop(Pcap pcap, int count, AbstractPacketListener<T, V> handler, T arg) {
-        packetNumber = 0;
-        PcapHandler<AbstractPacketListener<T, V>> callback = (user, h, bytes) -> {
-            user.initialize(++packetNumber, arg, pcap, h);
-            user.decode(ByteUtils.toByteArray(bytes));
-        };
-        return Jxnet.PcapLoop(pcap, count, callback, handler);
     }
 
     public static Map<Class, Packet> next(Pcap pcap, PcapPktHdr pcapPktHdr) {

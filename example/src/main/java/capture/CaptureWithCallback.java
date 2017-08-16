@@ -1,11 +1,10 @@
 package capture;
 
-import static com.ardikars.jxnet.Jxnet.*;
-
 import com.ardikars.jxnet.*;
-import com.ardikars.jxnet.packet.PacketHandler;
-import com.ardikars.jxnet.packet.PacketHelper;
+import com.ardikars.jxnet.packet.PacketListener;
 import com.ardikars.jxnet.util.Platforms;
+
+import static com.ardikars.jxnet.Jxnet.*;
 
 /**
  * Created by root on 6/26/17.
@@ -36,13 +35,13 @@ public class CaptureWithCallback {
             exit(-3);
         }
 
-        PacketHandler<String> callback = (arg, pktHdr, packets) -> {
+        PacketListener.Map<String> callback = (arg, pktHdr, packets) -> {
             System.out.println(arg);
             System.out.println(pktHdr);;
             System.out.println(packets);
         };
 
-        PacketHelper.loop(handle, 10, callback, "blabla");
+        PacketListener.loop(handle, 10, callback, "blabla");
 
         PcapStat stat = new PcapStat();
         PcapStats(handle, stat);

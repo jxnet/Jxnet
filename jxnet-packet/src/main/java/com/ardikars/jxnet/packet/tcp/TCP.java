@@ -232,7 +232,7 @@ public class TCP extends Packet {
                 .append(", Windows size: " + this.getWindowSize())
                 .append(", Checksum: " + this.getChecksum())
                 .append(", Urgent pointer: " + this.getUrgentPointer())
-                .append(", Options: " + Arrays.toString(getOptions()))
+                .append(", NeighborDiscoveryOptions: " + Arrays.toString(getOptions()))
                 .append("]").toString();
     }
 

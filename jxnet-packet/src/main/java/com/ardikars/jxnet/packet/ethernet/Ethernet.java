@@ -18,8 +18,7 @@
 package com.ardikars.jxnet.packet.ethernet;
 
 import com.ardikars.jxnet.MacAddress;
-import com.ardikars.jxnet.packet.Packet;
-import com.ardikars.jxnet.packet.UnknownPacket;
+import com.ardikars.jxnet.packet.*;
 import com.ardikars.jxnet.packet.arp.ARP;
 import com.ardikars.jxnet.packet.ip.IPv4;
 import com.ardikars.jxnet.packet.ip.IPv6;
@@ -40,7 +39,7 @@ public class Ethernet extends Packet {
     private byte priorityCodePoint;
     private byte canonicalFormatIndicator;
     private short vlanIdentifier;
-    private ProtocolType ethernetType;
+    private com.ardikars.jxnet.packet.ProtocolType ethernetType;
 
     /**
      * If needed
@@ -55,7 +54,7 @@ public class Ethernet extends Packet {
         this.setPriorityCodePoint((byte) 0);
         this.setCanonicalFormatIndicator((byte) 0);
         this.setVlanIdentifier((short) 0xffff);
-        this.setEthernetType(ProtocolType.UNKNOWN);
+        this.setEthernetType(com.ardikars.jxnet.packet.ProtocolType.UNKNOWN);
         this.setPayload(null);
     }
 
@@ -104,11 +103,11 @@ public class Ethernet extends Packet {
         return this;
     }
 
-    public ProtocolType getEthernetType() {
+    public com.ardikars.jxnet.packet.ProtocolType getEthernetType() {
         return this.ethernetType;
     }
 
-    public Ethernet setEthernetType(final ProtocolType ethernetType) {
+    public Ethernet setEthernetType(final com.ardikars.jxnet.packet.ProtocolType ethernetType) {
         this.ethernetType = ethernetType;
         return this;
     }
@@ -142,13 +141,13 @@ public class Ethernet extends Packet {
         hwAddrBuf = new byte[MacAddress.MAC_ADDRESS_LENGTH];
         buffer.get(hwAddrBuf);
         ethernet.setSourceMacAddress(MacAddress.valueOf(hwAddrBuf));
-        ProtocolType ethernetType = ProtocolType.getInstance(buffer.getShort());
-        if (ethernetType == ProtocolType.DOT1Q_VLAN_TAGGED_FRAMES) {
+        com.ardikars.jxnet.packet.ProtocolType ethernetType = com.ardikars.jxnet.packet.ProtocolType.getInstance(buffer.getShort());
+        if (ethernetType == com.ardikars.jxnet.packet.ProtocolType.DOT1Q_VLAN_TAGGED_FRAMES) {
             short tci = buffer.getShort();
             ethernet.setPriorityCodePoint((byte) (tci >> 13 & 0x07));
             ethernet.setCanonicalFormatIndicator((byte) (tci >> 14 & 0x01));
             ethernet.setVlanIdentifier((short) (tci & 0x0fff));
-            ethernetType = ProtocolType.getInstance(buffer.getShort());
+            ethernetType = com.ardikars.jxnet.packet.ProtocolType.getInstance(buffer.getShort());
         } else {
             ethernet.setVlanIdentifier((short) 0xffff);
         }
@@ -171,17 +170,17 @@ public class Ethernet extends Packet {
         switch (packet.getClass().getName()) {
             case "com.ardikars.jxnet.packet.ip.IPv4":
                 IPv4 ipv4 = (IPv4) packet;
-                this.setEthernetType(ProtocolType.IPV4);
+                this.setEthernetType(com.ardikars.jxnet.packet.ProtocolType.IPV4);
                 this.nextPacket = ipv4.toBytes();
                 return this;
             case "com.ardikars.jxnet.packet.ip.IPv6":
                 IPv6 ipv6 = (IPv6) packet;
-                this.setEthernetType(ProtocolType.IPV6);
+                this.setEthernetType(com.ardikars.jxnet.packet.ProtocolType.IPV6);
                 this.nextPacket = ipv6.toBytes();
                 return this;
             case "com.ardikars.jxnet.packet.arp.ARP":
                 ARP arp = (ARP) packet;
-                this.setEthernetType(ProtocolType.ARP);
+                this.setEthernetType(com.ardikars.jxnet.packet.ProtocolType.ARP);
                 this.nextPacket = arp.toBytes();
                 return this;
             default:
@@ -208,7 +207,7 @@ public class Ethernet extends Packet {
         buffer.put(this.getDestinationMacAddress().toBytes());
         buffer.put(this.getSourceMacAddress().toBytes());
         if (this.getVlanIdentifier() != (short) 0xffff) {
-            buffer.putShort(ProtocolType.DOT1Q_VLAN_TAGGED_FRAMES.getValue());
+            buffer.putShort(com.ardikars.jxnet.packet.ProtocolType.DOT1Q_VLAN_TAGGED_FRAMES.getValue());
             buffer.putShort((short) (((this.getPriorityCodePoint() << 13) & 0x07)
                     | ((this.getCanonicalFormatIndicator() << 14) & 0x01) | (this.getVlanIdentifier() & 0x0fff)));
         }

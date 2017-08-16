@@ -3,32 +3,24 @@ package com.ardikars.jxnet.packet;
 import com.ardikars.jxnet.*;
 import com.ardikars.jxnet.exception.JxnetException;
 import com.ardikars.jxnet.exception.PcapCloseException;
-import com.ardikars.jxnet.packet.ethernet.Ethernet;
-import com.ardikars.jxnet.packet.radiotap.RadioTap;
-import com.ardikars.jxnet.packet.sll.SLL;
 
 import java.lang.reflect.ParameterizedType;
 import java.nio.ByteBuffer;
+import java.util.Map;
 
-public abstract class AbstractPacketListener<T, V extends Packet> implements Encoder<byte[], Packet>, Decoder<V, byte[]> {
+public abstract class PacketProcessor<T, V extends Packet> implements Encoder<byte[], Packet>, Decoder<V, byte[]> {
 
-    private int packetNumber;
     private Pcap pcap;
     private T userArgument;
     private PcapPktHdr pcapPktHdr;
 
-    protected void initialize(int packetNumber, T userArgument, Pcap pcap, PcapPktHdr pktHdr) {
-        this.packetNumber = packetNumber;
+    protected void initialize(T userArgument, Pcap pcap, PcapPktHdr pktHdr) {
         this.pcap = pcap;
         this.pcapPktHdr = pktHdr;
         this.userArgument = userArgument;
     }
 
     public abstract void nextPacket(T arg, PcapPktHdr pcapPktHdr, V packet);
-
-    public int getPacketNumber() {
-        return this.packetNumber;
-    }
 
     public void exceptionCaught(Exception e) {
         e.printStackTrace();
@@ -69,7 +61,6 @@ public abstract class AbstractPacketListener<T, V extends Packet> implements Enc
     @SuppressWarnings("unchecked")
     @Override
     public V decode(byte[] data) {
-        Packet packet;
         String className = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1].getTypeName();
         Class clazz = null;
         try {
@@ -77,38 +68,16 @@ public abstract class AbstractPacketListener<T, V extends Packet> implements Enc
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        switch (pcap.getDataLinkType()) {
-            case EN10MB:
-                packet = Ethernet.newInstance(data);
-                while (packet != null) {
-                    if (packet.getClass() == clazz) {
-                        nextPacket(this.userArgument, this.pcapPktHdr, (V) packet);
-                        return (V) packet;
-                    }
-                    packet = packet.getPacket();
-                }
-            case IEEE802_11_RADIO:
-                packet = RadioTap.newInstance(data);
-                while (packet != null) {
-                    if (packet.getClass() == clazz) {
-                        nextPacket(this.userArgument, this.pcapPktHdr, (V) packet);
-                        return (V) packet;
-                    }
-                    packet = packet.getPacket();
-                }
-            case LINUX_SLL:
-                packet = SLL.newInstance(data);
-                while (packet != null) {
-                    if (packet.getClass() == clazz) {
-                        nextPacket(this.userArgument, this.pcapPktHdr, (V) packet);
-                        return (V) packet;
-                    }
-                    packet = packet.getPacket();
-                }
-            default:
-                nextPacket(this.userArgument, this.pcapPktHdr, null);
-                return null;
+
+        Map<Class, Packet> packets = PacketListener.parseMap(pcap.getDataLinkType(), data);
+        Packet packet = packets.get(clazz);
+        if (packet == null) {
+            packet = UnknownPacket.newInstance(data);
+            nextPacket(userArgument, pcapPktHdr, (V) packet);
+        } else {
+            nextPacket(userArgument, pcapPktHdr, (V) packet);
         }
+        return (V) packet;
     }
 
 }

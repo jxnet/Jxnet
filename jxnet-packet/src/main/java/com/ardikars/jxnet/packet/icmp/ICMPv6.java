@@ -65,6 +65,11 @@ public class ICMPv6 extends ICMP {
     }
 
     @Override
+    public Packet getPacket() {
+        return getTypeAndCode().decode(nextPacket);
+    }
+
+    @Override
     public byte[] toBytes() {
         byte[] data = new byte[ICMP_HEADER_LENGTH + ((this.nextPacket == null) ? 0 : this.nextPacket.length)];
         ByteBuffer buffer = ByteBuffer.wrap(data);

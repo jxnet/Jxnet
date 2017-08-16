@@ -252,7 +252,7 @@ public class IPv6 extends IP {
                 this.setNextHeader(IPProtocolType.UDP);
                 this.nextPacket = udp.toBytes();
                 return this;
-            case "com.ardikars.jxnet.packet.icmp.ICMPv6":
+            case "com.ardikars.jxnet.packet.icmp.ICMPv6InverseNeighborDiscoverySolicitation":
                 ICMPv6 icmp = (ICMPv6) packet;
                 if (icmp.getChecksum() == 0) {
                     bb = ByteBuffer.wrap(icmp.toBytes());

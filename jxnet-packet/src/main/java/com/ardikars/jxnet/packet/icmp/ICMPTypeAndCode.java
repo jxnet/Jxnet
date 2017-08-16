@@ -17,10 +17,13 @@
 
 package com.ardikars.jxnet.packet.icmp;
 
+import com.ardikars.jxnet.Decoder;
 import com.ardikars.jxnet.NamedTwoKeyMap;
 import com.ardikars.jxnet.TwoKeyMap;
+import com.ardikars.jxnet.packet.Packet;
 import com.ardikars.jxnet.packet.icmp.icmpv4.*;
 import com.ardikars.jxnet.packet.icmp.icmpv6.*;
+import com.ardikars.jxnet.packet.ndp.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +32,7 @@ import java.util.Map;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public abstract class ICMPTypeAndCode extends NamedTwoKeyMap<Byte, Byte, ICMPTypeAndCode> {
+public abstract class ICMPTypeAndCode extends NamedTwoKeyMap<Byte, Byte, ICMPTypeAndCode> implements Decoder<Packet, byte[]> {
 
     protected static Map<TwoKeyMap<Byte, Byte>, ICMPTypeAndCode> registry =
             new HashMap<TwoKeyMap<Byte, Byte>, ICMPTypeAndCode>();
@@ -65,9 +68,44 @@ public abstract class ICMPTypeAndCode extends NamedTwoKeyMap<Byte, Byte, ICMPTyp
     @Override
     public String toString() {
         return new StringBuilder()
-                .append("[Type: " + this.getType())
-                .append(", Code: " + this.getCode())
+                .append("[Type: " + (this.getType() & 0xff))
+                .append(", Code: " + (this.getCode() & 0xff))
                 .append("]").toString();
+    }
+
+    @Override
+    public Packet decode(byte[] data) {
+        int type = getType() & 0xff;
+        int code = getCode() & 0xff;
+        switch (type) {
+            case 133:
+                switch (code) {
+                    case 0: return RouterSolicitation.newInstance(data);
+                    default: return null;
+
+                }
+            case 134:
+                switch (code) {
+                    case 0: return RouterAdvertisement.newInstance(data);
+                    default: return null;
+                }
+            case 135:
+                switch (code) {
+                    case 0: return NeighborSolicitation.newInstance(data);
+                    default: return null;
+                }
+            case 136:
+                switch (code) {
+                    case 0: return NeighborAdvertisement.newInstance(data);
+                    default: return null;
+                }
+            case 137:
+                switch (code) {
+                    case 0: return Redirect.newInstance(data);
+                    default: return null;
+                }
+            default: return null;
+        }
     }
 
     static {
@@ -110,7 +148,7 @@ public abstract class ICMPTypeAndCode extends NamedTwoKeyMap<Byte, Byte, ICMPTyp
 
             register(ICMPv4TimestampReply.TIMESTAMP_REPLY);
 
-            // ICMPv6
+            // ICMPv6InverseNeighborDiscoverySolicitation
 
             register(ICMPv6EchoRequest.ECHO_REQUEST);
 
@@ -133,6 +171,46 @@ public abstract class ICMPTypeAndCode extends NamedTwoKeyMap<Byte, Byte, ICMPTyp
 
             register(ICMPv6TimeExceeded.HOP_LIMIT_EXCEEDED_IN_TRANSIT);
             register(ICMPv6TimeExceeded.FRAGMENT_REASSEMBLY_TIME_EXCEEDED);
+
+            register(ICMPv6MulticastListenerQuery.MULTICAST_LISTENER_QUERY);
+
+            register(ICMPv6MulticastListenerReport.MULTICAST_LISTENER_REPORT);
+
+            register(ICMPv6MulticastListenerDone.MULTICAST_LISTENER_DONE);
+
+            register(ICMPv6RouterSolicitation.ROUTER_SOLICITATION);
+
+            register(ICMPv6RouterAdvertisement.ROUTER_ADVERTISEMENT);
+
+            register(ICMPv6NeighborSolicitation.NEIGHBOR_SOLICITATION);
+
+            register(ICMPv6NeighborAdvertisement.NEIGHBOR_ADVERTISEMENT);
+
+            register(ICMPv6RedirectMessage.REDIRECT_MESSAGE);
+
+            register(ICMPv6RouterRenumbering.ROUTER_RENUMBERING_COMMAND);
+            register(ICMPv6RouterRenumbering.ROUTER_RENUMBERING_RESULT);
+            register(ICMPv6RouterRenumbering.SEQUENCE_NUMBER_RESET);
+
+            register(ICMPv6NodeInformationQuery.DATA_FIELD_CONTAINS_IPV6_ADDRESS);
+            register(ICMPv6NodeInformationQuery.DATA_FIELD_CONTAIONS_NAME);
+            register(ICMPv6NodeInformationQuery.DATA_FIELD_CONTAINS_IPV4_ADDRESS);
+
+            register(ICMPv6NodeInformationResponse.SUCCESSFULL_REPLY);
+            register(ICMPv6NodeInformationResponse.RESPONDER_REFUSES_TO_SUPPLY_THE_ASWER);
+            register(ICMPv6NodeInformationResponse.QTYPE_OF_THE_QUERY_IS_UNKNOWN_TO_THE_RESPONDER);
+
+            register(ICMPv6InverseNeighborDiscoverySolicitation.INVERSE_NEIGHBOR_DISCOVERY_SOLICITATION);
+
+            register(ICMPv6InverseNeighborDiscoveryAdvertisement.INVERSE_NEIGHBOR_DISCOVERY_ADVERTISEMENT);
+
+            register(ICMPv6HomeAgentAddressDiscoveryRequest.HOME_AGENT_ADDRESS_DISCOVERY_REQUEST);
+
+            register(ICMPv6HomeAgentAddressDiscoveryReply.HOME_AGENT_ADDRESS_DISCOVERY_REPLY);
+
+            register(ICMPv6MobilePrefixSolicitation.MOBILE_PREFIX_SOLICITATION);
+
+            register(ICMPv6MobilePrefixAdvertisement.MOBILE_PREFIX_ADVERTISEMENT);
 
         }
     }

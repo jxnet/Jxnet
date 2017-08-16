@@ -6,7 +6,7 @@ This might also work on non-Linux Unix-compatible platforms, but that
 has not been tested.
 
 See also the libpcap INSTALL.txt file for further libpcap configuration
-options.
+neighborDiscoveryOptions.
 
 These additions/extensions have been made to PCAP to allow it to
 capture packets from a SITA ACN device (and potentially others).
