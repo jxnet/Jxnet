@@ -4,10 +4,10 @@ import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
 import com.ardikars.jxnet.logger.DefaultPrinter;
 import com.ardikars.jxnet.logger.Logger;
+import com.ardikars.jxnet.packet.Packet;
 import com.ardikars.jxnet.packet.PacketListener;
 import com.ardikars.jxnet.packet.ethernet.Ethernet;
 import com.ardikars.jxnet.packet.ip.IPv4;
-import com.ardikars.jxnet.packet.tcp.TCPTest;
 import com.ardikars.jxnet.util.HexUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -19,14 +19,15 @@ import java.util.Arrays;
 /**
  * Created by root on 16/08/17.
  */
-public class UDPTest {
+public class Ethernet_IPv4_UDP_Test {
+
     private static int index = 0;
 
     private String pcap_source_file = getClass().getResource("/sample-capture/eth_ipv4_udp_dns.pcapng").getPath();
 
     private StringBuilder errbuf = new StringBuilder();
     private Pcap pcap = null;
-    private Logger logger = Logger.getLogger(UDPTest.class, new DefaultPrinter());
+    private Logger logger = Logger.getLogger(Ethernet_IPv4_UDP_Test.class, new DefaultPrinter());
 
     String[] hexStream = new String[] {
             "14cc20ccb9ecb827eb9a9c5f08004500003aa160400040119200c0a80196b4839090edc700350026078a31fe0100000100000000000008617264696b61727303636f6d0000010001",
@@ -102,6 +103,41 @@ public class UDPTest {
             }
         };
         PacketListener.loop(pcap, -1, callback, "");
+    }
+
+    @Test
+    public void foreach() {
+        PacketListener.List<String> listCallback = (arg, pktHdr, packets) -> {
+            logger.info("==========================================");
+            packets.stream().forEach(packet -> logger.info(packet.toString()));
+            logger.info("-------------------------------------------");
+            Packet packet = packets.get(0);
+            packet.forEachRemaining(packet1 -> logger.info(packet1.toString()));
+            logger.info("-------------------------------------------");
+            Packet packet2 = packets.get(0);
+            while (packet2.hasNext()) { // false
+                logger.info(packet2.next().toString());
+            }
+            logger.info("==========================================");
+        };
+        PacketListener.Map<String> mapCallback = (arg, pktHdr, packets) -> {
+            logger.info("==========================================");
+            packets.forEach((aClass, packet) -> {
+                logger.info(aClass + ": "+ packet.toString());
+            });
+            logger.info("-------------------------------------------");
+            Packet packet = packets.get(Ethernet.class);
+            packet.forEachRemaining(packet1 -> logger.info(packet1.toString()));
+            logger.info("-------------------------------------------");
+            Packet packet2 = packets.get(Ethernet.class);
+            while (packet2.hasNext()) { // false
+                logger.info(packet2.next().toString());
+            }
+            logger.info("==========================================");
+        };
+
+        PacketListener.loop(pcap, -1, listCallback, "");
+        PacketListener.loop(pcap, -1, mapCallback, "");
     }
 
     @After
