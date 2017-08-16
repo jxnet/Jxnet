@@ -3,6 +3,7 @@ package com.ardikars.test;
 import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
 import com.ardikars.jxnet.packet.PacketHelper;
+import com.ardikars.jxnet.packet.PacketListener;
 
 public class PacketLoop {
 
@@ -15,11 +16,11 @@ public class PacketLoop {
             System.err.println("ERROR.");
             return;
         }
-        PacketHandler<String> callback = (arg, pktHdr, packets) -> {
+        PacketListener.Map<String> callback = (arg, pktHdr, packets) -> {
             System.out.println(packets);
         };
 
-        PacketHelper.loop(pcap, -1, callback, null);
+        PacketListener.loop(pcap, -1, callback, null);
         Jxnet.PcapClose(pcap);
     }
 }
