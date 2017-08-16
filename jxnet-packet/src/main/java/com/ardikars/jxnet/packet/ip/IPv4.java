@@ -317,8 +317,10 @@ public class IPv4 extends IP {
                 this.setProtocol(IPProtocolType.ICMP);
                 this.nextPacket = packet.toBytes();
                 return this;
+            default:
+                this.nextPacket = packet.toBytes();
+                return this;
         }
-        return this;
     }
 
     @Override

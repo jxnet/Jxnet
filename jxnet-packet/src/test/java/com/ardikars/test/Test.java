@@ -5,6 +5,7 @@ import com.ardikars.jxnet.Pcap;
 import com.ardikars.jxnet.PcapPktHdr;
 import com.ardikars.jxnet.packet.Packet;
 import com.ardikars.jxnet.packet.PacketHelper;
+import com.ardikars.jxnet.packet.PacketListener;
 import com.ardikars.jxnet.packet.ethernet.Ethernet;
 
 import java.util.Map;
@@ -14,7 +15,7 @@ public class Test {
     @org.junit.Test
     public void test() {
 
-        PacketHandler<String> callback = new PacketHandler<String>() {
+        PacketListener.Map<String> callback = new PacketListener.Map<String>() {
             @Override
             public void nextPacket(String arg, PcapPktHdr pktHdr, Map<Class, Packet> packets) {
                 Ethernet ethernet = (Ethernet) packets.get(Ethernet.class);
@@ -26,7 +27,7 @@ public class Test {
         StringBuilder errbuf = new StringBuilder();
         Pcap pcap = Jxnet.PcapOpenOffline("/root/Downloads/IPv6_NDP.cap", errbuf);
 
-        PacketHelper.loop(pcap, -1, callback, "");
+        PacketListener.loop(pcap, -1, callback, "");
         Jxnet.PcapClose(pcap);
     }
 
