@@ -1,13 +1,9 @@
 package capture;
 
-import static com.ardikars.jxnet.Jxnet.*;
-
 import com.ardikars.jxnet.*;
-import com.ardikars.jxnet.packet.Packet;
-import com.ardikars.jxnet.packet.PacketHandler;
-import com.ardikars.jxnet.packet.PacketHelper;
+import com.ardikars.jxnet.packet.PacketListener;
 
-import java.util.Map;
+import static com.ardikars.jxnet.Jxnet.*;
 
 /**
  * Created by root on 6/27/17.
@@ -35,14 +31,14 @@ public class CaptureWithFilter {
             exit(-2);
         }
 
-        PacketHandler<String> callback = (arg, pktHdr, packets) -> {
+        PacketListener.Map<String> callback = (arg, pktHdr, packets) -> {
             System.out.println(packets);
         };
 
         BpfProgram bpfProgram = new BpfProgram();
         PcapCompile(handle, bpfProgram, "icmp", BpfProgram.BpfCompileMode.OPTIMIZE, netmask);
         PcapSetFilter(handle, bpfProgram);
-        PacketHelper.loop(handle, 10, callback, "");
+        PacketListener.loop(handle, 10, callback, "");
         PcapClose(handle);
     }
 

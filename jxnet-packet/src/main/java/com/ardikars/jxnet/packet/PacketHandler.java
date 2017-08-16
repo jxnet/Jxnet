@@ -25,6 +25,7 @@ import java.util.Map;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
+@Deprecated
 @FunctionalInterface
 public interface PacketHandler<T> {
 

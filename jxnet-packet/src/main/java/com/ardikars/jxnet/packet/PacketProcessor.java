@@ -58,6 +58,7 @@ public abstract class PacketProcessor<T, V extends Packet> implements Encoder<by
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public V decode(byte[] data) {
         String className = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1].getTypeName();
@@ -68,7 +69,7 @@ public abstract class PacketProcessor<T, V extends Packet> implements Encoder<by
             e.printStackTrace();
         }
 
-        Map<Class, Packet> packets = PacketHelper.parseMap(pcap.getDataLinkType(), data);
+        Map<Class, Packet> packets = PacketListener.parseMap(pcap.getDataLinkType(), data);
         Packet packet = packets.get(clazz);
         if (packet == null) {
             packet = UnknownPacket.newInstance(data);
