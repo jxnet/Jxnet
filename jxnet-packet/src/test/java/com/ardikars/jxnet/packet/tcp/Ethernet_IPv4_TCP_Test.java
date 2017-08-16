@@ -2,7 +2,6 @@ package com.ardikars.jxnet.packet.tcp;
 
 import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
-import com.ardikars.jxnet.PcapPktHdr;
 import com.ardikars.jxnet.logger.DefaultPrinter;
 import com.ardikars.jxnet.logger.Logger;
 import com.ardikars.jxnet.packet.Packet;
@@ -18,13 +17,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 @RunWith(JUnit4.class)
-public class TCPTest {
+public class Ethernet_IPv4_TCP_Test {
 
     private static int index = 0;
 
@@ -32,7 +27,7 @@ public class TCPTest {
 
     private StringBuilder errbuf = new StringBuilder();
     private Pcap pcap = null;
-    private Logger logger = Logger.getLogger(TCPTest.class, new DefaultPrinter());
+    private Logger logger = Logger.getLogger(Ethernet_IPv4_TCP_Test.class, new DefaultPrinter());
 
     String[] hexStream = new String[] {
             "14cc20ccb9ecb827eb9a9c5f08004500003c8303400040061710c0a80196dea5ffc4e7661f9069206fa400000000a0027210a0d70000020405b40402080a0020eca70000000001030307",
