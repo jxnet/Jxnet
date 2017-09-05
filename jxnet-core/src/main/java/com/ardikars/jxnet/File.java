@@ -38,29 +38,29 @@ public final class File extends java.io.File {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (obj == this)
-			return true;
-		if (obj.getClass() == this.getClass())
-			return false;
-		if (obj instanceof BpfProgram) {
-			BpfProgram bpf = (BpfProgram) obj;
-			return address  == bpf.getAddress();
-		}
-		return false;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
+
+		File file = (File) o;
+
+		return getAddress() == file.getAddress();
 	}
 
 	@Override
 	public int hashCode() {
-		return 17 * 37 +
-				((int) (this.address ^ (this.address >> 32)));
+		int result = super.hashCode();
+		result = 31 * result + (int) (getAddress() ^ (getAddress() >>> 32));
+		return result;
 	}
 
 	@Override
 	public String toString() {
-		return new StringBuilder().append("[Pointer Address: ")
-				.append(address)
-				.append("]").toString();
+		final StringBuilder sb = new StringBuilder("File{");
+		sb.append("address=").append(address);
+		sb.append('}');
+		return sb.toString();
 	}
 
 }

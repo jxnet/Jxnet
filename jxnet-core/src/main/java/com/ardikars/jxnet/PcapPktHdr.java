@@ -74,15 +74,38 @@ public final class PcapPktHdr {
 	public long getTvUsec() {
 		return this.tv_usec;
 	}
-	
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		PcapPktHdr that = (PcapPktHdr) o;
+
+		if (caplen != that.caplen) return false;
+		if (getLen() != that.getLen()) return false;
+		if (tv_sec != that.tv_sec) return false;
+		return tv_usec == that.tv_usec;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = caplen;
+		result = 31 * result + getLen();
+		result = 31 * result + tv_sec;
+		result = 31 * result + (int) (tv_usec ^ (tv_usec >>> 32));
+		return result;
+	}
+
 	@Override
 	public String toString() {
-		return new StringBuilder()
-				.append("[Capture Length: ").append(this.caplen)
-				.append(", Length: ").append(this.len)
-				.append(", TvSec: ").append(this.tv_sec)
-				.append(", TvUSec: ").append(this.tv_usec)
-				.append("]").toString();
+		final StringBuilder sb = new StringBuilder("PcapPktHdr{");
+		sb.append("caplen=").append(caplen);
+		sb.append(", len=").append(len);
+		sb.append(", tv_sec=").append(tv_sec);
+		sb.append(", tv_usec=").append(tv_usec);
+		sb.append('}');
+		return sb.toString();
 	}
-	
+
 }
