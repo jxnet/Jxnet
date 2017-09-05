@@ -174,23 +174,18 @@ public final class MacAddress {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (obj == this)
-			return true;
-		if (obj.getClass() != this.getClass())
-			return false;
-		if (obj instanceof MacAddress) {
-			final MacAddress addr = (MacAddress) obj;
-			return Arrays.equals(this.address, addr.toBytes());
-		}
-		return false;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		MacAddress that = (MacAddress) o;
+
+		return Arrays.equals(address, that.address);
 	}
 
 	@Override
 	public int hashCode() {
-		long hashcode = toLong();
-		return 17 * 37 +
-				((int) (hashcode ^ (hashcode >> 32)));
+		return Arrays.hashCode(address);
 	}
 
 	@Override

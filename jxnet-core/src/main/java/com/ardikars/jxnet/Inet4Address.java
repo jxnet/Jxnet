@@ -128,29 +128,28 @@ public final class Inet4Address extends InetAddress {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (obj == this)
-			return true;
-		if (obj.getClass() != this.getClass())
-			return false;
-		if (obj instanceof Inet4Address) {
-			final Inet4Address addr = (Inet4Address) obj;
-			return Arrays.equals(this.address, addr.toBytes());
-		}
-		return false;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Inet4Address that = (Inet4Address) o;
+
+		return Arrays.equals(address, that.address);
 	}
 
 	@Override
 	public int hashCode() {
-		return 17 * 37 + toInt();
+		return Arrays.hashCode(address);
 	}
 
+	@Override
 	public String toString() {
-		return new StringBuilder()
-				.append(this.address[0] & 0xff).append(".")
-				.append(this.address[1] & 0xff).append(".")
-				.append(this.address[2] & 0xff).append(".")
-				.append(this.address[3] & 0xff).toString();
+		final StringBuilder sb = new StringBuilder();
+		sb.append(this.address[0] & 0xff).append(".");
+		sb.append(this.address[1] & 0xff).append(".");
+		sb.append(this.address[2] & 0xff).append(".");
+		sb.append(this.address[3] & 0xff);
+		return sb.toString();
 	}
 
 }

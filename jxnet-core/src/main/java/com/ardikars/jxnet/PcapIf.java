@@ -75,30 +75,36 @@ public final class PcapIf {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (obj == this) return true;
-		if (obj.getClass() != this.getClass()) return false;
-		if (!(obj instanceof PcapIf)) return false;
-		PcapIf pcapIf = (PcapIf) obj;
-		if (this.name.equals(pcapIf.getName()) &&
-				this.description.equals(pcapIf.getDescription()) &&
-				this.flags == pcapIf.getFlags())
-			return true;
-		return false;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		PcapIf pcapIf = (PcapIf) o;
+
+		if (getFlags() != pcapIf.getFlags()) return false;
+		if (!getName().equals(pcapIf.getName())) return false;
+		if (!getDescription().equals(pcapIf.getDescription())) return false;
+		return getAddresses().equals(pcapIf.getAddresses());
 	}
 
 	@Override
 	public int hashCode() {
-		return Arrays.hashCode(toString().getBytes());
+		int result = getName().hashCode();
+		result = 31 * result + getDescription().hashCode();
+		result = 31 * result + getAddresses().hashCode();
+		result = 31 * result + getFlags();
+		return result;
 	}
 
 	@Override
 	public String toString() {
-		return new StringBuilder()
-				.append("[Name: " + this.name)
-				.append(", Description: " + this.description)
-				.append(", Flags: " + this.flags)
-				.append("]").toString();
+		final StringBuilder sb = new StringBuilder("PcapIf{");
+		sb.append("name='").append(name).append('\'');
+		sb.append(", description='").append(description).append('\'');
+		sb.append(", addresses=").append(addresses);
+		sb.append(", flags=").append(flags);
+		sb.append('}');
+		return sb.toString();
 	}
-	
+
 }

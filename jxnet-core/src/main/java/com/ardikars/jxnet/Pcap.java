@@ -37,6 +37,10 @@ public final class Pcap {
 		return this.address;
 	}
 
+	/**
+	 * Get datalink type.
+	 * @return datalink type.
+	 */
 	public DataLinkType getDataLinkType() {
 		if (!this.isClosed() && this.dataLinkType == null) {
 			this.dataLinkType = DataLinkType.valueOf((short) Jxnet.PcapDataLink(this));
@@ -44,6 +48,10 @@ public final class Pcap {
 		return this.dataLinkType;
 	}
 
+	/**
+	 * Get shapshot length.
+	 * @return snapshot length.
+	 */
 	public int getSnapshotLength() {
 		if (!this.isClosed() && this.snapshotLength == 0) {
 			this.snapshotLength = Jxnet.PcapSnapshot(this);
@@ -51,6 +59,10 @@ public final class Pcap {
 		return this.snapshotLength;
 	}
 
+	/**
+	 * Check pcap handle.
+	 * @return true if closed.
+	 */
 	public boolean isClosed() {
 		if (this.address == 0) {
 			return true;
@@ -59,29 +71,26 @@ public final class Pcap {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (obj == this)
-			return true;
-		if (obj.getClass() != this.getClass())
-			return false;
-		if (obj instanceof Pcap) {
-			Pcap pcap = (Pcap) obj;
-			return address  == pcap.getAddress();
-		}
-		return false;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Pcap pcap = (Pcap) o;
+
+		return getAddress() == pcap.getAddress();
 	}
 
 	@Override
 	public int hashCode() {
-		return 17 * 37 +
-				((int) (this.address ^ (this.address >> 32)));
+		return (int) (getAddress() ^ (getAddress() >>> 32));
 	}
 
 	@Override
 	public String toString() {
-		return new StringBuilder().append("[Pointer Address: ")
-				.append(address)
-				.append("]").toString();
+		final StringBuilder sb = new StringBuilder("Pcap{");
+		sb.append("address=").append(address);
+		sb.append('}');
+		return sb.toString();
 	}
 
 }
