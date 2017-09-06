@@ -3,6 +3,9 @@ package com.ardikars.test;
 
 import com.ardikars.jxnet.*;
 
+import java.nio.ByteBuffer;
+import java.util.List;
+
 public class Test {
 
     public static void main(String[] args) {
@@ -17,6 +20,12 @@ public class Test {
         print(PcapDumper.class);
         print(PcapPktHdr.class);
         print(PcapStat.class);
+        print(StringBuilder.class);
+        print(List.class);
+        print(Pcap.class);
+        print(ByteBuffer.class);
+        print(Inet4Address.class);
+        print(PcapDirection.class);
     }
 
     public static void print(Class clazz) {
