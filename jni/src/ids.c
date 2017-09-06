@@ -48,58 +48,6 @@ void SetStringBuilderIDs(JNIEnv *env) {
 	}
 }
 
-jclass AddrClass = NULL;
-jfieldID AddrAddrTypeFID = NULL;
-jfieldID AddrAddrBitsFID = NULL;
-jfieldID AddrDataFID = NULL;
-jmethodID AddrInitializeMID = NULL;
-jmethodID AddrGetStringAddressMID = NULL;
-
-void SetAddrIDs(JNIEnv *env) {
-
-	AddrClass = (*env)->FindClass(env, "com/ardikars/jxnet/Addr");
-
-	if(AddrClass == NULL) {
-		ThrowNew(env, CLASS_NOT_FOUND_EXCEPTION, "Unable to initialize class com.ardikars.jxnet.Addr");
-		return;
-	}
-
-	AddrAddrTypeFID = (*env)->GetFieldID(env, AddrClass, "addr_type", "S");
-
-	if(AddrAddrTypeFID == NULL) {
-		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field Addr.addr_type:short");
-		return;
-	}
-
-	AddrAddrBitsFID = (*env)->GetFieldID(env, AddrClass, "addr_bits", "S");
-
-	if(AddrAddrBitsFID == NULL) {
-		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field Addr.addr_bits:short");
-		return;
-	}
-
-	AddrDataFID = (*env)->GetFieldID(env, AddrClass, "data", "[B");
-
-	if(AddrDataFID == NULL) {
-		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field Addr.data:byte[]");
-		return;
-	}
-
-	AddrInitializeMID = (*env)->GetStaticMethodID(env, AddrClass, "initialize", "(SS[B)Lcom/ardikars/jxnet/Addr;");
-
-	if (AddrInitializeMID == NULL) {
-		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize static method Addr.initialize(short,short)");
-		return;
-	}
-
-	AddrGetStringAddressMID = (*env)->GetMethodID(env, AddrClass, "getStringAddress", "()Ljava/lang/String;");
-
-	if (AddrGetStringAddressMID == NULL) {
-		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method Addr.getStringAddress()");
-		return;
-	}
-}
-
 jclass ListClass = NULL;
 jmethodID ListAddMID = NULL;
 
@@ -549,4 +497,3 @@ void SetMacAddressIDs(JNIEnv *env) {
 		return;
 	}
 }
-

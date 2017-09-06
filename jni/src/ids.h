@@ -23,15 +23,6 @@ extern jmethodID StringBuilderAppendMID;
 
 void SetStringBuilderIDs(JNIEnv *env);
 
-extern jclass AddrClass;
-extern jfieldID AddrAddrTypeFID;
-extern jfieldID AddrAddrBitsFID;
-extern jfieldID AddrDataFID;
-extern jmethodID AddrInitializeMID;
-extern jmethodID AddrGetStringAddressMID;
-
-void SetAddrIDs(JNIEnv *env);
-
 extern jclass ListClass;
 extern jmethodID ListAddMID;
 
