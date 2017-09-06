@@ -30,6 +30,75 @@
 
 /*
  * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    InitIDs
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_com_ardikars_jxnet_Jxnet_InitIDs
+  (JNIEnv *env, jclass jcls, jint jhash_code) {
+    if (jhash_code == 0) {
+        return;
+    }
+    switch (jhash_code) {
+        case -125628996:
+#ifdef DEBUG
+    puts("Initializing com.ardikars.jxnet.Jxnet IDs")
+#endif
+        	break;
+        case 2041834879:
+#ifdef DEBUG
+    puts("Initializing com.ardikars.jxnet.BpfProgram IDs")
+#endif
+        	break;
+        case 1694825011:
+#ifdef DEBUG
+    puts("Initializing com.ardikars.test.Preconditions IDs")
+#endif
+        	break;
+        case -4186193:
+#ifdef DEBUG
+    puts("Initializing com.ardikars.jxnet.File IDs")
+#endif
+        	break;
+        case -549568616:
+#ifdef DEBUG
+    puts("Initializing com.ardikars.jxnet.MacAddress IDs")
+#endif
+        	break;
+        case -1651125978:
+#ifdef DEBUG
+    puts("Initializing com.ardikars.jxnet.PcapAddr IDs")
+#endif
+        	break;
+        case 552471442:
+#ifdef DEBUG
+    puts("Initializing com.ardikars.jxnet.PcapIf IDs")
+#endif
+        	break;
+        case 1395088008:
+#ifdef DEBUG
+    puts("Initializing com.ardikars.jxnet.SockAddr IDs")
+#endif
+        	break;
+        case -1787275882:
+#ifdef DEBUG
+    puts("Initializing com.ardikars.jxnet.PcapDumper IDs")
+#endif
+        	break;
+        case -1452791214:
+#ifdef DEBUG
+    puts("Initializing com.ardikars.jxnet.PcapPktHdr IDs")
+#endif
+        	break;
+        case -1650574455:
+#ifdef DEBUG
+    puts("Initializing com.ardikars.jxnet.PcapStat IDs")
+#endif
+        	break;
+    }
+  }
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
  * Method:    PcapFindAllDevs
  * Signature: (Ljava/util/List;Ljava/lang/StringBuilder;)I
  */
@@ -1212,4 +1281,3 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetDirection
 #endif
 	return -1;
   }
-  
