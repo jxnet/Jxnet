@@ -31,9 +31,15 @@ public final class Jxnet extends Core {
 	public static final int OK = 0;
 	
 	private static boolean isLoaded = false;
-	
+
+	private static native void InitIDs(int hashCode);
+
 	private Jxnet() {
 		//prevent to create jxnet instance
+	}
+
+	public static void initIDs(Class clazz) {
+		InitIDs(clazz.getName().hashCode());
 	}
 
 	/**

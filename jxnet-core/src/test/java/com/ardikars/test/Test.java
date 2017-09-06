@@ -1,20 +1,26 @@
 package com.ardikars.test;
 
 
-import com.ardikars.jxnet.Jxnet;
-import com.ardikars.jxnet.Pcap;
+import com.ardikars.jxnet.*;
 
 public class Test {
 
     public static void main(String[] args) {
-        StringBuilder errbuf = new StringBuilder();
-        Pcap pcap = Jxnet.PcapOpenLive("wlan0", 65535, 1, 2000, errbuf);
-        if (pcap == null) {
-            System.out.println(errbuf.toString());
-        } else {
-            System.out.println(pcap + " : " +pcap.getDataLinkType());
-        }
-        Jxnet.PcapClose(pcap);
+        print(Jxnet.class);
+        print(BpfProgram.class);
+        print(Preconditions.class);
+        print(File.class);
+        print(MacAddress.class);
+        print(PcapAddr.class);
+        print(PcapIf.class);
+        print(SockAddr.class);
+        print(PcapDumper.class);
+        print(PcapPktHdr.class);
+        print(PcapStat.class);
+    }
+
+    public static void print(Class clazz) {
+        System.out.println("case " + (clazz.getName().hashCode() & 0xffffffff) +": \t\n#ifdef DEBUG\n"+ "puts(\"Initializing " + clazz.getName()+" IDs\")" +"\n#endif\n\tbreak;");
     }
 
 }
