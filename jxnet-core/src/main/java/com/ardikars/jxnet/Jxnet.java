@@ -39,7 +39,8 @@ public final class Jxnet extends Core {
 	}
 
 	public static void initIDs(Class clazz) {
-		InitIDs(clazz.getName().hashCode());
+		//InitIDs(clazz.getName().hashCode());
+		System.out.println("Initializing " + clazz.getName() + " IDs.");
 	}
 
 	/**
@@ -204,7 +205,9 @@ public final class Jxnet extends Core {
 	 * Return the first valid device in the system.
 	 * @param errbuf error buffer.
 	 * @return first valid device in the system.
+	 * PCAP_DEPRECATED(pcap_lookupdev, "use 'pcap_findalldevs' and use the first device")
 	 */
+	@Deprecated
 	public static native String PcapLookupDev(StringBuilder errbuf); //
 
 	/**
@@ -500,6 +503,9 @@ public final class Jxnet extends Core {
 		if (!isLoaded) {
 			try {
 				Loaders.loadLibrary();
+				initIDs(List.class);
+				initIDs(StringBuilder.class);
+				initIDs(ByteBuffer.class);
 				isLoaded = true;
 			} catch (Exception e) {
 				System.err.println(e.getMessage());

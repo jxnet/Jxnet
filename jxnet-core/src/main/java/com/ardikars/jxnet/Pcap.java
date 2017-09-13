@@ -23,6 +23,8 @@ package com.ardikars.jxnet;
  */
 public final class Pcap {
 
+	public static final Inet4Address PCAP_NETMASK_UNKNOWN = Inet4Address.valueOf(0xffffffff);
+
 	private DataLinkType dataLinkType;
 
 	private int snapshotLength;
@@ -91,6 +93,10 @@ public final class Pcap {
 		sb.append("address=").append(address);
 		sb.append('}');
 		return sb.toString();
+	}
+
+	static {
+		Jxnet.initIDs(Pcap.class);
 	}
 
 }
