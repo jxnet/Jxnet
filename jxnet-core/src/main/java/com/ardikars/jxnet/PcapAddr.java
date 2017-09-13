@@ -17,8 +17,6 @@
 
 package com.ardikars.jxnet;
 
-import java.util.Arrays;
-
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
@@ -104,6 +102,10 @@ public final class PcapAddr {
 		sb.append(", dstaddr=").append(dstaddr);
 		sb.append('}');
 		return sb.toString();
+	}
+
+	static {
+		Jxnet.initIDs(PcapAddr.class);
 	}
 
 }

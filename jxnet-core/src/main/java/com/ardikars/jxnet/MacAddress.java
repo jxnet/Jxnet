@@ -202,11 +202,12 @@ public final class MacAddress {
 	}
 
 	static {
-		try {
-			Class.forName("com.ardikars.jxnet.Jxnet");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		Jxnet.initIDs(MacAddress.class);
+//		try {
+//			Class.forName("com.ardikars.jxnet.Jxnet");
+//		} catch (ClassNotFoundException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 }

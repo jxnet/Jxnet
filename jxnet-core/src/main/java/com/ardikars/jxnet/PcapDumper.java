@@ -67,4 +67,8 @@ public final class PcapDumper {
 		return sb.toString();
 	}
 
+	static {
+		Jxnet.initIDs(PcapDumper.class);
+	}
+
 }

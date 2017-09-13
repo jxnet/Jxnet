@@ -55,6 +55,9 @@ a.out
 /example/build/
 /example/target
 /example/out
+/jni/CMakeFiles
+/jni/CMakeCache.txt
+/jni/cmake_install.cmake
 /jni/.gradle/
 /jni/build
 /jni/out

@@ -83,4 +83,8 @@ public final class PcapStat {
 		return sb.toString();
 	}
 
+	static {
+		Jxnet.initIDs(PcapStat.class);
+	}
+
 }
