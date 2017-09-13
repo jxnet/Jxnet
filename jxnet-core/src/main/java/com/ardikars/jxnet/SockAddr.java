@@ -102,24 +102,21 @@ public final class SockAddr {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == this)
-            return true;
-        if (obj.getClass() != this.getClass())
-            return false;
-        if (obj instanceof Inet4Address) {
-            final Inet4Address addr = (Inet4Address) obj;
-            return Arrays.equals(this.data, addr.toBytes());
-        } else if (obj instanceof Inet6Address) {
-            final Inet6Address addr = (Inet6Address) obj;
-            return Arrays.equals(this.data, addr.toBytes());
-        }
-        return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SockAddr sockAddr = (SockAddr) o;
+
+        if (sa_family != sockAddr.sa_family) return false;
+        return Arrays.equals(getData(), sockAddr.getData());
     }
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(getData());
+        int result = (int) sa_family;
+        result = 31 * result + Arrays.hashCode(getData());
+        return result;
     }
 
     @Override
@@ -134,6 +131,10 @@ public final class SockAddr {
             default:
                 return null;
         }
+    }
+
+    static {
+        Jxnet.initIDs(SockAddr.class);
     }
 
 }

@@ -23,6 +23,9 @@ package com.ardikars.jxnet;
  */
 public final class BpfProgram {
 
+	/**
+	 * Bpf compile mode
+	 */
 	public enum BpfCompileMode {
 
 		OPTIMIZE(1), NON_OPTIMIZE(0);
@@ -44,7 +47,7 @@ public final class BpfProgram {
 	private long address;
 
 	/**
-	 * Create instance ob BpfProgram and initialize it.
+	 * Create instance of BpfProgram and initialize it.
 	 */
 	public BpfProgram() {
 		this.initBpfProgram();
@@ -54,6 +57,10 @@ public final class BpfProgram {
 		return this.address;
 	}
 
+	/**
+	 * Check bpf handle.
+	 * @return true if closed.
+	 */
 	public boolean isClosed() {
 		if (this.address == 0) {
 			return true;
@@ -62,37 +69,35 @@ public final class BpfProgram {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (obj == this)
-			return true;
-		if (obj.getClass() != this.getClass())
-			return false;
-		if (obj instanceof BpfProgram) {
-			BpfProgram bpf = (BpfProgram) obj;
-			return this.address == bpf.getAddress();
-		}
-		return false;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		BpfProgram that = (BpfProgram) o;
+
+		return getAddress() == that.getAddress();
 	}
 
 	@Override
 	public int hashCode() {
-		return 17 * 37 +
-				((int) (this.address ^ (this.address >> 32)));
+		return (int) (getAddress() ^ (getAddress() >>> 32));
 	}
 
 	@Override
 	public String toString() {
-		return new StringBuilder().append("[Pointer Address: ")
-				.append(this.address)
-				.append("]").toString();
+		final StringBuilder sb = new StringBuilder("BpfProgram{");
+		sb.append("address=").append(address);
+		sb.append('}');
+		return sb.toString();
 	}
-	
+
 	static {
-		try {
-			Class.forName("com.ardikars.jxnet.Jxnet");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		Jxnet.initIDs(BpfProgram.class);
+//		try {
+//			Class.forName("com.ardikars.jxnet.Jxnet");
+//		} catch (ClassNotFoundException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 }

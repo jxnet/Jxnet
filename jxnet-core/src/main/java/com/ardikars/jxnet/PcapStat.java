@@ -54,15 +54,37 @@ public final class PcapStat {
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		PcapStat pcapStat = (PcapStat) o;
+
+		if (ps_recv != pcapStat.ps_recv) return false;
+		if (ps_drop != pcapStat.ps_drop) return false;
+		return ps_ifdrop == pcapStat.ps_ifdrop;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = (int) (ps_recv ^ (ps_recv >>> 32));
+		result = 31 * result + (int) (ps_drop ^ (ps_drop >>> 32));
+		result = 31 * result + (int) (ps_ifdrop ^ (ps_ifdrop >>> 32));
+		return result;
+	}
+
+	@Override
 	public String toString() {
-		return new StringBuilder()
-				.append("[Recieved: ")
-				.append(ps_recv)
-				.append(", Dropped: ")
-				.append(ps_drop)
-				.append(", Dropped by Interface: ")
-				.append(ps_ifdrop)
-				.append("]").toString();
+		final StringBuilder sb = new StringBuilder("PcapStat{");
+		sb.append("ps_recv=").append(ps_recv);
+		sb.append(", ps_drop=").append(ps_drop);
+		sb.append(", ps_ifdrop=").append(ps_ifdrop);
+		sb.append('}');
+		return sb.toString();
+	}
+
+	static {
+		Jxnet.initIDs(PcapStat.class);
 	}
 
 }

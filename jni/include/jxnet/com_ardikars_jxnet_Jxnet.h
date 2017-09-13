@@ -11,6 +11,14 @@ extern "C" {
 #define com_ardikars_jxnet_Jxnet_OK 0L
 /*
  * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    InitIDs
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_com_ardikars_jxnet_Jxnet_InitIDs
+  (JNIEnv *, jclass, jint);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
  * Method:    PcapFindAllDevs
  * Signature: (Ljava/util/List;Ljava/lang/StringBuilder;)I
  */

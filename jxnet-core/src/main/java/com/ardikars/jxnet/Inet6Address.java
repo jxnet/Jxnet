@@ -205,25 +205,18 @@ public final class Inet6Address extends InetAddress {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (obj == this)
-			return true;
-		if (obj.getClass() != this.getClass())
-			return false;
-		if (obj instanceof Inet4Address) {
-			final Inet4Address addr = (Inet4Address) obj;
-			return Arrays.equals(this.address, addr.toBytes());
-		}
-		return false;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Inet6Address that = (Inet6Address) o;
+
+		return Arrays.equals(address, that.address);
 	}
 
 	@Override
 	public int hashCode() {
-		int hashCode = 17 * 3;
-		for (int i=0; i<address.length; i++) {
-			hashCode = hashCode * 3 + address[i];
-		}
-		return hashCode;
+		return Arrays.hashCode(address);
 	}
 
 	public String toString() {
@@ -266,4 +259,3 @@ public final class Inet6Address extends InetAddress {
 	}
 
 }
-

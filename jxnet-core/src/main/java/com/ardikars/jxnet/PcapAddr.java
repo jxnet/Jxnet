@@ -17,8 +17,6 @@
 
 package com.ardikars.jxnet;
 
-import java.util.Arrays;
-
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
@@ -72,33 +70,42 @@ public final class PcapAddr {
 		return this.dstaddr;
 	}
 
+
 	@Override
-	public boolean equals(Object obj) {
-		if (obj == this) return true;
-		if (obj.getClass() != this.getClass()) return false;
-		if (!(obj instanceof PcapAddr)) return false;
-		PcapAddr pcapAddr = (PcapAddr) obj;
-		if (this.addr.equals(pcapAddr.getAddr()) &&
-				this.netmask.equals(pcapAddr.getNetmask()) &&
-				this.broadaddr.equals(pcapAddr.getBroadAddr()) &&
-				this.dstaddr.equals(pcapAddr.getDstAddr()))
-			return true;
-		return false;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		PcapAddr pcapAddr = (PcapAddr) o;
+
+		if (!getAddr().equals(pcapAddr.getAddr())) return false;
+		if (!getNetmask().equals(pcapAddr.getNetmask())) return false;
+		if (!getBroadAddr().equals(pcapAddr.getBroadAddr())) return false;
+		return getDstAddr().equals(pcapAddr.getDstAddr());
 	}
 
 	@Override
 	public int hashCode() {
-		return Arrays.hashCode(toString().getBytes());
+		int result = getAddr().hashCode();
+		result = 31 * result + getNetmask().hashCode();
+		result = 31 * result + getBroadAddr().hashCode();
+		result = 31 * result + getDstAddr().hashCode();
+		return result;
 	}
 
 	@Override
 	public String toString() {
-		return new StringBuilder()
-				.append("[Addr: ").append(this.addr.toString())
-				.append(", Netmask: ").append(this.netmask.toString())
-				.append(", Broadcast Addr: ").append(this.broadaddr.toString())
-				.append(", Destiantion Addr: ").append(this.dstaddr.toString())
-				.toString();
+		final StringBuilder sb = new StringBuilder("PcapAddr{");
+		sb.append("addr=").append(addr);
+		sb.append(", netmask=").append(netmask);
+		sb.append(", broadaddr=").append(broadaddr);
+		sb.append(", dstaddr=").append(dstaddr);
+		sb.append('}');
+		return sb.toString();
 	}
-	
+
+	static {
+		Jxnet.initIDs(PcapAddr.class);
+	}
+
 }

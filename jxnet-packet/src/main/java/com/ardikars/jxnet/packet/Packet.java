@@ -28,7 +28,7 @@ import java.util.NoSuchElementException;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public abstract class Packet implements Iterator<Packet>, Builder<Packet> {
+public abstract class Packet implements Iterator<Packet> {
 
     private Packet next = this;
 
@@ -57,7 +57,7 @@ public abstract class Packet implements Iterator<Packet>, Builder<Packet> {
      */
     public abstract byte[] toBytes();
 
-    @Override
+    @Deprecated
     public Packet build() {
         return this;
     }

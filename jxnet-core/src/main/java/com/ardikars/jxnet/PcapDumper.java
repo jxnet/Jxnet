@@ -45,27 +45,30 @@ public final class PcapDumper {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (obj == this)
-			return true;
-		if (obj.getClass() != this.getClass())
-			return false;
-		if (obj instanceof PcapDumper) {
-			PcapDumper dumper = (PcapDumper) obj;
-			return this.address == dumper.getAddress();
-		}
-		return false;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		PcapDumper that = (PcapDumper) o;
+
+		return getAddress() == that.getAddress();
 	}
 
 	@Override
 	public int hashCode() {
-		return 17 * 37 +
-				((int) (this.address ^ (this.address >> 32)));
+		return (int) (getAddress() ^ (getAddress() >>> 32));
 	}
-	
+
 	@Override
 	public String toString() {
-		return String.valueOf(this.address);
+		final StringBuilder sb = new StringBuilder("PcapDumper{");
+		sb.append("address=").append(address);
+		sb.append('}');
+		return sb.toString();
+	}
+
+	static {
+		Jxnet.initIDs(PcapDumper.class);
 	}
 
 }
