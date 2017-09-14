@@ -55,6 +55,8 @@ a.out
 /example/build/
 /example/target
 /example/out
+/jni/libjxnet.so
+/jni/libjxnet.so.a
 /jni/jxnet.dll
 /jni/CMakeFiles
 /jni/CMakeCache.txt

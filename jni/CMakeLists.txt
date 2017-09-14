@@ -44,7 +44,6 @@ IF (WIN32)
 	set_target_properties(jxnet PROPERTIES PREFIX "")
 ELSE()
 	find_library(PCAP_LIB pcap)
-	set(CMAKE_C_FLAGS "-fPIC")
 	target_link_libraries(jxnet ${PCAP_LIB})
 ENDIF()
 
