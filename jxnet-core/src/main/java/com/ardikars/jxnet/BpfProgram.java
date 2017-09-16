@@ -92,12 +92,11 @@ public final class BpfProgram {
 	}
 
 	static {
-		Jxnet.initIDs(BpfProgram.class);
-//		try {
-//			Class.forName("com.ardikars.jxnet.Jxnet");
-//		} catch (ClassNotFoundException e) {
-//			e.printStackTrace();
-//		}
+		try {
+			Class.forName("com.ardikars.jxnet.Jxnet");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

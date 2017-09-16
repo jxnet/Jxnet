@@ -95,8 +95,4 @@ public final class Pcap {
 		return sb.toString();
 	}
 
-	static {
-		Jxnet.initIDs(Pcap.class);
-	}
-
 }

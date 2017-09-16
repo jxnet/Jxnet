@@ -75,7 +75,7 @@ allprojects {
 	}
 
 	tasks.withType(JavaCompile) {
-		options.compilerArgs << "-Xlint:unchecked,deprecation" << "-Werror"
+		options.compilerArgs << "-Xlint:unchecked" << "-Werror"
 	}
 
 	artifacts {
@@ -172,6 +172,8 @@ codeCoverageReport.dependsOn {
 
 dependencies {
 	compile project(':jxnet-core')
+	compile project(':jxnet-logger')
+	compile project(':jxnet-common')
 	compile project(':jxnet-packet')
 	compile project(':jxnet-util')
 }

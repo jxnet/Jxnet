@@ -133,8 +133,4 @@ public final class SockAddr {
         }
     }
 
-    static {
-        Jxnet.initIDs(SockAddr.class);
-    }
-
 }

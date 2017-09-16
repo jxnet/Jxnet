@@ -108,8 +108,4 @@ public final class PcapPktHdr {
 		return sb.toString();
 	}
 
-	static {
-		Jxnet.initIDs(PcapPktHdr.class);
-	}
-
 }

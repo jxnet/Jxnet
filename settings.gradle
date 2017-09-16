@@ -5,3 +5,5 @@ include 'jxnet-packet'
 include 'jxnet-util'
 include 'jxnet-common'
 include 'example'
+include 'jxnet-logger'
+

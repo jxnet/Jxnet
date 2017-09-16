@@ -107,8 +107,4 @@ public final class PcapIf {
 		return sb.toString();
 	}
 
-	static {
-		Jxnet.initIDs(PcapIf.class);
-	}
-
 }

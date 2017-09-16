@@ -3,7 +3,6 @@ package com.ardikars.jxnet.logger.test;
 import com.ardikars.jxnet.logger.DefaultPrinter;
 import com.ardikars.jxnet.logger.Logger;
 import com.ardikars.jxnet.util.ArrayUtils;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
