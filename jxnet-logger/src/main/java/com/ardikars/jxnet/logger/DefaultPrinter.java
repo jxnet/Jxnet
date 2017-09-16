@@ -17,34 +17,30 @@
 
 package com.ardikars.jxnet.logger;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
-
 /**
  * @author Ardika Rommy Sanjaya
- * @since 1.1.0
+ * @since 1.1.5
  */
 public class DefaultPrinter implements Printer {
 
-    private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(
-            "dd-MM-yyyy HH:mm:ss", Locale.ENGLISH
-    );
+//    private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(
+//            "dd-MM-yyyy HH:mm:ss", Locale.ENGLISH
+//    );
 
     @Override
-    public void print(String message, Class<?> clazz, Logger.Level level) {
+    public void print(Object message, Class<?> clazz, Logger.Level level) {
         if (Logger.getLevel() == null || Logger.getLevel() == level) {
             System.out.println(level.getColor().getAnsiColorCode() + " [ "
                     + level + " ] [ "
-                    + LocalDateTime.now().format(dateTimeFormatter) + " ] [ "
+//                    + LocalDateTime.now().format(dateTimeFormatter) + " ] [ "
                     + clazz.getName() + " ] : "
                     + message);
         }
     }
 
-    public DefaultPrinter setDateTimeFormatter(DateTimeFormatter dateTimeFormatter) {
-        this.dateTimeFormatter = dateTimeFormatter;
-        return this;
-    }
+//    public DefaultPrinter setDateTimeFormatter(DateTimeFormatter dateTimeFormatter) {
+//        this.dateTimeFormatter = dateTimeFormatter;
+//        return this;
+//    }
 
 }

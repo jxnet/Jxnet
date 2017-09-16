@@ -19,11 +19,11 @@ package com.ardikars.jxnet.logger;
 
 /**
  * @author Ardika Rommy Sanjaya
- * @since 1.1.0
+ * @since 1.1.5
  */
 public interface Printer {
 
-    public enum Color {
+    enum Color {
 
         RESET("\u001B[0m"),
         BLACK("\u001B[30m"),
@@ -47,6 +47,6 @@ public interface Printer {
 
     }
 
-    void print(String message, Class<?> clazz, Logger.Level level);
+    void print(Object message, Class<?> clazz, Logger.Level level);
 
 }

@@ -51,6 +51,10 @@ a.out
 /jxnet-common/build
 /jxnet-common/target
 /jxnet-common/out
+/jxnet-logger/.gradle
+/jxnet-logger/build
+/jxnet-logger/target
+/jxnet-logger/out
 /example/.gradle
 /example/build/
 /example/target

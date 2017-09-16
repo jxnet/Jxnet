@@ -8,7 +8,6 @@ import com.ardikars.jxnet.logger.Logger;
 import com.ardikars.jxnet.packet.PacketListener;
 import com.ardikars.jxnet.packet.ProtocolType;
 import com.ardikars.jxnet.packet.ethernet.Ethernet;
-import com.ardikars.jxnet.packet.udp.Ethernet_IPv4_UDP_Test;
 import com.ardikars.jxnet.util.HexUtils;
 import org.junit.After;
 import org.junit.Assert;

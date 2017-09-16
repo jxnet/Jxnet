@@ -63,8 +63,4 @@ public final class File extends java.io.File {
 		return sb.toString();
 	}
 
-	static {
-		Jxnet.initIDs(File.class);
-	}
-
 }
