@@ -51,10 +51,17 @@ a.out
 /jxnet-common/build
 /jxnet-common/target
 /jxnet-common/out
+/jxnet-logger/.gradle
+/jxnet-logger/build
+/jxnet-logger/target
+/jxnet-logger/out
 /example/.gradle
 /example/build/
 /example/target
 /example/out
+/jni/libjxnet.so
+/jni/libjxnet.so.a
+/jni/jxnet.dll
 /jni/CMakeFiles
 /jni/CMakeCache.txt
 /jni/cmake_install.cmake

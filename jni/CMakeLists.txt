@@ -1,3 +1,4 @@
+
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 set(CMAKE_LAGACY_CYGWIN_WIN32 0)
 
@@ -40,6 +41,9 @@ IF (WIN32)
 	find_library(IPHLPAPI_LIB iphlpapi)
 	set(CMAKE_C_FLAGS "-Wl,--export-all-symbols -Wl,--add-stdcall-alias -liphlpapi")
 	target_link_libraries(jxnet ${WPCAP_LIB} ${IPHLPAPI_LIB})
+	set_target_properties(jxnet PROPERTIES PREFIX "")
 ELSE()
-	set(CMAKE_C_FLAGS "-fPIC -lpcap")
+	find_library(PCAP_LIB pcap)
+	target_link_libraries(jxnet ${PCAP_LIB})
 ENDIF()
+

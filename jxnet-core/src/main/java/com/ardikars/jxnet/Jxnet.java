@@ -38,11 +38,6 @@ public final class Jxnet extends Core {
 		//prevent to create jxnet instance
 	}
 
-	public static void initIDs(Class clazz) {
-		//InitIDs(clazz.getName().hashCode());
-		System.out.println("Initializing " + clazz.getName() + " IDs.");
-	}
-
 	/**
 	 * Get a list of all capture sources that are up and that we can open.
 	 * Returns -1 on error, 0 otherwise.
@@ -503,9 +498,6 @@ public final class Jxnet extends Core {
 		if (!isLoaded) {
 			try {
 				Loaders.loadLibrary();
-				initIDs(List.class);
-				initIDs(StringBuilder.class);
-				initIDs(ByteBuffer.class);
 				isLoaded = true;
 			} catch (Exception e) {
 				System.err.println(e.getMessage());
