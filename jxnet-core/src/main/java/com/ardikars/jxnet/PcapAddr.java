@@ -104,8 +104,4 @@ public final class PcapAddr {
 		return sb.toString();
 	}
 
-	static {
-		Jxnet.initIDs(PcapAddr.class);
-	}
-
 }
