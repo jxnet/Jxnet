@@ -108,6 +108,13 @@ public class Loaders {
 			case ANDROID:
 				System.loadLibrary("jxnet");
 				break;
+			case FREEBSD:
+				if (Platforms.is64Bit()) {
+					loadLibrary("/system/freebsd/lib/x64/libjxnet.so");
+				} else {
+					loadLibrary("/system/freebsd/lib/x86/libjxnet.so");
+				}
+				break;
 			default:
 				throw new NotSupportedPlatformException();
 
