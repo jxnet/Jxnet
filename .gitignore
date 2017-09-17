@@ -32,6 +32,7 @@ a.out
 /bin
 /lib
 /libs
+/src
 /obj
 /target
 /classes
