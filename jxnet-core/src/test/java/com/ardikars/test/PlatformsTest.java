@@ -13,6 +13,7 @@ public class PlatformsTest {
         System.out.println("WINDOWS       : " + Platforms.isWindows());
         System.out.println("LINUX         : " + Platforms.isLinux());
         System.out.println("Android       : " + Platforms.isAndroid());
+        System.out.println("FreeBSD       : " + Platforms.isFreeBSD());
         System.out.println("+=============+");
         System.out.println("INTEL         : " + Platforms.isIntel());
         System.out.println("AMD           : " + Platforms.isAmd());

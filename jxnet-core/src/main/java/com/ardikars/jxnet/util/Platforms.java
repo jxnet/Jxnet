@@ -28,7 +28,7 @@ public class Platforms {
 	 */
 	public enum NAME {
 
-		LINUX, WINDOWS, ANDROID, UNKNOWN;
+		LINUX, WINDOWS, ANDROID, FREEBSD, UNKNOWN;
 
 	}
 
@@ -79,6 +79,10 @@ public class Platforms {
 		return NAME == Platforms.NAME.ANDROID;
 	}
 
+	public static final boolean isFreeBSD() {
+		return NAME == Platforms.NAME.FREEBSD;
+	}
+
 	public static final boolean is32Bit() {
 		return ARCHITECTURE == Platforms.ARCHITECTURE._32_BIT;
 	}
@@ -123,6 +127,8 @@ public class Platforms {
 			}
 		} else if (osName.startsWith("WINDOWS")) {
 			NAME = Platforms.NAME.WINDOWS;
+		} else if (osName.startsWith("FREEBSD")) {
+			NAME = Platforms.NAME.FREEBSD;
 		}
 		if ("i386".equals(osArch) || "i686".equals(osArch) || "i586".equals(osArch)) {
 			ARCHITECTURE = Platforms.ARCHITECTURE._32_BIT;
