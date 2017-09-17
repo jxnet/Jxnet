@@ -28,6 +28,9 @@ if test "x$JAVA_HOME" != x; then
 		[cygwin*|mingw*|msys*], [
 			CFLAGS="$CFLAGS -I$JAVA_HOME/include -I$JAVA_HOME/include/win32 "
 		],
+		[freebsd*], [
+            CFLAGS="$CFLAGS -I$JAVA_HOME/include -I$JAVA_HOME/include/freebsd "
+        ],
 		[*], [
 			AC_MSG_ERROR(["Platform is not supported."])
 		]
