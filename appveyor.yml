@@ -28,8 +28,9 @@ platform: Any CPU
 build_script:
   - cmd: gradlew.bat clean build -x test --info --no-daemon
 
-test_script:
-  - cmd: gradlew.bat clean test codeCoverageReport --info --no-daemon
+test: off
+#test_script:
+#  - cmd: gradlew.bat clean test codeCoverageReport --info --no-daemon
 
 notifications:
   - provider: Email
