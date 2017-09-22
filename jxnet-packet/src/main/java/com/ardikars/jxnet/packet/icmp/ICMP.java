@@ -23,7 +23,7 @@ import com.ardikars.jxnet.packet.Packet;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-abstract class ICMP extends Packet {
+public abstract class ICMP extends Packet {
 
     public static int ICMP_HEADER_LENGTH = 4;
 

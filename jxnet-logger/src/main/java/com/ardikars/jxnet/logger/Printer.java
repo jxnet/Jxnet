@@ -21,6 +21,7 @@ package com.ardikars.jxnet.logger;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.5
  */
+@FunctionalInterface
 public interface Printer {
 
     enum Color {
@@ -37,7 +38,7 @@ public interface Printer {
 
         private final String ansiColorCode;
 
-        private Color(String ansiColorCode) {
+        Color(String ansiColorCode) {
             this.ansiColorCode = ansiColorCode;
         }
 

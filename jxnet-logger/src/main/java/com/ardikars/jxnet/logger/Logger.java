@@ -64,55 +64,21 @@ public class Logger {
         return new Logger(clazz, printer);
     }
 
-    public void info(String message) {
+    public void info(Object message) {
         printer.print(message, clazz, Level.INFO);
     }
 
-    public void warn(String message) {
+    public void warn(Object message) {
         printer.print(message, clazz, Level.WARN);
     }
 
-    public void debug(String message) {
+    public void debug(Object message) {
         printer.print(message, clazz, Level.DEBUG);
     }
 
-    public void error(String message) {
+    public void error(Object message) {
         printer.print(message, clazz, Level.ERROR);
     }
-
-    public <T> void info(Collection<T> messages) {
-        printer.print(messages, clazz, Level.INFO);
-    }
-
-    public <T> void warn(Collection<T> messages) {
-        printer.print(messages, clazz, Level.WARN);
-    }
-
-    public <T> void debug(Collection<T> messages) {
-        printer.print(messages, clazz, Level.DEBUG);
-    }
-
-    public <T> void error(Collection<T> messages) {
-        printer.print(messages, clazz, Level.ERROR);
-    }
-
-    public <K, V> void info(Map<K, V> messages) {
-        printer.print(messages, clazz, Level.INFO);
-    }
-
-    public <K, V> void warn(Map<K, V> messages) {
-        printer.print(messages, clazz, Level.WARN);
-    }
-
-    public <K, V> void debug(Map<K, V> messages) {
-        printer.print(messages, clazz, Level.DEBUG);
-    }
-
-    public <K, V> void error(Map<K, V> messages) {
-        printer.print(messages, clazz, Level.ERROR);
-    }
-
-    //
 
     public void info(Object message, Class<?> clazz) {
         printer.print(message, clazz, Level.INFO);
@@ -130,36 +96,20 @@ public class Logger {
         printer.print(message, clazz, Level.ERROR);
     }
 
-    public <T> void info(Collection<Object> messages, Class<?> clazz) {
-        printer.print(messages, clazz, Level.INFO);
+    public static void info(Object message, Class<?> clazz, Printer printer) {
+        printer.print(message, clazz, Level.INFO);
     }
 
-    public <T> void warn(Collection<Object> messages, Class<?> clazz ) {
-        printer.print(messages, clazz, Level.WARN);
+    public static void warn(Object message, Class<?> clazz, Printer printer) {
+        printer.print(message, clazz, Level.WARN);
     }
 
-    public <T> void debug(Collection<Object> messages, Class<?> clazz) {
-        printer.print(messages, clazz, Level.DEBUG);
+    public static void debug(Object message, Class<?> clazz, Printer printer) {
+        printer.print(message, clazz, Level.DEBUG);
     }
 
-    public <T> void error(Collection<Object> messages, Class<?> clazz) {
-        printer.print(messages, clazz, Level.ERROR);
-    }
-
-    public <K, V> void info(Map<K, V> messages, Class<?> clazz) {
-        printer.print(messages, clazz, Level.INFO);
-    }
-
-    public <K, V> void warn(Map<K, V> messages, Class<?> clazz) {
-        printer.print(messages, clazz, Level.WARN);
-    }
-
-    public <K, V> void debug(Map<K, V> messages, Class<?> clazz) {
-        printer.print(messages, clazz, Level.DEBUG);
-    }
-
-    public <K, V> void error(Map<K, V> messages, Class<?> clazz) {
-        printer.print(messages, clazz, Level.ERROR);
+    public static void error(Object message, Class<?> clazz, Printer printer) {
+        printer.print(message, clazz, Level.ERROR);
     }
 
     public static void setLevel(Level level) {

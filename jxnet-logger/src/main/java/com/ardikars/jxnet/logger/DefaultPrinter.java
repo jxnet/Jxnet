@@ -23,24 +23,14 @@ package com.ardikars.jxnet.logger;
  */
 public class DefaultPrinter implements Printer {
 
-//    private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(
-//            "dd-MM-yyyy HH:mm:ss", Locale.ENGLISH
-//    );
-
     @Override
     public void print(Object message, Class<?> clazz, Logger.Level level) {
         if (Logger.getLevel() == null || Logger.getLevel() == level) {
             System.out.println(level.getColor().getAnsiColorCode() + " [ "
                     + level + " ] [ "
-//                    + LocalDateTime.now().format(dateTimeFormatter) + " ] [ "
                     + clazz.getName() + " ] : "
                     + message);
         }
     }
-
-//    public DefaultPrinter setDateTimeFormatter(DateTimeFormatter dateTimeFormatter) {
-//        this.dateTimeFormatter = dateTimeFormatter;
-//        return this;
-//    }
 
 }
