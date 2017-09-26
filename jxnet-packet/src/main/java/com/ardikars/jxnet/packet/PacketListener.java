@@ -74,6 +74,9 @@ public class PacketListener {
 
     public static java.util.Map<Class, Packet> nextMap(Pcap pcap, PcapPktHdr pcapPktHdr) {
         ByteBuffer buffer = Jxnet.PcapNext(pcap, pcapPktHdr);
+        if (buffer == null) {
+            return null;
+        }
         return parseMap(pcap.getDataLinkType(), ByteUtils.toByteArray(buffer));
     }
 

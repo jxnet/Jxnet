@@ -3,8 +3,6 @@
  * Copyright (C) 2017  Ardika Rommy Sanjaya
  */
 
-group 'com.ardikars.jxnet.example'
-
 dependencies {
     compile project(':jxnet-core')
     compile project(':jxnet-packet')

@@ -191,6 +191,12 @@ public class LoggerTest {
         logger.error(testClassMap, Logger.class);
     }
 
+    @Test
+    public void infoStatic() {
+        Logger.info("Hello World", LoggerTest.class,
+                (message, clazz, level) -> System.out.println(message));
+    }
+
     class TestClass {
 
         private final int number;
