@@ -47,6 +47,7 @@ public class CaptureWithCallback {
         PcapStats(handle, stat);
         System.out.println(stat);
         PcapClose(handle);
+        
     }
 
     public static void exit(int status) {
