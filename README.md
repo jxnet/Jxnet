@@ -11,10 +11,20 @@ Jxnet wraps a native packet capture library (libpcap/npcap) via JNI (Java Native
 [ ![Download](https://api.bintray.com/packages/ardikars/maven/com.ardikars.jxnet/images/download.svg?version=1.1.4) ](https://bintray.com/ardikars/maven/com.ardikars.jxnet/1.1.4/link)
 
 
+PLATFORM
+========
+
+  - Windows 7/8/10 (32/64 bit)
+  - Linux (x86/x64)
+  - FreeBSD (x86/x64)
+
+
 HOW TO BUILD
 ============
 
+```sh
 ./gradlew build -x test
+```
 
 
 HOW TO USE
