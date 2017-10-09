@@ -107,15 +107,14 @@ public class UDP extends Packet {
         return this;
     }
 
-    @Deprecated
-    public byte[] getPayload() {
-        return this.nextPacket;
-    }
-
-    @Deprecated
-    public UDP setPayload(byte[] payload) {
-        this.nextPacket = payload;
-        return this;
+    public static UDP newInstance(final ByteBuffer buffer) {
+        UDP udp = new UDP();
+        udp.setSourcePort(buffer.getShort());
+        udp.setDestinationPort(buffer.getShort());
+        udp.setLength(buffer.getShort());
+        udp.setChecksum(buffer.getShort());
+        udp.nextPacket = buffer.slice();
+        return udp;
     }
 
     /**
@@ -135,15 +134,7 @@ public class UDP extends Packet {
      * @return UDP object.
      */
     public static UDP newInstance(final byte[] bytes, final int offset, final int length) {
-        ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
-        UDP udp = new UDP();
-        udp.setSourcePort(buffer.getShort());
-        udp.setDestinationPort(buffer.getShort());
-        udp.setLength(buffer.getShort());
-        udp.setChecksum(buffer.getShort());
-        udp.nextPacket = new byte[buffer.limit() - UDP_HEADER_LENGTH];
-        buffer.get(udp.nextPacket);
-        return udp;
+        return newInstance(bytes, offset, length);
     }
 
     /**
@@ -158,7 +149,7 @@ public class UDP extends Packet {
         }
         switch (packet.getClass().getName()) {
             default:
-                this.nextPacket = packet.toBytes();
+                this.nextPacket = packet.buffer();
                 return this;
         }
     }
@@ -169,22 +160,43 @@ public class UDP extends Packet {
      */
     @Override
     public Packet getPacket() {
-        if (this.nextPacket == null || this.nextPacket.length == 0) return null;
+        if (this.nextPacket == null || this.nextPacket.capacity() == 0) return null;
+        this.nextPacket.rewind();
         return UnknownPacket.newInstance(this.nextPacket);
     }
 
     @Override
-    public byte[] toBytes() {
-        byte[] data = new byte[UDP_HEADER_LENGTH + ((this.nextPacket == null) ? 0 : this.nextPacket.length)];
+    public byte[] bytes() {
+        if (this.nextPacket != null) {
+            this.nextPacket.rewind();
+        }
+        byte[] data = new byte[UDP_HEADER_LENGTH + ((this.nextPacket == null) ? 0 : this.nextPacket.capacity())];
         ByteBuffer buffer = ByteBuffer.wrap(data);
         buffer.putShort(this.getSourcePort());
         buffer.putShort(this.getDestinationPort());
-        this.length = (short) (UDP_HEADER_LENGTH + ((this.nextPacket == null) ? 0 : this.nextPacket.length));
+        this.length = (short) (UDP_HEADER_LENGTH + ((this.nextPacket == null) ? 0 : this.nextPacket.capacity()));
         buffer.putShort(this.getLength());
         buffer.putShort(this.getChecksum());
         if (this.nextPacket != null)
             buffer.put(this.nextPacket);
         return data;
+    }
+
+    @Override
+    public ByteBuffer buffer() {
+        if (this.nextPacket != null) {
+            this.nextPacket.rewind();
+        }
+        ByteBuffer buffer = ByteBuffer
+                .allocateDirect(UDP_HEADER_LENGTH + ((this.nextPacket == null) ? 0 : this.nextPacket.capacity()));
+        buffer.putShort(this.getSourcePort());
+        buffer.putShort(this.getDestinationPort());
+        this.length = (short) (UDP_HEADER_LENGTH + ((this.nextPacket == null) ? 0 : this.nextPacket.capacity()));
+        buffer.putShort(this.getLength());
+        buffer.putShort(this.getChecksum());
+        if (this.nextPacket != null)
+            buffer.put(this.nextPacket);
+        return buffer;
     }
 
     @Override

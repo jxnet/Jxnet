@@ -19,6 +19,8 @@ package com.ardikars.jxnet.packet.ip.ipv6;
 
 import com.ardikars.jxnet.packet.Packet;
 
+import java.nio.ByteBuffer;
+
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.5
@@ -59,11 +61,6 @@ public class Options extends IPv6ExtensionHeader {
     }
 
     @Override
-    public Packet build() {
-        return null;
-    }
-
-    @Override
     public Packet setPacket(Packet packet) {
         return null;
     }
@@ -74,7 +71,13 @@ public class Options extends IPv6ExtensionHeader {
     }
 
     @Override
-    public byte[] toBytes() {
+    public byte[] bytes() {
         return new byte[0];
     }
+
+    @Override
+    public ByteBuffer buffer() {
+        return ByteBuffer.wrap(new byte[0]);
+    }
+
 }

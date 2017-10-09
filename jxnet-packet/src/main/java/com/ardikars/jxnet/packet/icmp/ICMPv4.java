@@ -27,15 +27,12 @@ import java.nio.ByteBuffer;
  */
 public class ICMPv4 extends ICMP {
 
-    @Deprecated
-    public byte[] getPayload() {
-        return this.nextPacket;
-    }
-
-    @Deprecated
-    public ICMPv4 setPayload(final byte[] payload) {
-        this.nextPacket = payload;
-        return this;
+    public static ICMPv4 newInstance(final ByteBuffer buffer) {
+        ICMPv4 icmp = new ICMPv4();
+        icmp.setTypeAndCode(ICMPTypeAndCode.getTypeAndCode(buffer.get(), buffer.get()));
+        icmp.setChecksum(buffer.getShort());
+        icmp.nextPacket = buffer.slice();
+        return icmp;
     }
 
     public static ICMPv4 newInstance(final byte[] bytes) {
@@ -43,13 +40,7 @@ public class ICMPv4 extends ICMP {
     }
 
     public static ICMPv4 newInstance(final byte[] bytes, final int offset, final int length) {
-        ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
-        ICMPv4 icmp = new ICMPv4();
-        icmp.setTypeAndCode(ICMPTypeAndCode.getTypeAndCode(buffer.get(), buffer.get()));
-        icmp.setChecksum(buffer.getShort());
-        icmp.nextPacket = new byte[buffer.limit() - ICMP_HEADER_LENGTH];
-        buffer.get(icmp.nextPacket);
-        return icmp;
+        return newInstance(ByteBuffer.wrap(bytes, offset, length));
     }
 
     @Override
@@ -59,14 +50,17 @@ public class ICMPv4 extends ICMP {
         }
         switch (packet.getClass().getName()) {
             default:
-                this.nextPacket = packet.toBytes();
+                this.nextPacket = packet.buffer();
                 return this;
         }
     }
 
     @Override
-    public byte[] toBytes() {
-        byte[] data = new byte[ICMP_HEADER_LENGTH + ((this.nextPacket == null) ? 0 : this.nextPacket.length)];
+    public byte[] bytes() {
+        if (this.nextPacket != null) {
+            this.nextPacket.rewind();
+        }
+        byte[] data = new byte[ICMP_HEADER_LENGTH + ((this.nextPacket == null) ? 0 : this.nextPacket.capacity())];
         ByteBuffer buffer = ByteBuffer.wrap(data);
         buffer.put(this.getTypeAndCode().getType());
         buffer.put(this.getTypeAndCode().getCode());
@@ -91,6 +85,38 @@ public class ICMPv4 extends ICMP {
             buffer.putShort(2, this.getChecksum());
         }
         return data;
+    }
+
+    @Override
+    public ByteBuffer buffer() {
+        if (this.nextPacket != null) {
+            this.nextPacket.rewind();
+        }
+        ByteBuffer buffer = ByteBuffer
+                .allocateDirect(ICMP_HEADER_LENGTH + ((this.nextPacket == null) ? 0 : this.nextPacket.capacity()));
+        buffer.put(this.getTypeAndCode().getType());
+        buffer.put(this.getTypeAndCode().getCode());
+        buffer.putShort(this.getChecksum());
+        if (this.nextPacket != null) {
+            buffer.put(this.nextPacket);
+        }
+        if (this.getChecksum() == 0) {
+            buffer.rewind();
+            int accumulation = 0;
+            for (int i = 0; i < buffer.capacity() / 2; ++i) {
+                accumulation += 0xffff & buffer.getShort();
+            }
+            // pad to an even number of shorts
+            if (buffer.capacity() % 2 > 0) {
+                accumulation += (buffer.get() & 0xff) << 8;
+            }
+
+            accumulation = (accumulation >> 16 & 0xffff)
+                    + (accumulation & 0xffff);
+            this.setChecksum((short) (~accumulation & 0xffff));
+            buffer.putShort(2, this.getChecksum());
+        }
+        return buffer;
     }
 
 }

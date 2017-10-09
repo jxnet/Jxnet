@@ -86,12 +86,7 @@ public class Fragment extends IPv6ExtensionHeader {
         return this;
     }
 
-    public static Fragment newInstance(final byte[] bytes) {
-        return newInstance(bytes, 0, bytes.length);
-    }
-
-    public static Fragment newInstance(final byte[] bytes, final int offset, final int length) {
-        ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
+    public static Fragment newInstance(final ByteBuffer buffer) {
         Fragment fragment = new Fragment();
         fragment.setNextHeader(IPProtocolType.getInstance(buffer.get()));
         short sscratch = buffer.getShort();
@@ -99,6 +94,14 @@ public class Fragment extends IPv6ExtensionHeader {
         fragment.setMoreFragment((byte) (sscratch & 0x1));
         fragment.setIdentification(buffer.getInt());
         return fragment;
+    }
+
+    public static Fragment newInstance(final byte[] bytes) {
+        return newInstance(bytes, 0, bytes.length);
+    }
+
+    public static Fragment newInstance(final byte[] bytes, final int offset, final int length) {
+        return newInstance(ByteBuffer.wrap(bytes, offset, length));
     }
 
     @Override
@@ -109,16 +112,11 @@ public class Fragment extends IPv6ExtensionHeader {
     @Override
     public Packet getPacket() {
         if (this.getPayload() == null || this.getPayload().length == 0) return null;
-        return this.nextHeader.decode(this.getPayload());
+        return this.nextHeader.decode(ByteBuffer.wrap(this.getPayload()));
     }
 
     @Override
-    public Packet build() {
-        return this;
-    }
-
-    @Override
-    public byte[] toBytes() {
+    public byte[] bytes() {
         byte[] data = new byte[FIXED_FRAGMENT_HEADER_LENGTH +
                 (this.getPayload() == null ? 0 : this.getPayload().length)];
         ByteBuffer buffer = ByteBuffer.wrap(data);
@@ -133,6 +131,24 @@ public class Fragment extends IPv6ExtensionHeader {
             buffer.put(this.getPayload());
         }
         return data;
+    }
+
+    @Override
+    public ByteBuffer buffer() {
+        ByteBuffer buffer = ByteBuffer
+                .allocateDirect(FIXED_FRAGMENT_HEADER_LENGTH +
+                        (this.getPayload() == null ? 0 : this.getPayload().length));
+        buffer.put(this.getNextHeader().getValue());
+        buffer.put((byte) 0);
+        buffer.putShort((short) (
+                (this.getFragmentOffset() & 0x1fff) << 3 |
+                        this.getMoreFragment() & 0x1
+        ));
+        buffer.putInt(this.getIdentification());
+        if (this.getPayload() != null) {
+            buffer.put(this.getPayload());
+        }
+        return buffer;
     }
 
     @Override

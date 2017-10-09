@@ -53,15 +53,15 @@ public class Ethernet_IPv4_TCP_Test {
         PacketListener.List<String> callback = (arg, pktHdr, packets) -> {
             Ethernet eth = (Ethernet) packets.get(0);
             if (eth != null) {
-                if (!HexUtils.toHexString(eth.toBytes()).equals(hexStream[index])) {
-                    logger.info(index+": "+HexUtils.toHexString(eth.toBytes()));
+                if (!HexUtils.toHexString(eth.bytes()).equals(hexStream[index])) {
+                    logger.info(index+": "+HexUtils.toHexString(eth.bytes()));
                 } else {
                     Ethernet ethernet = (Ethernet) new Ethernet()
                             .setDestinationMacAddress(eth.getDestinationMacAddress())
                             .setSourceMacAddress(eth.getSourceMacAddress())
                             .setEthernetType(eth.getEthernetType())
                             .setPacket(eth.getPacket());
-                    if (Arrays.equals(eth.toBytes(), ethernet.toBytes())) {
+                    if (Arrays.equals(eth.bytes(), ethernet.bytes())) {
                         logger.info("Valid Ethernet.");
                     }
 
@@ -83,7 +83,7 @@ public class Ethernet_IPv4_TCP_Test {
                         ip.setDestinationAddress(ipv4.getDestinationAddress());
                         ip.setOptions(ipv4.getOptions());
                         ip.setPacket(ipv4.getPacket());
-                        if (Arrays.equals(ipv4.toBytes(), ip.toBytes())) {
+                        if (Arrays.equals(ipv4.bytes(), ip.bytes())) {
                             logger.info("Valid IPv4.");
                         }
 
@@ -101,7 +101,7 @@ public class Ethernet_IPv4_TCP_Test {
                             t.setUrgentPointer(tcp.getUrgentPointer());
                             t.setOptions(tcp.getOptions());
                             t.setPacket(tcp.getPacket());
-                            if (Arrays.equals(tcp.toBytes(), t.toBytes())) {
+                            if (Arrays.equals(tcp.bytes(), t.bytes())) {
                                 logger.info("Valid TCP.");
                             }
                         }

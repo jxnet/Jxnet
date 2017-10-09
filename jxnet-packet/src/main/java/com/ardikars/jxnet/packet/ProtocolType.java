@@ -22,6 +22,7 @@ import com.ardikars.jxnet.packet.ip.IPv6;
 import com.ardikars.jxnet.NamedNumber;
 import com.ardikars.jxnet.util.HexUtils;
 
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -139,21 +140,22 @@ public final class ProtocolType extends NamedNumber<Short, ProtocolType> {
 
     /**
      * Decode payload.
-     * @param data byte array.
+     * @param buffer byte array.
      * @return packet.
      */
-    public Packet decode(final byte[] data) {
-        if (data == null || data.length == 0) {
+    public Packet decode(final ByteBuffer buffer) {
+        if (buffer == null || buffer.capacity() == 0) {
             return null;
         }
+        buffer.rewind();
         String v = HexUtils.toHexString(super.getValue());
         switch (v) {
             case "0800":
-                return IPv4.newInstance(data);
+                return IPv4.newInstance(buffer);
             case "0806":
-                return com.ardikars.jxnet.packet.arp.ARP.newInstance(data);
+                return com.ardikars.jxnet.packet.arp.ARP.newInstance(buffer);
             case "86dd":
-                return IPv6.newInstance(data);
+                return IPv6.newInstance(buffer);
             default:
                 return null;
         }

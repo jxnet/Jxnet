@@ -41,12 +41,12 @@ public class ChecksumTest {
                 .setUrgentPointer((short) 0)
                 .setOptions(HexUtils.parseHex("0101080a000b228e5c026753"));
 
-        System.out.println(HexUtils.toHexString(tcp.toBytes()));
+        System.out.println(HexUtils.toHexString(tcp.bytes()));
 
         iPv4.setPacket(tcp);
         ethernet.setPacket(iPv4);
 
-        byte[] bytes = ethernet.toBytes();
+        byte[] bytes = ethernet.bytes();
         ByteBuffer buffer = ByteBuffer.allocateDirect(bytes.length);
         buffer.put(bytes);
 

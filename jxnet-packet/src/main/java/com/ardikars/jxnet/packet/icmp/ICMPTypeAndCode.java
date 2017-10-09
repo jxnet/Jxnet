@@ -25,6 +25,7 @@ import com.ardikars.jxnet.packet.icmp.icmpv4.*;
 import com.ardikars.jxnet.packet.icmp.icmpv6.*;
 import com.ardikars.jxnet.packet.ndp.*;
 
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +33,7 @@ import java.util.Map;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public abstract class ICMPTypeAndCode extends NamedTwoKeyMap<Byte, Byte, ICMPTypeAndCode> implements Decoder<Packet, byte[]> {
+public abstract class ICMPTypeAndCode extends NamedTwoKeyMap<Byte, Byte, ICMPTypeAndCode> implements Decoder<Packet, ByteBuffer> {
 
     protected static Map<TwoKeyMap<Byte, Byte>, ICMPTypeAndCode> registry =
             new HashMap<TwoKeyMap<Byte, Byte>, ICMPTypeAndCode>();
@@ -74,34 +75,38 @@ public abstract class ICMPTypeAndCode extends NamedTwoKeyMap<Byte, Byte, ICMPTyp
     }
 
     @Override
-    public Packet decode(byte[] data) {
+    public Packet decode(ByteBuffer buffer) {
+        if (buffer == null) {
+            return null;
+        }
+        buffer.rewind();
         int type = getType() & 0xff;
         int code = getCode() & 0xff;
         switch (type) {
             case 133:
                 switch (code) {
-                    case 0: return RouterSolicitation.newInstance(data);
+                    case 0: return RouterSolicitation.newInstance(buffer);
                     default: return null;
 
                 }
             case 134:
                 switch (code) {
-                    case 0: return RouterAdvertisement.newInstance(data);
+                    case 0: return RouterAdvertisement.newInstance(buffer);
                     default: return null;
                 }
             case 135:
                 switch (code) {
-                    case 0: return NeighborSolicitation.newInstance(data);
+                    case 0: return NeighborSolicitation.newInstance(buffer);
                     default: return null;
                 }
             case 136:
                 switch (code) {
-                    case 0: return NeighborAdvertisement.newInstance(data);
+                    case 0: return NeighborAdvertisement.newInstance(buffer);
                     default: return null;
                 }
             case 137:
                 switch (code) {
-                    case 0: return Redirect.newInstance(data);
+                    case 0: return Redirect.newInstance(buffer);
                     default: return null;
                 }
             default: return null;

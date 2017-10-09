@@ -61,7 +61,7 @@ public class EncapsulatingSecurityPayload extends Packet {
     }
 
     @Override
-    public byte[] toBytes() {
+    public byte[] bytes() {
         byte[] data = new byte[FIXED_HEADER_LENGTH];
         ByteBuffer buffer = ByteBuffer.wrap(data);
         buffer.putInt(this.getSecurityParameterIndex());
@@ -70,8 +70,11 @@ public class EncapsulatingSecurityPayload extends Packet {
     }
 
     @Override
-    public Packet build() {
-        return this;
+    public ByteBuffer buffer() {
+        ByteBuffer buffer = ByteBuffer.allocateDirect(FIXED_HEADER_LENGTH);
+        buffer.putInt(this.getSecurityParameterIndex());
+        buffer.putInt(this.getSequenceNumber());
+        return buffer;
     }
 
     @Override

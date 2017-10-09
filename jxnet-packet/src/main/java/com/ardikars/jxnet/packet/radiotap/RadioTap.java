@@ -65,21 +65,19 @@ public class RadioTap extends Packet {
         return (byte) (this.present & 0xffffffffL);
     }
 
-    /*
-    @Deprecated
-    public byte[] getPayload() {
-        return this.nextPacket;
-    }
-
-    @Deprecated
-    public RadioTap setPayload(final byte[] payload) {
-        this.nextPacket = payload;
-        return this;
-    }*/
-
     public RadioTap setPresent(final int present) {
         this.present = (byte) (present & 0xffffffffL);
         return this;
+    }
+
+    public static RadioTap newInstance(final ByteBuffer buffer) {
+        RadioTap radioTap = new RadioTap();
+        radioTap.setVersion(buffer.get());
+        radioTap.setPadding(buffer.get());
+        radioTap.setLength(buffer.getShort());
+        radioTap.setPresent(buffer.getInt());
+        radioTap.nextPacket = buffer.slice();
+        return radioTap;
     }
 
     public static RadioTap newInstance(final byte[] bytes) {
@@ -87,15 +85,7 @@ public class RadioTap extends Packet {
     }
 
     public static RadioTap newInstance(final byte[] bytes, final int offset, final int length) {
-        ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
-        RadioTap radioTap = new RadioTap();
-        radioTap.setVersion(buffer.get());
-        radioTap.setPadding(buffer.get());
-        radioTap.setLength(buffer.getShort());
-        radioTap.setPresent(buffer.getInt());
-        radioTap.nextPacket = new byte[buffer.limit() - RADIO_TAP_HEADER];
-        buffer.get(radioTap.nextPacket);
-        return radioTap;
+        return newInstance(ByteBuffer.wrap(bytes, offset, length));
     }
 
 
@@ -106,15 +96,18 @@ public class RadioTap extends Packet {
         }
         switch (packet.getClass().getName()) {
             default:
-                this.nextPacket = packet.toBytes();
+                this.nextPacket = packet.buffer();
                 return this;
         }
     }
 
     @Override
-    public byte[] toBytes() {
+    public byte[] bytes() {
+        if (this.nextPacket != null) {
+            this.nextPacket.rewind();
+        }
         byte[] data = new byte[RADIO_TAP_HEADER +
-                ((this.nextPacket == null) ? 0 : this.nextPacket.length)];
+                ((this.nextPacket == null) ? 0 : this.nextPacket.capacity())];
         ByteBuffer buffer = ByteBuffer.wrap(data);
         buffer.put(this.getVersion());
         buffer.put(this.getPadding());
@@ -124,6 +117,24 @@ public class RadioTap extends Packet {
             buffer.put(this.nextPacket);
         }
         return data;
+    }
+
+    @Override
+    public ByteBuffer buffer() {
+        if (this.nextPacket != null) {
+            this.nextPacket.rewind();
+        }
+        ByteBuffer buffer = ByteBuffer
+                .allocateDirect(RADIO_TAP_HEADER +
+                        ((this.nextPacket == null) ? 0 : this.nextPacket.capacity()));
+        buffer.put(this.getVersion());
+        buffer.put(this.getPadding());
+        buffer.putShort(this.getLength());
+        buffer.putInt(this.getPresent());
+        if (this.nextPacket!= null) {
+            buffer.put(this.nextPacket);
+        }
+        return buffer;
     }
 
     @Override

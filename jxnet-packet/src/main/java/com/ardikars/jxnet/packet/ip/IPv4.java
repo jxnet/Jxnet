@@ -190,24 +190,8 @@ public class IPv4 extends IP {
         this.options = options;
         return this;
     }
-/*
-    @Deprecated
-    public byte[] getPayload() {
-        return this.nextPacket;
-    }
 
-    @Deprecated
-    public IPv4 setPayload(final byte[] payload) {
-        this.nextPacket = payload;
-        return this;
-    }*/
-
-    public static IPv4 newInstance(final byte[] bytes) {
-        return newInstance(bytes, 0, bytes.length);
-    }
-
-    public static IPv4 newInstance(final byte[] bytes, final int offset, final int length) {
-        ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
+    public static IPv4 newInstance(final ByteBuffer buffer) {
         IPv4 ipv4 = new IPv4();
         ipv4.version = buffer.get();
         ipv4.setHeaderLength((byte) (ipv4.version & 0xf));
@@ -236,13 +220,19 @@ public class IPv4 extends IP {
             int optionsLength = (ipv4.getHeaderLength() - 5) * 4;
             ipv4.options = new byte[optionsLength];
             buffer.get(ipv4.options);
-            ipv4.nextPacket = new byte[(buffer.limit() - (optionsLength + IPV4_HEADER_LENGTH))];
-            buffer.get(ipv4.nextPacket);
+            ipv4.nextPacket = buffer.slice();
         } else {
-            ipv4.nextPacket = new byte[(buffer.limit() - (IPV4_HEADER_LENGTH))];
-            buffer.get(ipv4.nextPacket);
+            ipv4.nextPacket = buffer.slice();
         }
         return ipv4;
+    }
+
+    public static IPv4 newInstance(final byte[] bytes) {
+        return newInstance(bytes, 0, bytes.length);
+    }
+
+    public static IPv4 newInstance(final byte[] bytes, final int offset, final int length) {
+        return newInstance(ByteBuffer.wrap(bytes, offset, length));
     }
 
     @Override
@@ -258,10 +248,10 @@ public class IPv4 extends IP {
             case "com.ardikars.jxnet.packet.tcp.TCP":
                 TCP tcp = (TCP) packet;
                 if (tcp.getChecksum() == 0) {
-                    bb = ByteBuffer.wrap(tcp.toBytes());
+                    bb = tcp.buffer();
                     length += tcp.getDataOffset() << 2;
                     if (tcp.getPacket() != null) {
-                        length += tcp.getPacket().toBytes().length;
+                        length += tcp.getPacket().buffer().capacity();
                     }
                     accumulation += (this.getSourceAddress().toInt() >> 16 & 0xffff)
                             + (this.getSourceAddress().toInt() & 0xffff);
@@ -282,15 +272,15 @@ public class IPv4 extends IP {
                     tcp.setChecksum((short) (~accumulation & 0xffff));
                 }
                 this.setProtocol(IPProtocolType.TCP);
-                this.nextPacket = tcp.toBytes();
+                this.nextPacket = tcp.buffer();
                 return this;
             case "com.ardikars.jxnet.packet.tcp.UDP":
                 UDP udp = (UDP) packet;
                 if (udp.getChecksum() == 0) {
-                    bb = ByteBuffer.wrap(udp.toBytes());
+                    bb = udp.buffer();
                     if (udp.getPacket() != null) {
-                        byte[] udpPayload = udp.getPacket().toBytes();
-                        length += udp.getLength() + ((udpPayload == null) ? 0 : udpPayload.length);
+                        ByteBuffer udpPayload = udp.getPacket().buffer();
+                        length += udp.getLength() + ((udpPayload == null) ? 0 : udpPayload.capacity());
                     }
                     if (udp.getChecksum() == 0) {
                         accumulation += (this.getSourceAddress().toInt() >> 16 & 0xffff)
@@ -311,14 +301,14 @@ public class IPv4 extends IP {
                     udp.setChecksum((short) (~accumulation & 0xffff));
                 }
                 this.setProtocol(IPProtocolType.UDP);
-                this.nextPacket = udp.toBytes();
+                this.nextPacket = udp.buffer();
                 return this;
             case "com.ardikars.jxnet.packet.icmp.ICMPv4":
                 this.setProtocol(IPProtocolType.ICMP);
-                this.nextPacket = packet.toBytes();
+                this.nextPacket = packet.buffer();
                 return this;
             default:
-                this.nextPacket = packet.toBytes();
+                this.nextPacket = packet.buffer();
                 return this;
         }
     }
@@ -329,15 +319,17 @@ public class IPv4 extends IP {
     }
 
     @Override
-    public byte[] toBytes() {
-
+    public byte[] bytes() {
+        if (this.nextPacket != null) {
+            this.nextPacket.rewind();
+        }
         int optionsLength = 0;
         if (this.getOptions() != null) {
             optionsLength = this.getOptions().length / 4;
         }
         this.setHeaderLength((byte) (5 + optionsLength));
         this.setTotalLength((short) (this.getHeaderLength() * 4 + (this.nextPacket == null ? 0
-                : this.nextPacket.length)));
+                : this.nextPacket.capacity())));
 
         byte[] data = new byte[this.getTotalLength()];
 
@@ -370,6 +362,50 @@ public class IPv4 extends IP {
             buffer.put(this.nextPacket);
         }
         return data;
+    }
+
+    @Override
+    public ByteBuffer buffer() {
+        if (this.nextPacket != null) {
+            this.nextPacket.rewind();
+        }
+        int optionsLength = 0;
+        if (this.getOptions() != null) {
+            optionsLength = this.getOptions().length / 4;
+        }
+        this.setHeaderLength((byte) (5 + optionsLength));
+        this.setTotalLength((short) (this.getHeaderLength() * 4 + (this.nextPacket == null ? 0
+                : this.nextPacket.capacity())));
+
+        ByteBuffer buffer = ByteBuffer.allocateDirect(this.getTotalLength());
+        buffer.put((byte) ((this.getVersion() & 0xf) << 4 | this.getHeaderLength() & 0xf));
+        buffer.put((byte) (((this.getDiffServ() << 2) & 0x3f) | this.getExpCon() & 0x3));
+        buffer.putShort(this.getTotalLength());
+        buffer.putShort(this.getIdentification());
+        buffer.putShort((short) ((this.getFlags() & 0x7) << 13 | this.getFragmentOffset() & 0x1fff));
+        buffer.put(this.getTtl());
+        buffer.put(this.getProtocol().getValue());
+        buffer.putShort((byte) (this.getChecksum() & 0xffff));
+        buffer.put(this.getSourceAddress().toBytes());
+        buffer.put(this.getDestinationAddress().toBytes());
+        if (this.getOptions() != null && this.getHeaderLength() > 5) {
+            buffer.put(this.getOptions());
+        }
+        if (this.getChecksum() == 0) {
+            buffer.rewind();
+            int accumulation = 0;
+            for (int i = 0; i < this.getHeaderLength() * 2; ++i) {
+                accumulation += 0xffff & buffer.getShort();
+            }
+            accumulation = (accumulation >> 16 & 0xffff)
+                    + (accumulation & 0xffff);
+            this.checksum = ((short) (~accumulation & 0xffff));
+            buffer.putShort(10, (short) (this.getChecksum() & 0xffff));
+        }
+        if (this.nextPacket != null) {
+            buffer.put(this.nextPacket);
+        }
+        return buffer;
     }
 
     @Override

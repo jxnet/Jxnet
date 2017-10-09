@@ -86,23 +86,7 @@ public class SLL extends Packet {
         return this;
     }
 
-    @Deprecated
-    public byte[] getPayload() {
-        return this.nextPacket;
-    }
-
-    @Deprecated
-    public SLL setPayload(final byte[] payload) {
-        this.nextPacket = payload;
-        return this;
-    }
-
-    public static SLL newInstance(final byte[] bytes) {
-        return newInstance(bytes, 0, bytes.length);
-    }
-
-    public static SLL newInstance(final byte[] bytes, final int offset, final int length) {
-        ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
+    public static SLL newInstance(final ByteBuffer buffer) {
         SLL sll = new SLL();
         sll.setPacketType(buffer.getShort());
         sll.setHardwareAddressType(buffer.getShort());
@@ -110,9 +94,16 @@ public class SLL extends Packet {
         sll.address = new byte[8];
         buffer.get(sll.address);
         sll.setProtocol(ProtocolType.getInstance(buffer.getShort()));
-        sll.nextPacket = new byte[buffer.limit() - SLL_HEADER_LENGTH];
-        buffer.get(sll.nextPacket);
+        sll.nextPacket = buffer.slice();
         return sll;
+    }
+
+    public static SLL newInstance(final byte[] bytes) {
+        return newInstance(bytes, 0, bytes.length);
+    }
+
+    public static SLL newInstance(final byte[] bytes, final int offset, final int length) {
+        return newInstance(ByteBuffer.wrap(bytes, offset, length));
     }
 
     @Override
@@ -122,7 +113,7 @@ public class SLL extends Packet {
         }
         switch (packet.getClass().getName()) {
             default:
-                this.nextPacket = packet.toBytes();
+                this.nextPacket = packet.buffer();
                 return this;
         }
     }
@@ -133,8 +124,11 @@ public class SLL extends Packet {
     }
 
     @Override
-    public byte[] toBytes() {
-        byte[] data = new byte[SLL_HEADER_LENGTH + ((this.nextPacket != null) ? 0 : this.nextPacket.length)];
+    public byte[] bytes() {
+        if (this.nextPacket != null) {
+            this.nextPacket.rewind();
+        }
+        byte[] data = new byte[SLL_HEADER_LENGTH + ((this.nextPacket != null) ? 0 : this.nextPacket.capacity())];
         ByteBuffer buffer = ByteBuffer.wrap(data);
         buffer.putShort(this.getPacketType());
         buffer.putShort(this.getHardwareAddressType());
@@ -145,6 +139,24 @@ public class SLL extends Packet {
             buffer.put(this.nextPacket);
         }
         return data;
+    }
+
+    @Override
+    public ByteBuffer buffer() {
+        if (this.nextPacket != null) {
+            this.nextPacket.rewind();
+        }
+        ByteBuffer buffer = ByteBuffer
+                .allocateDirect(SLL_HEADER_LENGTH + ((this.nextPacket != null) ? 0 : this.nextPacket.capacity()));
+        buffer.putShort(this.getPacketType());
+        buffer.putShort(this.getHardwareAddressType());
+        buffer.putShort(this.getHardwareAddressLength());
+        buffer.put(this.getAddress());
+        buffer.putShort((short) (this.getProtocol().getValue() & 0xffff));
+        if (this.nextPacket != null) {
+            buffer.put(this.nextPacket);
+        }
+        return buffer;
     }
 
     @Override

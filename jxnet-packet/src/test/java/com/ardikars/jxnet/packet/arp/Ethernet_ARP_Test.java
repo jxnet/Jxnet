@@ -52,15 +52,15 @@ public class Ethernet_ARP_Test {
         PacketListener.List<String> callback = (arg, pktHdr, packets) -> {
             Ethernet eth = (Ethernet) packets.get(0);
             if (eth != null) {
-                if (!HexUtils.toHexString(eth.toBytes()).equals(hexStream[index])) {
-                    logger.info(index + ": " + HexUtils.toHexString(eth.toBytes()));
+                if (!HexUtils.toHexString(eth.bytes()).equals(hexStream[index])) {
+                    logger.info(index + ": " + HexUtils.toHexString(eth.bytes()));
                 } else {
                     Ethernet ethernet = (Ethernet) new Ethernet()
                             .setDestinationMacAddress(eth.getDestinationMacAddress())
                             .setSourceMacAddress(eth.getSourceMacAddress())
                             .setEthernetType(eth.getEthernetType())
                             .setPacket(eth.getPacket());
-                    if (Arrays.equals(eth.toBytes(), ethernet.toBytes())) {
+                    if (Arrays.equals(eth.bytes(), ethernet.bytes())) {
                         logger.info("Valid Ethernet.");
                     }
                     if (eth.getPacket() instanceof ARP) {
@@ -76,10 +76,10 @@ public class Ethernet_ARP_Test {
                                 .setTargetHardwareAddress(arp.getTargetHardwareAddress())
                                 .setTargetProtocolAddress(arp.getTargetProtocolAddress())
                                 .setPacket(arp.getPacket());
-                        logger.debug(Arrays.toString(arp.toBytes()));
-                        logger.debug(Arrays.toString(arp1.toBytes()));
+                        logger.debug(Arrays.toString(arp.bytes()));
+                        logger.debug(Arrays.toString(arp1.bytes()));
                         System.out.println("----");
-                        if (Arrays.equals(arp.toBytes(), arp1.toBytes())) {
+                        if (Arrays.equals(arp.bytes(), arp1.bytes())) {
                             logger.info("Valid ARP.");
                         }
                     }

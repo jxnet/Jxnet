@@ -4,7 +4,6 @@ import com.ardikars.jxnet.Inet6Address;
 import com.ardikars.jxnet.MacAddress;
 import com.ardikars.jxnet.packet.Packet;
 import com.ardikars.jxnet.packet.ethernet.Ethernet;
-import com.ardikars.jxnet.packet.ethernet.ProtocolType;
 import com.ardikars.jxnet.packet.icmp.ICMPv6;
 import com.ardikars.jxnet.packet.icmp.icmpv6.ICMPv6NeighborAdvertisement;
 import com.ardikars.jxnet.packet.icmp.icmpv6.ICMPv6NeighborSolicitation;

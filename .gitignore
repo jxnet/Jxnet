@@ -56,10 +56,10 @@ a.out
 /jxnet-logger/build
 /jxnet-logger/target
 /jxnet-logger/out
-/example/.gradle
-/example/build/
-/example/target
-/example/out
+/jxnet-example/.gradle
+/jxnet-example/build/
+/jxnet-example/target
+/jxnet-example/out
 /jni/libjxnet.so
 /jni/libjxnet.so.a
 /jni/jxnet.dll

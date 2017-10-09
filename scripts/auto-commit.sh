@@ -6,6 +6,8 @@
 
 NOW=$(date +"%d-%m-%Y %T %Z")
 BRANCH="development"
+git config --global user.name "Ardika Rommy Sanjaya"
+git config --global user.email "ardikars@gmail.com"
 git checkout "$BRANCH"
 git add -A
 git status

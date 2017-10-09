@@ -18,6 +18,7 @@ import com.ardikars.jxnet.util.*;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
 import java.util.Map;
 
 import static com.ardikars.jxnet.Jxnet.PcapCreate;
@@ -119,8 +120,8 @@ public class ICMPTraceRoute {
             iPv4.setTtl((byte) ttl++);
             iPv4.setPacket(icmPv4);
             ethernet.setPacket(iPv4);
-            byte[] ethFrame = ethernet.toBytes();
-            PcapSendPacket(handle, BufferUtils.toDirectByteBuffer(ethFrame), ethFrame.length);
+            ByteBuffer buffer = ethernet.buffer();
+            PcapSendPacket(handle, buffer, buffer.capacity());
             System.out.println("Send");
             packetMap = PacketListener.nextMap(handle, pktHdr);
             if (packetMap == null) {
@@ -154,8 +155,8 @@ public class ICMPTraceRoute {
         for (int i=0; i<100; i++) {
             if (gwMac == null) {
                 packet = Packet.PacketBuilder().add(ethernet).add(arp).build();
-                byte[] pkt = packet.toBytes();
-                Jxnet.PcapSendPacket(handle, BufferUtils.toDirectByteBuffer(pkt), pkt.length);
+                ByteBuffer buffer = packet.buffer();
+                Jxnet.PcapSendPacket(handle, buffer, buffer.capacity());
                 Map<Class, Packet> packetMap = PacketListener.nextMap(handle, pktHdr);
                 ARP arpC = (ARP) packetMap.get(ARP.class);
                 if (arpC != null) {

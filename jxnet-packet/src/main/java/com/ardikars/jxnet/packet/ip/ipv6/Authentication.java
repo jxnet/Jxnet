@@ -81,12 +81,7 @@ public class Authentication extends Packet {
         return this;
     }
 
-    public static Authentication newInstance(final byte[] bytes) {
-        return newInstance(bytes, 0, bytes.length);
-    }
-
-    public static Authentication newInstance(final byte[] bytes, final int offset, final int length) {
-        final ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
+    public static Authentication newInstance(final ByteBuffer buffer) {
         Authentication authentication = new Authentication();
         authentication.setNextHeader(IPProtocolType.getInstance(buffer.get()));
         authentication.setPayloadLength(buffer.get());
@@ -102,25 +97,35 @@ public class Authentication extends Packet {
         return authentication;
     }
 
+    public static Authentication newInstance(final byte[] bytes) {
+        return newInstance(bytes, 0, bytes.length);
+    }
+
+    public static Authentication newInstance(final byte[] bytes, final int offset, final int length) {
+        return newInstance(ByteBuffer.wrap(bytes, offset, length));
+    }
+
     @Override
     public Packet setPacket(Packet packet) {
-        this.payload = packet.toBytes();
+        ByteBuffer buffer = packet.buffer();
+        this.payload = new byte[buffer.capacity()];
+        buffer.get(this.payload);
         return this;
     }
 
     @Override
     public Packet getPacket() {
-        return this.nextHeader.decode(this.getPayload());
+        return this.nextHeader.decode(ByteBuffer.wrap(this.getPayload()));
     }
 
     @Override
-    public byte[] toBytes() {
+    public byte[] bytes() {
         return new byte[0];
     }
 
     @Override
-    public Packet build() {
-        return null;
+    public ByteBuffer buffer() {
+        return ByteBuffer.wrap(new byte[0]);
     }
 
     @Override

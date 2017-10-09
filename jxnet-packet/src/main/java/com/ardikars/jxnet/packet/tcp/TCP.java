@@ -136,23 +136,7 @@ public class TCP extends Packet {
         return this;
     }
 
-    @Deprecated
-    public byte[] getPayload() {
-        return this.nextPacket;
-    }
-
-    @Deprecated
-    public TCP setPayload(final byte[] payload) {
-        this.nextPacket = payload;
-        return this;
-    }
-
-    public static TCP newInstance(final byte[] bytes) {
-        return newInstance(bytes, 0, bytes.length);
-    }
-
-    public static TCP newInstance(final byte[] bytes, final int offset, final int length) {
-        ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
+    public static TCP newInstance(final ByteBuffer buffer) {
         TCP tcp = new TCP();
         tcp.setSourcePort(buffer.getShort());
         tcp.setDestinationPort(buffer.getShort());
@@ -171,14 +155,20 @@ public class TCP extends Packet {
             }
             tcp.options = new byte[optionLength];
             buffer.get(tcp.options, 0, optionLength);
-            tcp.nextPacket = new byte[(buffer.limit() - (TCP_HEADER_LENGTH + optionLength))];
-            buffer.get(tcp.nextPacket);
+            tcp.nextPacket = buffer.slice();
         } else {
             tcp.setOptions(null);
-            tcp.nextPacket = new byte[(buffer.limit() - TCP_HEADER_LENGTH)];
-            buffer.get(tcp.nextPacket);
+            tcp.nextPacket = buffer.slice();
         }
         return tcp;
+    }
+
+    public static TCP newInstance(final byte[] bytes) {
+        return newInstance(bytes, 0, bytes.length);
+    }
+
+    public static TCP newInstance(final byte[] bytes, final int offset, final int length) {
+        return newInstance(ByteBuffer.wrap(bytes, offset, length));
     }
 
     @Override
@@ -188,21 +178,24 @@ public class TCP extends Packet {
         }
         switch (packet.getClass().getName()) {
             default:
-                this.nextPacket = packet.toBytes();
+                this.nextPacket = packet.buffer();
                 return this;
         }
     }
 
     @Override
     public Packet getPacket() {
-        if (this.nextPacket == null || this.nextPacket.length == 0) return null;
+        if (this.nextPacket == null || this.nextPacket.capacity() == 0) return null;
         return UnknownPacket.newInstance(this.nextPacket);
     }
 
     @Override
-    public byte[] toBytes() {
+    public byte[] bytes() {
+        if (this.nextPacket != null) {
+            this.nextPacket.rewind();
+        }
         byte[] data = new byte[TCP_HEADER_LENGTH + ((options == null) ? 0 : options.length) +
-                ((this.nextPacket == null) ? 0 : this.nextPacket.length)];
+                ((this.nextPacket == null) ? 0 : this.nextPacket.capacity())];
         ByteBuffer buffer = ByteBuffer.wrap(data);
         buffer.putShort(this.getSourcePort());
         buffer.putShort(this.getDestinationPort());
@@ -217,6 +210,29 @@ public class TCP extends Packet {
         if (this.nextPacket != null)
             buffer.put(this.nextPacket);
         return data;
+    }
+
+    @Override
+    public ByteBuffer buffer() {
+        if (this.nextPacket != null) {
+            this.nextPacket.rewind();
+        }
+        ByteBuffer buffer = ByteBuffer
+                .allocateDirect(TCP_HEADER_LENGTH + ((options == null) ? 0 : options.length) +
+                        ((this.nextPacket == null) ? 0 : this.nextPacket.capacity()));
+        buffer.putShort(this.getSourcePort());
+        buffer.putShort(this.getDestinationPort());
+        buffer.putInt(this.getSequence());
+        buffer.putInt(this.getAcknowledge());
+        buffer.putShort((short) ((this.getFlags().toShort() & 0x1ff) | (this.getDataOffset() & 0xf) << 12));
+        buffer.putShort(this.getWindowSize());
+        buffer.putShort(this.getChecksum());
+        buffer.putShort(this.getUrgentPointer());
+        if (this.getOptions() != null)
+            buffer.put(this.getOptions());
+        if (this.nextPacket != null)
+            buffer.put(this.nextPacket);
+        return buffer;
     }
 
     @Override
