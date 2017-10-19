@@ -50,6 +50,21 @@ public class EncapsulatingSecurityPayload extends Packet {
         return this;
     }
 
+    public static EncapsulatingSecurityPayload newInstance(final ByteBuffer buffer) {
+        EncapsulatingSecurityPayload esp = new EncapsulatingSecurityPayload();
+        esp.setSecurityParameterIndex(buffer.getInt());
+        esp.setSequenceNumber(buffer.getInt());
+        return esp;
+    }
+
+    public static EncapsulatingSecurityPayload newInstance(final byte[] bytes) {
+        return newInstance(bytes, 0, bytes.length);
+    }
+
+    public static EncapsulatingSecurityPayload newInstance(final byte[] bytes, final int offset, final int length) {
+        return newInstance(ByteBuffer.wrap(bytes, offset, length));
+    }
+
     @Override
     public Packet setPacket(Packet packet) {
         return null;
@@ -79,7 +94,7 @@ public class EncapsulatingSecurityPayload extends Packet {
 
     @Override
     public String toString() {
-        return new StringBuilder("p")
+        return new StringBuilder("")
                 .append("[SPI: ")
                 .append(this.getSecurityParameterIndex())
                 .append(", Seq Num: ")
