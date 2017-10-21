@@ -17,6 +17,8 @@
 
 package com.ardikars.jxnet.logger;
 
+import java.util.concurrent.Executor;
+
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.5
@@ -48,6 +50,6 @@ public interface Printer {
 
     }
 
-    void print(Object message, Class<?> clazz, Logger.Level level);
+    void print(String name, Object message, Logger.Level level);
 
 }

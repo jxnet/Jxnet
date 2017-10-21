@@ -8,6 +8,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @RunWith(JUnit4.class)
 public class LoggerTest {
@@ -19,7 +21,19 @@ public class LoggerTest {
         Logger.setLevel(Logger.Level.INFO); // set level to printer
         Logger.Level.INFO.setColor(Printer.Color.PURPLE); // set color to info level, default white
         logger.info("Hello world");
-        logger.info("Hello world", Logger.class);
+        logger.info(Logger.class, "Hello world");
+        logger.info(Logger.class.getSimpleName(), "Hello World");
+
+//        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        Logger.info(Logger.class.getSimpleName(), "Hello1", new DefaultPrinter());
+        Logger.info(Logger.class.getSimpleName(), "Hello2", new DefaultPrinter(), executorService);
+        try {
+            Thread.sleep(3600);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        executorService.shutdown();
     }
 
     @Test
@@ -53,7 +67,7 @@ public class LoggerTest {
                 new TestClass(5)
         );
         logger.info(testClasses);
-        logger.info(testClasses, Logger.class);
+        logger.info(Logger.class, testClasses);
     }
 
     @Test
@@ -66,7 +80,7 @@ public class LoggerTest {
                 new TestClass(5)
         );
         logger.warn(testClasses);
-        logger.warn(testClasses, Logger.class);
+        logger.warn(Logger.class, testClasses);
     }
 
     @Test
@@ -79,7 +93,7 @@ public class LoggerTest {
                 new TestClass(5)
         );
         logger.debug(testClasses);
-        logger.debug(testClasses, Logger.class);
+        logger.debug(Logger.class, testClasses);
     }
 
     @Test
@@ -92,7 +106,7 @@ public class LoggerTest {
                 new TestClass(5)
         );
         logger.error(testClasses);
-        logger.error(testClasses, Logger.class);
+        logger.error(Logger.class, testClasses);
     }
 
     @Test
@@ -104,7 +118,7 @@ public class LoggerTest {
         testClasses.add(new TestClass(4));
         testClasses.add(new TestClass(5));
         logger.info(testClasses);
-        logger.info(testClasses, Logger.class);
+        logger.info(Logger.class, testClasses);
     }
 
     @Test
@@ -116,7 +130,7 @@ public class LoggerTest {
         testClasses.add(new TestClass(4));
         testClasses.add(new TestClass(5));
         logger.warn(testClasses);
-        logger.warn(testClasses, Logger.class);
+        logger.warn(Logger.class, testClasses);
     }
 
     @Test
@@ -128,7 +142,7 @@ public class LoggerTest {
         testClasses.add(new TestClass(4));
         testClasses.add(new TestClass(5));
         logger.debug(testClasses);
-        logger.debug(testClasses, Logger.class);
+        logger.debug(Logger.class, testClasses);
     }
 
     @Test
@@ -140,7 +154,7 @@ public class LoggerTest {
         testClasses.add(new TestClass(4));
         testClasses.add(new TestClass(5));
         logger.error(testClasses);
-        logger.error(testClasses, Logger.class);
+        logger.error(Logger.class, testClasses);
     }
 
     @Test
@@ -152,7 +166,7 @@ public class LoggerTest {
         testClassMap.put(4, new TestClass(4));
         testClassMap.put(5, new TestClass(5));
         logger.info(testClassMap);
-        logger.info(testClassMap, Logger.class);
+        logger.info(Logger.class, testClassMap);
     }
 
     @Test
@@ -164,7 +178,7 @@ public class LoggerTest {
         testClassMap.put(4, new TestClass(4));
         testClassMap.put(5, new TestClass(5));
         logger.warn(testClassMap);
-        logger.warn(testClassMap, Logger.class);
+        logger.warn(Logger.class, testClassMap);
     }
 
     @Test
@@ -176,7 +190,7 @@ public class LoggerTest {
         testClassMap.put(4, new TestClass(4));
         testClassMap.put(5, new TestClass(5));
         logger.debug(testClassMap);
-        logger.debug(testClassMap, Logger.class);
+        logger.debug(Logger.class, testClassMap);
     }
 
     @Test
@@ -188,7 +202,7 @@ public class LoggerTest {
         testClassMap.put(4, new TestClass(4));
         testClassMap.put(5, new TestClass(5));
         logger.error(testClassMap);
-        logger.error(testClassMap, Logger.class);
+        logger.error(Logger.class, testClassMap);
     }
 
     @Test

@@ -4,6 +4,7 @@
  */
 
 dependencies {
+    compile project(':jxnet-util')
     testCompile "junit:junit:${JUNIT_VERSION}"
 }
 

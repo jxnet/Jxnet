@@ -7,8 +7,6 @@ import com.ardikars.jxnet.packet.ProtocolType;
 import com.ardikars.jxnet.packet.arp.ARP;
 import com.ardikars.jxnet.packet.arp.ARPOperationCode;
 import com.ardikars.jxnet.packet.ethernet.Ethernet;
-import com.ardikars.jxnet.util.AddrUtils;
-import com.ardikars.jxnet.util.BufferUtils;
 import com.ardikars.jxnet.util.Platforms;
 
 import java.io.IOException;

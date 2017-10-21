@@ -17,19 +17,39 @@
 
 package com.ardikars.jxnet.logger;
 
+import java.io.IOException;
+import java.io.Writer;
+
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.5
  */
 public class DefaultPrinter implements Printer {
 
+    private final Writer writer;
+
+    public DefaultPrinter() {
+        this.writer = null;
+    }
+
+    public DefaultPrinter(Writer writer) {
+        this.writer = writer;
+    }
+
     @Override
-    public void print(Object message, Class<?> clazz, Logger.Level level) {
-        if (Logger.getLevel() == null || Logger.getLevel() == level) {
-            System.out.println(level.getColor().getAnsiColorCode() + " [ "
-                    + level + " ] [ "
-                    + clazz.getName() + " ] : "
-                    + message);
+    public void print(String name, Object message, Logger.Level level) {
+        String value = " [ "
+                + level + " ] [ "
+                + name + " ] : "
+                + message;
+        System.out.println(level.getColor().getAnsiColorCode() + value);
+        if (writer != null) {
+            try {
+                writer.write(value);
+                writer.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

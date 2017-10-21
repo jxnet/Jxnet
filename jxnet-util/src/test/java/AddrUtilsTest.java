@@ -1,6 +1,5 @@
 import com.ardikars.jxnet.Inet4Address;
 import com.ardikars.jxnet.MacAddress;
-import com.ardikars.jxnet.util.AddrUtils;
 import org.junit.Test;
 
 import java.io.IOException;

@@ -17,8 +17,10 @@
 
 package com.ardikars.jxnet.logger;
 
-import java.util.Collection;
-import java.util.Map;
+import com.ardikars.jxnet.util.Validate;
+
+import java.io.Writer;
+import java.util.concurrent.Executor;
 
 /**
  * @author Ardika Rommy Sanjaya
@@ -35,7 +37,7 @@ public class Logger {
 
         private Printer.Color color;
 
-        private Level(Printer.Color color) {
+        Level(Printer.Color color) {
             this.color = color;
         }
 
@@ -52,64 +54,247 @@ public class Logger {
 
     private static Level level = null;
 
-    private final Class clazz;
+    private final String name;
     private final Printer printer;
+    private final Executor executor;
 
-    private Logger(Class clazz, Printer printer) {
-        this.clazz = clazz;
+    private Logger(String name, Printer printer) {
+        Validate.notNull(name, "Logger name is null.");
+        Validate.notNull(printer, "Logger printer is null.");
+        this.name = name;
         this.printer = printer;
+        this.executor = null;
+    }
+
+    private Logger(String name, Printer printer, Executor executor) {
+        Validate.notNull(name, "Logger name is null.");
+        Validate.notNull(printer, "Logger printer is null.");
+        Validate.notNull(executor, "Logger executor is null");
+        this.name = name;
+        this.printer = printer;
+        this.executor = executor;
     }
 
     public static Logger getLogger(Class clazz, Printer printer) {
-        return new Logger(clazz, printer);
+        Validate.notNull(clazz, "Logger name is null.");
+        return new Logger(clazz.getName(), printer);
+    }
+
+    public static Logger getLogger(Class clazz, Printer printer, Executor executor) {
+        Validate.notNull(clazz, "Logger name is null.");
+        return new Logger(clazz.getName(), printer, executor);
+    }
+
+    public static Logger getLogger(String name, Printer printer) {
+        return new Logger(name, printer);
+    }
+
+    public static Logger getLogger(String name, Printer printer, Executor executor) {
+        return new Logger(name, printer, executor);
     }
 
     public void info(Object message) {
-        printer.print(message, clazz, Level.INFO);
+        if (executor == null) {
+            printer.print(name, message, Level.INFO);
+        } else {
+            executor.execute(() -> printer.print(name, message, Level.INFO));
+        }
     }
 
     public void warn(Object message) {
-        printer.print(message, clazz, Level.WARN);
+        if (executor == null) {
+            printer.print(name, message, Level.WARN);
+        } else {
+            executor.execute(() -> printer.print(name, message, Level.WARN));
+        }
     }
 
     public void debug(Object message) {
-        printer.print(message, clazz, Level.DEBUG);
+        if (executor == null) {
+            printer.print(name, message, Level.DEBUG);
+        } else {
+            executor.execute(() -> printer.print(name, message, Level.DEBUG));
+        }
     }
 
     public void error(Object message) {
-        printer.print(message, clazz, Level.ERROR);
+        if (executor == null) {
+            printer.print(name, message, Level.ERROR);
+        } else {
+            executor.execute(() -> printer.print(name, message, Level.ERROR));
+        }
     }
 
-    public void info(Object message, Class<?> clazz) {
-        printer.print(message, clazz, Level.INFO);
+    public void info(Class<?> clazz, Object message) {
+        Validate.notNull(clazz, "Logger name is null.");
+        if (executor == null) {
+            printer.print(clazz.getName(), message, Level.INFO);
+        } else {
+            executor.execute(() -> printer.print(clazz.getName(), message, Level.INFO));
+        }
     }
 
-    public void warn(Object message, Class<?> clazz) {
-        printer.print(message, clazz, Level.WARN);
+    public void warn(Class<?> clazz, Object message) {
+        Validate.notNull(clazz, "Logger name is null.");
+        if (executor == null) {
+            printer.print(clazz.getName(), message, Level.WARN);
+        } else {
+            executor.execute(() -> printer.print(clazz.getName(), message, Level.WARN));
+        }
     }
 
-    public void debug(Object message, Class<?> clazz) {
-        printer.print(message, clazz, Level.DEBUG);
+    public void debug(Class<?> clazz, Object message) {
+        Validate.notNull(clazz, "Logger name is null.");
+        if (executor == null) {
+            printer.print(clazz.getName(), message, Level.DEBUG);
+        } else {
+            executor.execute(() -> printer.print(clazz.getName(), message, Level.DEBUG));
+        }
     }
 
-    public void error(Object message, Class<?> clazz) {
-        printer.print(message, clazz, Level.ERROR);
+    public void error(Class<?> clazz, Object message) {
+        Validate.notNull(clazz, "Logger name is null.");
+        if (executor == null) {
+            printer.print(clazz.getName(), message, Level.ERROR);
+        } else {
+            executor.execute(() -> printer.print(clazz.getName(), message, Level.ERROR));
+        }
     }
 
-    public static void info(Object message, Class<?> clazz, Printer printer) {
-        printer.print(message, clazz, Level.INFO);
+    public void info(String name, Object message) {
+        if (executor == null) {
+            printer.print(name, message, Level.INFO);
+        } else {
+            executor.execute(() -> printer.print(name, message, Level.INFO));
+        }
     }
 
-    public static void warn(Object message, Class<?> clazz, Printer printer) {
-        printer.print(message, clazz, Level.WARN);
+    public void warn(String name, Object message) {
+        if (executor == null) {
+            printer.print(name, message, Level.WARN);
+        } else {
+            executor.execute(() -> printer.print(name, message, Level.WARN));
+        }
     }
 
-    public static void debug(Object message, Class<?> clazz, Printer printer) {
-        printer.print(message, clazz, Level.DEBUG);
+    public void debug(String name, Object message) {
+        if (executor == null) {
+            printer.print(name, message, Level.DEBUG);
+        } else {
+            executor.execute(() -> printer.print(name, message, Level.DEBUG));
+        }
     }
 
-    public static void error(Object message, Class<?> clazz, Printer printer) {
-        printer.print(message, clazz, Level.ERROR);
+    public void error(String name, Object message) {
+        if (executor == null) {
+            printer.print(name, message, Level.ERROR);
+        } else {
+            executor.execute(() -> printer.print(name, message, Level.ERROR));
+        }
+    }
+
+    public static void info(Class<?> clazz, Object message, Printer printer) {
+        Validate.notNull(clazz, "Logger name is null.");
+        Validate.notNull(printer, "Logger printer is null.");
+        printer.print(clazz.getName(), message, Level.INFO);
+    }
+
+    public static void warn(Class<?> clazz, Object message, Printer printer) {
+        Validate.notNull(clazz, "Logger name is null.");
+        Validate.notNull(printer, "Logger printer is null.");
+        printer.print(clazz.getName(), message, Level.WARN);
+    }
+
+    public static void debug(Class<?> clazz, Object message, Printer printer) {
+        Validate.notNull(clazz, "Logger name is null.");
+        Validate.notNull(printer, "Logger printer is null.");
+        printer.print(clazz.getName(), message, Level.DEBUG);
+    }
+
+    public static void error(Class<?> clazz, Object message, Printer printer) {
+        Validate.notNull(clazz, "Logger name is null.");
+        Validate.notNull(printer, "Logger printer is null.");
+        printer.print(clazz.getName(), message, Level.ERROR);
+    }
+
+    public static void info(Class<?> clazz, Object message, Printer printer, Executor executor) {
+        Validate.notNull(clazz, "Logger name is null.");
+        Validate.notNull(printer, "Logger printer is null.");
+        Validate.notNull(executor, "Logger executor is null");
+        executor.execute(() -> printer.print(clazz.getName(), message, Level.INFO));
+    }
+
+    public static void warn(Class<?> clazz, Object message, Printer printer, Executor executor) {
+        Validate.notNull(clazz, "Logger name is null.");
+        Validate.notNull(printer, "Logger printer is null.");
+        Validate.notNull(executor, "Logger executor is null");
+        executor.execute(() -> printer.print(clazz.getName(), message, Level.WARN));
+    }
+
+    public static void debug(Class<?> clazz, Object message, Printer printer, Executor executor) {
+        Validate.notNull(clazz, "Logger name is null.");
+        Validate.notNull(printer, "Logger printer is null.");
+        Validate.notNull(executor, "Logger executor is null");
+        executor.execute(() -> printer.print(clazz.getName(), message, Level.DEBUG));
+    }
+
+    public static void error(Class<?> clazz, Object message, Printer printer, Executor executor) {
+        Validate.notNull(clazz, "Logger name is null.");
+        Validate.notNull(printer, "Logger printer is null.");
+        Validate.notNull(executor, "Logger executor is null");
+        executor.execute(() -> printer.print(clazz.getName(), message, Level.ERROR));
+    }
+
+    public static void info(String name, Object message, Printer printer) {
+        Validate.notNull(name, "Logger name is null.");
+        Validate.notNull(printer, "Logger printer is null.");
+        printer.print(name, message, Level.INFO);
+    }
+
+    public static void warn(String name, Object message, Printer printer) {
+        Validate.notNull(name, "Logger name is null.");
+        Validate.notNull(printer, "Logger printer is null.");
+        printer.print(name, message, Level.WARN);
+    }
+
+    public static void debug(String name, Object message, Printer printer) {
+        Validate.notNull(name, "Logger name is null.");
+        Validate.notNull(printer, "Logger printer is null.");
+        printer.print(name, message, Level.DEBUG);
+    }
+
+    public static void error(String name, Object message, Printer printer) {
+        Validate.notNull(name, "Logger name is null.");
+        Validate.notNull(printer, "Logger printer is null.");
+        printer.print(name, message, Level.ERROR);
+    }
+
+    public static void info(String name, Object message, Printer printer, Executor executor) {
+        Validate.notNull(name, "Logger name is null.");
+        Validate.notNull(printer, "Logger printer is null.");
+        Validate.notNull(executor, "Logger executor is null");
+        executor.execute(() -> printer.print(name, message, Level.INFO));
+    }
+
+    public static void warn(String name, Object message, Printer printer, Executor executor) {
+        Validate.notNull(name, "Logger name is null.");
+        Validate.notNull(printer, "Logger printer is null.");
+        Validate.notNull(executor, "Logger executor is null");
+        executor.execute(() -> printer.print(name, message, Level.WARN));
+    }
+
+    public static void debug(String name, Object message, Printer printer, Executor executor) {
+        Validate.notNull(name, "Logger name is null.");
+        Validate.notNull(printer, "Logger printer is null.");
+        Validate.notNull(executor, "Logger executor is null");
+        executor.execute(() -> printer.print(name, message, Level.DEBUG));
+    }
+
+    public static void error(String name, Object message, Printer printer, Executor executor) {
+        Validate.notNull(name, "Logger name is null.");
+        Validate.notNull(printer, "Logger printer is null.");
+        Validate.notNull(executor, "Logger executor is null");
+        executor.execute(() -> printer.print(name, message, Level.ERROR));
     }
 
     public static void setLevel(Level level) {

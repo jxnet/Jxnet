@@ -17,6 +17,8 @@
 
 package com.ardikars.jxnet.logger;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -27,6 +29,16 @@ import java.util.Locale;
  */
 public class SimplePrinter implements Printer {
 
+    private final Writer writer;
+
+    public SimplePrinter() {
+        this.writer = null;
+    }
+
+    public SimplePrinter(Writer writer) {
+        this.writer = writer;
+    }
+
     private Locale locale = Locale.ENGLISH;
 
     private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(
@@ -34,13 +46,20 @@ public class SimplePrinter implements Printer {
     );
 
     @Override
-    public void print(Object message, Class<?> clazz, Logger.Level level) {
-        if (Logger.getLevel() == null || Logger.getLevel() == level) {
-            System.out.println(level.getColor().getAnsiColorCode() + " [ "
-                    + level + " ] [ "
-                    + LocalDateTime.now().format(dateTimeFormatter) + " ] [ "
-                    + clazz.getName() + " ] : "
-                    + message);
+    public void print(String name, Object message, Logger.Level level) {
+        String value = " [ "
+                + level + " ] [ "
+                + LocalDateTime.now().format(dateTimeFormatter) + " ] [ "
+                + name + " ] : "
+                + message;
+        System.out.println(level.getColor().getAnsiColorCode() + value);
+        if (writer != null) {
+            try {
+                writer.write(value);
+                writer.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
