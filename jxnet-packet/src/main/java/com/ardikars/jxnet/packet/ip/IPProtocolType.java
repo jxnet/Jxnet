@@ -19,6 +19,7 @@ package com.ardikars.jxnet.packet.ip;
 
 import com.ardikars.jxnet.Decoder;
 import com.ardikars.jxnet.packet.Packet;
+import com.ardikars.jxnet.packet.UnknownPacket;
 import com.ardikars.jxnet.packet.icmp.ICMPv4;
 import com.ardikars.jxnet.packet.icmp.ICMPv6;
 import com.ardikars.jxnet.packet.ip.ipv6.EncapsulatingSecurityPayload;
@@ -137,7 +138,7 @@ public class IPProtocolType extends NamedNumber<Byte, IPProtocolType> implements
             case 17:
                 return com.ardikars.jxnet.packet.udp.UDP.newInstance(buffer);
             default:
-                return null;
+                return UnknownPacket.newInstance(buffer);
         }
     }
 

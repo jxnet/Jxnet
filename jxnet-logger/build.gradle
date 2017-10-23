@@ -3,6 +3,8 @@
  * Copyright (C) 2017  Ardika Rommy Sanjaya
  */
 
+description = "Logging api"
+
 dependencies {
     compile project(':jxnet-util')
     testCompile "junit:junit:${JUNIT_VERSION}"

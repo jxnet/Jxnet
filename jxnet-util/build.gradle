@@ -3,6 +3,8 @@
  * Copyright (C) 2017  Ardika Rommy Sanjaya
  */
 
+description = "Utilities for Jxnet."
+
 dependencies {
 	compile project(':jxnet-common')
 	testCompile "junit:junit:${JUNIT_VERSION}"

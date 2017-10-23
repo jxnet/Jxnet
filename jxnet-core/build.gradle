@@ -3,6 +3,8 @@
  * Copyright (C) 2017  Ardika Rommy Sanjaya
  */
 
+description = "Core module for Jxnet."
+
 sourceSets {
 	main {
 		resources {

@@ -3,6 +3,8 @@
  * Copyright (C) 2017  Ardika Rommy Sanjaya
  */
 
+description = "Module for crafting network packet."
+
 dependencies {
 	compile project(':jxnet-core')
 	compile project(':jxnet-common')
