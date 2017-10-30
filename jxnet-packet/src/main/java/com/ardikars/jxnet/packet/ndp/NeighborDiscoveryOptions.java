@@ -106,13 +106,8 @@ public class NeighborDiscoveryOptions extends Packet {
         return this;
     }
 
-    public static NeighborDiscoveryOptions newInstance(final byte[] bytes) {
-        return newInstance(bytes, 0, bytes.length);
-    }
-
-    public static NeighborDiscoveryOptions newInstance(final byte[] bytes, final int offset, final int length) {
+    public static NeighborDiscoveryOptions newInstance(final ByteBuffer buffer) {
         NeighborDiscoveryOptions neighborDiscoveryOptions = new NeighborDiscoveryOptions();
-        ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
         while (buffer.hasRemaining()) {
             OptionType type = OptionType.registry.get(buffer.get());
             if (!buffer.hasRemaining()) {
@@ -134,6 +129,14 @@ public class NeighborDiscoveryOptions extends Packet {
         return neighborDiscoveryOptions;
     }
 
+    public static NeighborDiscoveryOptions newInstance(final byte[] bytes) {
+        return newInstance(bytes, 0, bytes.length);
+    }
+
+    public static NeighborDiscoveryOptions newInstance(final byte[] bytes, final int offset, final int length) {
+        return newInstance(ByteBuffer.wrap(bytes, offset, length));
+    }
+
     public boolean hasOptions() {
         return !this.options.isEmpty();
     }
@@ -143,7 +146,7 @@ public class NeighborDiscoveryOptions extends Packet {
     }
 
     @Override
-    public byte[] toBytes() {
+    public byte[] bytes() {
         int length = 0;
         for (Option option : this.options) {
             length += (option.getLength() << 3);
@@ -160,6 +163,25 @@ public class NeighborDiscoveryOptions extends Packet {
             }
         }
         return data;
+    }
+
+    @Override
+    public ByteBuffer buffer() {
+        int length = 0;
+        for (Option option : this.options) {
+            length += (option.getLength() << 3);
+        }
+        ByteBuffer buffer = ByteBuffer.allocateDirect(length);
+        for (Option option : this.options) {
+            buffer.put(option.getType().getValue());
+            buffer.put(option.getLength());
+            buffer.put(option.getData());
+            int paddingLength = (option.getLength() << 3) - (option.getData().length + 2);
+            for (int i=0; i<paddingLength; i++) {
+                buffer.put((byte) 0);
+            }
+        }
+        return buffer;
     }
 
     @Override

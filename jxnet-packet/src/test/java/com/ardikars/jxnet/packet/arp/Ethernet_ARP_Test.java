@@ -3,8 +3,6 @@ package com.ardikars.jxnet.packet.arp;
 import com.ardikars.jxnet.DataLinkType;
 import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
-import com.ardikars.jxnet.logger.DefaultPrinter;
-import com.ardikars.jxnet.logger.Logger;
 import com.ardikars.jxnet.packet.PacketListener;
 import com.ardikars.jxnet.packet.ProtocolType;
 import com.ardikars.jxnet.packet.ethernet.Ethernet;
@@ -13,6 +11,8 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
@@ -27,7 +27,7 @@ public class Ethernet_ARP_Test {
 
     private StringBuilder errbuf = new StringBuilder();
     private Pcap pcap = null;
-    private Logger logger = Logger.getLogger(Ethernet_ARP_Test.class, new DefaultPrinter());
+    private Logger logger = LoggerFactory.getLogger(Ethernet_ARP_Test.class);
 
     String[] hexStream = new String[] {
             "14cc20ccb9ecb827eb9a9c5f08060001080006040001b827eb9a9c5fc0a80196000000000000c0a801fe",
@@ -52,15 +52,15 @@ public class Ethernet_ARP_Test {
         PacketListener.List<String> callback = (arg, pktHdr, packets) -> {
             Ethernet eth = (Ethernet) packets.get(0);
             if (eth != null) {
-                if (!HexUtils.toHexString(eth.toBytes()).equals(hexStream[index])) {
-                    logger.info(index + ": " + HexUtils.toHexString(eth.toBytes()));
+                if (!HexUtils.toHexString(eth.bytes()).equals(hexStream[index])) {
+                    logger.info(index + ": " + HexUtils.toHexString(eth.bytes()));
                 } else {
                     Ethernet ethernet = (Ethernet) new Ethernet()
                             .setDestinationMacAddress(eth.getDestinationMacAddress())
                             .setSourceMacAddress(eth.getSourceMacAddress())
                             .setEthernetType(eth.getEthernetType())
                             .setPacket(eth.getPacket());
-                    if (Arrays.equals(eth.toBytes(), ethernet.toBytes())) {
+                    if (Arrays.equals(eth.bytes(), ethernet.bytes())) {
                         logger.info("Valid Ethernet.");
                     }
                     if (eth.getPacket() instanceof ARP) {
@@ -76,10 +76,10 @@ public class Ethernet_ARP_Test {
                                 .setTargetHardwareAddress(arp.getTargetHardwareAddress())
                                 .setTargetProtocolAddress(arp.getTargetProtocolAddress())
                                 .setPacket(arp.getPacket());
-                        logger.debug(Arrays.toString(arp.toBytes()));
-                        logger.debug(Arrays.toString(arp1.toBytes()));
+                        logger.debug(Arrays.toString(arp.bytes()));
+                        logger.debug(Arrays.toString(arp1.bytes()));
                         System.out.println("----");
-                        if (Arrays.equals(arp.toBytes(), arp1.toBytes())) {
+                        if (Arrays.equals(arp.bytes(), arp1.bytes())) {
                             logger.info("Valid ARP.");
                         }
                     }

@@ -2,8 +2,6 @@ package com.ardikars.jxnet.packet.udp;
 
 import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
-import com.ardikars.jxnet.logger.DefaultPrinter;
-import com.ardikars.jxnet.logger.Logger;
 import com.ardikars.jxnet.packet.Packet;
 import com.ardikars.jxnet.packet.PacketListener;
 import com.ardikars.jxnet.packet.ethernet.Ethernet;
@@ -13,6 +11,8 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
@@ -27,7 +27,7 @@ public class Ethernet_IPv4_UDP_Test {
 
     private StringBuilder errbuf = new StringBuilder();
     private Pcap pcap = null;
-    private Logger logger = Logger.getLogger(Ethernet_IPv4_UDP_Test.class, new DefaultPrinter());
+    private Logger logger = LoggerFactory.getLogger(Ethernet_IPv4_UDP_Test.class);
 
     String[] hexStream = new String[] {
             "14cc20ccb9ecb827eb9a9c5f08004500003aa160400040119200c0a80196b4839090edc700350026078a31fe0100000100000000000008617264696b61727303636f6d0000010001",
@@ -52,15 +52,15 @@ public class Ethernet_IPv4_UDP_Test {
         PacketListener.List<String> callback = (arg, pktHdr, packets) -> {
             Ethernet eth = (Ethernet) packets.get(0);
             if (eth != null) {
-                if (!HexUtils.toHexString(eth.toBytes()).equals(hexStream[index])) {
-                    logger.info(index+": "+HexUtils.toHexString(eth.toBytes()));
+                if (!HexUtils.toHexString(eth.bytes()).equals(hexStream[index])) {
+                    logger.info(index+": "+HexUtils.toHexString(eth.bytes()));
                 } else {
                     Ethernet ethernet = (Ethernet) new Ethernet()
                             .setDestinationMacAddress(eth.getDestinationMacAddress())
                             .setSourceMacAddress(eth.getSourceMacAddress())
                             .setEthernetType(eth.getEthernetType())
                             .setPacket(eth.getPacket());
-                    if (Arrays.equals(eth.toBytes(), ethernet.toBytes())) {
+                    if (Arrays.equals(eth.bytes(), ethernet.bytes())) {
                         logger.info("Valid Ethernet.");
                     }
                     if (eth.getPacket() instanceof IPv4) {
@@ -81,7 +81,7 @@ public class Ethernet_IPv4_UDP_Test {
                         ip.setDestinationAddress(ipv4.getDestinationAddress());
                         ip.setOptions(ipv4.getOptions());
                         ip.setPacket(ipv4.getPacket());
-                        if (Arrays.equals(ipv4.toBytes(), ip.toBytes())) {
+                        if (Arrays.equals(ipv4.bytes(), ip.bytes())) {
                             logger.info("Valid IPv4.");
                         }
                         if (ip.getPacket() instanceof UDP) {
@@ -92,7 +92,7 @@ public class Ethernet_IPv4_UDP_Test {
                             u.setLength(udp.getLength());
                             u.setChecksum(udp.getChecksum());
                             u.setPacket(udp.getPacket());
-                            if (Arrays.equals(udp.toBytes(), u.toBytes())) {
+                            if (Arrays.equals(udp.bytes(), u.bytes())) {
                                 logger.info("Valid UDP.");
                             }
                         }

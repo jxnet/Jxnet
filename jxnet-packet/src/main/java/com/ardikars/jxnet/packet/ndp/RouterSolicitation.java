@@ -33,28 +33,30 @@ public class RouterSolicitation extends Packet {
         return this;
     }
 
+    public static RouterSolicitation newInstance(final ByteBuffer buffer) {
+        buffer.getInt(); // reserve
+        RouterSolicitation rs = new RouterSolicitation();
+        rs.setOptions(NeighborDiscoveryOptions.newInstance(buffer.slice()));
+        return rs;
+    }
+
     public static RouterSolicitation newInstance(final byte[] bytes) {
         return newInstance(bytes, 0, bytes.length);
     }
 
     public static RouterSolicitation newInstance(final byte[] bytes, final int offset, final int length) {
-        ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
-        buffer.getInt(); // reserve
-        RouterSolicitation rs = new RouterSolicitation();
-        rs.setOptions(NeighborDiscoveryOptions.newInstance(bytes, buffer.position(),
-                buffer.limit() - buffer.position()));
-        return rs;
+        return newInstance(ByteBuffer.wrap(bytes, offset, length));
     }
 
     @Override
-    public byte[] toBytes() {
-        byte[] optionsData = null;
+    public byte[] bytes() {
+        ByteBuffer optionsData = null;
         if (this.options.hasOptions()) {
-            optionsData = this.options.toBytes();
+            optionsData = this.options.buffer();
         }
         int optionsLength = 0;
         if (optionsData != null) {
-            optionsLength = optionsData.length;
+            optionsLength = optionsData.capacity();
         }
         final byte[] data = new byte[HEADER_LENGTH + optionsLength];
         final ByteBuffer bb = ByteBuffer.wrap(data);
@@ -63,6 +65,24 @@ public class RouterSolicitation extends Packet {
             bb.put(optionsData);
         }
         return data;
+    }
+
+    @Override
+    public ByteBuffer buffer() {
+        ByteBuffer optionsData = null;
+        if (this.options.hasOptions()) {
+            optionsData = this.options.buffer();
+        }
+        int optionsLength = 0;
+        if (optionsData != null) {
+            optionsLength = optionsData.capacity();
+        }
+        final ByteBuffer buffer = ByteBuffer.allocateDirect(HEADER_LENGTH + optionsLength);
+        buffer.putInt(0);
+        if (optionsData != null) {
+            buffer.put(optionsData);
+        }
+        return buffer;
     }
 
     @Override

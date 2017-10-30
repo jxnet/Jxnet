@@ -19,6 +19,7 @@ package com.ardikars.jxnet.packet.ip.ipv6;
 
 import com.ardikars.jxnet.packet.Packet;
 import com.ardikars.jxnet.packet.UnknownPacket;
+import com.ardikars.jxnet.packet.icmp.ICMPv6;
 import com.ardikars.jxnet.packet.ip.IPProtocolType;
 import com.ardikars.jxnet.packet.ip.IPv6;
 import com.ardikars.jxnet.packet.tcp.TCP;
@@ -42,8 +43,6 @@ public class Routing extends IPv6ExtensionHeader {
     private byte segmentLeft;
 
     private byte[] routingData;
-
-    private byte[] payload;
 
     public IPProtocolType getNextHeader() {
         return this.nextHeader;
@@ -90,21 +89,21 @@ public class Routing extends IPv6ExtensionHeader {
         return this;
     }
 
-    public byte[] getPayload() {
-        return this.payload;
+    public ByteBuffer getPayload() {
+        return this.nextPacket;
     }
 
     public Routing setPayload(final byte[] payload) {
-        this.payload = payload;
+        this.nextPacket = ByteBuffer.wrap(payload);
         return this;
     }
 
-    public static Routing newInstance(final byte[] bytes) {
-        return newInstance(bytes, 0, bytes.length);
+    public Routing setPayload(final ByteBuffer payload) {
+        this.nextPacket = payload;
+        return this;
     }
 
-    public static Routing newInstance(final byte[] bytes, final int offset, final int length) {
-        ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
+    public static Routing newInstance(final ByteBuffer buffer) {
         Routing routing = new Routing();
         routing.setNextHeader(IPProtocolType.getInstance(buffer.get()));
         routing.setExtensionLength(buffer.get());
@@ -113,9 +112,16 @@ public class Routing extends IPv6ExtensionHeader {
         int dataLength = Routing.FIXED_ROUTING_DATA_LENGTH + 8 * routing.getExtensionLength();
         routing.routingData = new byte[dataLength];
         buffer.get(routing.routingData, 0, routing.routingData.length);
-        routing.payload = new byte[buffer.limit() - (FIXED_ROUTING_HEADER_LENGTH + dataLength)];
-        buffer.get(routing.payload, 0, routing.payload.length);
+        routing.nextPacket = buffer.slice();
         return routing;
+    }
+
+    public static Routing newInstance(final byte[] bytes) {
+        return newInstance(bytes, 0, bytes.length);
+    }
+
+    public static Routing newInstance(final byte[] bytes, final int offset, final int length) {
+        return newInstance(ByteBuffer.wrap(bytes, offset, length));
     }
 
     @Override
@@ -125,27 +131,23 @@ public class Routing extends IPv6ExtensionHeader {
 
     @Override
     public Packet getPacket() {
-        if (this.getPayload() == null || this.getPayload().length == 0) return null;
+        if (this.getPayload() == null || this.getPayload().capacity() == 0) return null;
         switch (this.getNextHeader().getValue()) {
             case 6: return TCP.newInstance(this.getPayload());
             case 17: return UDP.newInstance(this.getPayload());
             case 41: return IPv6.newInstance(this.getPayload());
             case 43: return Routing.newInstance(this.getPayload());
             case 44: return Fragment.newInstance(this.getPayload());
+            case 58: return ICMPv6.newInstance(this.getPayload());
             default: return UnknownPacket.newInstance(this.getPayload());
         }
     }
 
     @Override
-    public Packet build() {
-        return this;
-    }
-
-    @Override
-    public byte[] toBytes() {
+    public byte[] bytes() {
         byte[] data = new byte[Routing.FIXED_ROUTING_HEADER_LENGTH
                 + Routing.FIXED_ROUTING_DATA_LENGTH + (8 * this.getExtensionLength())
-                + (this.getPayload() == null ? 0 : this.getPayload().length)];
+                + (this.getPayload() == null ? 0 : this.getPayload().capacity())];
         ByteBuffer buffer = ByteBuffer.wrap(data);
         buffer.put(this.getNextHeader().getValue());
         buffer.put(this.getExtensionLength());
@@ -156,6 +158,23 @@ public class Routing extends IPv6ExtensionHeader {
             buffer.put(this.getPayload());
         }
         return data;
+    }
+
+    @Override
+    public ByteBuffer buffer() {
+        ByteBuffer buffer = ByteBuffer
+                .allocateDirect(Routing.FIXED_ROUTING_HEADER_LENGTH
+                        + Routing.FIXED_ROUTING_DATA_LENGTH + (8 * this.getExtensionLength())
+                        + (this.getPayload() == null ? 0 : this.getPayload().capacity()));
+        buffer.put(this.getNextHeader().getValue());
+        buffer.put(this.getExtensionLength());
+        buffer.put(this.getRoutingType());
+        buffer.put(this.getSegmentLeft());
+        buffer.put(this.getRoutingData());
+        if (this.getPayload() != null) {
+            buffer.put(this.getPayload());
+        }
+        return buffer;
     }
 
     @Override

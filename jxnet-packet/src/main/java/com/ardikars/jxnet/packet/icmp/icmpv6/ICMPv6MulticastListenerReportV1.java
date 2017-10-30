@@ -24,20 +24,20 @@ import com.ardikars.jxnet.packet.icmp.ICMPTypeAndCode;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.5
  */
-public class ICMPv6MulticastListenerReport extends ICMPTypeAndCode {
+public class ICMPv6MulticastListenerReportV1 extends ICMPTypeAndCode {
 
-    public static final ICMPv6MulticastListenerReport MULTICAST_LISTENER_REPORT =
-            new ICMPv6MulticastListenerReport((byte) 0, "Multicast listener report");
+    public static final ICMPv6MulticastListenerReportV1 MULTICAST_LISTENER_REPORT =
+            new ICMPv6MulticastListenerReportV1((byte) 0, "Multicast listener report");
 
-    protected ICMPv6MulticastListenerReport(Byte code, String name) {
+    protected ICMPv6MulticastListenerReportV1(Byte code, String name) {
         super((byte) 131, code, name);
     }
 
-    public static ICMPv6MulticastListenerReport register(Byte code, String name) {
+    public static ICMPv6MulticastListenerReportV1 register(Byte code, String name) {
         TwoKeyMap<Byte, Byte> key = TwoKeyMap.newInstance((byte) 131, code);
-        ICMPv6MulticastListenerReport multicastListenerReport =
-                new ICMPv6MulticastListenerReport(key.getSecondKey(), name);
-        return (ICMPv6MulticastListenerReport) ICMPTypeAndCode.registry.put(key, multicastListenerReport);
+        ICMPv6MulticastListenerReportV1 multicastListenerReport =
+                new ICMPv6MulticastListenerReportV1(key.getSecondKey(), name);
+        return (ICMPv6MulticastListenerReportV1) ICMPTypeAndCode.registry.put(key, multicastListenerReport);
     }
 
     @Override

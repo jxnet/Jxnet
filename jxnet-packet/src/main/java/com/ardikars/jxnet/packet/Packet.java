@@ -19,6 +19,7 @@ package com.ardikars.jxnet.packet;
 
 import com.ardikars.jxnet.Builder;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -32,7 +33,7 @@ public abstract class Packet implements Iterator<Packet> {
 
     private Packet next = this;
 
-    protected byte[] nextPacket;
+    protected ByteBuffer nextPacket;
 
     /**
      * Set payload.
@@ -51,16 +52,13 @@ public abstract class Packet implements Iterator<Packet> {
         return null;
     }
 
-    /**
-     * Return packet in byte array.
-     * @return byte array.
-     */
-    public abstract byte[] toBytes();
+    public abstract byte[] bytes();
 
-    @Deprecated
-    public Packet build() {
-        return this;
-    }
+    /**
+     * Return packet in DirectByteBuffer.
+     * @return DirectByteBuffer.
+     */
+    public abstract ByteBuffer buffer();
 
     /**
      * Packet builder.

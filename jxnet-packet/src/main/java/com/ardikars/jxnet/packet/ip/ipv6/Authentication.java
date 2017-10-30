@@ -29,12 +29,13 @@ import java.util.Arrays;
  */
 public class Authentication extends Packet {
 
+    public static final byte FIXED_HEADER_LENGTH = 12; // bytes
+
     private IPProtocolType nextHeader;
     private byte payloadLength;
     private int securityParameterIndex;
+    private int sequenceNumber;
     private byte[] integrityCheckValue;
-
-    private byte[] payload;
 
     public IPProtocolType getNextHeader() {
         return this.nextHeader;
@@ -63,6 +64,14 @@ public class Authentication extends Packet {
         return this;
     }
 
+    public int getSequenceNumber() {
+        return sequenceNumber;
+    }
+
+    public void setSequenceNumber(int sequenceNumber) {
+        this.sequenceNumber = sequenceNumber;
+    }
+
     public byte[] getIntegrityCheckValue() {
         return this.integrityCheckValue;
     }
@@ -72,13 +81,37 @@ public class Authentication extends Packet {
         return this;
     }
 
-    public byte[] getPayload() {
-        return this.payload;
+    public ByteBuffer getPayload() {
+        return this.nextPacket;
     }
 
     public Authentication setPayload(final byte[] payload) {
-        this.payload = payload;
+        this.nextPacket = ByteBuffer.wrap(payload);
         return this;
+    }
+
+    public Authentication setPayload(final ByteBuffer payload) {
+        this.nextPacket = payload;
+        return this;
+    }
+
+    public static Authentication newInstance(final ByteBuffer buffer) {
+        Authentication authentication = new Authentication();
+        authentication.setNextHeader(IPProtocolType.getInstance(buffer.get()));
+        authentication.setPayloadLength(buffer.get());
+        buffer.getShort(); //reserved
+        authentication.setSecurityParameterIndex(buffer.getInt());
+        int icvLength = ((authentication.getPayloadLength() + 2) * 8) - 12;
+        authentication.setSequenceNumber(buffer.getInt());
+        authentication.integrityCheckValue = new byte[icvLength];
+        authentication.nextPacket = buffer.slice();
+        buffer.get(authentication.integrityCheckValue, 0, icvLength);
+
+        /*if (authentication.payload != null) {
+            authentication.payload = new byte[buffer.limit() - icvLength + 12];
+            buffer.get(authentication.payload, 0, authentication.payload.length);
+        }*/
+        return authentication;
     }
 
     public static Authentication newInstance(final byte[] bytes) {
@@ -86,41 +119,65 @@ public class Authentication extends Packet {
     }
 
     public static Authentication newInstance(final byte[] bytes, final int offset, final int length) {
-        final ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
-        Authentication authentication = new Authentication();
-        authentication.setNextHeader(IPProtocolType.getInstance(buffer.get()));
-        authentication.setPayloadLength(buffer.get());
-        buffer.getShort(); //reserved
-        authentication.setSecurityParameterIndex(buffer.getInt());
-        int icvLength = ((authentication.getPayloadLength() + 2) * 8) - 12;
-        authentication.integrityCheckValue = new byte[icvLength];
-        buffer.get(authentication.integrityCheckValue, 0, icvLength);
-        if (authentication.payload != null) {
-            authentication.payload = new byte[buffer.limit() - icvLength + 12];
-            buffer.get(authentication.payload, 0, authentication.payload.length);
-        }
-        return authentication;
+        return newInstance(ByteBuffer.wrap(bytes, offset, length));
     }
 
     @Override
     public Packet setPacket(Packet packet) {
-        this.payload = packet.toBytes();
         return this;
     }
 
     @Override
     public Packet getPacket() {
-        return this.nextHeader.decode(this.getPayload());
+        return this.nextHeader.decode(getPayload());
     }
 
     @Override
-    public byte[] toBytes() {
-        return new byte[0];
+    public byte[] bytes() {
+        ByteBuffer payloadData = null;
+        if (this.getPayload() != null) {
+            payloadData = this.getPayload();
+        }
+        int headerLength = FIXED_HEADER_LENGTH
+                + ((this.getIntegrityCheckValue() != null) ? this.getIntegrityCheckValue().length : 0);
+        int payloadLength = 0;
+        if (payloadData != null) {
+            payloadLength = payloadData.capacity();
+        }
+        final byte[] data = new byte[headerLength + payloadLength];
+        final ByteBuffer bb = ByteBuffer.wrap(data);
+        bb.put(this.getNextHeader().getValue());
+        bb.put(this.getPayloadLength());
+        bb.putShort((short) 0);
+        bb.putInt(this.getSequenceNumber());
+        bb.putInt(this.getSecurityParameterIndex());
+        if (this.getIntegrityCheckValue() != null) {
+            bb.put(this.getIntegrityCheckValue(), 0, this.getIntegrityCheckValue().length);
+        }
+        if (payloadData != null) {
+            bb.put(payloadData);
+        }
+        return data;
     }
 
     @Override
-    public Packet build() {
-        return null;
+    public ByteBuffer buffer() {
+        ByteBuffer buffer = ByteBuffer
+                .allocateDirect(FIXED_HEADER_LENGTH +
+                + ((this.getIntegrityCheckValue() != null) ? this.getIntegrityCheckValue().length : 0)
+                + ((this.getPayload() != null) ? this.getPayload().capacity() : 0));
+        buffer.put(this.getNextHeader().getValue());
+        buffer.put(this.getPayloadLength());
+        buffer.putShort((short) 0);
+        buffer.putInt(this.getSequenceNumber());
+        buffer.putInt(this.getSecurityParameterIndex());
+        if (this.getIntegrityCheckValue() != null) {
+            buffer.put(this.getIntegrityCheckValue(), 0, this.getIntegrityCheckValue().length);
+        }
+        if (this.getPayload() != null) {
+            buffer.put(this.getPayload());
+        }
+        return buffer;
     }
 
     @Override
@@ -130,6 +187,8 @@ public class Authentication extends Packet {
                 .append(this.getNextHeader())
                 .append(", Payload Length: ")
                 .append(this.getPayloadLength())
+                .append(", Sequence: ")
+                .append(this.getSequenceNumber())
                 .append(", SPI: ")
                 .append(this.getSecurityParameterIndex())
                 .append(", ICV: ")

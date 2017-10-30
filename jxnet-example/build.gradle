@@ -12,6 +12,6 @@ dependencies {
 }
 
 clean {
-    file("${rootDir}/example/obj").deleteDir()
-    file("${rootDir}/example/out").deleteDir()
+    file("${rootDir}/jxnet-example/obj").deleteDir()
+    file("${rootDir}/jxnet-example/out").deleteDir()
 }

@@ -17,14 +17,36 @@
 
 package com.ardikars.jxnet.packet.ip.ipv6;
 
+import java.nio.ByteBuffer;
+
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.5
  */
 public class HopByHopOptions extends Options {
 
+
     public HopByHopOptions() {
-        type = (byte) 0x00;
+        super.type = (byte) 0x00;
+    }
+
+    public static HopByHopOptions newInstance(final ByteBuffer buffer) {
+        HopByHopOptions hopByHopOptions = new HopByHopOptions();
+        hopByHopOptions.setNextHeader(buffer.get());
+        hopByHopOptions.setExtensionLength((byte)(buffer.get()));
+        byte[] options = new byte[Options.FIXED_OPTIONS_LENGTH + Options.LENGTH_UNIT * hopByHopOptions.getExtensionLength()];
+        buffer.get(options, 0, options.length);
+        hopByHopOptions.setOptions(options);
+        hopByHopOptions.nextPacket = buffer.slice();
+        return hopByHopOptions;
+    }
+
+    public static HopByHopOptions newInstance(final byte[] bytes, final int offset, final int length) {
+        return newInstance(ByteBuffer.wrap(bytes, offset, length));
+    }
+
+    public static HopByHopOptions newInstance(final byte[] bytes) {
+        return newInstance(bytes, 0, bytes.length);
     }
 
 }

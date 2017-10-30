@@ -126,18 +126,26 @@ public class IPv6 extends IP {
         return this;
     }
 
-    @Deprecated
-    public byte[] getPayload() {
-        return this.nextPacket;
-    }
+    public static IPv6 newInstance(final ByteBuffer buffer) {
+        IPv6 ipv6 = new IPv6();
+        int iscratch = buffer.getInt();
+        ipv6.setVersion((byte) (iscratch >> 28 & 0xf));
+        ipv6.setTrafficClass((byte) (iscratch >> 20 & 0xff));
+        ipv6.setFlowLabel(iscratch & 0xfffff);
+        ipv6.setPayloadLength(buffer.getShort());
+        ipv6.setNextHeader(IPProtocolType.getInstance(buffer.get()));
+        ipv6.setHopLimit(buffer.get());
 
-    @Deprecated
-    public IPv6 setPayload(final byte[] payload) {
-        if (payload != null) {
-            this.setPayloadLength((short) payload.length);
-            this.nextPacket = payload;
-        }
-        return this;
+        byte[] addrBuf = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
+        buffer.get(addrBuf);
+        ipv6.setSourceAddress(Inet6Address.valueOf(addrBuf));
+
+        addrBuf = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
+        buffer.get(addrBuf);
+        ipv6.setDestinationAddress(Inet6Address.valueOf(addrBuf));
+
+        ipv6.nextPacket = buffer.slice();
+        return ipv6;
     }
 
     public static IPv6 newInstance(final byte[] bytes) {
@@ -145,27 +153,7 @@ public class IPv6 extends IP {
     }
 
     public static IPv6 newInstance(final byte[] bytes, final int offset, final int length) {
-        ByteBuffer bb = ByteBuffer.wrap(bytes, offset, length);
-        IPv6 ipv6 = new IPv6();
-        int iscratch = bb.getInt();
-        ipv6.setVersion((byte) (iscratch >> 28 & 0xf));
-        ipv6.setTrafficClass((byte) (iscratch >> 20 & 0xff));
-        ipv6.setFlowLabel(iscratch & 0xfffff);
-        ipv6.setPayloadLength(bb.getShort());
-        ipv6.setNextHeader(IPProtocolType.getInstance(bb.get()));
-        ipv6.setHopLimit(bb.get());
-
-        byte[] addrBuf = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
-        bb.get(addrBuf);
-        ipv6.setSourceAddress(Inet6Address.valueOf(addrBuf));
-
-        addrBuf = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
-        bb.get(addrBuf);
-        ipv6.setDestinationAddress(Inet6Address.valueOf(addrBuf));
-
-        ipv6.nextPacket = new byte[bb.limit() - IPV6_HEADER_LENGTH];
-        bb.get(ipv6.nextPacket);
-        return ipv6;
+        return newInstance(ByteBuffer.wrap(bytes, offset, length));
     }
 
     @Override
@@ -181,10 +169,10 @@ public class IPv6 extends IP {
             case "com.ardikars.jxnet.packet.tcp.TCP":
                 TCP tcp = (TCP) packet;
                 if (tcp.getChecksum() == 0) {
-                    bb = ByteBuffer.wrap(tcp.toBytes());
+                    bb = tcp.buffer();
                     length += tcp.getDataOffset() << 2;
                     if (tcp.getPacket() != null) {
-                        length += tcp.getPacket().toBytes().length;
+                        length += tcp.getPacket().buffer().capacity();
                     }
                     final int bbLength =
                             Inet6Address.IPV6_ADDRESS_LENGTH * 2 // IPv6 src, dst
@@ -213,15 +201,15 @@ public class IPv6 extends IP {
                     tcp.setChecksum((short) (~accumulation & 0xffff));
                 }
                 this.setNextHeader(IPProtocolType.TCP);
-                this.nextPacket = tcp.toBytes();
+                this.nextPacket = tcp.buffer();
                 return this;
             case "com.ardikars.jxnet.packet.tcp.UDP":
                 UDP udp = (UDP) packet;
                 if (udp.getChecksum() == 0) {
-                    bb = ByteBuffer.wrap(udp.toBytes());
+                    bb = udp.buffer();
                     length += UDP.UDP_HEADER_LENGTH;
                     if (udp.getPacket() != null) {
-                        length += udp.getPacket().toBytes().length;
+                        length += udp.getPacket().buffer().capacity();
                     }
                     final int bbLength =
                             Inet6Address.IPV6_ADDRESS_LENGTH * 2 // IPv6 src, dst
@@ -250,24 +238,24 @@ public class IPv6 extends IP {
                     udp.setChecksum((short) (~accumulation & 0xffff));
                 }
                 this.setNextHeader(IPProtocolType.UDP);
-                this.nextPacket = udp.toBytes();
+                this.nextPacket = udp.buffer();
                 return this;
             case "com.ardikars.jxnet.packet.icmp.ICMPv6InverseNeighborDiscoverySolicitation":
                 ICMPv6 icmp = (ICMPv6) packet;
                 if (icmp.getChecksum() == 0) {
-                    bb = ByteBuffer.wrap(icmp.toBytes());
-                    byte[] icmpPayload = new byte[0];
+                    bb = icmp.buffer();
+                    ByteBuffer icmpPayload = null;
                     if (icmp.getPacket() != null) {
-                        icmpPayload = icmp.getPacket().toBytes();
+                        icmpPayload = icmp.getPacket().buffer();
                     }
                     final int bbLength =
                             IPV6_HEADER_LENGTH + ICMPv6.ICMP_HEADER_LENGTH +
-                            icmpPayload.length;
+                            ((icmpPayload != null) ? icmpPayload.capacity() : 0);
 
                     final ByteBuffer bbChecksum = ByteBuffer.allocate(bbLength);
                     bbChecksum.put(this.getSourceAddress().toBytes());
                     bbChecksum.put(this.getDestinationAddress().toBytes());
-                    bbChecksum.putInt(IPV6_HEADER_LENGTH + icmpPayload.length);
+                    bbChecksum.putInt(IPV6_HEADER_LENGTH + icmpPayload.capacity());
                     bbChecksum.put((byte) 0);
                     bbChecksum.put((byte) 0);
                     bbChecksum.put((byte) 0);
@@ -296,10 +284,10 @@ public class IPv6 extends IP {
                     icmp.setChecksum((short) (~accumulation & 0xffff));
                 }
                 this.setNextHeader(IPProtocolType.IPV6_ICMP);
-                this.nextPacket = icmp.toBytes();
+                this.nextPacket = icmp.buffer();
                 return this;
         }
-        this.nextPacket = packet.toBytes();
+        this.nextPacket = packet.buffer();
         return this;
     }
 
@@ -309,8 +297,11 @@ public class IPv6 extends IP {
     }
 
     @Override
-    public byte[] toBytes() {
-        byte[] data = new byte[IPV6_HEADER_LENGTH + ((this.nextPacket == null) ? 0 : this.nextPacket.length)];
+    public byte[] bytes() {
+        if (this.nextPacket != null) {
+            this.nextPacket.rewind();
+        }
+        byte[] data = new byte[IPV6_HEADER_LENGTH + ((this.nextPacket == null) ? 0 : this.nextPacket.capacity())];
         ByteBuffer buffer = ByteBuffer.wrap(data);
         buffer.putInt((this.getVersion() & 0xf) << 28 | (this.getTrafficClass() & 0xff) << 20 | this.getFlowLabel() & 0xfffff);
         buffer.putShort(this.getPayloadLength());
@@ -322,6 +313,25 @@ public class IPv6 extends IP {
             buffer.put(this.nextPacket);
         }
         return data;
+    }
+
+    @Override
+    public ByteBuffer buffer() {
+        if (this.nextPacket != null) {
+            this.nextPacket.rewind();
+        }
+        ByteBuffer buffer = ByteBuffer
+                .allocateDirect(IPV6_HEADER_LENGTH + ((this.nextPacket == null) ? 0 : this.nextPacket.capacity()));
+        buffer.putInt((this.getVersion() & 0xf) << 28 | (this.getTrafficClass() & 0xff) << 20 | this.getFlowLabel() & 0xfffff);
+        buffer.putShort(this.getPayloadLength());
+        buffer.put(this.getNextHeader().getValue());
+        buffer.put(this.getHopLimit());
+        buffer.put(this.getSourceAddress().toBytes());
+        buffer.put(this.getSourceAddress().toBytes());
+        if (this.nextPacket != null) {
+            buffer.put(this.nextPacket);
+        }
+        return buffer;
     }
 
     @Override

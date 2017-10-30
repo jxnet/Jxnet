@@ -136,12 +136,7 @@ public class ARP extends Packet {
         return this;
     }
 
-    public static ARP newInstance(final byte[] bytes) {
-        return newInstance(bytes, 0, bytes.length);
-    }
-
-    public static ARP newInstance(final byte[] bytes, final int offset, final int length) {
-        ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
+    public static ARP newInstance(final ByteBuffer buffer) {
         ARP arp = new ARP();
         arp.setHardwareType(DataLinkType.valueOf(buffer.getShort()));
         arp.setProtocolType(ProtocolType.getInstance(buffer.getShort()));
@@ -167,8 +162,16 @@ public class ARP extends Packet {
         return arp;
     }
 
+    public static ARP newInstance(final byte[] bytes) {
+        return newInstance(bytes, 0, bytes.length);
+    }
+
+    public static ARP newInstance(final byte[] bytes, final int offset, final int length) {
+        return newInstance(ByteBuffer.wrap(bytes, offset, length));
+    }
+
     @Override
-    public byte[] toBytes() {
+    public byte[] bytes() {
         byte[] data = new byte[ARP_HEADER_LENGTH];
         ByteBuffer buffer = ByteBuffer.wrap(data);
         buffer.putShort(this.getHardwareType().getValue());
@@ -181,6 +184,21 @@ public class ARP extends Packet {
         buffer.put(this.getTargetHardwareAddress().toBytes());
         buffer.put(this.getTargetProtocolAddress().toBytes());
         return data;
+    }
+
+    @Override
+    public ByteBuffer buffer() {
+        ByteBuffer buffer = ByteBuffer.allocateDirect(ARP_HEADER_LENGTH);
+        buffer.putShort(this.getHardwareType().getValue());
+        buffer.putShort(this.getProtocolType().getValue());
+        buffer.put(this.getHardwareAddressLength());
+        buffer.put(this.getProtocolAddressLength());
+        buffer.putShort(this.getOperationCode().getValue());
+        buffer.put(this.getSenderHardwareAddress().toBytes());
+        buffer.put(this.getSenderProtocolAddress().toBytes());
+        buffer.put(this.getTargetHardwareAddress().toBytes());
+        buffer.put(this.getTargetProtocolAddress().toBytes());
+        return buffer;
     }
 
     @Override

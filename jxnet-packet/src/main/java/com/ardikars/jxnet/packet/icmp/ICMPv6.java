@@ -27,15 +27,12 @@ import java.nio.ByteBuffer;
  */
 public class ICMPv6 extends ICMP {
 
-    @Deprecated
-    public byte[] getPayload() {
-        return this.nextPacket;
-    }
-
-    @Deprecated
-    public ICMPv6 setPayload(final byte[] payload) {
-        this.nextPacket = payload;
-        return this;
+    public static ICMPv6 newInstance(final ByteBuffer buffer) {
+        ICMPv6 icmp = new ICMPv6();
+        icmp.setTypeAndCode(ICMPTypeAndCode.getTypeAndCode(buffer.get(), buffer.get()));
+        icmp.setChecksum(buffer.getShort());
+        icmp.nextPacket = buffer.slice();
+        return icmp;
     }
 
     public static ICMPv6 newInstance(final byte[] bytes) {
@@ -43,13 +40,7 @@ public class ICMPv6 extends ICMP {
     }
 
     public static ICMPv6 newInstance(final byte[] bytes, final int offset, final int length) {
-        ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
-        ICMPv6 icmp = new ICMPv6();
-        icmp.setTypeAndCode(ICMPTypeAndCode.getTypeAndCode(buffer.get(), buffer.get()));
-        icmp.setChecksum(buffer.getShort());
-        icmp.nextPacket = new byte[buffer.limit() - ICMP_HEADER_LENGTH];
-        buffer.get(icmp.nextPacket);
-        return icmp;
+        return newInstance(ByteBuffer.wrap(bytes, offset, length));
     }
 
     @Override
@@ -59,7 +50,7 @@ public class ICMPv6 extends ICMP {
         }
         switch (packet.getClass().getName()) {
             default:
-                this.nextPacket = packet.toBytes();
+                this.nextPacket = packet.buffer();
                 return this;
         }
     }
@@ -70,8 +61,11 @@ public class ICMPv6 extends ICMP {
     }
 
     @Override
-    public byte[] toBytes() {
-        byte[] data = new byte[ICMP_HEADER_LENGTH + ((this.nextPacket == null) ? 0 : this.nextPacket.length)];
+    public byte[] bytes() {
+        if (this.nextPacket != null) {
+            this.nextPacket.rewind();
+        }
+        byte[] data = new byte[ICMP_HEADER_LENGTH + ((this.nextPacket == null) ? 0 : this.nextPacket.capacity())];
         ByteBuffer buffer = ByteBuffer.wrap(data);
         buffer.put(this.getTypeAndCode().getType());
         buffer.put(this.getTypeAndCode().getCode());
@@ -80,6 +74,22 @@ public class ICMPv6 extends ICMP {
             buffer.put(this.nextPacket);
         }
         return data;
+    }
+
+    @Override
+    public ByteBuffer buffer() {
+        if (this.nextPacket != null) {
+            this.nextPacket.rewind();
+        }
+        ByteBuffer buffer = ByteBuffer
+                .allocateDirect(ICMP_HEADER_LENGTH + ((this.nextPacket == null) ? 0 : this.nextPacket.capacity()));
+        buffer.put(this.getTypeAndCode().getType());
+        buffer.put(this.getTypeAndCode().getCode());
+        buffer.putShort(this.getChecksum());
+        if (this.nextPacket != null) {
+            buffer.put(this.nextPacket);
+        }
+        return buffer;
     }
 
 }

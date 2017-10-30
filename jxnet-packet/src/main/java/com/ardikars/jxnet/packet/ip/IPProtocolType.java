@@ -17,14 +17,15 @@
 
 package com.ardikars.jxnet.packet.ip;
 
+import com.ardikars.jxnet.Decoder;
 import com.ardikars.jxnet.packet.Packet;
 import com.ardikars.jxnet.packet.icmp.ICMPv4;
 import com.ardikars.jxnet.packet.icmp.ICMPv6;
-import com.ardikars.jxnet.packet.ip.ipv6.Fragment;
-import com.ardikars.jxnet.packet.ip.ipv6.Routing;
+import com.ardikars.jxnet.packet.ip.ipv6.*;
 import com.ardikars.jxnet.NamedNumber;
 import com.ardikars.jxnet.packet.ndp.*;
 
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +33,7 @@ import java.util.Map;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class IPProtocolType extends NamedNumber<Byte, IPProtocolType> {
+public class IPProtocolType extends NamedNumber<Byte, IPProtocolType> implements Decoder<Packet, ByteBuffer> {
 
     public static final IPProtocolType ICMP = new IPProtocolType((byte) 1, "Internet Control Message Protocol Version 4");
 
@@ -95,39 +96,44 @@ public class IPProtocolType extends NamedNumber<Byte, IPProtocolType> {
 
     /**
      * Decode payload.
-     * @param data byte array.
+     * @param buffer ByteBuffer.
      * @return packet.
      */
-    public Packet decode(final byte[] data) {
-        if (data == null || data.length == 0) {
+    @Override
+    public Packet decode(final ByteBuffer buffer) {
+        if (buffer == null) {
+            return null;
+        }
+        buffer.rewind();
+        if (buffer == null || buffer.capacity() == 0) {
             return null;
         }
         int value = super.getValue();
         switch (value) {
             case 1:
-                return ICMPv4.newInstance(data);
+                return ICMPv4.newInstance(buffer);
             case 41:
-                return IPv6.newInstance(data);
+                return IPv6.newInstance(buffer);
             case 58:
-                return ICMPv6.newInstance(data);
+                return ICMPv6.newInstance(buffer);
             case 43:
-                return Routing.newInstance(data);
+                return Routing.newInstance(buffer);
             case 44:
-                return Fragment.newInstance(data);
+                return Fragment.newInstance(buffer);
             case 0:
-                return null;
+                return HopByHopOptions.newInstance(buffer);
             case 60:
                 return null;
             case 50:
-                return null;
+                return EncapsulatingSecurityPayload.newInstance(buffer);
             case 51:
                 return null;
             case 2:
                 return null;
             case 6:
-                return com.ardikars.jxnet.packet.tcp.TCP.newInstance(data);
+                return com.ardikars.jxnet.packet.tcp.TCP.newInstance(buffer);
             case 17:
-                return com.ardikars.jxnet.packet.udp.UDP.newInstance(data);
+                return com.ardikars.jxnet.packet.udp.UDP.newInstance(buffer);
             default:
                 return null;
         }

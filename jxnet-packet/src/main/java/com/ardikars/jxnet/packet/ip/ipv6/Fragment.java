@@ -39,8 +39,6 @@ public class Fragment extends IPv6ExtensionHeader {
     private byte moreFragment;
     private int identification;
 
-    private byte[] payload;
-
     public IPProtocolType getNextHeader() {
         return this.nextHeader;
     }
@@ -77,13 +75,30 @@ public class Fragment extends IPv6ExtensionHeader {
         return this;
     }
 
-    public byte[] getPayload() {
-        return this.payload;
+    public ByteBuffer getPayload() {
+        return this.nextPacket;
+    }
+
+    public Fragment setPayload(final ByteBuffer payload) {
+        this.nextPacket = payload;
+        return this;
     }
 
     public Fragment setPayload(final byte[] payload) {
-        this.payload = payload;
+        this.nextPacket = ByteBuffer.wrap(payload);
         return this;
+    }
+
+    public static Fragment newInstance(final ByteBuffer buffer) {
+        Fragment fragment = new Fragment();
+        fragment.setNextHeader(IPProtocolType.getInstance(buffer.get()));
+        buffer.get(); // reserved
+        short sscratch = buffer.getShort();
+        fragment.setFragmentOffset((short) (sscratch >> 3 & 0x1fff));
+        fragment.setMoreFragment((byte) (sscratch & 0x1));
+        fragment.setIdentification(buffer.getInt());
+        fragment.nextPacket = buffer.slice();
+        return fragment;
     }
 
     public static Fragment newInstance(final byte[] bytes) {
@@ -91,14 +106,7 @@ public class Fragment extends IPv6ExtensionHeader {
     }
 
     public static Fragment newInstance(final byte[] bytes, final int offset, final int length) {
-        ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
-        Fragment fragment = new Fragment();
-        fragment.setNextHeader(IPProtocolType.getInstance(buffer.get()));
-        short sscratch = buffer.getShort();
-        fragment.setFragmentOffset((short) (sscratch >> 3 & 0x1fff));
-        fragment.setMoreFragment((byte) (sscratch & 0x1));
-        fragment.setIdentification(buffer.getInt());
-        return fragment;
+        return newInstance(ByteBuffer.wrap(bytes, offset, length));
     }
 
     @Override
@@ -108,19 +116,15 @@ public class Fragment extends IPv6ExtensionHeader {
 
     @Override
     public Packet getPacket() {
-        if (this.getPayload() == null || this.getPayload().length == 0) return null;
+        if (this.nextPacket == null || this.nextPacket.capacity() == 0) return null;
+        System.out.println(this.nextPacket.capacity());
         return this.nextHeader.decode(this.getPayload());
     }
 
     @Override
-    public Packet build() {
-        return this;
-    }
-
-    @Override
-    public byte[] toBytes() {
+    public byte[] bytes() {
         byte[] data = new byte[FIXED_FRAGMENT_HEADER_LENGTH +
-                (this.getPayload() == null ? 0 : this.getPayload().length)];
+                (this.getPayload() == null ? 0 : this.getPayload().capacity())];
         ByteBuffer buffer = ByteBuffer.wrap(data);
         buffer.put(this.getNextHeader().getValue());
         buffer.put((byte) 0);
@@ -133,6 +137,24 @@ public class Fragment extends IPv6ExtensionHeader {
             buffer.put(this.getPayload());
         }
         return data;
+    }
+
+    @Override
+    public ByteBuffer buffer() {
+        ByteBuffer buffer = ByteBuffer
+                .allocateDirect(FIXED_FRAGMENT_HEADER_LENGTH +
+                        (this.getPayload() == null ? 0 : this.getPayload().capacity()));
+        buffer.put(this.getNextHeader().getValue());
+        buffer.put((byte) 0);
+        buffer.putShort((short) (
+                (this.getFragmentOffset() & 0x1fff) << 3 |
+                        this.getMoreFragment() & 0x1
+        ));
+        buffer.putInt(this.getIdentification());
+        if (this.getPayload() != null) {
+            buffer.put(this.getPayload());
+        }
+        return buffer;
     }
 
     @Override

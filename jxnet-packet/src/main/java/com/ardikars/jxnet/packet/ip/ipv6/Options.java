@@ -18,12 +18,20 @@
 package com.ardikars.jxnet.packet.ip.ipv6;
 
 import com.ardikars.jxnet.packet.Packet;
+import com.ardikars.jxnet.packet.UnknownPacket;
+import com.ardikars.jxnet.packet.icmp.ICMPv6;
+import com.ardikars.jxnet.util.HexUtils;
+
+import java.nio.ByteBuffer;
 
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.5
  */
 public class Options extends IPv6ExtensionHeader {
+
+    public static int FIXED_OPTIONS_LENGTH = 6;
+    public static int LENGTH_UNIT = 8;
 
     private byte nextHeader;
     private byte extensionLength;
@@ -59,22 +67,41 @@ public class Options extends IPv6ExtensionHeader {
     }
 
     @Override
-    public Packet build() {
-        return null;
-    }
-
-    @Override
     public Packet setPacket(Packet packet) {
         return null;
     }
 
     @Override
     public Packet getPacket() {
-        return null;
+        if (this.nextPacket != null) {
+            this.nextPacket.rewind();
+        }
+        switch (nextHeader) {
+            case 58:
+                return ICMPv6.newInstance(this.nextPacket);
+            default:
+                return UnknownPacket.newInstance(this.nextPacket);
+        }
     }
 
     @Override
-    public byte[] toBytes() {
+    public byte[] bytes() {
         return new byte[0];
     }
+
+    @Override
+    public ByteBuffer buffer() {
+        return ByteBuffer.wrap(new byte[0]);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder()
+                .append("[Next Header: ").append(this.getNextHeader())
+                .append(", Extension Length: ").append(this.getExtensionLength())
+                .append(", Options: ").append(this.getOptions())
+                .append("]");
+        return sb.toString();
+    }
+
 }

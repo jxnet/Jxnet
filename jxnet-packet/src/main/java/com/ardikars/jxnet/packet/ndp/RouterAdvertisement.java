@@ -94,12 +94,7 @@ public class RouterAdvertisement extends Packet {
         return this;
     }
 
-    public static RouterAdvertisement newInstance(final byte[] bytes) {
-        return newInstance(bytes, 0, bytes.length);
-    }
-
-    public static RouterAdvertisement newInstance(final byte[] bytes, final int offset, final int length) {
-        ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
+    public static RouterAdvertisement newInstance(final ByteBuffer buffer) {
         int bscratch;
         RouterAdvertisement ra = new RouterAdvertisement();
         ra.setCurrentHopLimit(buffer.get());
@@ -109,20 +104,27 @@ public class RouterAdvertisement extends Packet {
         ra.setRouterLifetime(buffer.getShort());
         ra.setReachableTime(buffer.getInt());
         ra.setRetransmitTimer(buffer.getInt());
-        ra.setOptions(NeighborDiscoveryOptions.newInstance(bytes, buffer.position(),
-                buffer.limit() - buffer.position()));
+        ra.setOptions(NeighborDiscoveryOptions.newInstance(buffer.slice()));
         return ra;
     }
 
+    public static RouterAdvertisement newInstance(final byte[] bytes) {
+        return newInstance(bytes, 0, bytes.length);
+    }
+
+    public static RouterAdvertisement newInstance(final byte[] bytes, final int offset, final int length) {
+        return newInstance(ByteBuffer.wrap(bytes, offset, length));
+    }
+
     @Override
-    public byte[] toBytes() {
-        byte[] optionsData = null;
+    public byte[] bytes() {
+        ByteBuffer optionsData = null;
         if (this.options.hasOptions()) {
-            optionsData = this.options.toBytes();
+            optionsData = this.options.buffer();
         }
         int optionsLength = 0;
         if (optionsData != null) {
-            optionsLength = optionsData.length;
+            optionsLength = optionsData.capacity();
         }
         final byte[] data = new byte[HEADER_LENGTH + optionsLength];
         final ByteBuffer bb = ByteBuffer.wrap(data);
@@ -136,6 +138,29 @@ public class RouterAdvertisement extends Packet {
             bb.put(optionsData);
         }
         return data;
+    }
+
+    @Override
+    public ByteBuffer buffer() {
+        ByteBuffer optionsData = null;
+        if (this.options.hasOptions()) {
+            optionsData = this.options.buffer();
+        }
+        int optionsLength = 0;
+        if (optionsData != null) {
+            optionsLength = optionsData.capacity();
+        }
+        final ByteBuffer buffer = ByteBuffer.allocateDirect(HEADER_LENGTH + optionsLength);
+
+        buffer.put(this.getCurrentHopLimit());
+        buffer.put((byte) ((this.getManageFlag() & 0x1) << 7 | (this.getOtherFlag() & 0x1) << 6));
+        buffer.putShort(getRouterLifetime());
+        buffer.putInt(getReachableTime());
+        buffer.putInt(getRetransmitTimer());
+        if (optionsData != null) {
+            buffer.put(optionsData);
+        }
+        return buffer;
     }
 
     @Override

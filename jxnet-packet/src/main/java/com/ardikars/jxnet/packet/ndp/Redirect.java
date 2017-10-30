@@ -55,12 +55,7 @@ public class Redirect extends Packet {
         return this;
     }
 
-    public static Redirect newInstance(final byte[] bytes) {
-        return newInstance(bytes, 0, bytes.length);
-    }
-
-    public static Redirect newInstance(final byte[] bytes, final int offset, final int length) {
-        ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
+    public static Redirect newInstance(final ByteBuffer buffer) {
         Redirect redirect = new Redirect();
         buffer.getInt();
         byte[] target = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
@@ -69,20 +64,27 @@ public class Redirect extends Packet {
         byte[] destination = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
         buffer.get(destination, 0, Inet6Address.IPV6_ADDRESS_LENGTH);
         redirect.setDestinationAddress(Inet6Address.valueOf(destination));
-        redirect.setOptions(NeighborDiscoveryOptions.newInstance(bytes, buffer.position(),
-                buffer.limit() - buffer.position()));
+        redirect.setOptions(NeighborDiscoveryOptions.newInstance(buffer.slice()));
         return redirect;
     }
 
+    public static Redirect newInstance(final byte[] bytes) {
+        return newInstance(bytes, 0, bytes.length);
+    }
+
+    public static Redirect newInstance(final byte[] bytes, final int offset, final int length) {
+        return newInstance(ByteBuffer.wrap(bytes, offset, length));
+    }
+
     @Override
-    public byte[] toBytes() {
-        byte[] optionsData = null;
+    public byte[] bytes() {
+        ByteBuffer optionsData = null;
         if (this.options.hasOptions()) {
-            optionsData = this.options.toBytes();
+            optionsData = this.options.buffer();
         }
         int optionsLength = 0;
         if (optionsData != null) {
-            optionsLength = optionsData.length;
+            optionsLength = optionsData.capacity();
         }
         final byte[] data = new byte[HEADER_LENGTH + optionsLength];
         final ByteBuffer bb = ByteBuffer.wrap(data);
@@ -93,6 +95,26 @@ public class Redirect extends Packet {
             bb.put(optionsData);
         }
         return data;
+    }
+
+    @Override
+    public ByteBuffer buffer() {
+        ByteBuffer optionsData = null;
+        if (this.options.hasOptions()) {
+            optionsData = this.options.buffer();
+        }
+        int optionsLength = 0;
+        if (optionsData != null) {
+            optionsLength = optionsData.capacity();
+        }
+        final ByteBuffer buffer = ByteBuffer.allocateDirect(HEADER_LENGTH + optionsLength);
+        buffer.putInt(0);
+        buffer.put(this.targetAddress.toBytes());
+        buffer.put(this.destinationAddress.toBytes());
+        if (optionsData != null) {
+            buffer.put(optionsData);
+        }
+        return buffer;
     }
 
     @Override

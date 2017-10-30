@@ -54,7 +54,10 @@ public abstract class PacketProcessor<T, V extends Packet> implements Encoder<by
         if (data == null) {
             return null;
         } else {
-            return data.toBytes();
+            ByteBuffer buffer = data.buffer();
+            byte[] bytes = new byte[buffer.capacity()];
+            buffer.get(bytes, 0, bytes.length);
+            return bytes;
         }
     }
 

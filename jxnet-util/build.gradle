@@ -3,9 +3,13 @@
  * Copyright (C) 2017  Ardika Rommy Sanjaya
  */
 
+description = "Utilities for Jxnet."
+
 dependencies {
-	compile project(':jxnet-core')
 	compile project(':jxnet-common')
+	testCompile "org.slf4j:slf4j-api:${SLF4J_VERSION}"
+	testCompile "ch.qos.logback:logback-core:${LOGBACK_VERSION}"
+	testCompile "ch.qos.logback:logback-classic:${LOGBACK_VERSION}"
 	testCompile "junit:junit:${JUNIT_VERSION}"
 }
 

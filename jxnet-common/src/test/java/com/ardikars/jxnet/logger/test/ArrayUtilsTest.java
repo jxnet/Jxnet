@@ -1,18 +1,18 @@
 package com.ardikars.jxnet.logger.test;
 
-import com.ardikars.jxnet.logger.DefaultPrinter;
-import com.ardikars.jxnet.logger.Logger;
 import com.ardikars.jxnet.util.ArrayUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
 @RunWith(JUnit4.class)
 public class ArrayUtilsTest {
 
-    private Logger logger = Logger.getLogger(ArrayUtilsTest.class, new DefaultPrinter());
+    private Logger logger = LoggerFactory.getLogger(ArrayUtilsTest.class);
 
     @Test
     public void reverseByte() {

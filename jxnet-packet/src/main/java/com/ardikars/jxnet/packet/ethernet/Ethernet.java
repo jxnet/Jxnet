@@ -55,7 +55,6 @@ public class Ethernet extends Packet {
         this.setCanonicalFormatIndicator((byte) 0);
         this.setVlanIdentifier((short) 0xffff);
         this.setEthernetType(com.ardikars.jxnet.packet.ProtocolType.UNKNOWN);
-        this.setPayload(null);
     }
 
     public MacAddress getDestinationMacAddress() {
@@ -112,17 +111,6 @@ public class Ethernet extends Packet {
         return this;
     }
 
-    @Deprecated
-    public byte[] getPayload() {
-        return this.nextPacket;
-    }
-
-    @Deprecated
-    public Ethernet setPayload(final byte[] payload) {
-        this.nextPacket = payload;
-        return this;
-    }
-
     public Ethernet setPadding(final boolean padding) {
         this.padding = padding;
         return this;
@@ -153,11 +141,9 @@ public class Ethernet extends Packet {
         }
         ethernet.setEthernetType(ethernetType);
         if (ethernet.getVlanIdentifier() != (short) 0xffff) {
-            ethernet.nextPacket = new byte[(buffer.limit() - (ETHERNET_HEADER_LENGTH + VLAN_HEADER_LENGTH))];
-            buffer.get(ethernet.nextPacket);
+            ethernet.nextPacket = buffer.slice();
         } else {
-            ethernet.nextPacket = new byte[(buffer.limit() - ETHERNET_HEADER_LENGTH)];
-            buffer.get(ethernet.nextPacket);
+            ethernet.nextPacket = buffer.slice();
         }
         return ethernet;
     }
@@ -171,20 +157,20 @@ public class Ethernet extends Packet {
             case "com.ardikars.jxnet.packet.ip.IPv4":
                 IPv4 ipv4 = (IPv4) packet;
                 this.setEthernetType(com.ardikars.jxnet.packet.ProtocolType.IPV4);
-                this.nextPacket = ipv4.toBytes();
+                this.nextPacket = ipv4.buffer();
                 return this;
             case "com.ardikars.jxnet.packet.ip.IPv6":
                 IPv6 ipv6 = (IPv6) packet;
                 this.setEthernetType(com.ardikars.jxnet.packet.ProtocolType.IPV6);
-                this.nextPacket = ipv6.toBytes();
+                this.nextPacket = ipv6.buffer();
                 return this;
             case "com.ardikars.jxnet.packet.arp.ARP":
                 ARP arp = (ARP) packet;
                 this.setEthernetType(com.ardikars.jxnet.packet.ProtocolType.ARP);
-                this.nextPacket = arp.toBytes();
+                this.nextPacket = arp.buffer();
                 return this;
             default:
-                this.nextPacket = packet.toBytes();
+                this.nextPacket = packet.buffer();
                 return this;
         }
     }
@@ -195,10 +181,13 @@ public class Ethernet extends Packet {
     }
 
     @Override
-    public byte[] toBytes() {
+    public byte[] bytes() {
+        if (this.nextPacket != null) {
+            this.nextPacket.rewind();
+        }
         int headerLength = ETHERNET_HEADER_LENGTH +
                 ((this.getVlanIdentifier() != (short) 0xffff) ? VLAN_HEADER_LENGTH : 0) +
-                ((this.nextPacket == null) ? 0 : this.nextPacket.length);
+                ((this.nextPacket == null) ? 0 : this.nextPacket.capacity());
         if ((this.padding == true) && (headerLength < 60)) {
             headerLength = 60;
         }
@@ -216,6 +205,32 @@ public class Ethernet extends Packet {
             buffer.put(this.nextPacket);
         }
         return data;
+    }
+
+    @Override
+    public ByteBuffer buffer() {
+        if (this.nextPacket != null) {
+            this.nextPacket.rewind();
+        }
+        int headerLength = ETHERNET_HEADER_LENGTH +
+                ((this.getVlanIdentifier() != (short) 0xffff) ? VLAN_HEADER_LENGTH : 0) +
+                ((this.nextPacket == null) ? 0 : this.nextPacket.capacity());
+        if ((this.padding == true) && (headerLength < 60)) {
+            headerLength = 60;
+        }
+        ByteBuffer buffer = ByteBuffer.allocateDirect(headerLength);
+        buffer.put(this.getDestinationMacAddress().toBytes());
+        buffer.put(this.getSourceMacAddress().toBytes());
+        if (this.getVlanIdentifier() != (short) 0xffff) {
+            buffer.putShort(com.ardikars.jxnet.packet.ProtocolType.DOT1Q_VLAN_TAGGED_FRAMES.getValue());
+            buffer.putShort((short) (((this.getPriorityCodePoint() << 13) & 0x07)
+                    | ((this.getCanonicalFormatIndicator() << 14) & 0x01) | (this.getVlanIdentifier() & 0x0fff)));
+        }
+        buffer.putShort((short) (this.getEthernetType().getValue() & 0xffff));
+        if (this.nextPacket != null) {
+            buffer.put(this.nextPacket);
+        }
+        return buffer;
     }
 
     @Override

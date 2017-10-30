@@ -75,35 +75,36 @@ public class NeighborAdvertisement extends Packet {
         return this;
     }
 
-    public static NeighborAdvertisement newInstance(final byte[] bytes) {
-        return newInstance(bytes, 0, bytes.length);
-    }
-
-    public static NeighborAdvertisement newInstance(final byte[] bytes, final int offset, final int length) {
-        ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
+    public static NeighborAdvertisement newInstance(final ByteBuffer buffer) {
         NeighborAdvertisement na = new NeighborAdvertisement();
-        int iscratch;
-        iscratch = buffer.getInt();
+        int iscratch = buffer.getInt();
         na.setRouterFlag((byte) (iscratch >> 31 & 0x1));
         na.setSolicitedFlag((byte) (iscratch >> 30 & 0x1));
         na.setOverrideFlag((byte) (iscratch >> 29 & 0x1));
         byte[] ipv6AddrBuffer = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
         buffer.get(ipv6AddrBuffer, 0, Inet6Address.IPV6_ADDRESS_LENGTH);
         na.setTargetAddress(Inet6Address.valueOf(ipv6AddrBuffer));
-        na.setOptions(NeighborDiscoveryOptions.newInstance(bytes, buffer.position(),
-                buffer.limit() - buffer.position()));
+        na.setOptions(NeighborDiscoveryOptions.newInstance(buffer.slice()));
         return na;
     }
 
+    public static NeighborAdvertisement newInstance(final byte[] bytes) {
+        return newInstance(bytes, 0, bytes.length);
+    }
+
+    public static NeighborAdvertisement newInstance(final byte[] bytes, final int offset, final int length) {
+        return newInstance(ByteBuffer.wrap(bytes, offset, length));
+    }
+
     @Override
-    public byte[] toBytes() {
-        byte[] optionsData = null;
+    public byte[] bytes() {
+        ByteBuffer optionsData = null;
         if (this.options.hasOptions()) {
-            optionsData = this.options.toBytes();
+            optionsData = this.options.buffer();
         }
         int optionsLength = 0;
         if (optionsData != null) {
-            optionsLength = optionsData.length;
+            optionsLength = optionsData.capacity();
         }
         byte[] data = new byte[HEADER_LENGTH + optionsLength];
         ByteBuffer buffer = ByteBuffer.wrap(data);
@@ -116,6 +117,28 @@ public class NeighborAdvertisement extends Packet {
             buffer.put(optionsData);
         }
         return data;
+    }
+
+    @Override
+    public ByteBuffer buffer() {
+        ByteBuffer optionsData = null;
+        if (this.options.hasOptions()) {
+            optionsData = this.options.buffer();
+        }
+        int optionsLength = 0;
+        if (optionsData != null) {
+            optionsLength = optionsData.capacity();
+        }
+        ByteBuffer buffer = ByteBuffer.allocateDirect(HEADER_LENGTH + optionsLength);
+
+        buffer.putInt((this.getRouterFlag() & 0x1) << 31 |
+                (this.getSolicitedFlag() & 0x1) << 30 |
+                (this.getOverrideFlag() & 0x1) << 29);
+        buffer.put(this.getTargetAddress().toBytes());
+        if (optionsData != null) {
+            buffer.put(optionsData);
+        }
+        return buffer;
     }
 
     @Override

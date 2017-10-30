@@ -28,27 +28,29 @@ import java.nio.ByteBuffer;
  */
 public class UnknownPacket extends Packet {
 
-    private byte[] data;
+    private ByteBuffer data;
+
+    public static UnknownPacket newInstance(final ByteBuffer buffer) {
+        UnknownPacket unknownPacket = new UnknownPacket();
+        unknownPacket.data = buffer;
+        return unknownPacket;
+    }
 
     public static UnknownPacket newInstance(final byte[] bytes) {
         return newInstance(bytes, 0, bytes.length);
     }
 
     public static UnknownPacket newInstance(final byte[] bytes, final int offset, final int length) {
-        Validate.bounds(bytes, offset, length);
-        ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
-        UnknownPacket unknownPacket = new UnknownPacket();
-        unknownPacket.data = new byte[buffer.limit()];
-        buffer.get(unknownPacket.data, 0, unknownPacket.data.length);
-        return unknownPacket;
+        return newInstance(ByteBuffer.wrap(bytes, offset, length));
     }
 
-    public byte[] getData() {
-        return data;
+    public UnknownPacket setData(final ByteBuffer buffer) {
+        this.data = buffer;
+        return this;
     }
 
     public UnknownPacket setData(final byte[] data) {
-        this.data = data;
+        this.data = ByteBuffer.wrap(data);
         return this;
     }
 
@@ -63,18 +65,22 @@ public class UnknownPacket extends Packet {
     }
 
     @Override
-    public byte[] toBytes() {
+    public byte[] bytes() {
+        ByteBuffer buffer = buffer().duplicate();
+        byte[] data = new byte[buffer.capacity()];
+        buffer.get(data, 0, data.length);
+        return data;
+    }
+
+    @Override
+    public ByteBuffer buffer() {
         return this.data;
     }
 
     @Override
-    public Packet build() {
-        return this;
-    }
-
-    @Override
     public String toString() {
-        return "[Unknown: 0x" + HexUtils.toHexString(this.getData()) + "]";
+//        return "[Unknown: 0x" + HexUtils.toHexString(this.getData()) + "]";
+        return (this.data != null) ? this.data.toString() : "";
     }
 
 }

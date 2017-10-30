@@ -60,12 +60,7 @@ public class NeighborSolicitation extends Packet {
         return this;
     }
 
-    public static NeighborSolicitation newInstance(final byte[] bytes) {
-        return newInstance(bytes, 0, bytes.length);
-    }
-
-    public static NeighborSolicitation newInstance(final byte[] bytes, final int offset, final int length) {
-        ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
+    public static NeighborSolicitation newInstance(final ByteBuffer buffer) {
         NeighborSolicitation neighborSolicitation = new NeighborSolicitation();
         byte[] ipv6AddrBuffer = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
         buffer.get(ipv6AddrBuffer, 0, Inet6Address.IPV6_ADDRESS_LENGTH);
@@ -76,14 +71,31 @@ public class NeighborSolicitation extends Packet {
         return neighborSolicitation;
     }
 
+    public static NeighborSolicitation newInstance(final byte[] bytes) {
+        return newInstance(bytes, 0, bytes.length);
+    }
+
+    public static NeighborSolicitation newInstance(final byte[] bytes, final int offset, final int length) {
+        return newInstance(ByteBuffer.wrap(bytes, offset, length));
+    }
+
     @Override
-    public byte[] toBytes() {
-        byte[] opBuf = this.options.toBytes();
-        byte[] data = new byte[Inet6Address.IPV6_ADDRESS_LENGTH + opBuf.length];
+    public byte[] bytes() {
+        ByteBuffer opBuf = this.options.buffer();
+        byte[] data = new byte[Inet6Address.IPV6_ADDRESS_LENGTH + opBuf.capacity()];
         ByteBuffer buffer = ByteBuffer.wrap(data);
         buffer.put(this.getTargetAddress().toBytes());
         buffer.put(opBuf);
         return data;
+    }
+
+    @Override
+    public ByteBuffer buffer() {
+        ByteBuffer opBuf = this.options.buffer();
+        ByteBuffer buffer = ByteBuffer.allocateDirect(Inet6Address.IPV6_ADDRESS_LENGTH + opBuf.capacity());
+        buffer.put(this.getTargetAddress().toBytes());
+        buffer.put(opBuf);
+        return buffer;
     }
 
     @Override
