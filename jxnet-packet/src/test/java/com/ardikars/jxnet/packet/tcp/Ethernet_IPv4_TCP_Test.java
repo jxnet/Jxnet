@@ -27,7 +27,7 @@ public class Ethernet_IPv4_TCP_Test {
 
     private StringBuilder errbuf = new StringBuilder();
     private Pcap pcap = null;
-    private Logger logger = Logger.getLogger(Ethernet_IPv4_TCP_Test.class, new DefaultPrinter());
+    private Logger logger = Logger.Factory.getLogger(Ethernet_IPv4_TCP_Test.class);
 
     String[] hexStream = new String[] {
             "14cc20ccb9ecb827eb9a9c5f08004500003c8303400040061710c0a80196dea5ffc4e7661f9069206fa400000000a0027210a0d70000020405b40402080a0020eca70000000001030307",

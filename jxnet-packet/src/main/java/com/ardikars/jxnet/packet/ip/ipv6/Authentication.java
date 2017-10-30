@@ -37,8 +37,6 @@ public class Authentication extends Packet {
     private int sequenceNumber;
     private byte[] integrityCheckValue;
 
-    private byte[] payload;
-
     public IPProtocolType getNextHeader() {
         return this.nextHeader;
     }
@@ -83,12 +81,17 @@ public class Authentication extends Packet {
         return this;
     }
 
-    public byte[] getPayload() {
-        return this.payload;
+    public ByteBuffer getPayload() {
+        return this.nextPacket;
     }
 
     public Authentication setPayload(final byte[] payload) {
-        this.payload = payload;
+        this.nextPacket = ByteBuffer.wrap(payload);
+        return this;
+    }
+
+    public Authentication setPayload(final ByteBuffer payload) {
+        this.nextPacket = payload;
         return this;
     }
 
@@ -101,11 +104,13 @@ public class Authentication extends Packet {
         int icvLength = ((authentication.getPayloadLength() + 2) * 8) - 12;
         authentication.setSequenceNumber(buffer.getInt());
         authentication.integrityCheckValue = new byte[icvLength];
+        authentication.nextPacket = buffer.slice();
         buffer.get(authentication.integrityCheckValue, 0, icvLength);
-        if (authentication.payload != null) {
+
+        /*if (authentication.payload != null) {
             authentication.payload = new byte[buffer.limit() - icvLength + 12];
             buffer.get(authentication.payload, 0, authentication.payload.length);
-        }
+        }*/
         return authentication;
     }
 
@@ -119,20 +124,17 @@ public class Authentication extends Packet {
 
     @Override
     public Packet setPacket(Packet packet) {
-        ByteBuffer buffer = packet.buffer();
-        this.payload = new byte[buffer.capacity()];
-        buffer.get(this.payload);
         return this;
     }
 
     @Override
     public Packet getPacket() {
-        return this.nextHeader.decode(ByteBuffer.wrap(this.getPayload()));
+        return this.nextHeader.decode(getPayload());
     }
 
     @Override
     public byte[] bytes() {
-        byte[] payloadData = null;
+        ByteBuffer payloadData = null;
         if (this.getPayload() != null) {
             payloadData = this.getPayload();
         }
@@ -140,7 +142,7 @@ public class Authentication extends Packet {
                 + ((this.getIntegrityCheckValue() != null) ? this.getIntegrityCheckValue().length : 0);
         int payloadLength = 0;
         if (payloadData != null) {
-            payloadLength = payloadData.length;
+            payloadLength = payloadData.capacity();
         }
         final byte[] data = new byte[headerLength + payloadLength];
         final ByteBuffer bb = ByteBuffer.wrap(data);
@@ -163,7 +165,7 @@ public class Authentication extends Packet {
         ByteBuffer buffer = ByteBuffer
                 .allocateDirect(FIXED_HEADER_LENGTH +
                 + ((this.getIntegrityCheckValue() != null) ? this.getIntegrityCheckValue().length : 0)
-                + ((this.getPayload() != null) ? this.getPayload().length : 0));
+                + ((this.getPayload() != null) ? this.getPayload().capacity() : 0));
         buffer.put(this.getNextHeader().getValue());
         buffer.put(this.getPayloadLength());
         buffer.putShort((short) 0);

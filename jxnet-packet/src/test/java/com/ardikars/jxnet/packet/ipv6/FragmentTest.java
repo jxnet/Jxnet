@@ -34,11 +34,11 @@ public class FragmentTest {
 
     private static int index = 0;
 
-    private String pcap_source_file = getClass().getResource("/sample-capture//ipv6-udp-fragmented.pcap").getPath();
+    private String pcap_source_file = getClass().getResource("/sample-capture/ipv6-udp-fragmented.pcap").getPath();
 
     private StringBuilder errbuf = new StringBuilder();
     private Pcap pcap = null;
-    private Logger logger = Logger.getLogger(ESPTest.class, new DefaultPrinter());
+    private Logger logger = Logger.Factory.getLogger(ESPTest.class);
     @Before
     public void OpenHandle() {
         pcap = Jxnet.PcapOpenOffline(pcap_source_file, errbuf);

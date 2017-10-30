@@ -1,10 +1,10 @@
 package com.ardikars.jxnet.packet.ipv6;
 
+
 import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
 import com.ardikars.jxnet.logger.DefaultPrinter;
 import com.ardikars.jxnet.logger.Logger;
-import com.ardikars.jxnet.packet.Packet;
 import com.ardikars.jxnet.packet.PacketListener;
 import com.ardikars.jxnet.packet.ethernet.Ethernet;
 import org.junit.After;
@@ -14,18 +14,24 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.util.Arrays;
+
 @RunWith(JUnit4.class)
-public class ESPTest {
+public class HopByHopOptionsTest {
 
     private static int index = 0;
 
-    private String pcap_source_file = getClass().getResource("/sample-capture/IPv6-ESP.pcapng.pcapng").getPath();
+    private String pcap_source_file = getClass().getResource("/sample-capture/capture.pcap").getPath();
 
     private StringBuilder errbuf = new StringBuilder();
     private Pcap pcap = null;
-    private Logger logger = Logger.Factory.getLogger(ESPTest.class);
+    private Logger logger = Logger.Factory.getLogger();
+
+    java.util.logging.Logger log = java.util.logging.Logger.getLogger("");
     @Before
     public void OpenHandle() {
+        Logger.setLevel(Arrays.asList(Logger.Level.DEBUG, Logger.Level.INFO));
+        logger.debug("fdf", "sfdsf");
         pcap = Jxnet.PcapOpenOffline(pcap_source_file, errbuf);
         logger.info("Open handle.");
         Assert.assertNotEquals(errbuf.toString(), null, pcap);
@@ -48,34 +54,19 @@ public class ESPTest {
         PacketListener.List<String> listCallback = (arg, pktHdr, packets) -> {
             logger.info("==========================================");
             packets.stream().forEach(packet -> logger.info(packet.toString()));
-            logger.info("-------------------------------------------");
-            Packet packet = packets.get(0);
-            packet.forEachRemaining(packet1 -> logger.info(packet1.toString()));
-            logger.info("-------------------------------------------");
-            Packet packet2 = packets.get(0);
-            while (packet2.hasNext()) { // false
-                logger.info(packet2.next().toString());
-            }
-            logger.info("==========================================");
-        };
-        PacketListener.Map<String> mapCallback = (arg, pktHdr, packets) -> {
-            logger.info("==========================================");
-            packets.forEach((aClass, packet) -> {
-                logger.info(aClass + ": "+ packet.toString());
-            });
-            logger.info("-------------------------------------------");
-            Packet packet = packets.get(Ethernet.class);
-            packet.forEachRemaining(packet1 -> logger.info(packet1.toString()));
-            logger.info("-------------------------------------------");
-            Packet packet2 = packets.get(Ethernet.class);
-            while (packet2.hasNext()) { // false
-                logger.info(packet2.next().toString());
-            }
+//            logger.info("-------------------------------------------");
+//            Packet packet = packets.get(0);
+//            packet.forEachRemaining(packet1 -> logger.info(packet1.toString()));
+//            logger.info("-------------------------------------------");
+//            Packet packet2 = packets.get(0);
+//            while (packet2.hasNext()) { // false
+//                logger.info(packet2.next().toString());
+//            }
             logger.info("==========================================");
         };
 
         PacketListener.loop(pcap, -1, listCallback, "");
-        PacketListener.loop(pcap, -1, mapCallback, "");
+//        PacketListener.loop(pcap, -1, mapCallback, "");
     }
 
     @After

@@ -14,45 +14,40 @@ import java.util.concurrent.Executors;
 @RunWith(JUnit4.class)
 public class LoggerTest {
 
-    Logger logger = Logger.getLogger(LoggerTest.class, new DefaultPrinter());
+    Logger logger = Logger.Factory.getLogger(LoggerTest.class);
 
     @Test
     public void info() {
-        Logger.setLevel(Logger.Level.INFO); // set level to printer
+        Logger.setLevel(Arrays.asList(Logger.Level.INFO)); // set level to printer
         Logger.Level.INFO.setColor(Printer.Color.PURPLE); // set color to info level, default white
+
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        Logger.setExecutor(executorService);
         logger.info("Hello world");
         logger.info(Logger.class, "Hello world");
         logger.info(Logger.class.getSimpleName(), "Hello World");
 
-//        ExecutorService executorService = Executors.newSingleThreadExecutor();
-        ExecutorService executorService = Executors.newCachedThreadPool();
-        Logger.info(Logger.class.getSimpleName(), "Hello1", new DefaultPrinter());
-        Logger.info(Logger.class.getSimpleName(), "Hello2", new DefaultPrinter(), executorService);
-        try {
-            Thread.sleep(3600);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         executorService.shutdown();
+
     }
 
     @Test
     public void warn() {
-        Logger.setLevel(Logger.Level.WARN); // set level to printer
+        Logger.setLevel(Arrays.asList(Logger.Level.ERROR)); // set level to printer
         logger.warn("Hello world");
         logger.warn("Hello world", Logger.class);
     }
 
     @Test
     public void debug() {
-        Logger.setLevel(Logger.Level.DEBUG); // set level to printer
+        Logger.setLevel(Arrays.asList(Logger.Level.ERROR)); // set level to printer
         logger.debug("Hello world");
         logger.debug("Hello world", Logger.class);
     }
 
     @Test
     public void error() {
-        Logger.setLevel(Logger.Level.ERROR); // set level to printer
+        Logger.setLevel(Arrays.asList(Logger.Level.ERROR)); // set level to printer
         logger.error("Hello world");
         logger.error("Hello world", Logger.class);
     }
@@ -205,11 +200,6 @@ public class LoggerTest {
         logger.error(Logger.class, testClassMap);
     }
 
-    @Test
-    public void infoStatic() {
-        Logger.info("Hello World", LoggerTest.class,
-                (message, clazz, level) -> System.out.println(message));
-    }
 
     class TestClass {
 

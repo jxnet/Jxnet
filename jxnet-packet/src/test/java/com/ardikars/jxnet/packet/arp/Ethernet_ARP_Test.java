@@ -27,7 +27,7 @@ public class Ethernet_ARP_Test {
 
     private StringBuilder errbuf = new StringBuilder();
     private Pcap pcap = null;
-    private Logger logger = Logger.getLogger(Ethernet_ARP_Test.class, new DefaultPrinter());
+    private Logger logger = Logger.Factory.getLogger(Ethernet_ARP_Test.class);
 
     String[] hexStream = new String[] {
             "14cc20ccb9ecb827eb9a9c5f08060001080006040001b827eb9a9c5fc0a80196000000000000c0a801fe",

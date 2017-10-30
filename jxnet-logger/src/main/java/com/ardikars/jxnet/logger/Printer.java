@@ -17,6 +17,8 @@
 
 package com.ardikars.jxnet.logger;
 
+import java.io.PrintStream;
+import java.io.Writer;
 import java.util.concurrent.Executor;
 
 /**
@@ -50,6 +52,6 @@ public interface Printer {
 
     }
 
-    void print(String name, Object message, Logger.Level level);
+    void print(String name, Object message, Logger.Level level, PrintStream printStream, Writer writer, Executor executor);
 
 }

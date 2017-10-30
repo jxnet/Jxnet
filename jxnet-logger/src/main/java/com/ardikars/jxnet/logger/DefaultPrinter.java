@@ -18,7 +18,12 @@
 package com.ardikars.jxnet.logger;
 
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.Writer;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+import java.util.concurrent.Executor;
 
 /**
  * @author Ardika Rommy Sanjaya
@@ -26,29 +31,25 @@ import java.io.Writer;
  */
 public class DefaultPrinter implements Printer {
 
-    private final Writer writer;
-
-    public DefaultPrinter() {
-        this.writer = null;
-    }
-
-    public DefaultPrinter(Writer writer) {
-        this.writer = writer;
-    }
-
     @Override
-    public void print(String name, Object message, Logger.Level level) {
-        String value = " [ "
-                + level + " ] [ "
-                + name + " ] : "
-                + message;
-        System.out.println(level.getColor().getAnsiColorCode() + value);
-        if (writer != null) {
-            try {
-                writer.write(value);
-                writer.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
+    public void print(String name, Object message, Logger.Level level, PrintStream printStream, Writer writer, Executor executor) {
+        if (Logger.Level.getLevels().contains(level)) {
+            String value = " [ "
+                    + level + " ] [ "
+                    + name + " ] : "
+                    + message;
+            if (executor == null) {
+                printStream.println(level.getColor().getAnsiColorCode() + value);
+            } else {
+                executor.execute(() -> printStream.println(level.getColor().getAnsiColorCode() + value));
+            }
+            if (writer != null) {
+                try {
+                    writer.write(value);
+                    writer.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

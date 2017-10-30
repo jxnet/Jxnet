@@ -23,6 +23,7 @@ import com.ardikars.jxnet.TwoKeyMap;
 import com.ardikars.jxnet.packet.Packet;
 import com.ardikars.jxnet.packet.icmp.icmpv4.*;
 import com.ardikars.jxnet.packet.icmp.icmpv6.*;
+import com.ardikars.jxnet.packet.mld.MulticastListenerReportV2;
 import com.ardikars.jxnet.packet.ndp.*;
 
 import java.nio.ByteBuffer;
@@ -109,6 +110,11 @@ public abstract class ICMPTypeAndCode extends NamedTwoKeyMap<Byte, Byte, ICMPTyp
                     case 0: return Redirect.newInstance(buffer);
                     default: return null;
                 }
+            case 143:
+                switch (code) {
+                    case 0: return MulticastListenerReportV2.newInstance(buffer);
+                    default: return null;
+                }
             default: return null;
         }
     }
@@ -179,7 +185,8 @@ public abstract class ICMPTypeAndCode extends NamedTwoKeyMap<Byte, Byte, ICMPTyp
 
             register(ICMPv6MulticastListenerQuery.MULTICAST_LISTENER_QUERY);
 
-            register(ICMPv6MulticastListenerReport.MULTICAST_LISTENER_REPORT);
+            register(ICMPv6MulticastListenerReportV1.MULTICAST_LISTENER_REPORT);
+            register(ICMPv6MulticastListenerReportV2.MULTICAST_LISTENER_REPORT);
 
             register(ICMPv6MulticastListenerDone.MULTICAST_LISTENER_DONE);
 

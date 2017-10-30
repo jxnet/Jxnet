@@ -27,7 +27,7 @@ public class Ethernet_IPv4_UDP_Test {
 
     private StringBuilder errbuf = new StringBuilder();
     private Pcap pcap = null;
-    private Logger logger = Logger.getLogger(Ethernet_IPv4_UDP_Test.class, new DefaultPrinter());
+    private Logger logger = Logger.Factory.getLogger(Ethernet_IPv4_UDP_Test.class);
 
     String[] hexStream = new String[] {
             "14cc20ccb9ecb827eb9a9c5f08004500003aa160400040119200c0a80196b4839090edc700350026078a31fe0100000100000000000008617264696b61727303636f6d0000010001",
