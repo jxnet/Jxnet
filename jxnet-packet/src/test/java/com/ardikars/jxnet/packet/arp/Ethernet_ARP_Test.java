@@ -3,8 +3,6 @@ package com.ardikars.jxnet.packet.arp;
 import com.ardikars.jxnet.DataLinkType;
 import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
-import com.ardikars.jxnet.logger.DefaultPrinter;
-import com.ardikars.jxnet.logger.Logger;
 import com.ardikars.jxnet.packet.PacketListener;
 import com.ardikars.jxnet.packet.ProtocolType;
 import com.ardikars.jxnet.packet.ethernet.Ethernet;
@@ -13,6 +11,8 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
@@ -27,7 +27,7 @@ public class Ethernet_ARP_Test {
 
     private StringBuilder errbuf = new StringBuilder();
     private Pcap pcap = null;
-    private Logger logger = Logger.Factory.getLogger(Ethernet_ARP_Test.class);
+    private Logger logger = LoggerFactory.getLogger(Ethernet_ARP_Test.class);
 
     String[] hexStream = new String[] {
             "14cc20ccb9ecb827eb9a9c5f08060001080006040001b827eb9a9c5fc0a80196000000000000c0a801fe",

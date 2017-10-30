@@ -2,8 +2,6 @@ package com.ardikars.jxnet.packet.tcp;
 
 import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
-import com.ardikars.jxnet.logger.DefaultPrinter;
-import com.ardikars.jxnet.logger.Logger;
 import com.ardikars.jxnet.packet.Packet;
 import com.ardikars.jxnet.packet.PacketListener;
 import com.ardikars.jxnet.packet.ethernet.Ethernet;
@@ -15,6 +13,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
@@ -27,7 +27,7 @@ public class Ethernet_IPv4_TCP_Test {
 
     private StringBuilder errbuf = new StringBuilder();
     private Pcap pcap = null;
-    private Logger logger = Logger.Factory.getLogger(Ethernet_IPv4_TCP_Test.class);
+    private Logger logger = LoggerFactory.getLogger(Ethernet_IPv4_TCP_Test.class);
 
     String[] hexStream = new String[] {
             "14cc20ccb9ecb827eb9a9c5f08004500003c8303400040061710c0a80196dea5ffc4e7661f9069206fa400000000a0027210a0d70000020405b40402080a0020eca70000000001030307",

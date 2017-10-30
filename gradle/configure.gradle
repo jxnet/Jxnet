@@ -20,6 +20,8 @@ ext {
 	JAVA_VERSION = '1.8'
 	JUNIT_VERSION = '4.12'
 	GRADLE_VERSION = '3.5'
+	SLF4J_VERSION = '1.7.25'
+	LOGBACK_VERSION = '1.2.3'
 
 	pom_project = {
 

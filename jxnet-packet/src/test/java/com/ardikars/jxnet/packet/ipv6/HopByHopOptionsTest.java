@@ -3,8 +3,6 @@ package com.ardikars.jxnet.packet.ipv6;
 
 import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
-import com.ardikars.jxnet.logger.DefaultPrinter;
-import com.ardikars.jxnet.logger.Logger;
 import com.ardikars.jxnet.packet.PacketListener;
 import com.ardikars.jxnet.packet.ethernet.Ethernet;
 import org.junit.After;
@@ -13,6 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
@@ -25,12 +25,11 @@ public class HopByHopOptionsTest {
 
     private StringBuilder errbuf = new StringBuilder();
     private Pcap pcap = null;
-    private Logger logger = Logger.Factory.getLogger();
+    private Logger logger = LoggerFactory.getLogger(HopByHopOptionsTest.class);
 
     java.util.logging.Logger log = java.util.logging.Logger.getLogger("");
     @Before
     public void OpenHandle() {
-        Logger.setLevel(Arrays.asList(Logger.Level.DEBUG, Logger.Level.INFO));
         logger.debug("fdf", "sfdsf");
         pcap = Jxnet.PcapOpenOffline(pcap_source_file, errbuf);
         logger.info("Open handle.");

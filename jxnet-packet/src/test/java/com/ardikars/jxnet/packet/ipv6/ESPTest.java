@@ -2,8 +2,6 @@ package com.ardikars.jxnet.packet.ipv6;
 
 import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
-import com.ardikars.jxnet.logger.DefaultPrinter;
-import com.ardikars.jxnet.logger.Logger;
 import com.ardikars.jxnet.packet.Packet;
 import com.ardikars.jxnet.packet.PacketListener;
 import com.ardikars.jxnet.packet.ethernet.Ethernet;
@@ -13,6 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RunWith(JUnit4.class)
 public class ESPTest {
@@ -23,7 +23,7 @@ public class ESPTest {
 
     private StringBuilder errbuf = new StringBuilder();
     private Pcap pcap = null;
-    private Logger logger = Logger.Factory.getLogger(ESPTest.class);
+    private Logger logger = LoggerFactory.getLogger(ESPTest.class);
     @Before
     public void OpenHandle() {
         pcap = Jxnet.PcapOpenOffline(pcap_source_file, errbuf);
