@@ -32,7 +32,7 @@ public final class BpfProgram {
 
 		private final int value;
 
-		private BpfCompileMode(final int value) {
+		BpfCompileMode(final int value) {
 			this.value = value;
 		}
 

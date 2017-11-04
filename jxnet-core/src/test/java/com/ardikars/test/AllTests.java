@@ -3,7 +3,6 @@ package com.ardikars.test;
 import static com.ardikars.jxnet.Jxnet.*;
 
 import com.ardikars.jxnet.*;
-import com.ardikars.jxnet.exception.JxnetException;
 import com.ardikars.jxnet.util.Platforms;
 import org.junit.Assert;
 import org.junit.runner.RunWith;
@@ -15,12 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(Suite.class)
-@SuiteClasses({ PcapActivate.class, PcapSetFilter.class, PcapFindAllDevs.class,
-		PcapLookupDev.class, PcapLookupNet.class, Generic.class, Error.class,
-		PcapNextEx.class, PcapOpenDead.class, PcapOpenLive.class,
-		PcapOpenOffline.class, PcapBreakLoop.class, Blocking.class,
-		PcapDatalink.class, PcapDispatch.class, PreconditionsTest.class,
-		MacAddr.class, PcapDump.class, AddJavaLibraryPath.class })
+@SuiteClasses({ PcapActivateTest.class, PcapSetFilterTest.class, PcapFindAllDevsTest.class,
+		PcapLookupDevTest.class, PcapLookupNetTest.class, GenericTest.class, ErrorTest.class,
+		PcapNextExTest.class, PcapOpenDeadTest.class, PcapOpenLiveTest.class,
+		PcapOpenOfflineTest.class, PcapBreakLoopTest.class, BlockingTest.class,
+		PcapDatalinkTest.class, PcapDispatchTest.class, PreconditionsTest.class,
+		MacAddrTest.class, PcapDumpTest.class, AddJavaLibraryPathTest.class })
 public class AllTests {
 
 	private static StringBuilder errbuf = new StringBuilder();

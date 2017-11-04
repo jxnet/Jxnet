@@ -21,7 +21,7 @@ package com.ardikars.jxnet.util;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.5
  */
-public class Validate {
+public final class Validate {
 
     /**
      * Check null pointer.

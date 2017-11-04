@@ -4,7 +4,7 @@ import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
 import org.junit.*;
 
-public class Blocking {
+public class BlockingTest {
 
 
     @org.junit.Test

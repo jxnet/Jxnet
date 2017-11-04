@@ -11,7 +11,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PcapFindAllDevs {
+public class PcapFindAllDevsTest {
 	
 	@Test
 	public void run() {

@@ -27,7 +27,7 @@ public enum ImmediateMode {
 
     private final int value;
 
-    private ImmediateMode(final int value) {
+    ImmediateMode(final int value) {
         this.value = value;
     }
 

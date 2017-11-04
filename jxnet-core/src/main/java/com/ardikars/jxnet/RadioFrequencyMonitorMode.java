@@ -27,7 +27,7 @@ public enum RadioFrequencyMonitorMode {
 
     private final int value;
 
-    private RadioFrequencyMonitorMode(final int value) {
+    RadioFrequencyMonitorMode(final int value) {
         this.value = value;
     }
 

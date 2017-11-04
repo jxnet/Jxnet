@@ -4,7 +4,7 @@ import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
 import org.junit.*;
 
-public class Generic {
+public class GenericTest {
 
     @org.junit.Test
     public void run() {

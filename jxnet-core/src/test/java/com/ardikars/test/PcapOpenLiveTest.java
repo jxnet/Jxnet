@@ -6,7 +6,7 @@ import com.ardikars.jxnet.exception.PcapCloseException;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class PcapOpenLive {
+public class PcapOpenLiveTest {
 	
 	@Test
 	public void run() throws PcapCloseException {

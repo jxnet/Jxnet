@@ -2,7 +2,7 @@ package com.ardikars.test;
 
 import com.ardikars.jxnet.MacAddress;
 
-public class MacAddr {
+public class MacAddrTest {
 
     @org.junit.Test
     public void run() {

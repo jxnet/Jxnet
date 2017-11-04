@@ -27,7 +27,7 @@ public enum TimestampPrecision {
 
     private final int value;
 
-    private TimestampPrecision(final int value) {
+    TimestampPrecision(final int value) {
         this.value = value;
     }
 

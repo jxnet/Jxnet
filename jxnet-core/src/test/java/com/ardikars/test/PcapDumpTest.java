@@ -3,14 +3,13 @@ package com.ardikars.test;
 import static com.ardikars.jxnet.Jxnet.*;
 
 import com.ardikars.jxnet.*;
-import com.ardikars.jxnet.exception.JxnetException;
 import com.ardikars.jxnet.exception.PcapCloseException;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.nio.ByteBuffer;
 
-public class PcapDump {
+public class PcapDumpTest {
 	
 	@Test
 	public void run() throws PcapCloseException {

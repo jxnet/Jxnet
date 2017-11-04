@@ -2,10 +2,8 @@ package com.ardikars.test;
 
 import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
-import com.ardikars.jxnet.exception.JxnetException;
-import org.junit.*;
 
-public class Error {
+public class ErrorTest {
 
     @org.junit.Test
     public void run() {

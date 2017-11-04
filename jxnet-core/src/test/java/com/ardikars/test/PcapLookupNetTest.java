@@ -6,7 +6,7 @@ import static com.ardikars.jxnet.Jxnet.*;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class PcapLookupNet {
+public class PcapLookupNetTest {
 	
 	@Test
 	public void run() {
