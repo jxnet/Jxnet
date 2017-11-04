@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet.exception;
+package com.ardikars.test;
 
 /**
  * @author Ardika Rommy Sanjaya

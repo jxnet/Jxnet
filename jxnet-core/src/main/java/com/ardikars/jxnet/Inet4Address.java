@@ -17,7 +17,7 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.util.Preconditions;
+import com.ardikars.jxnet.util.Validate;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -41,6 +41,8 @@ public final class Inet4Address extends InetAddress {
 	}
 
 	private Inet4Address(final byte[] address) {
+		Validate.nullPointer(address);
+		Validate.illegalArgument(address.length == IPV4_ADDRESS_LENGTH);
 		this.address = address;
 	}
 
@@ -49,27 +51,17 @@ public final class Inet4Address extends InetAddress {
 	 * @param inet4Address ipv4 string address.
 	 * @return Inet4Address object.
 	 */
-	public static Inet4Address valueOf(final String inet4Address) {
-		Preconditions.CheckNotNull(inet4Address);
+	public static Inet4Address valueOf(String inet4Address) {
+		inet4Address = Validate.nullPointer(inet4Address, "0.0.0.0");
 		//Preconditions.CheckArgument(inet4Address.matches("\\b((25[0–5]|2[0–4]\\d|[01]?\\d\\d?)(\\.)){3}(25[0–5]|2[0–4]\\d|[01]?\\d\\d?)\\b"));
 		String[] parts = inet4Address.split("\\.");
 		byte[] result = new byte[parts.length];
-		Preconditions.CheckArgument(result.length == IPV4_ADDRESS_LENGTH);
+		Validate.illegalArgument(result.length == IPV4_ADDRESS_LENGTH);
 		for (int i=0; i<result.length; i++) {
-			if (parts[i].length() == 0 || parts[i] == null) {
-				throw new IllegalArgumentException("");
-			}
-			if (parts[i].length() > 1 && parts[i].startsWith("0")) {
-				throw new IllegalArgumentException("");
-			}
-			try {
-				result[i] = Integer.valueOf(parts[i]).byteValue();
-				if (result[i] > 0xffff) {
-					throw new IllegalArgumentException("");
-				}
-			} catch (Exception ex) {
-				throw new IllegalArgumentException("");
-			}
+			Validate.illegalArgument(parts[i] != null || parts[i].length() != 0);
+			Validate.illegalArgument(!(parts[i].length() > 1 && parts[i].startsWith("0")));
+			result[i] = Integer.valueOf(parts[i]).byteValue();
+			Validate.illegalArgument(result[i] <= 0xff);
 		}
 		return Inet4Address.valueOf(result);
 	}
@@ -80,8 +72,6 @@ public final class Inet4Address extends InetAddress {
 	 * @return IPv4Address object.
 	 */
 	public static Inet4Address valueOf(final byte[] address) {
-		Preconditions.CheckNotNull(address);
-		Preconditions.CheckArgument(address.length == Inet4Address.IPV4_ADDRESS_LENGTH);
 		return new Inet4Address(address);
 	}
 
@@ -124,6 +114,7 @@ public final class Inet4Address extends InetAddress {
 	}
 
 	public void update(final Inet4Address inet4address) {
+		Validate.nullPointer(inet4address);
 		this.address = inet4address.toBytes();
 	}
 

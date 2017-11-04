@@ -17,7 +17,7 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.util.Preconditions;
+import com.ardikars.jxnet.util.Validate;
 
 import java.util.Arrays;
 import java.util.regex.Pattern;
@@ -52,6 +52,8 @@ public final class MacAddress {
 	private byte[] address = new byte[MAC_ADDRESS_LENGTH];
 	
 	private MacAddress(byte[] address) {
+		Validate.nullPointer(address);
+		Validate.illegalArgument(address.length == MAC_ADDRESS_LENGTH);
 		this.address = Arrays.copyOf(address, MacAddress.MAC_ADDRESS_LENGTH);
 	}
 
@@ -67,13 +69,12 @@ public final class MacAddress {
 	 * @param address string MAC Address.
 	 * @return MacAddress object.
 	 */
-	public static MacAddress valueOf(final String address) {
-		Preconditions.CheckNotNull(address);
-		if (!isValidAddress(address)) throw new IllegalArgumentException();
+	public static MacAddress valueOf(String address) {
+		address = Validate.nullPointer(address, "00:00:00:00:00:00");
 		final String[] elements = address.split(":|-");
-		Preconditions.CheckArgument((elements.length == MAC_ADDRESS_LENGTH), "Specified MAC Address must contain 12 hex digits");
-		final byte[] b = new byte[MacAddress.MAC_ADDRESS_LENGTH];
-		for (int i = 0; i < MacAddress.MAC_ADDRESS_LENGTH; i++) {
+		Validate.illegalArgument(elements.length == MAC_ADDRESS_LENGTH);
+		final byte[] b = new byte[MAC_ADDRESS_LENGTH];
+		for (int i = 0; i < MAC_ADDRESS_LENGTH; i++) {
 			final String element = elements[i];
 			b[i] = (byte) Integer.parseInt(element, 16);
 		}
@@ -86,8 +87,6 @@ public final class MacAddress {
 	 * @return MacAddress object.
 	 */
 	public static MacAddress valueOf(final byte[] address) {
-		Preconditions.CheckNotNull(address);
-		Preconditions.CheckArgument((address.length == MAC_ADDRESS_LENGTH), "Specified MAC Address must contain 12 hex digits");
 		return new MacAddress(address);
 	}
 
@@ -113,10 +112,12 @@ public final class MacAddress {
 	 * @return true is valid, false otherwise.
 	 */
 	public static boolean isValidAddress(final String address) {
+		Validate.nullPointer(address);
 		return Pattern.matches("^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$", address);
 	}
 
 	public void update(final MacAddress macAddress) {
+		Validate.nullPointer(macAddress);
 		this.address = macAddress.toBytes();
 	}
 

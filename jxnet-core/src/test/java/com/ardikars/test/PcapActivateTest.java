@@ -4,13 +4,12 @@ import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
 import com.ardikars.jxnet.PcapDirection;
 import com.ardikars.jxnet.PcapStat;
-import com.ardikars.jxnet.exception.JxnetException;
 import com.ardikars.jxnet.util.Platforms;
 
 import static com.ardikars.jxnet.Jxnet.*;
 import static com.ardikars.jxnet.Jxnet.PcapGetErr;
 
-public class PcapActivate {
+public class PcapActivateTest {
 
     @org.junit.Test
     public void run() {

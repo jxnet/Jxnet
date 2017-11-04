@@ -21,7 +21,7 @@ package com.ardikars.jxnet.util;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
-public class Platforms {
+public final class Platforms {
 
 	/**
 	 * Operating System Name

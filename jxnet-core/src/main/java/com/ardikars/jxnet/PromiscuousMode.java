@@ -27,7 +27,7 @@ public enum PromiscuousMode {
 
     private final int value;
 
-    private PromiscuousMode(final int value) {
+    PromiscuousMode(final int value) {
         this.value = value;
     }
 

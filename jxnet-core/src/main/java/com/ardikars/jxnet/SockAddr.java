@@ -34,7 +34,7 @@ public final class SockAddr {
         private short value;
         private String description;
 
-        private Family(Short value, String description) {
+        Family(Short value, String description) {
             this.value = value;
             this.description = description;
         }

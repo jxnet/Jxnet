@@ -2,17 +2,15 @@ package com.ardikars.test;
 
 import static com.ardikars.jxnet.Jxnet.*;
 
-import com.ardikars.jxnet.BpfProgram;
 import com.ardikars.jxnet.Pcap;
 import com.ardikars.jxnet.PcapDumper;
 import com.ardikars.jxnet.PcapPktHdr;
 import com.ardikars.jxnet.exception.PcapCloseException;
-import com.ardikars.jxnet.exception.JxnetException;
 import org.junit.Test;
 
 import java.nio.ByteBuffer;
 
-public class PcapOpenDead {
+public class PcapOpenDeadTest {
 	
 	@Test
 	public void run() throws PcapCloseException {

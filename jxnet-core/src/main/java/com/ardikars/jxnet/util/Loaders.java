@@ -18,19 +18,17 @@
 package com.ardikars.jxnet.util;
 
 import com.ardikars.jxnet.Jxnet;
-import com.ardikars.jxnet.exception.JxnetException;
 import com.ardikars.jxnet.exception.NotSupportedPlatformException;
 
 import java.io.*;
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.regex.Pattern;
 
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
-public class Loaders {
+public final class Loaders {
 
 	/**
 	 * Error Buffer
@@ -43,7 +41,7 @@ public class Loaders {
 	 * @throws Exception exception.
 	 */
 	public static void loadFromAbsolutePath(String path) throws Exception {
-		Preconditions.CheckNotNull(path);
+		Validate.nullPointer(path);
 		try {
 			System.load(path);
 			Field isLoadedField = Jxnet.class.getDeclaredField("isLoaded");
@@ -63,7 +61,7 @@ public class Loaders {
 	public static void loadFromInnerJar(String[] path) throws
 			IllegalArgumentException, IOException {
 		errbuf.setLength(0);
-		Preconditions.CheckNotNull(path);
+		Validate.nullPointer(path);
 		for (String lib : path) {
 			loadLibrary(lib);
 		}
@@ -149,7 +147,7 @@ public class Loaders {
 		InputStream is = Loaders.class.getResourceAsStream(path);
 		if (is == null) {
 			errbuf.append("Error: " + path + " not found.\n");
-			throw new JxnetException(errbuf.toString());
+			throw new FileNotFoundException(errbuf.toString());
 		}
 		OutputStream os = new FileOutputStream(temp);
 		while ((readBytes = is.read(buffer)) != -1) {

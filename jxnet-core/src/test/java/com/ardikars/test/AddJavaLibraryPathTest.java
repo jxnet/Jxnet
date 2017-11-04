@@ -7,7 +7,7 @@ import org.junit.Test;
 /**
  * Created by root on 6/8/17.
  */
-public class AddJavaLibraryPath {
+public class AddJavaLibraryPathTest {
 
     @Test
     public void run() {

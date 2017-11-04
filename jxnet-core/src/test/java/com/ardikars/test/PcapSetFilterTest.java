@@ -1,15 +1,10 @@
 package com.ardikars.test;
 
 import com.ardikars.jxnet.*;
-import com.ardikars.jxnet.exception.JxnetException;
-import com.ardikars.jxnet.exception.PcapCloseException;
-import org.junit.*;
-
-import java.nio.ByteBuffer;
 
 import static com.ardikars.jxnet.Jxnet.*;
 
-public class PcapSetFilter {
+public class PcapSetFilterTest {
 
     @org.junit.Test
     public void run() {

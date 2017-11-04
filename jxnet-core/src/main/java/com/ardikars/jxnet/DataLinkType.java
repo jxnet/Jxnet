@@ -82,7 +82,7 @@ public enum DataLinkType {
     private short value;
     private String description;
 
-    private DataLinkType(Short value, String description) {
+    DataLinkType(Short value, String description) {
         this.value = value;
         this.description = description;
     }

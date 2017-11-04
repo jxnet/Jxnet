@@ -6,7 +6,7 @@ import org.junit.*;
 
 import static com.ardikars.jxnet.Jxnet.*;
 
-public class PcapDatalink {
+public class PcapDatalinkTest {
 
     @org.junit.Test
     public void run() {

@@ -2,14 +2,13 @@ package com.ardikars.test;
 
 import com.ardikars.jxnet.Pcap;
 import com.ardikars.jxnet.PcapPktHdr;
-import com.ardikars.jxnet.exception.JxnetException;
 import org.junit.Test;
 
 import java.nio.ByteBuffer;
 
 import static com.ardikars.jxnet.Jxnet.*;
 
-public class PcapNextEx {
+public class PcapNextExTest {
 
     @Test
     public void run() {

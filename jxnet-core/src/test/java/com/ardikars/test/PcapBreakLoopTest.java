@@ -13,7 +13,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 
-public class PcapBreakLoop {
+public class PcapBreakLoopTest {
 
     class MyThread extends Thread {
 

@@ -9,7 +9,7 @@ import com.ardikars.jxnet.SockAddr;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class PcapLookupDev {
+public class PcapLookupDevTest {
 	
 	@Test
 	public void run() {
