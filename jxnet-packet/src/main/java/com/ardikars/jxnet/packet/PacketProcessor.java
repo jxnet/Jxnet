@@ -1,10 +1,11 @@
+/*
 package com.ardikars.jxnet.packet;
 
 import com.ardikars.jxnet.*;
 import com.ardikars.jxnet.exception.JxnetException;
 import com.ardikars.jxnet.exception.PcapCloseException;
+import com.ardikars.jxnet.packet.ethernet.Ethernet;
 
-import java.lang.reflect.ParameterizedType;
 import java.nio.ByteBuffer;
 import java.util.Map;
 
@@ -64,10 +65,10 @@ public abstract class PacketProcessor<T, V extends Packet> implements Encoder<by
     @SuppressWarnings("unchecked")
     @Override
     public V decode(byte[] data) {
-        String className = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1].getTypeName();
+        // added more bugs
         Class clazz = null;
         try {
-            clazz = Class.forName(className);
+            clazz = Class.forName(Ethernet.class.getName());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -84,3 +85,4 @@ public abstract class PacketProcessor<T, V extends Packet> implements Encoder<by
     }
 
 }
+*/

@@ -302,7 +302,7 @@ public class ByteUtils {
      * @return byte array.
      */
     public static byte[] toByteArray(final ByteBuffer byteBuffer) {
-        Validate.notNull(byteBuffer);
+        Validate.nullPointer(byteBuffer);
         if (!byteBuffer.hasRemaining()) {
             byteBuffer.flip();
         }

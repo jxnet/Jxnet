@@ -209,7 +209,7 @@ public class HexUtils {
      * @return byte array.
      */
     public static byte[] parseHex(String hexStream) {
-        Validate.notNull(hexStream);
+        Validate.nullPointer(hexStream);
         if (hexStream.startsWith("0x")) {
             hexStream = hexStream.substring(2);
         }

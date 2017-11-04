@@ -27,7 +27,7 @@ public class ESPTest {
     @Before
     public void OpenHandle() {
         pcap = Jxnet.PcapOpenOffline(pcap_source_file, errbuf);
-        logger.info("Open handle.");
+        logger.debug("Open handle.");
         Assert.assertNotEquals(errbuf.toString(), null, pcap);
     }
 

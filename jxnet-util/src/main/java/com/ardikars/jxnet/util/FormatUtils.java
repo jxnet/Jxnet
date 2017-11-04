@@ -27,7 +27,7 @@ public class FormatUtils {
 
 	@Deprecated
 	public static ByteBuffer toDirectBuffer(ByteBuffer byteBuffer) {
-		Validate.notNull(byteBuffer);
+		Validate.nullPointer(byteBuffer);
 		if (byteBuffer.isDirect())
 			return byteBuffer;
 		ByteBuffer buffer = ByteBuffer.
@@ -37,7 +37,7 @@ public class FormatUtils {
 
 	@Deprecated
 	public static ByteBuffer toDirectBuffer(byte[] bytes) {
-		Validate.notNull(bytes);
+		Validate.nullPointer(bytes);
 		ByteBuffer buffer = ByteBuffer.
 				allocateDirect(bytes.length);
 		return buffer.put(bytes);
@@ -45,7 +45,7 @@ public class FormatUtils {
 
 	@Deprecated
 	public static byte[] toBytes(ByteBuffer byteBuffer) {
-		Validate.notNull(byteBuffer);
+		Validate.nullPointer(byteBuffer);
 		if (!byteBuffer.hasRemaining()) {
 			byteBuffer.flip();
 		}
@@ -56,7 +56,7 @@ public class FormatUtils {
 
 	@Deprecated
 	public static byte[] toBytes(String hexStr) {
-		Validate.notNull(hexStr);
+		Validate.nullPointer(hexStr);
 		String src = hexStr.replaceAll("\\s+", "").trim();
 		int len = src.length();
 		byte[] data = new byte[len / 2];
@@ -68,7 +68,7 @@ public class FormatUtils {
 	}
 
 	public static long toLong(byte[] bytes) {
-		Validate.notNull(bytes);
+		Validate.nullPointer(bytes);
 		ByteBuffer bb = ByteBuffer.allocate(bytes.length);
 		bb.put(bytes);
 		return bb.getLong();
@@ -81,8 +81,8 @@ public class FormatUtils {
 
 	@Deprecated
 	public static String toHexString(byte[] data, int offset, int length) {
-		Validate.notNull(data);
-		Validate.argument(offset >= 0 && length > 0);
+		Validate.nullPointer(data);
+		Validate.illegalArgument(offset >= 0 && length > 0);
 		StringBuilder sb = new StringBuilder();
 		int l;
 		if(data.length != length) {
@@ -123,7 +123,7 @@ public class FormatUtils {
 	}
 	
 	public static String toAscii(String hexStr) {
-		Validate.notNull(hexStr);
+		Validate.nullPointer(hexStr);
 		StringBuilder sb = new StringBuilder("");
 		for (int i = 0; i < hexStr.length(); i += 2) {
 			String str = hexStr.substring(i, i + 2);

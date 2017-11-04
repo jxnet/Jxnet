@@ -17,12 +17,12 @@ import java.util.concurrent.Executor;
  */
 public class PacketListener {
 
-    @FunctionalInterface
+//    @FunctionalInterface // JAVA 8
     public interface Map<T> {
 
         /**
          * Next available packet.
-         * @param arg user argument.
+         * @param arg user illegalArgument.
          * @param pktHdr PcapPktHdr.
          * @param packets packet.
          */
@@ -30,12 +30,12 @@ public class PacketListener {
 
     }
 
-    @FunctionalInterface
+//    @FunctionalInterface // JAVA 8
     public interface List<T> {
 
         /**
          * Next available packet.
-         * @param arg user argument.
+         * @param arg user illegalArgument.
          * @param pktHdr PcapPktHdr.
          * @param packets packet.
          */
@@ -43,29 +43,38 @@ public class PacketListener {
 
     }
 
-    public static <T> int loop(Pcap pcap, int count, PacketListener.List<T> packetList, T arg) {
-        PcapHandler<PacketListener.List<T>> handler = (user, h, bytes) -> {
-            java.util.List<Packet> packets = parseList(pcap.getDataLinkType(), ByteUtils.toByteArray(bytes));
-            user.nextPacket(arg, h, packets);
+    public static <T> int loop(final Pcap pcap, final int count, final PacketListener.List<T> packetList, final T arg) {
+        PcapHandler<PacketListener.List<T>> handler = new PcapHandler<List<T>>() {
+            @Override
+            public void nextPacket(List<T> user, PcapPktHdr h, ByteBuffer bytes) {
+                java.util.List<Packet> packets = parseList(pcap.getDataLinkType(), ByteUtils.toByteArray(bytes));
+                user.nextPacket(arg, h, packets);
+            }
         };
         return Jxnet.PcapLoop(pcap, count, handler, packetList);
     }
 
-    public static <T> int loop(Pcap pcap, int count, PacketListener.Map<T> packetMap, T arg) {
-        PcapHandler<PacketListener.Map<T>> handler = (user, h, bytes) -> {
-            java.util.Map<Class, Packet> packets = parseMap(pcap.getDataLinkType(), ByteUtils.toByteArray(bytes));
-            user.nextPacket(arg, h, packets);
+    public static <T> int loop(final Pcap pcap, final int count, final PacketListener.Map<T> packetMap, final T arg) {
+        PcapHandler<PacketListener.Map<T>> handler = new PcapHandler<Map<T>>() {
+            @Override
+            public void nextPacket(Map<T> user, PcapPktHdr h, ByteBuffer bytes) {
+                java.util.Map<Class, Packet> packets = parseMap(pcap.getDataLinkType(), ByteUtils.toByteArray(bytes));
+                user.nextPacket(arg, h, packets);
+            }
         };
         return Jxnet.PcapLoop(pcap, count, handler, packetMap);
     }
 
-    public static <T, V extends Packet> int loop(Pcap pcap, int count, PacketProcessor<T, V> handler, T arg) {
-        PcapHandler<PacketProcessor<T, V>> callback = (user, h, bytes) -> {
-            user.initialize(arg, pcap, h);
-            user.decode(ByteUtils.toByteArray(bytes));
+    /*public static <T, V extends Packet> int loop(final Pcap pcap, final int count, final PacketProcessor<T, V> handler, final T arg) {
+        PcapHandler<PacketProcessor<T, V>> callback = new PcapHandler<PacketProcessor<T, V>>() {
+            @Override
+            public void nextPacket(PacketProcessor<T, V> user, PcapPktHdr h, ByteBuffer bytes) {
+                user.initialize(arg, pcap, h);
+                user.decode(ByteUtils.toByteArray(bytes));
+            }
         };
         return Jxnet.PcapLoop(pcap, count, callback, handler);
-    }
+    }*/
 
     public static java.util.List<Packet> nextList(Pcap pcap, PcapPktHdr pcapPktHdr) {
         ByteBuffer buffer = Jxnet.PcapNext(pcap, pcapPktHdr);
@@ -157,35 +166,53 @@ public class PacketListener {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> int loop(Pcap pcap, int count, PacketListener.List<T> packetList, T arg, Executor executor) {
-        PcapHandler<PacketListener.List<T>> handler = (user, h, bytes) -> {
-            executor.execute(() -> {
-                java.util.List<Packet> packets = parseList(pcap.getDataLinkType(), ByteUtils.toByteArray(bytes));
-                user.nextPacket(arg, h, packets);
-            });
+    public static <T> int loop(final Pcap pcap, final int count, final PacketListener.List<T> packetList, final T arg, final Executor executor) {
+        PcapHandler<PacketListener.List<T>> handler = new PcapHandler<List<T>>() {
+            @Override
+            public void nextPacket(final List<T> user, final PcapPktHdr h, final ByteBuffer bytes) {
+                executor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        java.util.List<Packet> packets = parseList(pcap.getDataLinkType(), ByteUtils.toByteArray(bytes));
+                        user.nextPacket(arg, h, packets);
+                    }
+                });
+            }
         };
         return Jxnet.PcapLoop(pcap, count, handler, packetList);
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> int loop(Pcap pcap, int count, PacketListener.Map<T> packetMap, T arg, Executor executor) {
-        PcapHandler<PacketListener.Map<T>> handler = (user, h, bytes) -> {
-            executor.execute(() -> {
-                java.util.Map<Class, Packet> packets = parseMap(pcap.getDataLinkType(), ByteUtils.toByteArray(bytes));
-                user.nextPacket(arg, h, packets);
-            });
+    public static <T> int loop(final Pcap pcap, final int count, final PacketListener.Map<T> packetMap, final T arg, final Executor executor) {
+        PcapHandler<PacketListener.Map<T>> handler = new PcapHandler<Map<T>>() {
+            @Override
+            public void nextPacket(final Map<T> user, final PcapPktHdr h, final ByteBuffer bytes) {
+                executor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        java.util.Map<Class, Packet> packets = parseMap(pcap.getDataLinkType(), ByteUtils.toByteArray(bytes));
+                        user.nextPacket(arg, h, packets);
+                    }
+                });
+            }
         };
         return Jxnet.PcapLoop(pcap, count, handler, packetMap);
     }
 
-    public static <T, V extends Packet> int loop(Pcap pcap, int count, PacketProcessor<T, V> handler, T arg, Executor executor) {
-        PcapHandler<PacketProcessor<T, V>> callback = (user, h, bytes) -> {
-            executor.execute(() -> {
-                user.initialize(arg, pcap, h);
-                user.decode(ByteUtils.toByteArray(bytes));
-            });
+    /*public static <T, V extends Packet> int loop(final Pcap pcap, final int count, final PacketProcessor<T, V> handler, final T arg, final Executor executor) {
+        PcapHandler<PacketProcessor<T, V>> callback = new PcapHandler<PacketProcessor<T, V>>() {
+            @Override
+            public void nextPacket(final PacketProcessor<T, V> user, final PcapPktHdr h, final ByteBuffer bytes) {
+                executor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        user.initialize(arg, pcap, h);
+                        user.decode(ByteUtils.toByteArray(bytes));
+                    }
+                });
+            }
         };
         return Jxnet.PcapLoop(pcap, count, callback, handler);
-    }
+    }*/
 
 }
