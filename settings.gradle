@@ -1,7 +1,3 @@
 rootProject.name = 'jxnet'
 
 include 'jxnet-core'
-include 'jxnet-packet'
-include 'jxnet-util'
-include 'jxnet-common'
-//include 'jxnet-example'
