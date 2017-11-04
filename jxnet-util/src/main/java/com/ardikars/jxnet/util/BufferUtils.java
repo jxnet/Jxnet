@@ -32,7 +32,7 @@ public class BufferUtils {
      * @return DirectByteBuffer.
      */
     public static ByteBuffer toDirectByteBuffer(final ByteBuffer byteBuffer) {
-        Validate.notNull(byteBuffer);
+        Validate.nullPointer(byteBuffer);
         if (byteBuffer.isDirect())
             return byteBuffer;
         ByteBuffer buffer = ByteBuffer.
@@ -57,7 +57,7 @@ public class BufferUtils {
      * @return DirectByteBuffer.
      */
     public static ByteBuffer toDirectByteBuffer(final byte[] bytes) {
-        Validate.notNull(bytes);
+        Validate.nullPointer(bytes);
         return toDirectByteBuffer(bytes, 0, bytes.length);
     }
 

@@ -60,7 +60,7 @@ allprojects {
 			footer 'https://github.com/ardikars/Jxnet'
 			bottom "Copyright &copy; 2015 - ${currentYear} ardikars.com. All rights reserved."
 			showFromProtected()
-			addStringOption 'Xdoclint:all,-reference', '-quiet'
+//			addStringOption 'Xdoclint:all,-reference', '-quiet'
 		}
 	}	
 

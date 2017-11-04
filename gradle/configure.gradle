@@ -17,7 +17,7 @@ ext {
 	TOOLS_OUT = "${rootDir}/jxnet-core/src/main/resources/bin"
 	MAVEN_LOCAL_REPOSITORY = "${rootDir}/build/repository"
 
-	JAVA_VERSION = '1.8'
+	JAVA_VERSION = '1.7'
 	JUNIT_VERSION = '4.12'
 	GRADLE_VERSION = '3.5'
 	SLF4J_VERSION = '1.7.25'

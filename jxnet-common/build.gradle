@@ -16,3 +16,5 @@ clean {
     file("${rootDir}/jxnet-common/out").deleteDir()
 }
 
+test {
+}

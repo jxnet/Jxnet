@@ -23,7 +23,7 @@ import java.nio.ByteBuffer;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
-@FunctionalInterface
+//@FunctionalInterface // JAVA 8
 public interface PcapHandler<T> {
 
 	/**
