@@ -172,9 +172,6 @@ codeCoverageReport.dependsOn {
 
 dependencies {
 	compile project(':jxnet-core')
-	compile project(':jxnet-common')
-	compile project(':jxnet-packet')
-	compile project(':jxnet-util')
 }
 
 task distributions(type: Zip, dependsOn: build) {

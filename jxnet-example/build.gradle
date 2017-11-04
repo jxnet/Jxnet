@@ -5,9 +5,6 @@
 
 dependencies {
     compile project(':jxnet-core')
-    compile project(':jxnet-packet')
-    compile project(':jxnet-util')
-    compile project(':jxnet-common')
     testCompile "junit:junit:${JUNIT_VERSION}"
 }
 

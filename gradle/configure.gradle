@@ -29,7 +29,7 @@ ext {
 
 		description = 'Jxnet is a java library for capturing and sending network paket.'
 
-		url 'https://github.com/ardikars/Jxnet'
+		url 'https://github.com/jxnet/Jxnet'
 
 		developers {
 			developer {
@@ -48,9 +48,9 @@ ext {
 		}
 
 		scm {
-			url 'https://github.com/ardikars/Jxnet.git'
-			connection 'scm:git:https://github.com/ardikars/Jxnet.git'
-			developerConnection 'scm:git:git@github.com/ardikars/Jxnet.git'
+			url 'https://github.com/jxnet/Jxnet.git'
+			connection 'scm:git:https://github.com/jxnet/Jxnet.git'
+			developerConnection 'scm:git:git@github.com/jxnet/Jxnet.git'
 			tag 'HEAD'
 		}
 
