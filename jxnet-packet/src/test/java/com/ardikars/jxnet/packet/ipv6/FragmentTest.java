@@ -3,6 +3,7 @@ package com.ardikars.jxnet.packet.ipv6;
 
 import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
+import com.ardikars.jxnet.PcapPktHdr;
 import com.ardikars.jxnet.packet.Packet;
 import com.ardikars.jxnet.packet.PacketListener;
 import com.ardikars.jxnet.packet.ethernet.Ethernet;
@@ -16,6 +17,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 @RunWith(JUnit4.class)
 public class FragmentTest {
@@ -36,11 +39,14 @@ public class FragmentTest {
 
     @Test
     public void validate() {
-        PacketListener.List<String> callback = (arg, pktHdr, packets) -> {
-            Ethernet eth = (Ethernet) packets.get(0);
-            if (eth != null) {
+        PacketListener.List<String> callback = new PacketListener.List<String>() {
+            @Override
+            public void nextPacket(String arg, PcapPktHdr pktHdr, List<Packet> packets) {
+                Ethernet eth = (Ethernet) packets.get(0);
+                if (eth != null) {
 
-                index++;
+                    index++;
+                }
             }
         };
         PacketListener.loop(pcap, -1, callback, "");
@@ -48,22 +54,17 @@ public class FragmentTest {
 
     @Test
     public void foreach() {
-        PacketListener.List<String> listCallback = (arg, pktHdr, packets) -> {
-            logger.info("==========================================");
-            packets.stream().forEach(packet -> logger.info(packet.toString()));
-//            logger.info("-------------------------------------------");
-//            Packet packet = packets.get(0);
-//            packet.forEachRemaining(packet1 -> logger.info(packet1.toString()));
-//            logger.info("-------------------------------------------");
-//            Packet packet2 = packets.get(0);
-//            while (packet2.hasNext()) { // false
-//                logger.info(packet2.next().toString());
-//            }
-            logger.info("==========================================");
+        PacketListener.List<String> listCallback = new PacketListener.List<String>() {
+            @Override
+            public void nextPacket(String arg, PcapPktHdr pktHdr, List<Packet> packets) {
+                Packet packet2 = packets.get(0);
+                while (packet2.hasNext()) { // false
+                    logger.info(packet2.next().toString());
+                }
+                logger.info("==========================================");
+            }
         };
-
         PacketListener.loop(pcap, -1, listCallback, "");
-//        PacketListener.loop(pcap, -1, mapCallback, "");
     }
 
     @After

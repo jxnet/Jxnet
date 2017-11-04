@@ -75,7 +75,7 @@ allprojects {
 	}
 
 	tasks.withType(JavaCompile) {
-		options.compilerArgs << "-Xlint:unchecked" << "-Werror"
+//		options.compilerArgs << "-Xlint:unchecked" << "-Werror"
 	}
 
 	artifacts {

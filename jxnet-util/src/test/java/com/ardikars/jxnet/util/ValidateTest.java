@@ -62,8 +62,4 @@ public class ValidateTest {
         System.out.println(Validate.nullPointer(null, "MyNewVal"));
     }
 
-    @Test
-    public void test() {
-    }
-
 }

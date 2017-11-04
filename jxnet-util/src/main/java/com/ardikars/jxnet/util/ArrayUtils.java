@@ -129,6 +129,7 @@ public class ArrayUtils {
     /**
      * Reverse order.
      * @param value value.
+     * @param <T> type of value.
      * @return array in reverse order.
      */
     @SuppressWarnings("unchecked")
@@ -282,6 +283,7 @@ public class ArrayUtils {
     /**
      * Concatenate array.
      * @param arrays arrays.
+     * @param <T> type of array.
      * @return array.
      */
     @SuppressWarnings("unchecked")

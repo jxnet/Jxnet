@@ -3,6 +3,8 @@ package com.ardikars.jxnet.packet.arp;
 import com.ardikars.jxnet.DataLinkType;
 import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
+import com.ardikars.jxnet.PcapPktHdr;
+import com.ardikars.jxnet.packet.Packet;
 import com.ardikars.jxnet.packet.PacketListener;
 import com.ardikars.jxnet.packet.ProtocolType;
 import com.ardikars.jxnet.packet.ethernet.Ethernet;
@@ -15,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by root on 16/08/17.
@@ -49,42 +52,45 @@ public class Ethernet_ARP_Test {
 
     @Test
     public void validate() {
-        PacketListener.List<String> callback = (arg, pktHdr, packets) -> {
-            Ethernet eth = (Ethernet) packets.get(0);
-            if (eth != null) {
-                if (!HexUtils.toHexString(eth.bytes()).equals(hexStream[index])) {
-                    logger.info(index + ": " + HexUtils.toHexString(eth.bytes()));
-                } else {
-                    Ethernet ethernet = (Ethernet) new Ethernet()
-                            .setDestinationMacAddress(eth.getDestinationMacAddress())
-                            .setSourceMacAddress(eth.getSourceMacAddress())
-                            .setEthernetType(eth.getEthernetType())
-                            .setPacket(eth.getPacket());
-                    if (Arrays.equals(eth.bytes(), ethernet.bytes())) {
-                        logger.info("Valid Ethernet.");
-                    }
-                    if (eth.getPacket() instanceof ARP) {
-                        ARP arp = (ARP) eth.getPacket();
-                        ARP arp1 = (ARP) new ARP()
-                                .setHardwareType(DataLinkType.valueOf(arp.getHardwareType().getValue()))
-                                .setProtocolType(ProtocolType.getInstance(arp.getProtocolType().getValue()))
-                                .setHardwareAddressLength(arp.getHardwareAddressLength())
-                                .setProtocolAddressLength(arp.getHardwareAddressLength())
-                                .setOperationCode(arp.getOperationCode())
-                                .setSenderHardwareAddress(arp.getSenderHardwareAddress())
-                                .setSenderProtocolAddress(arp.getSenderProtocolAddress())
-                                .setTargetHardwareAddress(arp.getTargetHardwareAddress())
-                                .setTargetProtocolAddress(arp.getTargetProtocolAddress())
-                                .setPacket(arp.getPacket());
-                        logger.debug(Arrays.toString(arp.bytes()));
-                        logger.debug(Arrays.toString(arp1.bytes()));
-                        System.out.println("----");
-                        if (Arrays.equals(arp.bytes(), arp1.bytes())) {
-                            logger.info("Valid ARP.");
+        PacketListener.List<String> callback = new PacketListener.List<String>() {
+            @Override
+            public void nextPacket(String arg, PcapPktHdr pktHdr, List<Packet> packets) {
+                Ethernet eth = (Ethernet) packets.get(0);
+                if (eth != null) {
+                    if (!HexUtils.toHexString(eth.bytes()).equals(hexStream[index])) {
+                        logger.info(index + ": " + HexUtils.toHexString(eth.bytes()));
+                    } else {
+                        Ethernet ethernet = (Ethernet) new Ethernet()
+                                .setDestinationMacAddress(eth.getDestinationMacAddress())
+                                .setSourceMacAddress(eth.getSourceMacAddress())
+                                .setEthernetType(eth.getEthernetType())
+                                .setPacket(eth.getPacket());
+                        if (Arrays.equals(eth.bytes(), ethernet.bytes())) {
+                            logger.info("Valid Ethernet.");
+                        }
+                        if (eth.getPacket() instanceof ARP) {
+                            ARP arp = (ARP) eth.getPacket();
+                            ARP arp1 = (ARP) new ARP()
+                                    .setHardwareType(DataLinkType.valueOf(arp.getHardwareType().getValue()))
+                                    .setProtocolType(ProtocolType.getInstance(arp.getProtocolType().getValue()))
+                                    .setHardwareAddressLength(arp.getHardwareAddressLength())
+                                    .setProtocolAddressLength(arp.getHardwareAddressLength())
+                                    .setOperationCode(arp.getOperationCode())
+                                    .setSenderHardwareAddress(arp.getSenderHardwareAddress())
+                                    .setSenderProtocolAddress(arp.getSenderProtocolAddress())
+                                    .setTargetHardwareAddress(arp.getTargetHardwareAddress())
+                                    .setTargetProtocolAddress(arp.getTargetProtocolAddress())
+                                    .setPacket(arp.getPacket());
+                            logger.debug(Arrays.toString(arp.bytes()));
+                            logger.debug(Arrays.toString(arp1.bytes()));
+                            System.out.println("----");
+                            if (Arrays.equals(arp.bytes(), arp1.bytes())) {
+                                logger.info("Valid ARP.");
+                            }
                         }
                     }
+                    index++;
                 }
-                index++;
             }
         };
         PacketListener.loop(pcap, -1, callback, "");

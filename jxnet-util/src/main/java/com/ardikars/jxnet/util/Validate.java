@@ -212,6 +212,7 @@ public class Validate {
      * @param array array.
      * @param offset offset.
      * @param length length.
+     * @param <T> type of array.
      */
     public static <T> void bounds(T[] array, int offset, int length) {
         nullPointer(array, new NullPointerException("array is null."));
