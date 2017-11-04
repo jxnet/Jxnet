@@ -2,6 +2,7 @@ package com.ardikars.jxnet.packet.tcp;
 
 import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
+import com.ardikars.jxnet.PcapPktHdr;
 import com.ardikars.jxnet.packet.Packet;
 import com.ardikars.jxnet.packet.PacketListener;
 import com.ardikars.jxnet.packet.ethernet.Ethernet;
@@ -17,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.List;
 
 @RunWith(JUnit4.class)
 public class Ethernet_IPv4_TCP_Test {
@@ -50,65 +52,68 @@ public class Ethernet_IPv4_TCP_Test {
 
     @Test
     public void validate() {
-        PacketListener.List<String> callback = (arg, pktHdr, packets) -> {
-            Ethernet eth = (Ethernet) packets.get(0);
-            if (eth != null) {
-                if (!HexUtils.toHexString(eth.bytes()).equals(hexStream[index])) {
-                    logger.info(index+": "+HexUtils.toHexString(eth.bytes()));
-                } else {
-                    Ethernet ethernet = (Ethernet) new Ethernet()
-                            .setDestinationMacAddress(eth.getDestinationMacAddress())
-                            .setSourceMacAddress(eth.getSourceMacAddress())
-                            .setEthernetType(eth.getEthernetType())
-                            .setPacket(eth.getPacket());
-                    if (Arrays.equals(eth.bytes(), ethernet.bytes())) {
-                        logger.info("Valid Ethernet.");
-                    }
-
-                    if (eth.getPacket() instanceof IPv4) {
-                        IPv4 ipv4 = (IPv4) eth.getPacket();
-                        IPv4 ip = new IPv4();
-                        ip.setVersion(ipv4.getVersion());
-                        ip.setHeaderLength(ipv4.getHeaderLength());
-                        ip.setDiffServ(ipv4.getDiffServ());
-                        ip.setExpCon(ipv4.getExpCon());
-                        ip.setTotalLength(ipv4.getTotalLength());
-                        ip.setIdentification(ipv4.getIdentification());
-                        ip.setFlags(ipv4.getFlags());
-                        ip.setFragmentOffset(ipv4.getFragmentOffset());
-                        ip.setTtl(ipv4.getTtl());
-                        ip.setProtocol(ipv4.getProtocol());
-                        ip.setChecksum(ipv4.getChecksum());
-                        ip.setSourceAddress(ipv4.getSourceAddress());
-                        ip.setDestinationAddress(ipv4.getDestinationAddress());
-                        ip.setOptions(ipv4.getOptions());
-                        ip.setPacket(ipv4.getPacket());
-                        if (Arrays.equals(ipv4.bytes(), ip.bytes())) {
-                            logger.info("Valid IPv4.");
+        PacketListener.List<String> callback = new PacketListener.List<String>() {
+            @Override
+            public void nextPacket(String arg, PcapPktHdr pktHdr, List<Packet> packets) {
+                Ethernet eth = (Ethernet) packets.get(0);
+                if (eth != null) {
+                    if (!HexUtils.toHexString(eth.bytes()).equals(hexStream[index])) {
+                        logger.info(index + ": " + HexUtils.toHexString(eth.bytes()));
+                    } else {
+                        Ethernet ethernet = (Ethernet) new Ethernet()
+                                .setDestinationMacAddress(eth.getDestinationMacAddress())
+                                .setSourceMacAddress(eth.getSourceMacAddress())
+                                .setEthernetType(eth.getEthernetType())
+                                .setPacket(eth.getPacket());
+                        if (Arrays.equals(eth.bytes(), ethernet.bytes())) {
+                            logger.info("Valid Ethernet.");
                         }
 
-                        if (ip.getPacket() instanceof TCP) {
-                            TCP tcp = (TCP) ip.getPacket();
-                            TCP t = new TCP();
-                            t.setSourcePort(tcp.getSourcePort());
-                            t.setDestinationPort(tcp.getDestinationPort());
-                            t.setSequence(tcp.getSequence());
-                            t.setAcknowledge(tcp.getAcknowledge());
-                            t.setDataOffset(tcp.getDataOffset());
-                            t.setFlags(tcp.getFlags());
-                            t.setWindowSize(tcp.getWindowSize());
-                            t.setChecksum(tcp.getChecksum());
-                            t.setUrgentPointer(tcp.getUrgentPointer());
-                            t.setOptions(tcp.getOptions());
-                            t.setPacket(tcp.getPacket());
-                            if (Arrays.equals(tcp.bytes(), t.bytes())) {
-                                logger.info("Valid TCP.");
+                        if (eth.getPacket() instanceof IPv4) {
+                            IPv4 ipv4 = (IPv4) eth.getPacket();
+                            IPv4 ip = new IPv4();
+                            ip.setVersion(ipv4.getVersion());
+                            ip.setHeaderLength(ipv4.getHeaderLength());
+                            ip.setDiffServ(ipv4.getDiffServ());
+                            ip.setExpCon(ipv4.getExpCon());
+                            ip.setTotalLength(ipv4.getTotalLength());
+                            ip.setIdentification(ipv4.getIdentification());
+                            ip.setFlags(ipv4.getFlags());
+                            ip.setFragmentOffset(ipv4.getFragmentOffset());
+                            ip.setTtl(ipv4.getTtl());
+                            ip.setProtocol(ipv4.getProtocol());
+                            ip.setChecksum(ipv4.getChecksum());
+                            ip.setSourceAddress(ipv4.getSourceAddress());
+                            ip.setDestinationAddress(ipv4.getDestinationAddress());
+                            ip.setOptions(ipv4.getOptions());
+                            ip.setPacket(ipv4.getPacket());
+                            if (Arrays.equals(ipv4.bytes(), ip.bytes())) {
+                                logger.info("Valid IPv4.");
+                            }
+
+                            if (ip.getPacket() instanceof TCP) {
+                                TCP tcp = (TCP) ip.getPacket();
+                                TCP t = new TCP();
+                                t.setSourcePort(tcp.getSourcePort());
+                                t.setDestinationPort(tcp.getDestinationPort());
+                                t.setSequence(tcp.getSequence());
+                                t.setAcknowledge(tcp.getAcknowledge());
+                                t.setDataOffset(tcp.getDataOffset());
+                                t.setFlags(tcp.getFlags());
+                                t.setWindowSize(tcp.getWindowSize());
+                                t.setChecksum(tcp.getChecksum());
+                                t.setUrgentPointer(tcp.getUrgentPointer());
+                                t.setOptions(tcp.getOptions());
+                                t.setPacket(tcp.getPacket());
+                                if (Arrays.equals(tcp.bytes(), t.bytes())) {
+                                    logger.info("Valid TCP.");
+                                }
                             }
                         }
-                    }
 
+                    }
+                    index++;
                 }
-                index++;
             }
         };
         PacketListener.loop(pcap, -1, callback, "");
@@ -116,37 +121,17 @@ public class Ethernet_IPv4_TCP_Test {
 
     @Test
     public void foreach() {
-        PacketListener.List<String> listCallback = (arg, pktHdr, packets) -> {
-            logger.info("==========================================");
-            packets.stream().forEach(packet -> logger.info(packet.toString()));
-            logger.info("-------------------------------------------");
-            Packet packet = packets.get(0);
-            packet.forEachRemaining(packet1 -> logger.info(packet1.toString()));
-            logger.info("-------------------------------------------");
-            Packet packet2 = packets.get(0);
-            while (packet2.hasNext()) { // false
-                logger.info(packet2.next().toString());
+        PacketListener.List<String> listCallback = new PacketListener.List<String>() {
+            @Override
+            public void nextPacket(String arg, PcapPktHdr pktHdr, List<Packet> packets) {
+                Packet packet2 = packets.get(0);
+                while (packet2.hasNext()) { // false
+                    logger.info(packet2.next().toString());
+                }
+                logger.info("==========================================");
             }
-            logger.info("==========================================");
         };
-        PacketListener.Map<String> mapCallback = (arg, pktHdr, packets) -> {
-            logger.info("==========================================");
-            packets.forEach((aClass, packet) -> {
-                logger.info(aClass + ": "+ packet.toString());
-            });
-            logger.info("-------------------------------------------");
-            Packet packet = packets.get(Ethernet.class);
-            packet.forEachRemaining(packet1 -> logger.info(packet1.toString()));
-            logger.info("-------------------------------------------");
-            Packet packet2 = packets.get(Ethernet.class);
-            while (packet2.hasNext()) { // false
-                logger.info(packet2.next().toString());
-            }
-            logger.info("==========================================");
-        };
-
         PacketListener.loop(pcap, -1, listCallback, "");
-        PacketListener.loop(pcap, -1, mapCallback, "");
     }
 
     @After

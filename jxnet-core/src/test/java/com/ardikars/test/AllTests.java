@@ -83,11 +83,14 @@ public class AllTests {
 		return pcap;
 	}
 
-	public static PcapHandler<String> handler = (user, h, bytes) -> {
-		System.out.println("User   : " + user);
-		System.out.println("Header : " + h);
-		System.out.println("Packet : " + bytes);
-		System.out.println("=======");
+	public static PcapHandler<String> handler = new PcapHandler<String>() {
+		@Override
+		public void nextPacket(String user, PcapPktHdr h, ByteBuffer bytes) {
+			System.out.println("User   : " + user);
+			System.out.println("Header : " + h);
+			System.out.println("Packet : " + bytes);
+			System.out.println("=======");
+		}
 	};
 
 	public static void nextPacket(Pcap pcap) {

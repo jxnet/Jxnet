@@ -65,7 +65,6 @@ public abstract class PacketProcessor<T, V extends Packet> implements Encoder<by
     @SuppressWarnings("unchecked")
     @Override
     public V decode(byte[] data) {
-        // added more bugs
         Class clazz = null;
         try {
             clazz = Class.forName(Ethernet.class.getName());

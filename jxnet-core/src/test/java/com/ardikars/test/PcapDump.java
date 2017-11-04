@@ -18,7 +18,7 @@ public class PcapDump {
 
 		Pcap handler = AllTests.openHandle(); // Exception already thrown
 
-		PcapDumper dumper = PcapDumpOpen(handler, "../sample-capture/dump.pcapng");
+		final PcapDumper dumper = PcapDumpOpen(handler, "../sample-capture/dump.pcapng");
 		if (dumper == null) {
 			System.err.println(PcapGetErr(handler));
 			error = true;
@@ -27,14 +27,17 @@ public class PcapDump {
 			System.out.println("OK");
 		}
 
-		PcapHandler<String> callback = (user, h, bytes) -> {
-			System.out.println("User   : " + user);
-			System.out.println("Header : " + h);
-			System.out.println("Packet : " + bytes);
-			System.out.println("Write bytes: " +PcapDumpFTell(dumper));
-			System.out.println("=======");
-			PcapDump(dumper, h, bytes);
-			PcapDumpFlush(dumper);
+		PcapHandler<String> callback = new PcapHandler<String>() {
+			@Override
+			public void nextPacket(String user, PcapPktHdr h, ByteBuffer bytes) {
+				System.out.println("User   : " + user);
+				System.out.println("Header : " + h);
+				System.out.println("Packet : " + bytes);
+				System.out.println("Write bytes: " + PcapDumpFTell(dumper));
+				System.out.println("=======");
+				PcapDump(dumper, h, bytes);
+				PcapDumpFlush(dumper);
+			}
 		};
 
 		if (Jxnet.PcapLoop(handler, AllTests.maxIteration, callback, null) != 0) {

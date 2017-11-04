@@ -1,6 +1,5 @@
-package com.ardikars.jxnet.logger.test;
+package com.ardikars.jxnet.util;
 
-import com.ardikars.jxnet.util.ArrayUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -90,8 +89,9 @@ public class ArrayUtilsTest {
     public void concatenateByte() {
         byte[] a = new byte[] {1, 2};
         byte[] b = new byte[] {3, 4};
-        byte[] result = new byte[] {1, 2, 3, 4};
-        if (!Arrays.equals(ArrayUtils.concatenate(a, b), result)) {
+        byte[] c = new byte[] {5, 6};
+        byte[] result = new byte[] {1, 2, 3, 4, 5, 6};
+        if (!Arrays.equals(ArrayUtils.concatenate(a, b, c), result)) {
             logger.error("concatenateByte");
         }
     }

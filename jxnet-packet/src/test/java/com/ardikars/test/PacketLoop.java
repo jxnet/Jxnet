@@ -2,7 +2,11 @@ package com.ardikars.test;
 
 import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
+import com.ardikars.jxnet.PcapPktHdr;
+import com.ardikars.jxnet.packet.Packet;
 import com.ardikars.jxnet.packet.PacketListener;
+
+import java.util.Map;
 
 public class PacketLoop {
 
@@ -15,8 +19,11 @@ public class PacketLoop {
             System.err.println("ERROR.");
             return;
         }
-        PacketListener.Map<String> callback = (arg, pktHdr, packets) -> {
-            System.out.println(packets);
+        PacketListener.Map<String> callback = new PacketListener.Map<String>() {
+            @Override
+            public void nextPacket(String arg, PcapPktHdr pktHdr, Map<Class, Packet> packets) {
+                System.out.println(packets);
+            }
         };
 
         PacketListener.loop(pcap, -1, callback, null);
