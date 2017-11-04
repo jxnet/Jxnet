@@ -17,6 +17,8 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.jxnet.util.Validate;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -40,6 +42,11 @@ class Core {
      */
     public static Pcap PcapOpenLive(PcapIf source, int snaplen, PromiscuousMode promisc,
                                     int timeout, StringBuilder errbuf) {
+        Validate.nullPointer(source);
+        Validate.between(0, 65536, snaplen);
+        Validate.nullPointer(promisc);
+        Validate.illegalArgument(timeout > 0);
+        Validate.nullPointer(errbuf);
         return Jxnet.PcapOpenLive(source.getName(), snaplen, promisc.getValue(), timeout, errbuf);
     }
 
@@ -57,6 +64,8 @@ class Core {
      * appropriate error message.
      */
     public static Pcap PcapCreate(PcapIf source, StringBuilder errbuf) {
+        Validate.nullPointer(source);
+        Validate.nullPointer(errbuf);
         return Jxnet.PcapCreate(source.getName(), errbuf);
     }
 
@@ -68,6 +77,8 @@ class Core {
      * @return 0 on success.
      */
     public static int PcapSetPromisc(Pcap pcap, PromiscuousMode promiscuousMode) {
+        Validate.nullPointer(pcap);
+        Validate.nullPointer(promiscuousMode);
         return Jxnet.PcapSetPromisc(pcap, promiscuousMode.getValue());
     }
 
@@ -79,6 +90,8 @@ class Core {
      * @return 0 on success.
      */
     public static int PcapSetImmediateMode(Pcap pcap, ImmediateMode immediateMode) {
+        Validate.nullPointer(pcap);
+        Validate.nullPointer(immediateMode);
         return Jxnet.PcapSetImmediateMode(pcap, immediateMode.getValue());
     }
 
@@ -95,6 +108,11 @@ class Core {
      */
     public static int PcapCompile(Pcap pcap, BpfProgram fp, String filter,
                                   BpfProgram.BpfCompileMode optimize, Inet4Address netmask) {
+        Validate.nullPointer(pcap);
+        Validate.nullPointer(fp);
+        filter = Validate.nullPointer(filter, "");
+        Validate.nullPointer(optimize);
+        netmask = Validate.nullPointer(netmask, Inet4Address.valueOf("255.255.255.0"));
         return Jxnet.PcapCompile(pcap, fp, filter, optimize.getValue(), netmask.toInt());
     }
 
@@ -112,6 +130,12 @@ class Core {
      */
     public static int PcapCompileNoPcap(int snaplen_arg, DataLinkType linkType, BpfProgram program,
                                   String buf, BpfProgram.BpfCompileMode optimize, Inet4Address netmask) {
+        Validate.between(0, 65536, snaplen_arg);
+        Validate.nullPointer(linkType);
+        Validate.nullPointer(program);
+        buf = Validate.nullPointer(buf, "");
+        Validate.nullPointer(optimize);
+        netmask = Validate.nullPointer(netmask, Inet4Address.valueOf("255.255.255.0"));
         return Jxnet.PcapCompileNoPcap(snaplen_arg, linkType.getValue(), program, buf,
                 optimize.getValue(), netmask.toInt());
     }
@@ -122,6 +146,7 @@ class Core {
      * @return link layer of an adapter.
      */
     public static DataLinkType PcapDatalink(Pcap pcap) {
+        Validate.nullPointer(pcap);
         return DataLinkType.valueOf((short) Jxnet.PcapDataLink(pcap));
     }
 
@@ -133,6 +158,8 @@ class Core {
      * @return -1 on error, 0 otherwise.
      */
     public static int PcapSetDatalink(Pcap pcap, DataLinkType linkType) {
+        Validate.nullPointer(pcap);
+        Validate.nullPointer(linkType);
         return Jxnet.PcapSetDataLink(pcap, linkType.getValue());
     }
 
@@ -143,6 +170,8 @@ class Core {
      * @return pcap object.
      */
     public static Pcap PcapOpenDead(DataLinkType linkType, int snaplen) {
+        Validate.nullPointer(linkType);
+        Validate.between(0, 65536, snaplen);
         return Jxnet.PcapOpenDead(linkType.getValue(), snaplen);
     }
 
@@ -151,6 +180,7 @@ class Core {
      * @param pcapIf PcapIf object.
      */
     public static void PcapFreeAllDevs(List<PcapIf> pcapIf) {
+        Validate.nullPointer(pcapIf);
         if (!pcapIf.isEmpty()) {
             pcapIf.clear();
         }
@@ -162,7 +192,7 @@ class Core {
      * @return PcapIf object.
      */
     public static PcapIf LookupNetworkInterface(StringBuilder errbuf) {
-        if (errbuf == null) throw new NullPointerException();
+        Validate.nullPointer(errbuf);
         List<PcapIf> pcapIfs = new ArrayList<>();
         if (Jxnet.PcapFindAllDevs(pcapIfs, errbuf) != Jxnet.OK) {
             return null;
@@ -198,7 +228,7 @@ class Core {
      * @return PcapIf.
      */
     public static PcapIf SelectNetowrkInterface(StringBuilder errbuf) {
-        if (errbuf == null) throw new NullPointerException();
+        Validate.nullPointer(errbuf);
         List<PcapIf> pcapIfs = new ArrayList<>();
         if (Jxnet.PcapFindAllDevs(pcapIfs, errbuf) != Jxnet.OK) {
             return null;

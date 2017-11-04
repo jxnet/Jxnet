@@ -19,7 +19,7 @@ import java.util.List;
 		PcapLookupDev.class, PcapLookupNet.class, Generic.class, Error.class,
 		PcapNextEx.class, PcapOpenDead.class, PcapOpenLive.class,
 		PcapOpenOffline.class, PcapBreakLoop.class, Blocking.class,
-		PcapDatalink.class, PcapDispatch.class, Preconditions.class,
+		PcapDatalink.class, PcapDispatch.class, PreconditionsTest.class,
 		MacAddr.class, PcapDump.class, AddJavaLibraryPath.class })
 public class AllTests {
 

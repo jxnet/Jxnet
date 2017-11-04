@@ -13,57 +13,72 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ *//*
+
 
 package com.ardikars.jxnet.util;
 
+*/
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
- */
+ *//*
+
 public final class Preconditions {
 	
-	/**
+	*/
+/**
      * Check argument.
      * @param expression false will show error message.
-     */
+     *//*
+
 	public static native void CheckArgument(boolean expression);
 	
-    /**
+    */
+/**
      * Check argument.
      * @param expression false will show error message.
      * @param errorMessage error message.
-     */
+     *//*
+
     public static native void CheckArgument(boolean expression, String errorMessage);
 
-    /**
+    */
+/**
      * Check state
      * @param expression false will show error message.
-     */
+     *//*
+
     public static native void CheckState(boolean expression);
     
-    /**
+    */
+/**
      * Check state
      * @param expression false will show error message.
      * @param errorMessage error message.
-     */
+     *//*
+
     public static native void CheckState(boolean expression, String errorMessage);
 
-	/**
+	*/
+/**
      * Check not null.
      * @param reference false will show error message.
      * @param <T> object type.
      * @return same object.
-     */
+     *//*
+
     public static native <T> T CheckNotNull(T reference);
 
-    /**
+    */
+/**
      * Check not null.
      * @param reference false will show error message.
      * @param errorMessage error message.
      * @param <T> object type.
      * @return same object.
-     */
+     *//*
+
     public static native <T> T CheckNotNull(T reference, String errorMessage);
 
     static {
@@ -75,3 +90,4 @@ public final class Preconditions {
     }
 
 }
+*/

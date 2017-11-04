@@ -32,17 +32,9 @@ public abstract class InetAddress {
 	 */
 	public static InetAddress valueOf(String ipString) {
 		if (ipString.contains(":")) {
-			try {
-				return Inet6Address.valueOf(ipString);
-			} catch (Exception ex) {
-				throw new IllegalArgumentException("");
-			}
+			return Inet6Address.valueOf(ipString);
 		} else {
-			try {
-				return Inet4Address.valueOf(ipString);
-			} catch (Exception ex) {
-				throw new IllegalArgumentException("");
-			}
+			return Inet4Address.valueOf(ipString);
 		}
 	}
 
@@ -53,8 +45,9 @@ public abstract class InetAddress {
 	 */
 	public static boolean isValidAddress(String ipString) {
 		try {
-			return (valueOf(ipString) == null) ? false : true;
-		} catch (Exception ex) {
+			valueOf(ipString);
+			return true;
+		} catch (Exception e) {
 			return false;
 		}
 	}

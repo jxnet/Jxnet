@@ -17,7 +17,7 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.util.Preconditions;
+import com.ardikars.jxnet.util.Validate;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -47,6 +47,8 @@ public final class Inet6Address extends InetAddress {
 	}
 
 	private Inet6Address(byte[] address) {
+		Validate.nullPointer(address);
+		Validate.illegalArgument(address.length == IPV6_ADDRESS_LENGTH);
 		this.address = address;
 	}
 
@@ -56,8 +58,6 @@ public final class Inet6Address extends InetAddress {
 	 * @return Inet6Address object.
 	 */
 	public static Inet6Address valueOf(final byte[] address) {
-		Preconditions.CheckNotNull(address);
-		Preconditions.CheckArgument(address.length == IPV6_ADDRESS_LENGTH);
 		return new Inet6Address(address);
 	}
 
@@ -68,19 +68,15 @@ public final class Inet6Address extends InetAddress {
 	 */
 	public static Inet6Address valueOf(String inet6Address) {
 
-		Preconditions.CheckNotNull(inet6Address);
+		inet6Address = Validate.nullPointer(inet6Address, "::");
 
 		final int IPV6_MAX_HEX_GROUPS = 8;
 		final int IPV6_MAX_HEX_DIGITS_PER_GROUP = 4;
 
 		boolean containsCompressedZeroes = inet6Address.contains("::");
-		if (containsCompressedZeroes && (inet6Address.indexOf("::") != inet6Address.lastIndexOf("::"))) {
-			throw new IllegalArgumentException("");
-		}
-		if ((inet6Address.startsWith(":") && !inet6Address.startsWith("::"))
-				|| (inet6Address.endsWith(":") && !inet6Address.endsWith("::"))) {
-			throw new IllegalArgumentException("");
-		}
+		Validate.illegalArgument(!(containsCompressedZeroes && (inet6Address.indexOf("::") != inet6Address.lastIndexOf("::"))));
+		Validate.illegalArgument(!((inet6Address.startsWith(":") && !inet6Address.startsWith("::"))
+				|| (inet6Address.endsWith(":") && !inet6Address.endsWith("::"))));
 		String[] parts = inet6Address.split(":");
 		if (containsCompressedZeroes) {
 			List<String> partsAsList = new ArrayList<String>(Arrays.asList(parts));
@@ -91,54 +87,37 @@ public final class Inet6Address extends InetAddress {
 			}
 			parts = partsAsList.toArray(new String[partsAsList.size()]);
 		}
-		if (parts.length > IPV6_MAX_HEX_GROUPS && parts.length < 3) {
-			throw new IllegalArgumentException("");
-		}
+		Validate.illegalArgument(!(parts.length > IPV6_MAX_HEX_GROUPS && parts.length < 3));
 		int validOctets = 0;
 		int emptyOctets = 0;
 		for (int index = 0; index < parts.length; index++) {
 			String octet = parts[index];
 			if (octet.length() == 0) {
 				emptyOctets++;
-				if (emptyOctets > 1) {
-					throw new IllegalArgumentException("");
-				}
+				Validate.illegalArgument(!(emptyOctets > 1));
 			} else {
 				emptyOctets = 0;
 				if (index == parts.length - 1 && octet.contains(".")) {
 					byte[] quad;
-					try {
-						quad = Inet4Address.valueOf(octet).toBytes();
-						String initialPart = inet6Address.substring(0, inet6Address.lastIndexOf(":") + 1);
-						String penultimate = Integer.toHexString(((quad[0] & 0xff) << 8) | (quad[1] & 0xff));
-						String ultimate = Integer.toHexString(((quad[2] & 0xff) << 8) | (quad[3] & 0xff));
-						inet6Address = initialPart + penultimate + ultimate;
-					} catch (Exception ex) {
-						throw new IllegalArgumentException("");
-					}
+					quad = Inet4Address.valueOf(octet).toBytes();
+					String initialPart = inet6Address.substring(0, inet6Address.lastIndexOf(":") + 1);
+					String penultimate = Integer.toHexString(((quad[0] & 0xff) << 8) | (quad[1] & 0xff));
+					String ultimate = Integer.toHexString(((quad[2] & 0xff) << 8) | (quad[3] & 0xff));
+					inet6Address = initialPart + penultimate + ultimate;
 					validOctets += 2;
 					continue;
 				}
-				if (octet.length() > IPV6_MAX_HEX_DIGITS_PER_GROUP) {
-					throw new IllegalArgumentException("");
-				}
+				Validate.illegalArgument(!(octet.length() > IPV6_MAX_HEX_DIGITS_PER_GROUP));
 			}
 			validOctets++;
 		}
-		if (validOctets > IPV6_MAX_HEX_GROUPS || (validOctets < IPV6_MAX_HEX_GROUPS && !containsCompressedZeroes)) {
-			throw new IllegalArgumentException("");
-		}
-
+		Validate.illegalArgument(!(validOctets > IPV6_MAX_HEX_GROUPS || (validOctets < IPV6_MAX_HEX_GROUPS && !containsCompressedZeroes)));
 		parts = inet6Address.split(":", 8 + 2);
-		if (parts.length < 3 || parts.length > 8 + 1) {
-			throw new IllegalArgumentException("");
-		}
+		Validate.illegalArgument(!(parts.length < 3 || parts.length > 8 + 1));
 		int skipIndex = -1;
 		for (int i = 1; i < parts.length - 1; i++) {
 			if (parts[i].length() == 0) {
-				if (skipIndex >= 0) {
-					throw new IllegalArgumentException("");
-				}
+				Validate.illegalArgument(!(skipIndex >= 0));
 				skipIndex = i;
 			}
 		}
@@ -147,20 +126,14 @@ public final class Inet6Address extends InetAddress {
 		if (skipIndex >= 0) {
 			partsHi = skipIndex;
 			partsLo = parts.length - skipIndex - 1;
-			if (parts[0].length() == 0 && --partsHi != 0) {
-				return null;
-			}
-			if (parts[parts.length - 1].length() == 0 && --partsLo != 0) {
-				return null;
-			}
+			Validate.illegalArgument(!(parts[0].length() == 0 && --partsHi != 0));
+			Validate.illegalArgument(!(parts[parts.length - 1].length() == 0 && --partsLo != 0));
 		} else {
 			partsHi = parts.length;
 			partsLo = 0;
 		}
 		int partsSkipped = 8 - (partsHi + partsLo);
-		if (!(skipIndex >= 0 ? partsSkipped >= 1 : partsSkipped == 0)) {
-			return null;
-		}
+		Validate.illegalArgument((skipIndex >= 0 ? partsSkipped >= 1 : partsSkipped == 0));
 		ByteBuffer rawBytes = ByteBuffer.allocate(2 * 8);
 		try {
 			for (int i = 0; i < partsHi; i++) {
@@ -201,6 +174,7 @@ public final class Inet6Address extends InetAddress {
 	}
 
 	public void update(final Inet6Address inet6address) {
+		Validate.nullPointer(inet6address);
 		this.address = inet6address.toBytes();
 	}
 

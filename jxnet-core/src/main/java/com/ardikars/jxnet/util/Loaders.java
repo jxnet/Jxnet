@@ -43,7 +43,7 @@ public class Loaders {
 	 * @throws Exception exception.
 	 */
 	public static void loadFromAbsolutePath(String path) throws Exception {
-		Preconditions.CheckNotNull(path);
+		Validate.nullPointer(path);
 		try {
 			System.load(path);
 			Field isLoadedField = Jxnet.class.getDeclaredField("isLoaded");
@@ -63,7 +63,7 @@ public class Loaders {
 	public static void loadFromInnerJar(String[] path) throws
 			IllegalArgumentException, IOException {
 		errbuf.setLength(0);
-		Preconditions.CheckNotNull(path);
+		Validate.nullPointer(path);
 		for (String lib : path) {
 			loadLibrary(lib);
 		}
