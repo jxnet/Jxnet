@@ -24,7 +24,6 @@ task generateJNIHeaders(type: Exec, dependsOn: classes) {
 	def classpath = sourceSets.main.output.classesDir
 	commandLine 'javah', '-jni', '-d', "${rootDir}/jni/include/jxnet", '-classpath', classpath,
 			'com.ardikars.jxnet.Jxnet',
-			'com.ardikars.jxnet.util.Preconditions',
 			'com.ardikars.jxnet.BpfProgram',
 			'com.ardikars.jxnet.MacAddress'
 }

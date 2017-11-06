@@ -43,6 +43,10 @@ public final class PcapPktHdr {
 		this.tv_usec = tv_usec;
 	}
 
+	public static PcapPktHdr newInstance(int caplen, int len, int tv_sec, long tv_usec) {
+		return new PcapPktHdr(caplen, len, tv_sec, tv_usec);
+	}
+
 	/**
 	 * Returning capture length.
 	 * @return capture length.

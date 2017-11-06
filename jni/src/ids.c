@@ -262,6 +262,7 @@ jfieldID PcapPktHdrCaplenFID = NULL;
 jfieldID PcapPktHdrLenFID = NULL;
 jfieldID PcapPktHdrTvSecFID = NULL;
 jfieldID PcapPktHdrTvUsecFID = NULL;
+jmethodID PcapPktHdrNewInstance = NULL;
 
 void SetPcapPktHdrIDs(JNIEnv *env) {
 
@@ -299,6 +300,14 @@ void SetPcapPktHdrIDs(JNIEnv *env) {
 		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field PcapPktHdr.tv_usec:long");
 		return;
 	}
+
+	PcapPktHdrNewInstance = (*env)->GetStaticMethodID(env, PcapPktHdrClass, "newInstance", "(IIIJ)Lcom/ardikars/jxnet/PcapPktHdr;");
+
+	if(PcapPktHdrNewInstance == NULL) {
+	    ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method PcapPktHdr.newInstance(int,int,int,long)");
+	    return;
+	}
+
 }
 
 jclass ByteBufferClass = NULL;

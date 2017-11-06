@@ -69,6 +69,7 @@ extern jfieldID PcapPktHdrCaplenFID;
 extern jfieldID PcapPktHdrLenFID;
 extern jfieldID PcapPktHdrTvSecFID;
 extern jfieldID PcapPktHdrTvUsecFID;
+extern jmethodID PcapPktHdrNewInstance;
 
 void SetPcapPktHdrIDs(JNIEnv *env);
 
