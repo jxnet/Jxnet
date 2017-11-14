@@ -73,66 +73,104 @@ public final class Loaders {
 	 * @throws IOException IOException.
 	 * @throws IllegalArgumentException IllegalArgumentException.
 	 */
-	public static void loadLibrary() throws
-			UnsatisfiedLinkError, IOException, IllegalArgumentException {
+	public static void loadSharedLibrary() throws UnsatisfiedLinkError, NotSupportedPlatformException {
 		errbuf.setLength(0);
 		if (Platforms.isWindows()) {
 			addJavaLibarayPath("C:\\Windows\\System32\\Npcap");
 		}
-		if (load()) {
-			return;
-		}
-		switch (Platforms.getName()) {
-			case LINUX:
-				if (Platforms.isArm()) {
-					if (Platforms.getVersion().equals("v7") || Platforms.getVersion().equals("v6")) {
-						loadLibrary("/shared/linux/lib/arm32/libjxnet.so");
-					}
-				} else {
-					if (Platforms.is64Bit()) {
-						loadLibrary("/shared/linux/lib/x64/libjxnet.so");
-					} else {
-						loadLibrary("/shared/linux/lib/x86/libjxnet.so");
-					}
-				}
-				break;
-			case WINDOWS:
-				if (Platforms.is64Bit()) {
-					loadLibrary("/shared/windows/lib/x64/jxnet.dll");
-				} else {
-					loadLibrary("/shared/windows/lib/x86/jxnet.dll");
-				}
-				break;
-			case ANDROID:
-				System.loadLibrary("jxnet");
-				break;
-			case FREEBSD:
-				if (Platforms.is64Bit()) {
-					loadLibrary("/shared/freebsd/lib/x64/libjxnet.so");
-				} else {
-					loadLibrary("/shared/freebsd/lib/x86/libjxnet.so");
-				}
-				break;
-			default:
-				throw new NotSupportedPlatformException();
 
-		}
-	}
-	
-	private static boolean load() {
-		boolean success = false;
 		try {
 			System.loadLibrary("jxnet");
-			success = true;
+			return;
 		} catch (UnsatisfiedLinkError e) {
-			errbuf.append(e.toString()+"\n");
-			success = false;
+			switch (Platforms.getName()) {
+				case LINUX:
+					if (Platforms.isArm()) {
+						if (Platforms.getVersion().equals("v7") || Platforms.getVersion().equals("v6")) {
+							loadLibrary("/shared/linux/lib/arm32/libjxnet.so");
+						}
+					} else {
+						if (Platforms.is64Bit()) {
+							loadLibrary("/shared/linux/lib/x64/libjxnet.so");
+						} else {
+							loadLibrary("/shared/linux/lib/x86/libjxnet.so");
+						}
+					}
+					break;
+				case WINDOWS:
+					if (Platforms.is64Bit()) {
+						loadLibrary("/shared/windows/lib/x64/jxnet.dll");
+					} else {
+						loadLibrary("/shared/windows/lib/x86/jxnet.dll");
+					}
+					break;
+				case ANDROID:
+					System.loadLibrary("jxnet");
+					break;
+				case FREEBSD:
+					if (Platforms.is64Bit()) {
+						loadLibrary("/shared/freebsd/lib/x64/libjxnet.so");
+					} else {
+						loadLibrary("/shared/freebsd/lib/x86/libjxnet.so");
+					}
+					break;
+				default:
+					throw new NotSupportedPlatformException();
+
+			}
 		}
-		return success;
 	}
-	
-	private static void loadLibrary(String path) throws IllegalArgumentException, IOException {
-		//CheckNotNull(path);
+
+	public static void loadStaticLibrary() throws UnsatisfiedLinkError, NotSupportedPlatformException {
+		errbuf.setLength(0);
+		if (Platforms.isWindows()) {
+			addJavaLibarayPath("C:\\Windows\\System32\\Npcap");
+		}
+
+		try {
+			System.loadLibrary("jxnet");
+			return;
+		} catch (UnsatisfiedLinkError e) {
+			switch (Platforms.getName()) {
+				case LINUX:
+					if (Platforms.isArm()) {
+						if (Platforms.getVersion().equals("v7") || Platforms.getVersion().equals("v6")) {
+							loadLibrary("/static/linux/lib/arm32/libjxnet.so");
+						}
+					} else {
+						if (Platforms.is64Bit()) {
+							loadLibrary("/static/linux/lib/x64/libjxnet.so");
+						} else {
+							loadLibrary("/static/linux/lib/x86/libjxnet.so");
+						}
+					}
+					break;
+				case WINDOWS:
+					if (Platforms.is64Bit()) {
+						loadLibrary("/static/windows/lib/x64/jxnet.dll");
+					} else {
+						loadLibrary("/static/windows/lib/x86/jxnet.dll");
+					}
+					break;
+				case ANDROID:
+					System.loadLibrary("jxnet");
+					break;
+				case FREEBSD:
+					if (Platforms.is64Bit()) {
+						loadLibrary("/static/freebsd/lib/x64/libjxnet.so");
+					} else {
+						loadLibrary("/static/freebsd/lib/x86/libjxnet.so");
+					}
+					break;
+				default:
+					throw new NotSupportedPlatformException();
+
+			}
+		}
+	}
+
+	private static void loadLibrary(String path) throws UnsatisfiedLinkError {
+		Validate.nullPointer(path);
 		if (!path.startsWith("/")) {
 			throw new IllegalArgumentException("The path has to be absolute (start with '/').");
 		}
@@ -140,21 +178,38 @@ public final class Loaders {
 		if (parts != null && parts.length > 1) {
 			parts = Pattern.compile("\\.").split(parts[parts.length - 1]);
 		}
-		File temp = File.createTempFile(parts[0], "." + parts[1]);
+		File temp = null;
+		try {
+			temp = File.createTempFile(parts[0], "." + parts[1]);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		temp.deleteOnExit();
 		byte[] buffer = new byte[1024];
 		int readBytes;
 		InputStream is = Loaders.class.getResourceAsStream(path);
 		if (is == null) {
 			errbuf.append("Error: " + path + " not found.\n");
-			throw new FileNotFoundException(errbuf.toString());
 		}
-		OutputStream os = new FileOutputStream(temp);
-		while ((readBytes = is.read(buffer)) != -1) {
-			os.write(buffer, 0, readBytes);
+		OutputStream os = null;
+		try {
+			os = new FileOutputStream(temp);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		}
-		is.close();
-		os.close();
+		try {
+			while ((readBytes = is.read(buffer)) != -1) {
+                os.write(buffer, 0, readBytes);
+            }
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			is.close();
+			os.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		System.load(temp.getAbsolutePath());
 	}
 
