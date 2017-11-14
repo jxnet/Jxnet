@@ -86,21 +86,21 @@ public final class Loaders {
 			case LINUX:
 				if (Platforms.isArm()) {
 					if (Platforms.getVersion().equals("v7") || Platforms.getVersion().equals("v6")) {
-						loadLibrary("/system/linux/lib/arm32/libjxnet.so");
+						loadLibrary("/shared/linux/lib/arm32/libjxnet.so");
 					}
 				} else {
 					if (Platforms.is64Bit()) {
-						loadLibrary("/system/linux/lib/x64/libjxnet.so");
+						loadLibrary("/shared/linux/lib/x64/libjxnet.so");
 					} else {
-						loadLibrary("/system/linux/lib/x86/libjxnet.so");
+						loadLibrary("/shared/linux/lib/x86/libjxnet.so");
 					}
 				}
 				break;
 			case WINDOWS:
 				if (Platforms.is64Bit()) {
-					loadLibrary("/system/windows/lib/x64/jxnet.dll");
+					loadLibrary("/shared/windows/lib/x64/jxnet.dll");
 				} else {
-					loadLibrary("/system/windows/lib/x86/jxnet.dll");
+					loadLibrary("/shared/windows/lib/x86/jxnet.dll");
 				}
 				break;
 			case ANDROID:
@@ -108,9 +108,9 @@ public final class Loaders {
 				break;
 			case FREEBSD:
 				if (Platforms.is64Bit()) {
-					loadLibrary("/system/freebsd/lib/x64/libjxnet.so");
+					loadLibrary("/shared/freebsd/lib/x64/libjxnet.so");
 				} else {
-					loadLibrary("/system/freebsd/lib/x86/libjxnet.so");
+					loadLibrary("/shared/freebsd/lib/x86/libjxnet.so");
 				}
 				break;
 			default:

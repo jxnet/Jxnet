@@ -40,6 +40,14 @@ a.out
 /jxnet-core/build
 /jxnet-core/target
 /jxnet-core/out
+/jxnet-static/.gradle
+/jxnet-static/build
+/jxnet-static/target
+/jxnet-static/out
+/jxnet-shared/.gradle
+/jxnet-shared/build
+/jxnet-shared/target
+/jxnet-shared/out
 /jxnet-example/.gradle
 /jxnet-example/build/
 /jxnet-example/target
