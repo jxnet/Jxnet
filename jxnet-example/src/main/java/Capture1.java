@@ -1,5 +1,3 @@
-package capture;
-
 import static com.ardikars.jxnet.Jxnet.*;
 
 import com.ardikars.jxnet.*;

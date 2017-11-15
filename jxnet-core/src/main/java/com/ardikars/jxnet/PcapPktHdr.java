@@ -28,7 +28,10 @@ public final class PcapPktHdr {
 	
 	private int tv_sec;
 	private long tv_usec;
-	
+
+	/**
+	 * Create PcapPktHdr instance.
+	 */
 	public PcapPktHdr() {
 		this.caplen = 0;
 		this.len = 0;
@@ -36,11 +39,30 @@ public final class PcapPktHdr {
 		this.tv_usec = 0;
 	}
 
+	/**
+	 * Create PcapPktHdr instance.
+	 * @param caplen capture length.
+	 * @param len length.
+	 * @param tv_sec tv_sec.
+	 * @param tv_usec tv_usec.
+	 */
 	public PcapPktHdr(int caplen, int len, int tv_sec, long tv_usec) {
 		this.caplen = caplen;
 		this.len = len;
 		this.tv_sec = tv_sec;
 		this.tv_usec = tv_usec;
+	}
+
+	/**
+	 * Create new PcapPktHdr instance.
+	 * @param caplen capture length.
+	 * @param len length.
+	 * @param tv_sec tv_sec.
+	 * @param tv_usec tv_usec.
+	 * @return PcapPktHdr.
+	 */
+	public static PcapPktHdr newInstance(int caplen, int len, int tv_sec, long tv_usec) {
+		return new PcapPktHdr(caplen, len, tv_sec, tv_usec);
 	}
 
 	/**

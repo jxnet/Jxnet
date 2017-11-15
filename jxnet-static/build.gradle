@@ -1,0 +1,13 @@
+
+/**
+ * Copyright (C) 2017  Ardika Rommy Sanjaya
+ */
+
+sourceSets {
+	main {
+		resources {
+			srcDir 'src/main/resources'
+			include 'static/**/*'
+		}
+	}
+}

@@ -9,9 +9,7 @@ sourceSets {
 	main {
 		resources {
 			srcDir 'src/main/resources'
-			include 'lib/**/*'
-			include 'bin/**/*'
-			include 'system/**/*'
+			include '**/*'
 		}
 	}
 }
@@ -24,13 +22,6 @@ task generateJNIHeaders(type: Exec, dependsOn: classes) {
 	def classpath = sourceSets.main.output.classesDir
 	commandLine 'javah', '-jni', '-d', "${rootDir}/jni/include/jxnet", '-classpath', classpath,
 			'com.ardikars.jxnet.Jxnet',
-			'com.ardikars.jxnet.util.Preconditions',
 			'com.ardikars.jxnet.BpfProgram',
 			'com.ardikars.jxnet.MacAddress'
 }
-
-clean {
-	file("${rootDir}/jxnet-core/obj").deleteDir()
-	file("${rootDir}/jxnet-core/out").deleteDir()
-}
-

@@ -200,11 +200,16 @@ struct bpf_program *GetBpfProgram(JNIEnv *env, jobject jbpf_program) {
 void pcap_callback(u_char *user, const struct pcap_pkthdr *pkt_header, const u_char *pkt_data) {
 	pcap_user_data_t *user_data = (pcap_user_data_t *) user;
 	JNIEnv *env = user_data->env;
-	jobject pkt_hdr = NewObject(env, PcapPktHdrClass, "<init>", "()V");
+	/*jobject pkt_hdr = NewObject(env, PcapPktHdrClass, "<init>", "()V");
 	(*env)->SetIntField(env, pkt_hdr, PcapPktHdrCaplenFID, (jint) pkt_header->caplen);
 	(*env)->SetIntField(env, pkt_hdr, PcapPktHdrLenFID, (jint) pkt_header->len);
 	(*env)->SetIntField(env, pkt_hdr, PcapPktHdrTvSecFID, (jint) pkt_header->ts.tv_sec);
-	(*env)->SetLongField(env, pkt_hdr, PcapPktHdrTvUsecFID, (jlong) pkt_header->ts.tv_usec);
+	(*env)->SetLongField(env, pkt_hdr, PcapPktHdrTvUsecFID, (jlong) pkt_header->ts.tv_usec);*/
+	jobject pkt_hdr = (*env)->CallStaticObjectMethod(env, PcapPktHdrClass, PcapPktHdrNewInstance,
+            (jint) pkt_header->caplen,
+            (jint) pkt_header->len,
+            (jint) pkt_header->ts.tv_sec,
+            (jlong) pkt_header->ts.tv_usec);
 	(*env)->CallNonvirtualVoidMethod(env,
     			user_data->callback,
 			user_data->PcapHandlerClass,

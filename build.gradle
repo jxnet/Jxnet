@@ -137,6 +137,11 @@ allprojects {
 		}
 	}
 
+	clean {
+		file("${rootDir}/${project.name}/obj").deleteDir()
+		file("${rootDir}/${project.name}/out").deleteDir()
+	}
+
 }
 
 subprojects.each {

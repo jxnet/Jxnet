@@ -29,6 +29,10 @@ public final class PcapDumper {
 		//
 	}
 
+	/**
+	 * Get pointer address
+	 * @return pointer address.
+	 */
 	public synchronized long getAddress() {
 		return this.address;
 	}

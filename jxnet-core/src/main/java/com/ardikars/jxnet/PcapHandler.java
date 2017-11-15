@@ -32,6 +32,6 @@ public interface PcapHandler<T> {
 	 * @param h PcapPktHdr.
 	 * @param bytes packet buffer.
 	 */
-	void nextPacket(T user, PcapPktHdr h, ByteBuffer bytes);
+	void nextPacket(T user, PcapPktHdr h, ByteBuffer bytes); // Asyncronous
 	
 }

@@ -497,11 +497,16 @@ public final class Jxnet extends Core {
 	static {
 		if (!isLoaded) {
 			try {
-				Loaders.loadLibrary();
+				Loaders.loadSharedLibrary();
 				isLoaded = true;
-			} catch (Exception e) {
-				System.err.println(e.getMessage());
-				isLoaded = false;
+			} catch (UnsatisfiedLinkError e) {
+				try {
+					Loaders.loadStaticLibrary();
+				} catch (UnsatisfiedLinkError err) {
+					System.err.println(err.getMessage());
+					isLoaded = false;
+				}
+
 			}
 		}
 	}
