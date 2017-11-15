@@ -35,6 +35,10 @@ public final class Pcap {
 
 	}
 
+	/**
+	 * Get pointer address.
+	 * @return pointer address.
+	 */
 	public synchronized long getAddress() {
 		return this.address;
 	}

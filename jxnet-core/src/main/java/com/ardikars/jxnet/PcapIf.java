@@ -27,9 +27,9 @@ import java.util.List;
  */
 public final class PcapIf {
 	
-	@SuppressWarnings("unused")
-	private volatile PcapIf next;
-	
+	/*@SuppressWarnings("unused")
+	private volatile PcapIf next;*/
+
 	private volatile String name;
 	
 	private volatile String description;

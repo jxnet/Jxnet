@@ -70,7 +70,6 @@ public final class Loaders {
 	/**
 	 * Load library.
 	 * @throws UnsatisfiedLinkError UnsatisfiedLinkError.
-	 * @throws IOException IOException.
 	 * @throws IllegalArgumentException IllegalArgumentException.
 	 */
 	public static void loadSharedLibrary() throws UnsatisfiedLinkError, NotSupportedPlatformException {
