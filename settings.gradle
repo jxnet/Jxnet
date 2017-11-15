@@ -4,4 +4,4 @@ include 'jxnet-core'
 include 'jxnet-static'
 include 'jxnet-shared'
 include 'jxnet-android'
-
+include 'jxnet-example'
