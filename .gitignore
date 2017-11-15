@@ -48,6 +48,10 @@ a.out
 /jxnet-shared/build
 /jxnet-shared/target
 /jxnet-shared/out
+/jxnet-android/.gradle
+/jxnet-android/build/
+/jxnet-android/target
+/jxnet-android/out
 /jxnet-example/.gradle
 /jxnet-example/build/
 /jxnet-example/target
