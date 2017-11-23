@@ -176,6 +176,7 @@ codeCoverageReport.dependsOn {
 }
 
 dependencies {
+	compile project(':jxnet-context')
 	compile project(':jxnet-core')
 }
 

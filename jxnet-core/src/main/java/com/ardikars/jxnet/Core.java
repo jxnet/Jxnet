@@ -229,7 +229,7 @@ class Core {
      */
     public static PcapIf SelectNetowrkInterface(StringBuilder errbuf) {
         Validate.nullPointer(errbuf);
-        List<PcapIf> pcapIfs = new ArrayList<>();
+        List<PcapIf> pcapIfs = new ArrayList<PcapIf>();
         if (Jxnet.PcapFindAllDevs(pcapIfs, errbuf) != Jxnet.OK) {
             return null;
         }

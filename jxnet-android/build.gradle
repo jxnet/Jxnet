@@ -7,7 +7,11 @@ sourceSets {
     main {
         resources {
             srcDir 'src/main/resources'
-            include 'shared/**/*'
+            include 'system/**/*'
         }
     }
+}
+
+dependencies {
+    compile project(":jxnet-context")
 }

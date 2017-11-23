@@ -17,8 +17,6 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.util.Loaders;
-
 import java.nio.ByteBuffer;
 import java.util.List;
 
@@ -30,12 +28,7 @@ public final class Jxnet extends Core {
 
 	public static final int OK = 0;
 	
-	private static boolean isLoaded = false;
-
-	private static native void InitIDs(int hashCode);
-
 	private Jxnet() {
-		//prevent to create jxnet instance
 	}
 
 	/**
@@ -493,22 +486,5 @@ public final class Jxnet extends Core {
 	 * @return the precision of the time stamp returned in packet captures on the pcap descriptor.
 	 */
 	// public static native int PcapGetTStampPrecision(Pcap pcap);
-
-	static {
-		if (!isLoaded) {
-			try {
-				Loaders.loadSharedLibrary();
-				isLoaded = true;
-			} catch (UnsatisfiedLinkError e) {
-				try {
-					Loaders.loadStaticLibrary();
-				} catch (UnsatisfiedLinkError err) {
-					System.err.println(err.getMessage());
-					isLoaded = false;
-				}
-
-			}
-		}
-	}
 
 }
