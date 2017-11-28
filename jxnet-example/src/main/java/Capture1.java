@@ -12,6 +12,18 @@ import java.nio.ByteBuffer;
 public class Capture1 {
 
     public static void main(String[] args) {
+
+        ApplicationInitializer initializer = new ApplicationInitializer() {
+            @Override
+            public void initialize(Application.Context context) {
+                context.addLibrary(new DynamicLibrary());
+                context.addLibrary(new StaticLibrary());
+                Application.bootstrap("Capture1", "0.1", context);
+            }
+        };
+
+        initializer.initialize(new ApplicationContext());
+
         StringBuilder errbuf = new StringBuilder();
         PcapIf source = SelectNetowrkInterface(errbuf);
         if (source == null) {

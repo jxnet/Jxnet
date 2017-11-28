@@ -1,7 +1,9 @@
 rootProject.name = 'jxnet'
 
+include 'jxnet-context'
 include 'jxnet-core'
 include 'jxnet-static'
-include 'jxnet-shared'
+include 'jxnet-dynamic'
 include 'jxnet-android'
 include 'jxnet-example'
+

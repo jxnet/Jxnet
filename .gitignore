@@ -36,6 +36,10 @@ a.out
 /obj
 /target
 /classes
+/jxnet-context/.gradle
+/jxnet-context/build
+/jxnet-context/target
+/jxnet-context/out
 /jxnet-core/.gradle
 /jxnet-core/build
 /jxnet-core/target
@@ -44,10 +48,10 @@ a.out
 /jxnet-static/build
 /jxnet-static/target
 /jxnet-static/out
-/jxnet-shared/.gradle
-/jxnet-shared/build
-/jxnet-shared/target
-/jxnet-shared/out
+/jxnet-dynamic/.gradle
+/jxnet-dynamic/build
+/jxnet-dynamic/target
+/jxnet-dynamic/out
 /jxnet-android/.gradle
 /jxnet-android/build/
 /jxnet-android/target

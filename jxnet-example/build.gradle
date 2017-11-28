@@ -4,6 +4,9 @@
  */
 
 dependencies {
+    compile project(':jxnet-static')
+    compile project(':jxnet-dynamic')
+    compile project(':jxnet-android')
     compile project(':jxnet-core')
     testCompile "junit:junit:${JUNIT_VERSION}"
 }
