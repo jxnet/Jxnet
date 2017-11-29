@@ -36,11 +36,12 @@ public class Application {
         libraryLoaders.add(libraryLoader);
     }
 
-    public static Context bootstrap(String applicationName, String applicationVersion, Context context) throws UnsatisfiedLinkError {
+    public static void bootstrap(String applicationName, String applicationVersion) {
         getInstance().applicationName = applicationName;
         getInstance().applicationVersion = applicationVersion;
-        getInstance().context = context;
+    }
 
+    private static void start() throws UnsatisfiedLinkError {
         if (Platforms.isWindows()) {
             String path = "C:\\Windows\\System32\\Npcap";
             String paths = System.getProperty("java.library.path");
@@ -83,7 +84,6 @@ public class Application {
                 }
             }
         }
-        return context;
     }
 
     public String getApplicationName() {
@@ -105,6 +105,13 @@ public class Application {
         sb.append(", applicationVersion='").append(applicationVersion).append('\'');
         sb.append('}');
         return sb.toString();
+    }
+
+    public static void run(ApplicationInitializer applicationInitializer) {
+        Context context = new ApplicationContext();
+        getInstance().context = context;
+        applicationInitializer.initialize(context);
+        Application.start();
     }
 
     public interface Context {
