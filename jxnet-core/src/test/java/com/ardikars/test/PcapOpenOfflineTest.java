@@ -9,12 +9,13 @@ import com.ardikars.jxnet.exception.PcapCloseException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+// 7
 public class PcapOpenOfflineTest {
 
 	@Test
 	public void run() throws PcapCloseException {
 		StringBuilder errbuf = new StringBuilder();
-        Pcap handler = PcapOpenOffline("/tmp/capture.pcap", errbuf);
+        Pcap handler = PcapOpenOffline("dump.pcap", errbuf);
         if(handler == null) {
             throw new PcapCloseException(errbuf.toString());
         }

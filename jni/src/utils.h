@@ -24,6 +24,7 @@
 #define NO_SUCH_FIELD_EXCEPTION "java/lang/NoSuchFieldException"
 #define NULL_PTR_EXCEPTION "java/lang/NullPointerException"
 #define NATIVE_EXCEPTION "com/ardikars/jxnet/exception/NativeException"
+#define DEVICE_NOT_FOUND_EXCEPTION "com/ardikars/jxnet/exception/DeviceNotFoundException"
 #define PCAP_CLOSE_EXCEPTION "com/ardikars/jxnet/exception/PcapCloseException"
 #define BPF_PROGRAM_CLOSE_EXCEPTION "com/ardikars/jxnet/exception/BpfProgramCloseException"
 #define PCAP_DUMPER_CLOSE_EXCEPTION "com/ardikars/jxnet/exception/PcapDumperCloseException"

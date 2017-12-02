@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#if defined(__linux__) || defined(__FreeBSD__)
+#if defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>
@@ -18,7 +18,7 @@
 #include <arpa/inet.h>
 #endif
 
-#if defined(__FreeBSD__)
+#if defined(__FreeBSD__) || defined(__APPLE__)
 #include <sys/sysctl.h>
 #include <net/if_dl.h>
 #elif defined(__linux__)
@@ -60,7 +60,7 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_MacAddress_fromNicName
 		pAdapterInfo = (IP_ADAPTER_INFO *) malloc(ulOutBufLen);
 		if (pAdapterInfo == NULL) {
 			(*env)->ReleaseStringUTFChars(env, jnic_name, buf);
-			ThrowNew(env, NATIVE_EXCEPTION, "Error allocating memory needed to call GetAdaptersinfo\n");
+			ThrowNew(env, NATIVE_EXCEPTION, "Error allocating memory needed to call GetAdaptersinfo");
 			return NULL;
 		}
 	}
@@ -79,20 +79,20 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_MacAddress_fromNicName
 				break;
 			}
 			pAdapter = pAdapter->Next;
-        	}
+        }
 	} else {
 		(*env)->ReleaseStringUTFChars(env, jnic_name, buf);
-		ThrowNew(env, NATIVE_EXCEPTION, "GetAdaptersInfo failed\n");
+		ThrowNew(env, DEVICE_NOT_FOUND_EXCEPTION, "GetAdaptersInfo failed");
 		return NULL;
 	}
 	if (pAdapterInfo)
 		free(pAdapterInfo);
 
 	(*env)->ReleaseStringUTFChars(env, jnic_name, buf);
-        SetMacAddressIDs(env);
-        jobject obj = (*env)->CallStaticObjectMethod(env, MacAddressClass,
-                        MacAddressValueOfMID, hw_addr);
-        return obj;
+    SetMacAddressIDs(env);
+    jobject obj = (*env)->CallStaticObjectMethod(env, MacAddressClass,
+                    MacAddressValueOfMID, hw_addr);
+    return obj;
 
 
 #elif defined(__linux__)
@@ -109,6 +109,7 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_MacAddress_fromNicName
 	strncpy(ifr.ifr_ifrn.ifrn_name, buf, IFNAMSIZ);
 	if (ioctl(sd, SIOCGIFHWADDR, &ifr) != 0) {
 		(*env)->ReleaseStringUTFChars(env, jnic_name, buf);
+		ThrowNew(env, DEVICE_NOT_FOUND_EXCEPTION, "Ioctl error.");
 		return NULL;
 	}
 	bcopy((u_char *) ifr.ifr_ifru.ifru_hwaddr.sa_data, mac_addr, 6);
@@ -116,35 +117,39 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_MacAddress_fromNicName
 	(*env)->SetByteArrayRegion(env, hw_addr, 0 , 6, (jbyte *) mac_addr);
 	close(sd);
 
-        (*env)->ReleaseStringUTFChars(env, jnic_name, buf);
-        SetMacAddressIDs(env);
-        jobject obj = (*env)->CallStaticObjectMethod(env, MacAddressClass,
-                        MacAddressValueOfMID, hw_addr);
-        return obj;
+    (*env)->ReleaseStringUTFChars(env, jnic_name, buf);
+    SetMacAddressIDs(env);
+    jobject obj = (*env)->CallStaticObjectMethod(env, MacAddressClass,
+            MacAddressValueOfMID, hw_addr);
+    return obj;
 
-#elif defined(__FreeBSD__) || #defined(__APPLE__)
+#elif defined(__FreeBSD__) || defined(__APPLE__)
 
-	int			mib[6];
-	size_t			len;
-	char			*mac_buf;
-	unsigned char		*ptr;
-	struct if_msghdr	*ifm;
-	struct sockaddr_dl	*sdl;
+	int mib[6];
+	size_t len;
+	char *mac_buf;
+	unsigned char *ptr;
+	struct if_msghdr *ifm;
+	struct sockaddr_dl *sdl;
 	mib[0] = CTL_NET;
 	mib[1] = AF_ROUTE;
 	mib[2] = 0;
 	mib[3] = AF_LINK;
 	mib[4] = NET_RT_IFLIST;
 	if ((mib[5] = if_nametoindex(buf)) == 0) {
+	    ThrowNew(env, DEVICE_NOT_FOUND_EXCEPTION, "Device index not found.");
 		return NULL;
 	}
 	if (sysctl(mib, 6, NULL, &len, NULL, 0) < 0) {
+	    ThrowNew(env, NATIVE_EXCEPTION, "Sysctl error.");
 		return NULL;
 	}
 	if ((mac_buf = malloc(len)) == NULL) {
+	    ThrowNew(env, NATIVE_EXCEPTION, "Error allocating memory.");
 		return NULL;
 	}
 	if (sysctl(mib, 6, mac_buf, &len, NULL, 0) < 0) {
+	    ThrowNew(env, NATIVE_EXCEPTION, "Sysctl error.");
 		return NULL;
 	}
 	ifm = (struct if_msghdr *) mac_buf;
@@ -155,12 +160,12 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_MacAddress_fromNicName
 	(*env)->SetByteArrayRegion(env, hw_addr, 0, 6, (jbyte *) ptr);
 
 	(*env)->ReleaseStringUTFChars(env, jnic_name, buf);
-        SetMacAddressIDs(env);
-        jobject obj = (*env)->CallStaticObjectMethod(env, MacAddressClass,
-                        MacAddressValueOfMID, hw_addr);
-        return obj;
+    SetMacAddressIDs(env);
+    jobject obj = (*env)->CallStaticObjectMethod(env, MacAddressClass,
+                    MacAddressValueOfMID, hw_addr);
+    return obj;
 #else
-	ThrowNew(env, NATIVE_EXCEPTION, NULL);
+	ThrowNew(env, NOT_SUPPORTED_PLATFORM_EXCEPTION, NULL);
 	return NULL;
 #endif
   	return NULL;

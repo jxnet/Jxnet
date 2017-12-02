@@ -18,8 +18,8 @@ import java.util.List;
 		PcapLookupDevTest.class, PcapLookupNetTest.class, GenericTest.class, ErrorTest.class,
 		PcapNextExTest.class, PcapOpenDeadTest.class, PcapOpenLiveTest.class,
 		PcapOpenOfflineTest.class, PcapBreakLoopTest.class, BlockingTest.class,
-		PcapDatalinkTest.class, PcapDispatchTest.class, PreconditionsTest.class,
-		MacAddrTest.class, PcapDumpTest.class, AddJavaLibraryPathTest.class })
+		PcapDatalinkTest.class, PcapDispatchTest.class,
+		MacAddrTest.class, PcapDumpTest.class} )
 public class AllTests {
 
 	private static StringBuilder errbuf = new StringBuilder();
