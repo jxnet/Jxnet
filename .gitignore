@@ -11,7 +11,6 @@ a.out
 *.lo
 *.la
 *.sl
-*.dylib
 *.po
 *.Plo
 *.jar

@@ -34,6 +34,13 @@ public class StaticLibrary implements Library.Loader {
                     Library.loadLibrary("/static/freebsd/lib/x86/libjxnet.so");
                 }
                 break;
+            case DARWIN:
+                if (Platforms.is64Bit()) {
+                    Library.loadLibrary("/static/darwin/lib/x64/libjxnet.dylib");
+                } else {
+                    Library.loadLibrary("/static/darwin/lib/x86/libjxnet.dylib");
+                }
+                break;
             default:
                 throw new UnsatisfiedLinkError("Not supported platform.");
 
