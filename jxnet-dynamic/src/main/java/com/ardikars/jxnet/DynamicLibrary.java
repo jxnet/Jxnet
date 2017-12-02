@@ -34,6 +34,13 @@ public class DynamicLibrary implements Library.Loader {
                     Library.loadLibrary("/dynamic/freebsd/lib/x86/libjxnet.so");
                 }
                 break;
+            case DARWIN:
+                if (Platforms.is64Bit()) {
+                    Library.loadLibrary("/dynamic/darwin/lib/x64/libjxnet.dylib");
+                } else {
+                    Library.loadLibrary("/dynamic/darwin/lib/x86/libjxnet.dylib");
+                }
+                break;
             default:
                 throw new UnsatisfiedLinkError("Not supported platform.");
         }

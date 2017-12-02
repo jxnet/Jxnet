@@ -87,7 +87,7 @@ public class Platforms {
             name = Name.WINDOWS;
         } else if (osName.startsWith("FREEBSD")) {
             name = Name.FREEBSD;
-        } else if (osName.contains("DARWIN")) {
+        } else if (osName.startsWith("MAC OS")) {
             name = Name.DARWIN;
         } else {
             name = Name.UNKNOWN;
