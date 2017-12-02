@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#if defined(__linux__) || defined(__FreeBSD__)
+#if defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>
@@ -18,7 +18,7 @@
 #include <arpa/inet.h>
 #endif
 
-#if defined(__FreeBSD__)
+#if defined(__FreeBSD__) || defined(__APPLE__)
 #include <sys/sysctl.h>
 #include <net/if_dl.h>
 #elif defined(__linux__)
@@ -122,7 +122,7 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_MacAddress_fromNicName
                         MacAddressValueOfMID, hw_addr);
         return obj;
 
-#elif defined(__FreeBSD__) || #defined(__APPLE__)
+#elif defined(__FreeBSD__) || defined(__APPLE__)
 
 	int			mib[6];
 	size_t			len;
