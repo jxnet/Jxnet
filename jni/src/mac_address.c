@@ -122,7 +122,7 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_MacAddress_fromNicName
                         MacAddressValueOfMID, hw_addr);
         return obj;
 
-#elif defined(__FreeBSD__)
+#elif defined(__FreeBSD__) || #defined(__APPLE__)
 
 	int			mib[6];
 	size_t			len;
