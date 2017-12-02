@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import java.nio.ByteBuffer;
 
+// 6
 public class PcapDumpTest {
 	
 	@Test
@@ -17,7 +18,7 @@ public class PcapDumpTest {
 
 		Pcap handler = AllTests.openHandle(); // Exception already thrown
 
-		final PcapDumper dumper = PcapDumpOpen(handler, "../sample-capture/dump.pcapng");
+		final PcapDumper dumper = PcapDumpOpen(handler, "dump.pcap");
 		if (dumper == null) {
 			System.err.println(PcapGetErr(handler));
 			error = true;
