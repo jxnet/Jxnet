@@ -29,7 +29,6 @@ extern jmethodID ListAddMID;
 void SetListIDs(JNIEnv *env);
 
 extern jclass PcapIfClass;
-extern jfieldID PcapIfNextFID;
 extern jfieldID PcapIfNameFID;
 extern jfieldID PcapIfDescriptionFID;
 extern jfieldID PcapIfAddressesFID;
@@ -38,7 +37,6 @@ extern jfieldID PcapIfFlagsFID;
 void SetPcapIfIDs(JNIEnv *env);
 
 extern jclass PcapAddrClass;
-extern jfieldID PcapAddrNextFID;
 extern jfieldID PcapAddrAddrFID;
 extern jfieldID PcapAddrNetmaskFID;
 extern jfieldID PcapAddrBroadAddrFID;
@@ -114,4 +112,3 @@ extern jclass MacAddressClass;
 extern jmethodID MacAddressValueOfMID;
 
 void SetMacAddressIDs(JNIEnv *env);
-

@@ -18,6 +18,8 @@
 package com.ardikars.jxnet.exception;
 
 /**
+ * Pcap Dumper Close Exception
+ *
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */

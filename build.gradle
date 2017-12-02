@@ -57,7 +57,7 @@ allprojects {
 			windowTitle "${NAME} ${project.version}"
 			header "${NAME} ${project.version}"
 			docTitle "${NAME} ${project.version} API Documentation"
-			footer 'https://github.com/ardikars/Jxnet'
+			footer 'https://github.com/jxnet/Jxnet'
 			bottom "Copyright &copy; 2015 - ${currentYear} ardikars.com. All rights reserved."
 			showFromProtected()
 //			addStringOption 'Xdoclint:all,-reference', '-quiet'
@@ -119,7 +119,7 @@ allprojects {
 			name = 'com.ardikars.jxnet'
 			desc = 'Jxnet is a java library for capturing and sending network paket.'
 			licenses = ['GNU Lesser General Public License, Version 3.0']
-			vcsUrl = 'https://github.com/ardikars/Jxnet.git'
+			vcsUrl = 'https://github.com/jxnet/Jxnet.git'
 			version {
 				name = project.version
 				vcsTag = project.version

@@ -18,6 +18,8 @@
 package com.ardikars.jxnet.exception;
 
 /**
+ * Not Supported Platform Exception
+ *
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */

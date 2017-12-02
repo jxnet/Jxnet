@@ -43,6 +43,8 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxnet_BpfProgram_initBpfProgram
         fp->bf_insns = NULL;
         fp->bf_len = 0;
 
+        // Including SetBpfProgramIDS().
         SetBpfProgram(env, jobj, fp);
+
   }
   

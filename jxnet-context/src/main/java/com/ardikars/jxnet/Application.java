@@ -22,6 +22,10 @@ public class Application {
 
     }
 
+    public boolean isLoaded() {
+        return libraryIsLoaded;
+    }
+
     public static Application getInstance() {
         if (instance == null) {
             instance = new Application();
@@ -36,10 +40,12 @@ public class Application {
         libraryLoaders.add(libraryLoader);
     }
 
-    public static Context bootstrap(String applicationName, String applicationVersion, Context context) throws UnsatisfiedLinkError {
+    public static void run(String applicationName, String applicationVersion, ApplicationInitializer initializer) throws UnsatisfiedLinkError {
         getInstance().applicationName = applicationName;
         getInstance().applicationVersion = applicationVersion;
-        getInstance().context = context;
+        getInstance().context = new ApplicationContext();
+
+        initializer.initialize(getInstance().getContext());
 
         if (Platforms.isWindows()) {
             String path = "C:\\Windows\\System32\\Npcap";
@@ -83,7 +89,6 @@ public class Application {
                 }
             }
         }
-        return context;
     }
 
     public String getApplicationName() {

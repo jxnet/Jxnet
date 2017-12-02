@@ -39,6 +39,7 @@ public final class Jxnet extends Core {
 	 * @param alldevsp list of interface.
 	 * @param errbuf error buffer.
 	 * @return -1 on error, 0 otherwise.
+	 * @since 1.1.4
 	 */
 	public static native int PcapFindAllDevs(List<PcapIf> alldevsp, StringBuilder errbuf);
 
@@ -50,36 +51,40 @@ public final class Jxnet extends Core {
 	 * @param to_ms timeout.
 	 * @param errbuf error buffer.
 	 * @return null on error.
+	 * @since 1.1.4
 	 */
 	public static native Pcap PcapOpenLive(String source, int snaplen, int promisc, int to_ms, StringBuilder errbuf);
 
 	/**
 	 * Collect a group of packets.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
 	 * @param cnt maximum iteration, -1 to infinite.
 	 * @param callback callback funtion.
 	 * @param user args
-	 * @param <T> arps type.
+	 * @param <T> args type.
 	 * @return -1 on error, 0 otherwise.
+	 * @since 1.1.4
 	 */
 	public static native <T> int PcapLoop(Pcap pcap, int cnt, PcapHandler<T> callback, T user);
 
 	/**
 	 * Collect a group of packets.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
 	 * @param cnt maximum iteration, -1 to infinite.
 	 * @param callback callback function.
 	 * @param user arg.
-	 * @param <T> arg type.
+	 * @param <T> args type.
 	 * @return -1 on error, 0 otherwise.
+	 * @since 1.1.4
 	 */
 	public static native <T> int PcapDispatch(Pcap pcap, int cnt, PcapHandler<T> callback, T user);
 
 	/**
 	 * Open a file to write packets.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
 	 * @param fname file name.
 	 * @return null on error.
+	 * @since 1.1.4
 	 */
 	public static native PcapDumper PcapDumpOpen(Pcap pcap, String fname);
 
@@ -88,6 +93,7 @@ public final class Jxnet extends Core {
 	 * @param pcap_dumper pcap dumper object.
 	 * @param h pcap packet header.
 	 * @param sp packet buffer.
+	 * @since 1.1.4
 	 */
 	public static native void PcapDump(PcapDumper pcap_dumper, PcapPktHdr h, ByteBuffer sp);
 
@@ -96,6 +102,7 @@ public final class Jxnet extends Core {
 	 * @param fname file name.
 	 * @param errbuf error buffer.
 	 * @return null on error.
+	 * @since 1.1.4
 	 */
 	public static native Pcap PcapOpenOffline(String fname, StringBuilder errbuf);
 
@@ -103,52 +110,58 @@ public final class Jxnet extends Core {
 	 * Compile a packet filter, converting an high level filtering expression
 	 * (see Filtering expression syntax) in a program that can be interpreted
 	 * by the kernel-level filtering engine.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
 	 * @param fp compiled bfp.
 	 * @param str filter expression.
 	 * @param optimize optimize (0/1).
 	 * @param netmask netmask.
 	 * @return -1 on error, 0 otherwise.
+	 * @since 1.1.4
 	 */
 	public static native int PcapCompile(Pcap pcap, BpfProgram fp, String str, int optimize, int netmask);
 
 	/**
 	 * Associate a filter to a capture.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
 	 * @param fp compiled bpf.
 	 * @return -1 on error, 0 otherwise.
+	 * @since 1.1.4
 	 */
 	public static native int PcapSetFilter(Pcap pcap, BpfProgram fp);
 
 	/**
 	 * Send a raw packet.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
 	 * @param buf packet buffer.
 	 * @param size size of packet buffer.
 	 * @return -1 on error, 0 otherwise.
+	 * @since 1.1.4
 	 */
 	public static native int PcapSendPacket(Pcap pcap, ByteBuffer buf, int size);
 
 	/**
 	 * Return the next available packet.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
 	 * @param h packet header.
 	 * @return next available packet.
+	 * @since 1.1.4
 	 */
 	public static native ByteBuffer PcapNext(Pcap pcap, PcapPktHdr h);
 
 	/**
 	 * Read a packet from an interface or from an offline capture.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
 	 * @param pkt_header packet header.
 	 * @param pkt_data packet buffer.
 	 * @return -1 on error, 0 otherwise.
+	 * @since 1.1.4
 	 */
 	public static native int PcapNextEx(Pcap pcap, PcapPktHdr pkt_header, ByteBuffer pkt_data);
 
 	/**
 	 * Close the files associated with pcap and deallocates resources.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
+	 * @since 1.1.4
 	 */
 	public static native void PcapClose(Pcap pcap);
 
@@ -158,50 +171,57 @@ public final class Jxnet extends Core {
 	 * is returned on error, 0 on success.
 	 * @param pcap_dumper pcap dumper object.
 	 * @return -1 on error, 0 otherwise.
+	 * @since 1.1.4
 	 */
 	public static native int PcapDumpFlush(PcapDumper pcap_dumper);
 
 	/**
 	 * Closes a savefile.
 	 * @param pcap_dumper pcap dumper object.
+	 * @since 1.1.4
 	 */
 	public static native void PcapDumpClose(PcapDumper pcap_dumper);
 
 	/**
 	 * Return the link layer of an adapter.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
 	 * @return link layer of an adapter.
+	 * @since 1.1.4
 	 */
 	public static native int PcapDataLink(Pcap pcap);
 
 	/**
 	 * Set the current data link type of the pcap descriptor to the type
 	 * specified by dlt. -1 is returned on failure.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
 	 * @param dtl data link type.
 	 * @return -1 on error, 0 otherwise.
+	 * @since 1.1.4
 	 */
 	public static native int PcapSetDataLink(Pcap pcap, int dtl);
 
 	/**
 	 * Set a flag that will force PcapDispatch() or PcapLoop() to return rather than looping.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
+	 * @since 1.1.4
 	 */
-	public static native void PcapBreakLoop(Pcap pcap); //
+	public static native void PcapBreakLoop(Pcap pcap);
 
 	/**
 	 * Return the first valid device in the system.
 	 * @param errbuf error buffer.
 	 * @return first valid device in the system.
 	 * PCAP_DEPRECATED(pcap_lookupdev, "use 'pcap_findalldevs' and use the first device")
+	 * @since 1.1.4
 	 */
 	@Deprecated
-	public static native String PcapLookupDev(StringBuilder errbuf); //
+	public static native String PcapLookupDev(StringBuilder errbuf);
 
 	/**
 	 * Return the error text pertaining to the last pcap library error.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
 	 * @return error text pertaining to the last pcap library error.
+	 * @since 1.1.4
 	 */
 	public static native String PcapGetErr(Pcap pcap);
 
@@ -209,20 +229,23 @@ public final class Jxnet extends Core {
 	 * Returns a pointer to a string giving information about the version of the libpcap library being used;
 	 * note that it contains more information than just a version number.
 	 * @return libpcap version.
+	 * @since 1.1.4
 	 */
 	public static native String PcapLibVersion();
 
 	/**
 	 * Returns true (1) if the current savefile uses a different byte order than the current system.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
 	 * @return true (1) if the current savefile uses a different byte order than the current system.
+	 * @since 1.1.4
 	 */
 	public static native int PcapIsSwapped(Pcap pcap);
 
 	/**
 	 * Return the dimension of the packet portion (in bytes) that is delivered to the application.
-	 * @param pcap pcap object
+	 * @param pcap pcap instance
 	 * @return dimension of the packet portion (in bytes) that is delivered to the application.
+	 * @since 1.1.4
 	 */
 	public static native int PcapSnapshot(Pcap pcap);
 
@@ -230,20 +253,23 @@ public final class Jxnet extends Core {
 	 * Provided in case StrError() isn't available.
 	 * @param error error code.
 	 * @return error message.
+	 * @since 1.1.4
 	 */
 	public static native String PcapStrError(int error);
 
 	/**
 	 * Return the major version number of the pcap library used to write the savefile.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
 	 * @return major version number of the pcap library used to write the savefile.
+	 * @since 1.1.4
 	 */
 	public static native int PcapMajorVersion(Pcap pcap);
 
 	/**
 	 * Return the minor version number of the pcap library used to write the savefile.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
 	 * @return minor version number of the pcap library used to write the savefile.
+	 * @since 1.1.4
 	 */
 	public static native int PcapMinorVersion(Pcap pcap);
 
@@ -252,6 +278,7 @@ public final class Jxnet extends Core {
 	 * NULL is returned on failure.
 	 * @param dtl link type.
 	 * @return null is returned on failure.
+	 * @since 1.1.4
 	 */
 	public static native String PcapDataLinkValToName(int dtl);
 
@@ -260,6 +287,7 @@ public final class Jxnet extends Core {
 	 * NULL is returned on failure.
 	 * @param dtl link type.
 	 * @return is returned on failure.
+	 * @since 1.1.4
 	 */
 	public static native String PcapDataLinkValToDescription(int dtl);
 
@@ -269,31 +297,35 @@ public final class Jxnet extends Core {
 	 * -1 is returned on failure.
 	 * @param name link type name.
 	 * @return link type.
+	 * @since 1.1.4
 	 */
 	public static native int PcapDataLinkNameToVal(String name);
 
 	/**
 	 * Switch between blocking and nonblocking mode.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
 	 * @param nonblock 1 to set non block.
 	 * @param errbuf error buffer.
 	 * @return -1 on error.
+	 * @since 1.1.4
 	 */
 	public static native int PcapSetNonBlock(Pcap pcap, int nonblock, StringBuilder errbuf);
 
 	/**
 	 * Get the "non-blocking" state of an interface.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
 	 * @param errbuf error buffer.
 	 * @return nonblocking is 1, blocking 0.
+	 * @since 1.1.4
 	 */
 	public static native int PcapGetNonBlock(Pcap pcap, StringBuilder errbuf);
 
 	/**
-	 * Create a pcap_t structure without starting a capture.
+	 * Create a pcap instance without starting a capture.
 	 * @param linktype link type.
 	 * @param snaplen snapshot length.
 	 * @return null on error.
+	 * @since 1.1.4
 	 */
 	public static native Pcap PcapOpenDead(int linktype, int snaplen);
 
@@ -301,18 +333,20 @@ public final class Jxnet extends Core {
 	 * Return the file position for a "savefile".
 	 * @param pcap_dumper pcap dumper object.
 	 * @return file position for a "savefile".
+	 * @since 1.1.4
 	 */
 	public static native long PcapDumpFTell(PcapDumper pcap_dumper); //
 
 	/**
 	 * Free a filter.
 	 * @param bpf_program compiled bpf.
+	 * @since 1.1.4
 	 */
 	public static native void PcapFreeCode(BpfProgram bpf_program);
 
 	/**
 	 * Return the standard stream of an offline capture.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
 	 * @return null on error.
 	 */
 	//public static native File PcapFile(Pcap pcap);
@@ -326,7 +360,7 @@ public final class Jxnet extends Core {
 
 	/**
 	 *
- 	 * @param pcap pcap object.
+ 	 * @param pcap pcap instance.
 	 * @param f file object.
 	 * @return null on error.
 	 */
@@ -334,9 +368,10 @@ public final class Jxnet extends Core {
 
 	/**
 	 * Return statistics on current capture.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
 	 * @param pcap_stat pcap stat object.
 	 * @return -1 on error
+	 * @since 1.1.4
 	 */
 	public static native int PcapStats(Pcap pcap, PcapStat pcap_stat);
 
@@ -347,6 +382,7 @@ public final class Jxnet extends Core {
 	 * @param maskp netmask
 	 * @param errbuf error buffer.
 	 * @return -1 on error, 0 otherwise.
+	 * @since 1.1.4
 	 */
 	public static native int PcapLookupNet(String device, Inet4Address netp, Inet4Address maskp, StringBuilder errbuf);
 
@@ -361,13 +397,15 @@ public final class Jxnet extends Core {
 	 * @param optimize optiomize (0/1).
 	 * @param mask netmask.
 	 * @return -1 on error.
+	 * @since 1.1.4
 	 */
 	public static native int PcapCompileNoPcap(int snaplen_arg, int linktype_arg, BpfProgram program, String buf, int optimize, int mask);
 
 	/**
 	 * Print the text of the last pcap library error on stderr, prefixed by prefix.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
 	 * @param prefix prrfix.
+	 * @since 1.1.4
 	 */
 	public static native void PcapPError(Pcap pcap, String prefix);
 
@@ -381,74 +419,83 @@ public final class Jxnet extends Core {
 	 * options for the capture, such as promiscuous mode, can be set on the handle before activating it.
 	 * @param source network device.
 	 * @param errbuf errof buffer.
-	 * @return returns a pcap_t * on success and NULL on failure. If NULL is returned, errbuf is filled in with an
+	 * @return returns a pcap instance on success and NULL on failure. If NULL is returned, errbuf is filled in with an
 	 * appropriate error message.
+	 * @since 1.1.4
 	 */
 	public static native Pcap PcapCreate(String source, StringBuilder errbuf);
 
 	/**
 	 * Sets the snapshot length to be used on a capture handle when the handle is activated to snaplen.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
 	 * @param snaplen snaplen.
 	 * @return 0 on success.
+	 * @since 1.1.4
 	 */
 	public static native int PcapSetSnaplen(Pcap pcap, int snaplen);
 
 	/**
 	 * sets whether promiscuous mode should be set on a capture handle when the handle is activated.
 	 * If promisc is non-zero, promiscuous mode will be set, otherwise it will not be set.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
 	 * @param promisc promisc.
 	 * @return 0 on success.
+	 * @since 1.1.4
 	 */
 	public static native int PcapSetPromisc(Pcap pcap, int promisc);
 
 	/**
 	 * Sets the packet buffer timeout that will be used on a capture handle when the handle is activated to to_ms, which is in units of milliseconds.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
 	 * @param timeout timeout.
 	 * @return 0 on success.
+	 * @since 1.1.4
 	 */
 	public static native int PcapSetTimeout(Pcap pcap, int timeout);
 
 	/**
 	 * Sets the buffer size that will be used on a capture handle when the handle is activated to buffer_size, which is in units of bytes.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
 	 * @param buffer_size buffer size.
 	 * @return 0 on success.
+	 * @since 1.1.4
 	 */
 	public static native int PcapSetBufferSize(Pcap pcap, int buffer_size);
 
 	/**
 	 * Checks whether monitor mode could be set on a capture handle when the handle is activated.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
 	 * @return 0 if monitor mode could not be set, 1 if monitor mode could be set, and a negative value on error.
+	 * @since 1.1.4
 	 */
 	public static native int PcapCanSetRfMon(Pcap pcap);
 
 	/**
 	 * Sets whether monitor mode should be set on a capture handle when the handle is activated.
 	 * If rfmon is non-zero, monitor mode will be set, otherwise it will not be set.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
 	 * @param rfmon 1 (true) or 0 (false).
 	 * @return 0 on success.
+	 * @since 1.1.4
 	 */
 	public static native int PcapSetRfMon(Pcap pcap, int rfmon);
 
 	/**
 	 * Sets whether immediate mode should be set on a capture handle when the handle is activated. If immediate_mode is non-zero,
 	 * immediate mode will be set, otherwise it will not be set.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
 	 * @param immediate_mode immediate_mode.
 	 * @return 0 on success.
+	 * @since 1.1.4
 	 */
 	public static native int PcapSetImmediateMode(Pcap pcap, int immediate_mode);
 
 	/**
 	 * Is used to activate a packet capture handle to look at packets on the network,
 	 * with the options that were set on the handle being in effect.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
 	 * @return 0 on success without warnings, a non-zero positive value on success with warnings, and a negative value on error.
+	 * @since 1.1.4
 	 */
 	public static native int PcapActivate(Pcap pcap);
 
@@ -465,9 +512,10 @@ public final class Jxnet extends Core {
 	 * platforms might not support PCAP_D_OUT.
 	 *
 	 * This operation is not supported if a ``savefile'' is being read.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
 	 * @param direction direction.
 	 * @return returns  0 on success and -1 on failure (not supported by operating system).
+	 * @since 1.1.4
 	 */
 	public static native int PcapSetDirection(Pcap pcap, PcapDirection direction);
 
@@ -482,9 +530,22 @@ public final class Jxnet extends Core {
 
 	/**
 	 * Get the time stamp precision returned in captures.
-	 * @param pcap pcap object.
+	 * @param pcap pcap instance.
 	 * @return the precision of the time stamp returned in packet captures on the pcap descriptor.
 	 */
 	// public static native int PcapGetTStampPrecision(Pcap pcap);
+
+	static {
+		if (!Application.getInstance().isLoaded()) {
+            ApplicationInitializer initializer = new ApplicationInitializer() {
+                @Override
+                public void initialize(Application.Context context) {
+                    context.addLibrary(new DynamicLibrary());
+                    context.addLibrary(new StaticLibrary());
+                }
+            };
+            Application.run("", "", initializer);
+        }
+	}
 
 }

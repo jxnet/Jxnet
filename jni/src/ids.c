@@ -26,26 +26,31 @@ jmethodID StringBuilderAppendMID = NULL;
 
 void SetStringBuilderIDs(JNIEnv *env) {
 
+    if (StringBuilderClass != NULL) {
+        return; // Already cached
+    }
+
 	StringBuilderClass = (*env)->FindClass(env, "java/lang/StringBuilder");
 
-	if(StringBuilderClass == NULL) {
+	if (StringBuilderClass == NULL) {
 		ThrowNew(env, CLASS_NOT_FOUND_EXCEPTION, "Unable to initialize class java.lang.StringBuilder");
 		return;
 	}
 
 	StringBuilderSetLengthMID = (*env)->GetMethodID(env, StringBuilderClass, "setLength", "(I)V");
 
-	if(StringBuilderSetLengthMID == NULL) {
+	if (StringBuilderSetLengthMID == NULL) {
 		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method StringBuilder.setLength(int)");
 		return;
 	}
 
 	StringBuilderAppendMID = (*env)->GetMethodID(env, StringBuilderClass, "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;");
 
-	if(StringBuilderAppendMID == NULL) {
+	if (StringBuilderAppendMID == NULL) {
 		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method StringBuilder.append(String)");
 		return;
 	}
+
 }
 
 jclass ListClass = NULL;
@@ -53,23 +58,27 @@ jmethodID ListAddMID = NULL;
 
 void SetListIDs(JNIEnv *env) {
 
+    if (ListClass != NULL) {
+        return; // Already cached
+    }
+
 	ListClass = (*env)->FindClass(env, "java/util/List");
 
-	if(ListClass == NULL) {
+	if (ListClass == NULL) {
 		ThrowNew(env, CLASS_NOT_FOUND_EXCEPTION, "Unable to initialize class java.util.List");
 		return;
 	}
 
 	ListAddMID = (*env)->GetMethodID(env, ListClass, "add", "(Ljava/lang/Object;)Z");
 
-	if(ListAddMID == NULL) {
+	if (ListAddMID == NULL) {
 		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method List.add(Object)");
 		return;
 	}
+
 }
 
 jclass PcapIfClass = NULL;
-jfieldID PcapIfNextFID = NULL;
 jfieldID PcapIfNameFID = NULL;
 jfieldID PcapIfDescriptionFID = NULL;
 jfieldID PcapIfAddressesFID = NULL;
@@ -77,51 +86,48 @@ jfieldID PcapIfFlagsFID = NULL;
 
 void SetPcapIfIDs(JNIEnv *env) {
 
+    if (PcapIfClass != NULL) {
+        return; // Alredy cached
+    }
+
 	PcapIfClass = (*env)->FindClass(env, "com/ardikars/jxnet/PcapIf");
 
-	if(PcapIfClass == NULL) {
+	if (PcapIfClass == NULL) {
 		ThrowNew(env, CLASS_NOT_FOUND_EXCEPTION, "Unable to initialize class com.ardikars.jxnet.PcapIf");
-		return;
-	}
-
-	PcapIfNextFID = (*env)->GetFieldID(env, PcapIfClass, "next", "Lcom/ardikars/jxnet/PcapIf;");
-
-	if(PcapIfNextFID == NULL) {
-		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field PcapIf.next:PcapIf");
 		return;
 	}
 
 	PcapIfNameFID = (*env)->GetFieldID(env, PcapIfClass, "name", "Ljava/lang/String;");
 
-  	if(PcapIfNameFID == NULL) {
+  	if (PcapIfNameFID == NULL) {
 		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field PcapIf.name:String");
 		return;
 	}
 
 	PcapIfDescriptionFID = (*env)->GetFieldID(env, PcapIfClass, "description", "Ljava/lang/String;");
 
-  	if(PcapIfDescriptionFID == NULL) {
+  	if (PcapIfDescriptionFID == NULL) {
 		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field PcapIf.description:String");
 		return;
 	}
 
 	PcapIfAddressesFID = (*env)->GetFieldID(env, PcapIfClass, "addresses", "Ljava/util/List;");
 
-	if(PcapIfAddressesFID == NULL) {
-		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field JxpcapIf.addresses:List");
+	if (PcapIfAddressesFID == NULL) {
+		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field PcapIf.addresses:List");
   		return;
 	}
 
 	PcapIfFlagsFID = (*env)->GetFieldID(env, PcapIfClass, "flags", "I");
 
-	if(PcapIfNameFID == NULL) {
+	if (PcapIfNameFID == NULL) {
 		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field PcapIf.flags:int");
 		return;
 	}
+
 }
 
 jclass PcapAddrClass = NULL;
-jfieldID PcapAddrNextFID = NULL;
 jfieldID PcapAddrAddrFID = NULL;
 jfieldID PcapAddrNetmaskFID = NULL;
 jfieldID PcapAddrBroadAddrFID = NULL;
@@ -129,47 +135,45 @@ jfieldID PcapAddrDstAddrFID = NULL;
 
 void SetPcapAddrIDs(JNIEnv *env) {
 
+    if (PcapAddrClass != NULL) {
+        return; // Already cached
+    }
+
 	PcapAddrClass = (*env)->FindClass(env, "com/ardikars/jxnet/PcapAddr");
 
-	if(PcapAddrClass == NULL) {
+	if (PcapAddrClass == NULL) {
 		ThrowNew(env, CLASS_NOT_FOUND_EXCEPTION, "Unable to initialize class com.ardikars.jxnet.PcapAddr");
-		return;
-	}
-
-	PcapAddrNextFID = (*env)->GetFieldID(env, PcapAddrClass, "next", "Lcom/ardikars/jxnet/PcapAddr;");
-
-	if(PcapAddrNextFID == NULL) {
-		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field PcapAddr.next:PcapAddr");
 		return;
 	}
 
 	PcapAddrAddrFID = (*env)->GetFieldID(env, PcapAddrClass, "addr", "Lcom/ardikars/jxnet/SockAddr;");
 
-	if(PcapAddrAddrFID == NULL) {
+	if (PcapAddrAddrFID == NULL) {
 		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field PcapAddr.addr:SockAddr");
 		return;
 	}
 
 	PcapAddrNetmaskFID = (*env)->GetFieldID(env, PcapAddrClass, "netmask", "Lcom/ardikars/jxnet/SockAddr;");
 
-	if(PcapAddrNetmaskFID == NULL) {
+	if (PcapAddrNetmaskFID == NULL) {
 		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field PcapAddr.netmask:SockAddr");
 		return;
 	}
 
 	PcapAddrBroadAddrFID = (*env)->GetFieldID(env, PcapAddrClass, "broadaddr", "Lcom/ardikars/jxnet/SockAddr;");
 
-	if(PcapAddrBroadAddrFID == NULL) {
+	if (PcapAddrBroadAddrFID == NULL) {
 		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field PcapAddr.broadaddr:SockAddr");
 		return;
 	}
 
 	PcapAddrDstAddrFID = (*env)->GetFieldID(env, PcapAddrClass, "dstaddr", "Lcom/ardikars/jxnet/SockAddr;");
 
-	if(PcapAddrDstAddrFID == NULL) {
+	if (PcapAddrDstAddrFID == NULL) {
 		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field PcapAddr.dstaddr:SockAddr");
 		return;
 	}
+
 }
 
 jclass SockAddrClass = NULL;
@@ -178,23 +182,27 @@ jfieldID SockAddrDataFID = NULL;
 
 void SetSockAddrIDs(JNIEnv *env) {
 
+    if (SockAddrClass != NULL) {
+        return; // Already cached
+    }
+
 	SockAddrClass = (*env)->FindClass(env, "com/ardikars/jxnet/SockAddr");
 
-	if(SockAddrClass == NULL) {
+	if (SockAddrClass == NULL) {
 		ThrowNew(env, CLASS_NOT_FOUND_EXCEPTION, "Unable to initialize class com.ardikars.jxnet.SockAddr");
 		return;
 	}
 
 	SockAddrSaFamilyFID = (*env)->GetFieldID(env, SockAddrClass, "sa_family", "S");
 
-	if(SockAddrSaFamilyFID == NULL) {
+	if (SockAddrSaFamilyFID == NULL) {
 		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field SockAddr.sa_family:short");
 		return;
 	}
 
 	SockAddrDataFID = (*env)->GetFieldID(env, SockAddrClass, "data", "[B");
 
-	if(SockAddrDataFID== NULL) {
+	if (SockAddrDataFID== NULL) {
 		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field SockAddr.data:byte[]");
 		return;
 	}
@@ -205,6 +213,10 @@ jfieldID PcapAddressFID = NULL;
 jmethodID PcapGetAddressMID = NULL;
 
 void SetPcapIDs(JNIEnv *env) {
+
+    if (PcapClass != NULL) {
+        return; // Alredy cached
+    }
 
   	PcapClass = (*env)->FindClass(env, "com/ardikars/jxnet/Pcap");
 
@@ -233,6 +245,10 @@ jfieldID FileAddressFID = NULL;
 jmethodID FileGetAddressMID = NULL;
 
 void SetFileIDs(JNIEnv *env) {
+
+    if (FileClass != NULL) {
+        return; // Already cached
+    }
 
 	FileClass = (*env)->FindClass(env, "com/ardikars/jxnet/File");
 
@@ -266,44 +282,48 @@ jmethodID PcapPktHdrNewInstance = NULL;
 
 void SetPcapPktHdrIDs(JNIEnv *env) {
 
+    if (PcapPktHdrClass != NULL) {
+        return; // Already cached
+    }
+
 	PcapPktHdrClass = (*env)->FindClass(env, "com/ardikars/jxnet/PcapPktHdr");
 
-	if(PcapPktHdrClass == NULL) {
+	if (PcapPktHdrClass == NULL) {
 		ThrowNew(env, CLASS_NOT_FOUND_EXCEPTION, "Unable to initialize class com.ardikars.jxnet.PcapPktHdr");
 		return;
 	}
 
 	PcapPktHdrCaplenFID = (*env)->GetFieldID(env, PcapPktHdrClass, "caplen", "I");
 
-	if(PcapPktHdrCaplenFID == NULL) {
+	if (PcapPktHdrCaplenFID == NULL) {
 		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field PcapPktHdr.caplen:int");
 		return;
 	}
 
 	PcapPktHdrLenFID = (*env)->GetFieldID(env, PcapPktHdrClass, "len", "I");
 
-	if(PcapPktHdrLenFID == NULL) {
+	if (PcapPktHdrLenFID == NULL) {
 		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field PcapPktHdr.len:int");
 		return;
 	}
 
 	PcapPktHdrTvSecFID = (*env)->GetFieldID(env, PcapPktHdrClass, "tv_sec", "I");
 
-	if(PcapPktHdrTvSecFID == NULL) {
+	if (PcapPktHdrTvSecFID == NULL) {
 		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field PcapPktHdr.tv_sec:int");
 		return;
 	}
 
 	PcapPktHdrTvUsecFID = (*env)->GetFieldID(env, PcapPktHdrClass, "tv_usec", "J");
 
-	if(PcapPktHdrTvUsecFID == NULL) {
+	if (PcapPktHdrTvUsecFID == NULL) {
 		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field PcapPktHdr.tv_usec:long");
 		return;
 	}
 
 	PcapPktHdrNewInstance = (*env)->GetStaticMethodID(env, PcapPktHdrClass, "newInstance", "(IIIJ)Lcom/ardikars/jxnet/PcapPktHdr;");
 
-	if(PcapPktHdrNewInstance == NULL) {
+	if (PcapPktHdrNewInstance == NULL) {
 	    ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method PcapPktHdr.newInstance(int,int,int,long)");
 	    return;
 	}
@@ -316,26 +336,31 @@ jmethodID ByteBufferPutMID = NULL;
 
 void SetByteBufferIDs(JNIEnv *env) {
 
+    if (ByteBufferClass != NULL) {
+        return; // Alredy cached
+    }
+
 	ByteBufferClass = (*env)->FindClass(env, "java/nio/ByteBuffer");
 
-	if(ByteBufferClass == NULL) {
+	if (ByteBufferClass == NULL) {
 		ThrowNew(env, CLASS_NOT_FOUND_EXCEPTION, "Unable to initialize class java.nio.ByteBuffer");
 		return;
 	}
 
 	ByteBufferClearMID = (*env)->GetMethodID(env, ByteBufferClass, "clear", "()Ljava/nio/Buffer;");
 
-	if(ByteBufferClearMID == NULL) {
+	if (ByteBufferClearMID == NULL) {
 		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method ByteBuffer.clear()");
 		return;
 	}
 
 	ByteBufferPutMID = (*env)->GetMethodID(env, ByteBufferClass, "put", "(Ljava/nio/ByteBuffer;)Ljava/nio/ByteBuffer;");
 
-	if(ByteBufferPutMID == NULL) {
+	if (ByteBufferPutMID == NULL) {
 		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method ByteBuffer.put(ByteBuffer)");
   		return;
 	}
+
 }
 
 jclass PcapDumperClass = NULL;
@@ -343,6 +368,10 @@ jfieldID PcapDumperAddressFID = NULL;
 jmethodID PcapDumperGetAddressMID = NULL;
 
 void SetPcapDumperIDs(JNIEnv *env) {
+
+    if (PcapDumperClass != NULL) {
+        return; // Already cached
+    }
 
 	PcapDumperClass = (*env)->FindClass(env, "com/ardikars/jxnet/PcapDumper");
 
@@ -364,6 +393,7 @@ void SetPcapDumperIDs(JNIEnv *env) {
 		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method PcapDumper.getAddress(long)");
 		return;
 	}
+
 }
 
 jclass BpfProgramClass = NULL;
@@ -371,6 +401,10 @@ jfieldID BpfProgramAddressFID = NULL;
 jmethodID BpfProgramGetAddressMID = NULL;
 
 void SetBpfProgramIDs(JNIEnv *env) {
+
+    if (BpfProgramClass != NULL) {
+        return; // Alredy cached
+    }
 
 	BpfProgramClass = (*env)->FindClass(env, "com/ardikars/jxnet/BpfProgram");
 
@@ -402,33 +436,38 @@ jfieldID PcapStatPsIfDropFID = NULL;
 
 void SetPcapStatIDs(JNIEnv *env) {
 
+    if (PcapStatClass != NULL) {
+        return; // Alredy cached
+    }
+
 	PcapStatClass = (*env)->FindClass(env, "com/ardikars/jxnet/PcapStat");
 
-	if(PcapStatClass == NULL) {
+	if (PcapStatClass == NULL) {
 		ThrowNew(env, CLASS_NOT_FOUND_EXCEPTION, "Unable to initialize class com.ardikars.jxnet.PcapStat");
 		return;
 	}
 
 	PcapStatPsRecvFID = (*env)->GetFieldID(env, PcapStatClass, "ps_recv", "J");
 
-	if(PcapStatPsRecvFID == NULL) {
+	if (PcapStatPsRecvFID == NULL) {
 		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field PcapStat.ps_recv:long");
 		return;
 	}
 
 	PcapStatPsDropFID = (*env)->GetFieldID(env, PcapStatClass, "ps_drop", "J");
 
-	if(PcapStatPsDropFID == NULL) {
+	if (PcapStatPsDropFID == NULL) {
 		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field PcapStat.ps_drop:long");
 		return;
 	}
 
 	PcapStatPsIfDropFID = (*env)->GetFieldID(env, PcapStatClass, "ps_ifdrop", "J");
 
-	if(PcapStatPsDropFID == NULL) {
+	if (PcapStatPsDropFID == NULL) {
 		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field PcapStat.ps_ifdrop:long");
 		return;
 	}
+
 }
 
 jclass Inet4AddressClass = NULL;
@@ -438,23 +477,27 @@ jfieldID Inet4AddressAddressFID = NULL;
 
 void SetInet4AddressIDs(JNIEnv *env) {
 
+    if (Inet4AddressClass != NULL) {
+        return; // Already cached
+    }
+
 	Inet4AddressClass = (*env)->FindClass(env, "com/ardikars/jxnet/Inet4Address");
 
-	if(Inet4AddressClass == NULL) {
+	if (Inet4AddressClass == NULL) {
 		ThrowNew(env, CLASS_NOT_FOUND_EXCEPTION, "Unable to initialize class com.ardikars.jxnet.Inet4Address");
 		return;
 	}
 
 	Inet4AddressValueOfMID = (*env)->GetStaticMethodID(env, Inet4AddressClass, "valueOf", "(I)Lcom/ardikars/jxnet/Inet4Address;");
 
-	if(Inet4AddressValueOfMID == NULL) {
+	if (Inet4AddressValueOfMID == NULL) {
 		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method Inet4Address.valueOf(int)");
 		return;
 	}
 
 	Inet4AddressToIntMID = (*env)->GetMethodID(env, Inet4AddressClass, "toInt", "()I");
 
-	if(Inet4AddressToIntMID == NULL) {
+	if (Inet4AddressToIntMID == NULL) {
 		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method Inet4Address.toInt()");
 		return;
 	}
@@ -465,6 +508,7 @@ void SetInet4AddressIDs(JNIEnv *env) {
 		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field Inet4Address.address");
 		return;
 	}
+
 }
 
 jclass PcapDirectionClass = NULL;
@@ -472,25 +516,34 @@ jmethodID PcapDirectionNameMID = NULL;
 
 void SetPcapDirectionIDs(JNIEnv *env) {
 
+    if (PcapDirectionClass != NULL) {
+        return; // Already cached
+    }
+
 	PcapDirectionClass = (*env)->FindClass(env, "com/ardikars/jxnet/PcapDirection");
 
-	if(PcapDirectionClass == NULL) {
+	if (PcapDirectionClass == NULL) {
 		ThrowNew(env, CLASS_NOT_FOUND_EXCEPTION, "Unable to initialize class com.ardikars.jxnet.PcapDirection");
    		return;
   	}
 
   	PcapDirectionNameMID = (*env)->GetMethodID(env, PcapDirectionClass, "name", "()Ljava/lang/String;");
 
-  	if(PcapDirectionNameMID == NULL) {
+  	if (PcapDirectionNameMID == NULL) {
   		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method PcapDirection.name()");
   		return;
 	}
+
 }
 
 jclass MacAddressClass = NULL;
 jmethodID MacAddressValueOfMID = NULL;
 
 void SetMacAddressIDs(JNIEnv *env) {
+
+    if (MacAddressClass != NULL) {
+        return; // Already cached
+    }
 
 	MacAddressClass = (*env)->FindClass(env, "com/ardikars/jxnet/MacAddress");
 
@@ -501,8 +554,9 @@ void SetMacAddressIDs(JNIEnv *env) {
 
 	MacAddressValueOfMID = (*env)->GetStaticMethodID(env, MacAddressClass, "valueOf", "([B)Lcom/ardikars/jxnet/MacAddress;");
 
-	if(MacAddressValueOfMID == NULL) {
+	if (MacAddressValueOfMID == NULL) {
 		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method MacAddress.valueOf(byte[])");
 		return;
 	}
+
 }

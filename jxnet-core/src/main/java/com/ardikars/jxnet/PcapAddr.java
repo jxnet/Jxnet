@@ -22,9 +22,6 @@ package com.ardikars.jxnet;
  * @since 1.0.0
  */
 public final class PcapAddr {
-
-	@SuppressWarnings("unused")
-	private volatile PcapAddr next;
 	
 	private volatile SockAddr addr;
 	
