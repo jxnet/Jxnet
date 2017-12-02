@@ -10,7 +10,8 @@ import java.util.List;
 public class Application {
 
     private List<Library.Loader> libraryLoaders;
-    private boolean libraryIsLoaded;
+    private boolean loaded;
+    private boolean developmentMode = false;
 
     private static Application instance;
 
@@ -23,7 +24,11 @@ public class Application {
     }
 
     public boolean isLoaded() {
-        return libraryIsLoaded;
+        return loaded;
+    }
+
+    public void enableDevelopmentMode() {
+        this.developmentMode = true;
     }
 
     public static Application getInstance() {
@@ -77,15 +82,18 @@ public class Application {
             }
         }
 
-        Application application = getInstance();
-        if (!application.libraryIsLoaded && application.libraryLoaders != null && !application.libraryLoaders.isEmpty()) {
-            for (Library.Loader loader : application.libraryLoaders) {
-                try {
-                    loader.load();
-                    application.libraryIsLoaded = true;
-                    break;
-                } catch (UnsatisfiedLinkError e) {
-                    continue;
+        if (getInstance().developmentMode) {
+            System.loadLibrary("jxnet");
+        } else {
+            if (!getInstance().loaded && getInstance().libraryLoaders != null && !getInstance().libraryLoaders.isEmpty()) {
+                for (Library.Loader loader : getInstance().libraryLoaders) {
+                    try {
+                        loader.load();
+                        getInstance().loaded = true;
+                        break;
+                    } catch (UnsatisfiedLinkError e) {
+                        continue;
+                    }
                 }
             }
         }

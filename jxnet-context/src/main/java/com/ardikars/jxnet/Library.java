@@ -52,12 +52,7 @@ public final class Library {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        try {
-            System.loadLibrary("jxnet");
-            System.out.println("Development mode is active.");
-        } catch (Exception e) {
-            System.load(temp.getAbsolutePath());
-        }
+        System.load(temp.getAbsolutePath());
     };
 
 }
