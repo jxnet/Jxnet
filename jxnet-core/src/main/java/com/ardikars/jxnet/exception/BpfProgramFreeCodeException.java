@@ -18,6 +18,8 @@
 package com.ardikars.jxnet.exception;
 
 /**
+ * BPF FreeCode Exception
+ *
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */

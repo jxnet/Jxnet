@@ -18,26 +18,26 @@
 package com.ardikars.jxnet.exception;
 
 /**
- * BPF Close Exception
+ * Native Exception
  *
  * @author Ardika Rommy Sanjaya
- * @since 1.0.0
+ * @since 1.1.5
  */
-public final class BpfProgramCloseException extends RuntimeException {
+public final class NativeException extends RuntimeException {
 
-	public BpfProgramCloseException() {
+	public NativeException() {
 		super();
 	}
-	
-	public BpfProgramCloseException(String message) {
+
+	public NativeException(String message) {
 		super(message);
 	}
-	
-	public BpfProgramCloseException(String message, Throwable cause) {
+
+	public NativeException(String message, Throwable cause) {
 		super(message, cause);
 	}
-	
-	public BpfProgramCloseException(Throwable cause) {
+
+	public NativeException(Throwable cause) {
 		super(cause);
 	}
 	

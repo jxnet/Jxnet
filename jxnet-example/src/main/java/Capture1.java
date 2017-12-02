@@ -18,11 +18,10 @@ public class Capture1 {
             public void initialize(Application.Context context) {
                 context.addLibrary(new DynamicLibrary());
                 context.addLibrary(new StaticLibrary());
-                Application.bootstrap("Capture1", "0.1", context);
             }
         };
 
-        initializer.initialize(new ApplicationContext());
+        Application.run("Capture1", "1", initializer);
 
         StringBuilder errbuf = new StringBuilder();
         PcapIf source = SelectNetowrkInterface(errbuf);

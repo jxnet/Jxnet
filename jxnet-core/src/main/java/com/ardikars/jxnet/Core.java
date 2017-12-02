@@ -38,7 +38,8 @@ class Core {
      * @param promisc promiscuous mode.
      * @param timeout timeout.
      * @param errbuf error buffer.
-     * @return pcap object.
+     * @return pcap instance.
+     * @since 1.1.5
      */
     public static Pcap PcapOpenLive(PcapIf source, int snaplen, PromiscuousMode promisc,
                                     int timeout, StringBuilder errbuf) {
@@ -60,8 +61,9 @@ class Core {
      * options for the capture, such as promiscuous mode, can be set on the handle before activating it.
      * @param source network device.
      * @param errbuf errof buffer.
-     * @return returns a pcap_t * on success and NULL on failure. If NULL is returned, errbuf is filled in with an
+     * @return returns a pcap instance on success and NULL on failure. If NULL is returned, errbuf is filled in with an
      * appropriate error message.
+     * @since 1.1.5
      */
     public static Pcap PcapCreate(PcapIf source, StringBuilder errbuf) {
         Validate.nullPointer(source);
@@ -70,11 +72,12 @@ class Core {
     }
 
     /**
-     * sets whether promiscuous mode should be set on a capture handle when the handle is activated.
+     * Sets whether promiscuous mode should be set on a capture handle when the handle is activated.
      * If promisc is non-zero, promiscuous mode will be set, otherwise it will not be set.
-     * @param pcap pcap object.
+     * @param pcap pcap instance.
      * @param promiscuousMode promisc mode.
      * @return 0 on success.
+     * @since 1.1.5
      */
     public static int PcapSetPromisc(Pcap pcap, PromiscuousMode promiscuousMode) {
         Validate.nullPointer(pcap);
@@ -85,9 +88,10 @@ class Core {
     /**
      * Sets whether immediate mode should be set on a capture handle when the handle is activated. If immediate_mode is non-zero,
      * immediate mode will be set, otherwise it will not be set.
-     * @param pcap pcap object.
+     * @param pcap pcap instance.
      * @param immediateMode immediate_mode.
      * @return 0 on success.
+     * @since 1.1.5
      */
     public static int PcapSetImmediateMode(Pcap pcap, ImmediateMode immediateMode) {
         Validate.nullPointer(pcap);
@@ -99,12 +103,13 @@ class Core {
      * Compile a packet filter, converting an high level filtering expression
      * (see Filtering expression syntax) in a program that can be interpreted
      * by the kernel-level filtering engine.
-     * @param pcap pcap object.
+     * @param pcap pcap instance.
      * @param fp compiled bfp.
      * @param filter filter.
      * @param optimize optimize.
      * @param netmask netmask.
      * @return -1 on error, 0 otherwise.
+     * @since 1.1.5
      */
     public static int PcapCompile(Pcap pcap, BpfProgram fp, String filter,
                                   BpfProgram.BpfCompileMode optimize, Inet4Address netmask) {
@@ -127,6 +132,7 @@ class Core {
      * @param optimize optimize.
      * @param netmask netmask.
      * @return -1 on error.
+     * @since 1.1.5
      */
     public static int PcapCompileNoPcap(int snaplen_arg, DataLinkType linkType, BpfProgram program,
                                   String buf, BpfProgram.BpfCompileMode optimize, Inet4Address netmask) {
@@ -142,8 +148,9 @@ class Core {
 
     /**
      * Return the link layer of an adapter.
-     * @param pcap pcap object.
+     * @param pcap pcap instance.
      * @return link layer of an adapter.
+     * @since 1.1.5
      */
     public static DataLinkType PcapDatalink(Pcap pcap) {
         Validate.nullPointer(pcap);
@@ -153,9 +160,10 @@ class Core {
     /**
      * Set the current data link type of the pcap descriptor to the type
      * specified by dlt. -1 is returned on failure.
-     * @param pcap pcap object.
+     * @param pcap pcap instance.
      * @param linkType datalink type.
      * @return -1 on error, 0 otherwise.
+     * @since 1.1.5
      */
     public static int PcapSetDatalink(Pcap pcap, DataLinkType linkType) {
         Validate.nullPointer(pcap);
@@ -164,10 +172,11 @@ class Core {
     }
 
     /**
-     * Create a pcap_t structure without starting a capture.
+     * Create a pcap instance without starting a capture.
      * @param linkType datalink type.
      * @param snaplen snapshot length.
-     * @return pcap object.
+     * @return pcap instance.
+     * @since 1.1.5
      */
     public static Pcap PcapOpenDead(DataLinkType linkType, int snaplen) {
         Validate.nullPointer(linkType);
@@ -178,6 +187,7 @@ class Core {
     /**
      * Removes all of the elements.
      * @param pcapIf PcapIf object.
+     * @since 1.1.5
      */
     public static void PcapFreeAllDevs(List<PcapIf> pcapIf) {
         Validate.nullPointer(pcapIf);
@@ -190,6 +200,7 @@ class Core {
      * Return the first connected device to the network.
      * @param errbuf error buffer.
      * @return PcapIf object.
+     * @since 1.1.5
      */
     public static PcapIf LookupNetworkInterface(StringBuilder errbuf) {
         Validate.nullPointer(errbuf);
@@ -226,6 +237,7 @@ class Core {
      * Select network interface.
      * @param errbuf errbuf.
      * @return PcapIf.
+     * @since 1.1.5
      */
     public static PcapIf SelectNetowrkInterface(StringBuilder errbuf) {
         Validate.nullPointer(errbuf);

@@ -63,7 +63,7 @@ void *JlongToPointer(jlong address) {
 
 
 void SetStringBuilder(JNIEnv *env, jobject obj, const char *str) {
-	if(obj == NULL) {
+	if (obj == NULL) {
 		ThrowNew(env, NULL_PTR_EXCEPTION, NULL);
 	}
 	SetStringBuilderIDs(env);
@@ -76,7 +76,7 @@ jobject NewObject(JNIEnv *env, jclass class, const char *name, const char *signa
 }
 
 jbyteArray NewByteAddr(JNIEnv *env, struct sockaddr *addr) {
-	if(addr==NULL) {
+	if (addr==NULL) {
 		return NULL;
 	}
 	jbyteArray address = NULL;
@@ -98,7 +98,7 @@ jbyteArray NewByteAddr(JNIEnv *env, struct sockaddr *addr) {
 
 jobject NewSockAddr(JNIEnv *env, struct sockaddr *addr) {
 	jobject sockaddr = NewObject(env, SockAddrClass, "<init>", "()V");
-	if(addr == NULL) {
+	if (addr == NULL) {
 		return sockaddr;
 	}
 	(*env)->SetShortField(env, sockaddr, SockAddrSaFamilyFID, (jshort) addr->sa_family);
@@ -114,15 +114,12 @@ jobject SetPcap(JNIEnv *env, pcap_t *pcap) {
 }
 
 pcap_t *GetPcap(JNIEnv *env, jobject jpcap) {
-	if(jpcap == NULL) {
+	if (jpcap == NULL) {
 		ThrowNew(env, NULL_PTR_EXCEPTION, NULL);
 		return NULL;
 	}
 	SetPcapIDs(env);
 	jlong pcap = 0;
-	/*if ((pcap = (*env)->GetLongField(env, jpcap, PcapAddressFID)) == 0) {
-		ThrowNew(env, PCAP_CLOSE_EXCEPTION, NULL);
-	}*/
 	if ((pcap = (*env)->CallLongMethod(env, jpcap, PcapGetAddressMID)) == 0) {
 		ThrowNew(env, PCAP_CLOSE_EXCEPTION, NULL);
 	}
@@ -137,15 +134,12 @@ jobject SetFile(JNIEnv *env, FILE *file) {
 }
 
 FILE *GetFile(JNIEnv *env, jobject jf) {
-	if(jf == NULL) {
+	if (jf == NULL) {
 		ThrowNew(env, NULL_PTR_EXCEPTION, NULL);
 		return NULL;
 	}
 	SetFileIDs(env);
 	jlong file = 0;
-	/*if ((file = (*env)->GetLongField(env, jf, FileAddressFID)) == 0) {
-		ThrowNew(env, FILE_CLOSE_EXCEPTION, NULL);
-	}*/
 	if ((file = (*env)->CallLongMethod(env, jf, FileGetAddressMID)) == 0) {
 		ThrowNew(env, FILE_CLOSE_EXCEPTION, NULL);
 	}
@@ -160,15 +154,12 @@ jobject SetPcapDumper(JNIEnv *env, pcap_dumper_t *pcap_dumper) {
 }
 
 pcap_dumper_t *GetPcapDumper(JNIEnv *env, jobject jpcap_dumper) {
-	if(jpcap_dumper == NULL) {
+	if (jpcap_dumper == NULL) {
 		ThrowNew(env, NULL_PTR_EXCEPTION, NULL);
 		return NULL;
 	}
 	SetPcapDumperIDs(env);
 	jlong pcap_dumper = 0;
-	/*if ((pcap_dumper = (*env)->GetLongField(env, jpcap_dumper, PcapDumperAddressFID)) == 0) {
-		ThrowNew(env, PCAP_DUMPER_CLOSE_EXCEPTION, NULL);
-	}*/
 	if ((pcap_dumper = (*env)->CallLongMethod(env, jpcap_dumper, PcapDumperGetAddressMID)) == 0) {
 		ThrowNew(env, PCAP_DUMPER_CLOSE_EXCEPTION, NULL);
 	}
@@ -182,15 +173,12 @@ jobject SetBpfProgram(JNIEnv *env, jobject obj, struct bpf_program *fp) {
 }
 
 struct bpf_program *GetBpfProgram(JNIEnv *env, jobject jbpf_program) {
-	if(jbpf_program == NULL) {
+	if (jbpf_program == NULL) {
 		ThrowNew(env, NULL_PTR_EXCEPTION, NULL);
 		return NULL;
 	}
 	SetBpfProgramIDs(env);
 	jlong bpf_program = 0;
-	/*if ((bpf_program = (*env)->GetLongField(env, jbpf_program, BpfProgramAddressFID)) == 0) {
-		ThrowNew(env, BPF_PROGRAM_CLOSE_EXCEPTION, NULL);
-	}*/
 	if ((bpf_program = (*env)->CallLongMethod(env, jbpf_program, BpfProgramGetAddressMID)) == 0) {
 		ThrowNew(env, BPF_PROGRAM_CLOSE_EXCEPTION, NULL);
 	}
@@ -200,11 +188,6 @@ struct bpf_program *GetBpfProgram(JNIEnv *env, jobject jbpf_program) {
 void pcap_callback(u_char *user, const struct pcap_pkthdr *pkt_header, const u_char *pkt_data) {
 	pcap_user_data_t *user_data = (pcap_user_data_t *) user;
 	JNIEnv *env = user_data->env;
-	/*jobject pkt_hdr = NewObject(env, PcapPktHdrClass, "<init>", "()V");
-	(*env)->SetIntField(env, pkt_hdr, PcapPktHdrCaplenFID, (jint) pkt_header->caplen);
-	(*env)->SetIntField(env, pkt_hdr, PcapPktHdrLenFID, (jint) pkt_header->len);
-	(*env)->SetIntField(env, pkt_hdr, PcapPktHdrTvSecFID, (jint) pkt_header->ts.tv_sec);
-	(*env)->SetLongField(env, pkt_hdr, PcapPktHdrTvUsecFID, (jlong) pkt_header->ts.tv_usec);*/
 	jobject pkt_hdr = (*env)->CallStaticObjectMethod(env, PcapPktHdrClass, PcapPktHdrNewInstance,
             (jint) pkt_header->caplen,
             (jint) pkt_header->len,

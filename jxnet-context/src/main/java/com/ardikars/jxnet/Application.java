@@ -22,6 +22,10 @@ public class Application {
 
     }
 
+    public boolean isLoaded() {
+        return libraryIsLoaded;
+    }
+
     public static Application getInstance() {
         if (instance == null) {
             instance = new Application();
@@ -36,10 +40,19 @@ public class Application {
         libraryLoaders.add(libraryLoader);
     }
 
+<<<<<<< HEAD
+    public static void run(String applicationName, String applicationVersion, ApplicationInitializer initializer) throws UnsatisfiedLinkError {
+        getInstance().applicationName = applicationName;
+        getInstance().applicationVersion = applicationVersion;
+        getInstance().context = new ApplicationContext();
+
+        initializer.initialize(getInstance().getContext());
+=======
     public static void bootstrap(String applicationName, String applicationVersion) {
         getInstance().applicationName = applicationName;
         getInstance().applicationVersion = applicationVersion;
     }
+>>>>>>> master
 
     private static void start() throws UnsatisfiedLinkError {
         if (Platforms.isWindows()) {
