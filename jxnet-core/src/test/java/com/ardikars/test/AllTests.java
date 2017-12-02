@@ -19,7 +19,7 @@ import java.util.List;
 		PcapNextExTest.class, PcapOpenDeadTest.class, PcapOpenLiveTest.class,
 		PcapOpenOfflineTest.class, PcapBreakLoopTest.class, BlockingTest.class,
 		PcapDatalinkTest.class, PcapDispatchTest.class, PreconditionsTest.class,
-		MacAddrTest.class, PcapDumpTest.class, AddJavaLibraryPathTest.class })
+		MacAddrTest.class, PcapDumpTest.class} )
 public class AllTests {
 
 	private static StringBuilder errbuf = new StringBuilder();
