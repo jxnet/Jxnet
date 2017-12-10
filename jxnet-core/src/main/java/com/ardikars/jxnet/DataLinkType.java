@@ -87,14 +87,27 @@ public enum DataLinkType {
         this.description = description;
     }
 
+    /**
+     * Get datalink value.
+     * @return datalink value.
+     */
     public short getValue() {
         return this.value;
     }
 
+    /**
+     * Get dalink description
+     * @return datalink description.
+     */
     public String getDescription() {
         return this.description;
     }
 
+    /**
+     * Get datalink from value.
+     * @param dataLinkType datalink value.
+     * @return datalink.
+     */
     public static DataLinkType valueOf(final short dataLinkType) {
         for(DataLinkType f : values()) {
             if(f.getValue() == dataLinkType) {

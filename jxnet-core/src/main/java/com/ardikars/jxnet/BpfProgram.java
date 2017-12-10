@@ -53,6 +53,10 @@ public final class BpfProgram {
 		this.initBpfProgram();
 	}
 
+	/**
+	 * Get Bpf Program pointer address.
+	 * @return pointer address.
+	 */
 	public synchronized long getAddress() {
 		return this.address;
 	}

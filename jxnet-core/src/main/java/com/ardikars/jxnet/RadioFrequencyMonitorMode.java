@@ -31,6 +31,10 @@ public enum RadioFrequencyMonitorMode {
         this.value = value;
     }
 
+    /**
+     * Return 1 if in RFMon, 0 otherwise.
+     * @return
+     */
     public int getValue() {
         return value;
     }

@@ -21,6 +21,7 @@ package com.ardikars.jxnet;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
+@Deprecated
 public final class File extends java.io.File {
 
 	private long address;

@@ -13,6 +13,16 @@ public class ApplicationContext implements Application.Context {
     }
 
     @Override
+    public void addProperty(String key, Object value) {
+        Application.getInstance().addProperty(key, value);
+    }
+
+    @Override
+    public Object getProperty(String key) {
+        return Application.getInstance().getProperty(key);
+    }
+
+    @Override
     public void addLibrary(Library.Loader libraryLoader) {
         Application.getInstance().addLibrary(libraryLoader);
     }

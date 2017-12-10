@@ -31,6 +31,10 @@ public enum PromiscuousMode {
         this.value = value;
     }
 
+    /**
+     * Return 1 if in promicuous mode, 0 otherwise.
+     * @return  if in promicuous mode, 0 otherwise.
+     */
     public int getValue() {
         return value;
     }
