@@ -30,6 +30,9 @@ import java.util.List;
  */
 public final class Inet6Address extends InetAddress {
 
+	/**
+	 * Zero IPv6 Address.
+	 */
 	public static final Inet6Address ZERO = valueOf(new byte[] {
 			(byte) 0x0, (byte) 0x0, (byte) 0x0, (byte) 0x0,
 			(byte) 0x0, (byte) 0x0, (byte) 0x0, (byte) 0x0,
@@ -37,8 +40,14 @@ public final class Inet6Address extends InetAddress {
 			(byte) 0x0, (byte) 0x0, (byte) 0x0, (byte) 0x0,
 	});
 
+	/**
+	 * IPv6 Loopback Address (::1).
+	 */
 	public static final Inet6Address LOCALHOST = valueOf("::1");
-	
+
+	/**
+	 * IPv6 Address Length.
+	 */
 	public static final short IPV6_ADDRESS_LENGTH = 16;
 	
 	private byte[] address = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
@@ -53,18 +62,18 @@ public final class Inet6Address extends InetAddress {
 	}
 
 	/**
-	 * Create Inet6Address object.
+	 * Create Inet6Address instance.
 	 * @param address ipv6 bytes address.
-	 * @return Inet6Address object.
+	 * @return Inet6Address instance.
 	 */
 	public static Inet6Address valueOf(final byte[] address) {
 		return new Inet6Address(address);
 	}
 
 	/**
-	 * Create Inet6Address object.
+	 * Create Inet6Address instance.
 	 * @param inet6Address ipv6 string address.
-	 * @return Inet6Address object.
+	 * @return Inet6Address instance.
 	 */
 	public static Inet6Address valueOf(String inet6Address) {
 
