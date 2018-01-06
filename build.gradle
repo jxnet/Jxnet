@@ -180,7 +180,7 @@ dependencies {
 	compile project(':jxnet-core')
 }
 
-task distributions(type: Zip, dependsOn: build) {
+task dist(type: Zip, dependsOn: build) {
 
 	archiveName = "${NAME}-${VERSION}.zip"
 	

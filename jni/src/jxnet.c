@@ -439,9 +439,7 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapNext
   		return NULL;
   	}
 
-  	if (PcapPktHdrClass == NULL) {
-  		SetPcapPktHdrIDs(env);
-  	}
+    SetPcapPktHdrIDs(env);
 
   	struct pcap_pkthdr pkt_header;
 
@@ -476,13 +474,8 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapNextEx
   		return -1;
   	}
 
-  	if (PcapPktHdrClass == NULL) {
-  		SetPcapPktHdrIDs(env);
-  	}
-
-  	if (ByteBufferClass == NULL) {
-  		SetByteBufferIDs(env);
-  	}
+    SetPcapPktHdrIDs(env);
+    SetByteBufferIDs(env);
 
   	struct pcap_pkthdr *pkt_header;
   	const u_char *data = NULL;

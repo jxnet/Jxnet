@@ -20,6 +20,7 @@ package com.ardikars.jxnet;
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.4
+ * Not implemented yet.
  */
 public enum TimestampPrecision {
 

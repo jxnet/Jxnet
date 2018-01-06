@@ -16,6 +16,7 @@ dependencies {
 	compile project(":jxnet-context")
 	compile project(":jxnet-dynamic")
 	compile project(":jxnet-static")
+	compile project(":jxnet-android")
 	testCompile "junit:junit:${JUNIT_VERSION}"
 }
 

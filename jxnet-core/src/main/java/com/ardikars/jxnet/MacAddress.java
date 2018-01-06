@@ -27,7 +27,10 @@ import java.util.regex.Pattern;
  * @since 1.0.0
  */
 public final class MacAddress {
-	
+
+	/**
+	 * MAC Address Length.
+	 */
 	public static final int MAC_ADDRESS_LENGTH = 6;
 
 	/**
@@ -44,9 +47,12 @@ public final class MacAddress {
 	 * Broadcast MAC Address (ff:ff:ff:ff:ff:ff).
 	 */
 	public static final MacAddress BROADCAST = valueOf("ff:ff:ff:ff:ff:ff");
-	
+
+	/**
+	 * Multicast Address.
+	 */
 	public static final MacAddress IPV4_MULTICAST = valueOf("01:00:5e:00:00:00");
-	
+
 	public static final MacAddress IPV4_MULTICAST_MASK = valueOf("ff:ff:ff:80:00:00");
 	
 	private byte[] address = new byte[MAC_ADDRESS_LENGTH];
@@ -58,16 +64,16 @@ public final class MacAddress {
 	}
 
 	/**
-	 * Create MacAddress object from NIC name.
+	 * Create MacAddress instance from NIC name.
 	 * @param nicName NIC name.
-	 * @return MacAddress object.
+	 * @return MacAddress instance.
 	 */
 	public static native MacAddress fromNicName(final String nicName);
 
 	/**
-	 * Create MacAddress object.
+	 * Create MacAddress instance.
 	 * @param address string MAC Address.
-	 * @return MacAddress object.
+	 * @return MacAddress instance.
 	 */
 	public static MacAddress valueOf(String address) {
 		address = Validate.nullPointer(address, "00:00:00:00:00:00");
@@ -82,18 +88,18 @@ public final class MacAddress {
 	}
 
 	/**
-	 * Create MacAddress object.
+	 * Create MacAddress instance.
 	 * @param address bytes MAC Address.
-	 * @return MacAddress object.
+	 * @return MacAddress instance.
 	 */
 	public static MacAddress valueOf(final byte[] address) {
 		return new MacAddress(address);
 	}
 
 	/**
-	 * Create MacAddress object.
+	 * Create MacAddress instance.
 	 * @param address long MAC Address.
-	 * @return MacAddress object.
+	 * @return MacAddress instance.
 	 */
 	public static MacAddress valueOf(final long address) {
 		final byte[] bytes = new byte[] {

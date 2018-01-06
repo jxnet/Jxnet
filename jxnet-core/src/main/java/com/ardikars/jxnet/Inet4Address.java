@@ -28,10 +28,19 @@ import java.util.Arrays;
  */
 public final class Inet4Address extends InetAddress {
 
+	/**
+	 * IPv4 Address (0.0.0.0).
+	 */
 	public static final Inet4Address ZERO = valueOf(0);
 
+	/**
+	 * IPv4 Loopback address (127.0.0.1).
+	 */
 	public static final Inet4Address LOCALHOST = valueOf("127.0.0.1");
 
+	/**
+	 * IPv4 Address Length.
+	 */
 	public static final int IPV4_ADDRESS_LENGTH = 4;
 	
 	private byte[] address = new byte[Inet4Address.IPV4_ADDRESS_LENGTH];
@@ -47,9 +56,9 @@ public final class Inet4Address extends InetAddress {
 	}
 
 	/**
-	 * Create Inet4Address object.
+	 * Create Inet4Address instance.
 	 * @param inet4Address ipv4 string address.
-	 * @return Inet4Address object.
+	 * @return Inet4Address instance.
 	 */
 	public static Inet4Address valueOf(String inet4Address) {
 		inet4Address = Validate.nullPointer(inet4Address, "0.0.0.0");
@@ -67,18 +76,18 @@ public final class Inet4Address extends InetAddress {
 	}
 
 	/**
-	 * Create IPv4Address object.
+	 * Create IPv4Address instance.
 	 * @param address ipv4 bytes address.
-	 * @return IPv4Address object.
+	 * @return IPv4Address instance.
 	 */
 	public static Inet4Address valueOf(final byte[] address) {
 		return new Inet4Address(address);
 	}
 
 	/**
-	 * Create Inet4Address object.
+	 * Create Inet4Address instance.
 	 * @param address ipv4 int address.
-	 * @return Inet4Address object.
+	 * @return Inet4Address instance.
 	 */
 	public static Inet4Address valueOf(final int address) {
 		return new Inet4Address(new byte[]{(byte) (address >>> 24),
@@ -99,12 +108,6 @@ public final class Inet4Address extends InetAddress {
 		return ip;
 	}
 
-	private long toLong() {
-		ByteBuffer bb = ByteBuffer.allocate(this.address.length);
-		bb.put(this.address);
-		return bb.getLong();
-	}
-
 	/**
 	 * Returning bytes address of Inet4Address.
 	 * @return bytes ipv4 address.
@@ -113,6 +116,10 @@ public final class Inet4Address extends InetAddress {
 		return Arrays.copyOf(this.address, this.address.length);
 	}
 
+	/**
+	 * Change value of Inet4address.
+	 * @param inet4address Inet4Address.
+	 */
 	public void update(final Inet4Address inet4address) {
 		Validate.nullPointer(inet4address);
 		this.address = inet4address.toBytes();

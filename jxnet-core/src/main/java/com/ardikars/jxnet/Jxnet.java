@@ -377,9 +377,9 @@ public final class Jxnet extends Core {
 
 	/**
 	 * Return the subnet and netmask of an interface.
-	 * @param device interface name/
-	 * @param netp netproto
-	 * @param maskp netmask
+	 * @param device interface name.
+	 * @param netp netproto.
+	 * @param maskp netmask.
 	 * @param errbuf error buffer.
 	 * @return -1 on error, 0 otherwise.
 	 * @since 1.1.4
@@ -544,8 +544,8 @@ public final class Jxnet extends Core {
                     context.addLibrary(new StaticLibrary());
                 }
             };
-            Application.run("", "", initializer);
-        }
+			Application.run("", "", initializer);
+		}
 	}
 
 }

@@ -31,6 +31,10 @@ public enum ImmediateMode {
         this.value = value;
     }
 
+    /**
+     * Get immediate mode.
+     * @return true if immediate mode, false otherwise.
+     */
     public int getValue() {
         return value;
     }

@@ -4,8 +4,7 @@ import com.ardikars.jxnet.util.Platforms;
 
 import java.io.File;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Application {
 
@@ -17,13 +16,10 @@ public class Application {
 
     private String applicationName;
     private String applicationVersion;
+    private Map<String, Object> properties;
     private Context context;
 
-    private Application() {
-
-    }
-
-    public boolean isLoaded() {
+    protected boolean isLoaded() {
         return loaded;
     }
 
@@ -31,18 +27,33 @@ public class Application {
         this.developmentMode = true;
     }
 
-    public static Application getInstance() {
+    private Application() {
+
+    }
+
+    protected static Application getInstance() {
         if (instance == null) {
             instance = new Application();
+            if (instance.libraryLoaders == null) {
+                instance.libraryLoaders = new ArrayList<Library.Loader>();
+            }
+            if (instance.properties == null) {
+                instance.properties = new HashMap<String, Object>();
+            }
         }
         return instance;
     }
 
-    public void addLibrary(Library.Loader libraryLoader) {
-        if (libraryLoaders == null) {
-            libraryLoaders = new ArrayList<Library.Loader>();
-        }
+    protected void addLibrary(Library.Loader libraryLoader) {
         libraryLoaders.add(libraryLoader);
+    }
+
+    protected void addProperty(String key, Object value) {
+        properties.put(key, value);
+    }
+
+    protected Object getProperty(String key) {
+        return properties.get(key);
     }
 
     public static void run(String applicationName, String applicationVersion, ApplicationInitializer initializer) throws UnsatisfiedLinkError {
@@ -82,8 +93,13 @@ public class Application {
             }
         }
 
-        if (getInstance().developmentMode) {
-            System.loadLibrary("jxnet");
+        if (getInstance().developmentMode && !getInstance().loaded) {
+            try {
+                System.loadLibrary("jxnet");
+                getInstance().loaded = true;
+            } catch (Exception e) {
+                getInstance().loaded = false;
+            }
         } else {
             if (!getInstance().loaded && getInstance().libraryLoaders != null && !getInstance().libraryLoaders.isEmpty()) {
                 for (Library.Loader loader : getInstance().libraryLoaders) {
@@ -99,25 +115,24 @@ public class Application {
         }
     }
 
-    public String getApplicationName() {
+    protected String getApplicationName() {
         return applicationName;
     }
 
-    public String getApplicationVersion() {
+    protected String getApplicationVersion() {
         return applicationVersion;
     }
 
-    public Context getContext() {
+    protected Context getContext() {
         return context;
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("Application{");
-        sb.append("applicationName='").append(applicationName).append('\'');
-        sb.append(", applicationVersion='").append(applicationVersion).append('\'');
-        sb.append('}');
-        return sb.toString();
+    public static Application.Context getApplicationContext() {
+        Application.Context context = getInstance().getContext();
+        if (context == null) {
+            throw new NullPointerException("No application context found.");
+        }
+        return context;
     }
 
     public interface Context {
@@ -125,6 +140,10 @@ public class Application {
         String getApplicationName();
 
         String getApplicationVersion();
+
+        void addProperty(String key, Object value);
+
+        Object getProperty(String key);
 
         void addLibrary(Library.Loader libraryLoader);
 
