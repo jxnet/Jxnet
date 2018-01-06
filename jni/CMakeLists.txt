@@ -1,7 +1,7 @@
 
-/**
- * Copyright (C) 2017  Ardika Rommy Sanjaya
- */
+#
+# Copyright (C) 2017  Ardika Rommy Sanjaya
+#
 
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 set(CMAKE_LAGACY_CYGWIN_WIN32 0)
@@ -50,4 +50,3 @@ ELSE()
 	find_library(PCAP_LIB pcap)
 	target_link_libraries(jxnet ${PCAP_LIB})
 ENDIF()
-
