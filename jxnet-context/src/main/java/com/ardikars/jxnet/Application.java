@@ -82,8 +82,13 @@ public class Application {
             }
         }
 
-        if (getInstance().developmentMode) {
-            System.loadLibrary("jxnet");
+        if (getInstance().developmentMode && !getInstance().loaded) {
+            try {
+                System.loadLibrary("jxnet");
+                getInstance().loaded = true;
+            } catch (Exception e) {
+                getInstance().loaded = false;
+            }
         } else {
             if (!getInstance().loaded && getInstance().libraryLoaders != null && !getInstance().libraryLoaders.isEmpty()) {
                 for (Library.Loader loader : getInstance().libraryLoaders) {
