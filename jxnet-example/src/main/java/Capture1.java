@@ -58,7 +58,7 @@ public class Capture1 {
         PcapClose(handle);
     }
 
-    public static void exit(int status) {
+    public static void exit(int status)  {
         System.exit(status);
     }
 

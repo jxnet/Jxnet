@@ -33,7 +33,7 @@ public enum RadioFrequencyMonitorMode {
 
     /**
      * Return 1 if in RFMon, 0 otherwise.
-     * @return
+     * @return 1 if in RFMon, 0 otherwise.
      */
     public int getValue() {
         return value;
