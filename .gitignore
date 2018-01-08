@@ -59,6 +59,10 @@ a.out
 /jxnet-example/build/
 /jxnet-example/target
 /jxnet-example/out
+/jni/cmake-build-debug/
+/jni/.idea
+/jni/test
+/jni/build
 /jni/libjxnet.so
 /jni/libjxnet.so.a
 /jni/jxnet.dll
