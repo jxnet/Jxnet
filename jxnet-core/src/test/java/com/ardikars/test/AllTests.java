@@ -67,7 +67,7 @@ public class AllTests {
 			PcapClose(pcap);
 			throw new JxnetException(err);
 		}
-		if (Platforms.isLinux()) {
+		if (!Platforms.isWindows()) {
 			if (PcapSetImmediateMode(pcap, immediate) != 0) {
 				String err = PcapGetErr(pcap);
 				PcapClose(pcap);
