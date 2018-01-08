@@ -5,5 +5,5 @@ include 'jxnet-core'
 include 'jxnet-static'
 include 'jxnet-dynamic'
 include 'jxnet-android'
-include 'jxnet-example'
+//include 'jxnet-example'
 
