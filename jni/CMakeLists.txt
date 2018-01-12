@@ -10,8 +10,8 @@ project(jni)
 # set(CMAKE_LAGACY_CYGWIN_WIN32 0)
 set(CMAKE_C_STANDARD 99)
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
-    "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" OR
+    "${CMAKE_C_COMPILER_ID}" STREQUAL "Clang")
     message (STATUS "GCC OR CLANG")
     set(warnings "-Wall -Wextra -Werror")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
