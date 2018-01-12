@@ -3,10 +3,21 @@
  * Copyright (C) 2017  Ardika Rommy Sanjaya
  */
 
+//create a single Jar with all dependencies
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Jxnet Example Application',
+                'Implementation-Version': version,
+                'Main-Class': 'Application'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
 dependencies {
-    compile project(':jxnet-static')
     compile project(':jxnet-dynamic')
-    compile project(':jxnet-android')
+    compile project(':jxnet-static')
     compile project(':jxnet-core')
     testCompile "junit:junit:${JUNIT_VERSION}"
 }
