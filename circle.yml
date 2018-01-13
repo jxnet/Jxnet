@@ -1,7 +1,7 @@
 
 machine:
   java:
-    version: oraclejdk8
+    version: oraclejdk7
 
 general:
   branches:
@@ -9,6 +9,6 @@ general:
     - master
 
 test:
-  override:
-    - sudo ./gradlew clean build -x test
-
+    post:
+        - if [ -e ./gradlew ]; then sudo ./gradlew codeCoverageReport;else sudo gradle codeCoverageReport;fi
+        - sudo bash <(curl -s https://codecov.io/bash)
