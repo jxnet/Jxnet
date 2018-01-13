@@ -34,19 +34,19 @@
 #define ILLEGAL_ARGUMENT_EXCEPTION "java/lang/IllegalArgumentException"
 
 typedef struct pcap_user_data_t {
-        JNIEnv *env;
-        jobject callback;
-        jobject user;
-        jclass PcapHandlerClass;
-        jmethodID PcapHandlerNextPacketMID;
+    JNIEnv *env;
+    jobject callback;
+    jobject user;
+    jclass PcapHandlerClass;
+    jmethodID PcapHandlerNextPacketMID;
 } pcap_user_data_t;
 
 typedef struct arp_user_data_t {
-        JNIEnv *env;
-        jobject callback;
-        jobject user;
-        jclass ArpHandlerClass;
-        jmethodID ArpHandlerNextArpEntryMID;
+    JNIEnv *env;
+    jobject callback;
+    jobject user;
+    jclass ArpHandlerClass;
+    jmethodID ArpHandlerNextArpEntryMID;
 } arp_user_data_t;
 
 void swap_order_uint32(uint32_t *value);
@@ -59,7 +59,7 @@ void ThrowNew(JNIEnv *env, const char *class_name, const char *message);
 
 void SetStringBuilder(JNIEnv *env, jobject obj, const char *str);
 
-jobject NewObject(JNIEnv *env, jclass class, const char *name, const char *signature);
+jobject NewObject(JNIEnv *env, const char *class_name, const char *name, const char *signature);
 
 jbyteArray NewByteAddr(JNIEnv *env, struct sockaddr *addr);
 

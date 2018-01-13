@@ -226,7 +226,7 @@ public final class Jxnet extends Core {
 	public static native String PcapGetErr(Pcap pcap);
 
 	/**
-	 * Returns a pointer to a string giving information about the version of the libpcap library being used;
+	 * Returns a string giving information about the version of the libpcap library being used;
 	 * note that it contains more information than just a version number.
 	 * @return libpcap version.
 	 * @since 1.1.4
@@ -404,7 +404,7 @@ public final class Jxnet extends Core {
 	/**
 	 * Print the text of the last pcap library error on stderr, prefixed by prefix.
 	 * @param pcap pcap instance.
-	 * @param prefix prrfix.
+	 * @param prefix prefix.
 	 * @since 1.1.4
 	 */
 	public static native void PcapPError(Pcap pcap, String prefix);

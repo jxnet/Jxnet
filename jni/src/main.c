@@ -15,14 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet;
+#include <stdio.h>
+#include <pcap.h>
 
-/**
- * @author Ardika Rommy Sanjaya
- * @since 1.1.5
- */
-public interface ApplicationInitializer {
-
-    void initialize(Application.Context context);
-
+int main(void) {
+    printf("%s\n", pcap_lib_version());
+    return 0;
 }

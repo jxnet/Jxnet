@@ -71,7 +71,8 @@ void SetStringBuilder(JNIEnv *env, jobject obj, const char *str) {
 	(*env)->CallObjectMethod(env, obj, StringBuilderAppendMID, (*env)->NewStringUTF(env, str));
 }
 
-jobject NewObject(JNIEnv *env, jclass class, const char *name, const char *signature) {
+jobject NewObject(JNIEnv *env, const char *class_name, const char *name, const char *signature) {
+	jclass class = (*env)->FindClass(env, class_name);
 	return (*env)->NewObject(env, class, (*env)->GetMethodID(env, class, name, signature));
 }
 
@@ -97,7 +98,7 @@ jbyteArray NewByteAddr(JNIEnv *env, struct sockaddr *addr) {
 }
 
 jobject NewSockAddr(JNIEnv *env, struct sockaddr *addr) {
-	jobject sockaddr = NewObject(env, SockAddrClass, "<init>", "()V");
+	jobject sockaddr = NewObject(env, "com/ardikars/jxnet/SockAddr", "<init>", "()V");
 	if (addr == NULL) {
 		return sockaddr;
 	}
@@ -108,9 +109,9 @@ jobject NewSockAddr(JNIEnv *env, struct sockaddr *addr) {
 
 jobject SetPcap(JNIEnv *env, pcap_t *pcap) {
 	SetPcapIDs(env);
-	jobject obj = NewObject(env, PcapClass, "<init>", "()V");
-  	(*env)->SetLongField(env, obj, PcapAddressFID, PointerToJlong(pcap));
-  	return obj;
+	jobject obj = NewObject(env, "com/ardikars/jxnet/Pcap", "<init>", "()V");
+	(*env)->SetLongField(env, obj, PcapAddressFID, PointerToJlong(pcap));
+	return obj;
 }
 
 pcap_t *GetPcap(JNIEnv *env, jobject jpcap) {
@@ -128,9 +129,9 @@ pcap_t *GetPcap(JNIEnv *env, jobject jpcap) {
 
 jobject SetFile(JNIEnv *env, FILE *file) {
 	SetFileIDs(env);
-	jobject obj = NewObject(env, FileClass, "<init>", "()V");
-  	(*env)->SetLongField(env, obj, FileAddressFID, PointerToJlong(file));
-  	return obj;
+	jobject obj = NewObject(env, "com/ardikars/jxnet/File", "<init>", "()V");
+	(*env)->SetLongField(env, obj, FileAddressFID, PointerToJlong(file));
+	return obj;
 }
 
 FILE *GetFile(JNIEnv *env, jobject jf) {
@@ -148,9 +149,9 @@ FILE *GetFile(JNIEnv *env, jobject jf) {
 
 jobject SetPcapDumper(JNIEnv *env, pcap_dumper_t *pcap_dumper) {
 	SetPcapDumperIDs(env);
-	jobject obj = NewObject(env, PcapDumperClass, "<init>", "()V");
-  	(*env)->SetLongField(env, obj, PcapDumperAddressFID, PointerToJlong(pcap_dumper));
-  	return obj;
+	jobject obj = NewObject(env, "com/ardikars/jxnet/PcapDumper", "<init>", "()V");
+	(*env)->SetLongField(env, obj, PcapDumperAddressFID, PointerToJlong(pcap_dumper));
+	return obj;
 }
 
 pcap_dumper_t *GetPcapDumper(JNIEnv *env, jobject jpcap_dumper) {
@@ -168,8 +169,8 @@ pcap_dumper_t *GetPcapDumper(JNIEnv *env, jobject jpcap_dumper) {
 
 jobject SetBpfProgram(JNIEnv *env, jobject obj, struct bpf_program *fp) {
 	SetBpfProgramIDs(env);
-  	(*env)->SetLongField(env, obj, BpfProgramAddressFID, PointerToJlong(fp));
-  	return obj;
+	(*env)->SetLongField(env, obj, BpfProgramAddressFID, PointerToJlong(fp));
+	return obj;
 }
 
 struct bpf_program *GetBpfProgram(JNIEnv *env, jobject jbpf_program) {
@@ -189,16 +190,16 @@ void pcap_callback(u_char *user, const struct pcap_pkthdr *pkt_header, const u_c
 	pcap_user_data_t *user_data = (pcap_user_data_t *) user;
 	JNIEnv *env = user_data->env;
 	jobject pkt_hdr = (*env)->CallStaticObjectMethod(env, PcapPktHdrClass, PcapPktHdrNewInstance,
-            (jint) pkt_header->caplen,
-            (jint) pkt_header->len,
-            (jint) pkt_header->ts.tv_sec,
-            (jlong) pkt_header->ts.tv_usec);
+													 (jint) pkt_header->caplen,
+													 (jint) pkt_header->len,
+													 (jint) pkt_header->ts.tv_sec,
+													 (jlong) pkt_header->ts.tv_usec);
 	(*env)->CallNonvirtualVoidMethod(env,
-    			user_data->callback,
-			user_data->PcapHandlerClass,
-			user_data->PcapHandlerNextPacketMID,
-			user_data->user,
-			pkt_hdr,
-			(*env)->NewDirectByteBuffer(env, (void *) pkt_data, (jint) pkt_header->caplen));
+									 user_data->callback,
+									 user_data->PcapHandlerClass,
+									 user_data->PcapHandlerNextPacketMID,
+									 user_data->user,
+									 pkt_hdr,
+									 (*env)->NewDirectByteBuffer(env, (void *) pkt_data, (jint) pkt_header->caplen));
 	(*env)->DeleteLocalRef(env, pkt_hdr);
 }
