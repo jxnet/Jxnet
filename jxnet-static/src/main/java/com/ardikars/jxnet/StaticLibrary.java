@@ -21,6 +21,7 @@ public class StaticLibrary implements Library.Loader {
                 }
                 break;
             case WINDOWS:
+                System.setProperty("java.library.path", "C:\\Windows\\System32\\Npcap");
                 if (Platforms.is64Bit()) {
                     Library.loadLibrary("/static/windows/lib/x64/jxnet.dll");
                 } else {
