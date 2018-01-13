@@ -7,7 +7,7 @@ dist:
   - trusty
 
 jdk:
-  - oraclejdk8
+  - openjdk7
 
 os:
   - linux
@@ -16,8 +16,8 @@ group:
   - stable
 
 before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution
+  - sudo rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - sudo rm -fr $HOME/.gradle/caches/*/plugin-resolution
 
 cache:
   directories:
@@ -30,11 +30,15 @@ branches:
   only:
     - master
 
+before_script:
+  - chmod +x gradlew
+
 script:
   - sudo ./gradlew clean build -x test --info --no-daemon
+  - sudo ./gradlew codeCoverageReport
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - sudo bash <(curl -s https://codecov.io/bash)
 
 notifications:
   email:
@@ -42,4 +46,3 @@ notifications:
       - ardikars@gmail.com
     on_success: change
     on_failure: always
-

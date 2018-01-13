@@ -1,4 +1,9 @@
 
+#---------------------------------#
+#      general configuration      #
+#---------------------------------#
+
+# version format
 version: '{build}-{branch}'
 
 branches:
@@ -7,34 +12,63 @@ branches:
   except:
     - development
 
+# Do not build on tags
 skip_tags: true
 
+#---------------------------------#
+#    environment configuration    #
+#---------------------------------#
+
+# Operating system (build VM template)
 os: Windows Server 2012 R2
 
+# fetch repository as zip archive
 shallow_clone: true
 
 cache:
   - C:\Users\appveyor\.gradle\wrapper
   - C:\Users\appveyor\.gradle\native
   - C:\Users\appveyor\.gradle\daemon
-  - C:\Users\appveyor\.gradle\caches
+#  - C:\Users\appveyor\.gradle\caches
 
+# environment variables
+environment:
+  JAVA_HOME: C:\Program Files (x86)\Java\jdk1.8.0
+
+# scripts that run after cloning repository
 install:
-  - ps: (new-object net.webclient).DownloadFile('https://nmap.org/npcap/dist/npcap-0.91.exe', 'npcap.exe')
-  - ps: npcap.exe /S /npf_startup=yes /loopback_support=yes /dlt_null=no /admin_only=no /dot11_support=no /vlan_support=no /winpcap_mode=yes
+  # Install WinPcap
+  #- cmd: choco install -y winpcap
 
+  # Install nmap which includes WinPcap instead of WinPcap itself to avoid an issue where
+  # installation of autohotkey.portable which is used by choco install script for WinPcap
+  # randomly fails somehow.
+  - cmd: choco install -y nmap
+
+#---------------------------------#
+#       build configuration       #
+#---------------------------------#
+
+# build platform, i.e. x86, x64, Any CPU. This setting is optional.
 platform: Any CPU
 
 build_script:
-  - cmd: gradlew.bat clean build -x test --info --no-daemon
+  - cmd: gradlew.bat clean build --info --no-daemon
 
-test: off
-#test_script:
-#  - cmd: gradlew.bat clean test codeCoverageReport --info --no-daemon
+#---------------------------------#
+#       tests configuration       #
+#---------------------------------#
+
+test_script:
+  - cmd: gradlew.bat test --info --no-daemon
+
+#---------------------------------#
+#         notifications           #
+#---------------------------------#
 
 notifications:
   - provider: Email
     to: ardikars@gmail.com
     on_build_success: false
     on_build_failure: true
-
+    
