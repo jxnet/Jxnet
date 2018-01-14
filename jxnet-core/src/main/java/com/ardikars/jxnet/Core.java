@@ -197,6 +197,50 @@ class Core {
     }
 
     /**
+     * Removes all of the elements.
+     * @param dtl_list datalinks.
+     */
+    public static void PcapFreeDataLinks(List<Integer> dtl_list) {
+        Validate.nullPointer(dtl_list);
+        if (!dtl_list.isEmpty()) {
+            dtl_list.clear();
+        }
+    }
+
+    /**
+     * Removes all of the elements.
+     * @param tstamp_type_list time stamp types.
+     */
+    public static void PcapFreeTStampTypes(List<Integer> tstamp_type_list) {
+        Validate.nullPointer(tstamp_type_list);
+        if (!tstamp_type_list.isEmpty()) {
+            tstamp_type_list.clear();
+        }
+    }
+
+    /**
+     * Removes all of the elements.
+     * @param dtl_list datalinks.
+     */
+    public static void PcapFreeDataLinks0(List<DataLinkType> dtl_list) {
+        Validate.nullPointer(dtl_list);
+        if (!dtl_list.isEmpty()) {
+            dtl_list.clear();
+        }
+    }
+
+    /**
+     * Removes all of the elements.
+     * @param tstamp_type_list time stamp types.
+     */
+    public static void PcapFreeTStampTypes0(List<TimeStampType> tstamp_type_list) {
+        Validate.nullPointer(tstamp_type_list);
+        if (!tstamp_type_list.isEmpty()) {
+            tstamp_type_list.clear();
+        }
+    }
+
+    /**
      * Return the first connected device to the network.
      * @param errbuf error buffer.
      * @return PcapIf object.
@@ -268,6 +312,57 @@ class Core {
             }
             return pcapIfs.get(i-1);
         }
+    }
+
+    /**
+     * Get list of datalinks.
+     * @param pcap pcap instance.
+     * @param dataLinkTypes datalinks.
+     * @return list of datalinks.
+     */
+    public static int PcapListDataLinks0(Pcap pcap, List<DataLinkType> dataLinkTypes) {
+        List<Integer> datalinks = new ArrayList<Integer>();
+        int result = Jxnet.PcapListDataLinks(pcap, datalinks);
+        for (Integer datalink : datalinks) {
+            dataLinkTypes.add(DataLinkType.valueOf(datalink.shortValue()));
+        }
+        return result;
+    }
+
+    /**
+     * Get link of time stamp types.
+     * @param pcap pcap instance.
+     * @param timeStampTypes time stamp types.
+     * @return time stamp types.
+     */
+    public static int PcapListTStampTypes0(Pcap pcap, List<TimeStampType> timeStampTypes) {
+        List<Integer> tsTypes = new ArrayList<Integer>();
+        int result = Jxnet.PcapListTStampTypes(pcap, tsTypes);
+        for (Integer tsType : tsTypes) {
+            timeStampTypes.add(TimeStampType.valueOf(tsType.intValue()));
+        }
+        return result;
+    }
+
+    /**
+     * Get the time stamp precision returned in captures.
+     * @param pcap pcap instance.
+     * @return the precision of the time stamp returned in packet captures on the pcap descriptor.
+     */
+    public static TimeStampPrecision PcapGetTStampPrecision0(Pcap pcap) {
+        int timeStampPrecision = Jxnet.PcapGetTStampPrecision(pcap);
+        return TimeStampPrecision.valueOf(timeStampPrecision);
+    }
+
+    /**
+     * Set the time stamp type returned in captures.
+     * @param pcap pcap.
+     * @param timeStampPrecision time stamp type.
+     * @return 0 on success if specified time type precision is expected to be supported
+     * by operating system.
+     */
+    public static int PcapSetTStampType(Pcap pcap, TimeStampPrecision timeStampPrecision) {
+        return Jxnet.PcapSetTStampPrecision(pcap, timeStampPrecision.getValue());
     }
 
 }

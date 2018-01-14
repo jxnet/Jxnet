@@ -22,18 +22,36 @@ package com.ardikars.jxnet;
  * @since 1.1.4
  * Not implemented yet.
  */
-public enum TimestampPrecision {
+public enum TimeStampPrecision {
 
     TIMESTAMP_MICRO(0), TIMESTAMP_NANO(1);
 
     private final int value;
 
-    TimestampPrecision(final int value) {
+    TimeStampPrecision(final int value) {
         this.value = value;
     }
 
+    /**
+     * Get time stamp precision value;
+     * @return time stamp precision value;
+     */
     public int getValue() {
         return value;
+    }
+
+    /**
+     * Get time stamp precision.
+     * @param value
+     * @return time stamp precision
+     */
+    public static TimeStampPrecision valueOf(final int value) {
+        for (TimeStampPrecision timeStampPrecision : values()) {
+            if (timeStampPrecision.getValue() == value) {
+                return timeStampPrecision;
+            }
+        }
+        return null;
     }
 
 }

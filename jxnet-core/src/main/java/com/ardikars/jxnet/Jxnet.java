@@ -526,14 +526,39 @@ public final class Jxnet extends Core {
 	 * @return 0 on success if specified time stamp precision is expected to be supported
 	 * by operating system.
 	 */
-	//public static native int PcapSetTStampPrecision(Pcap pcap, int tstamp_precision);
+	public static native int PcapSetTStampPrecision(Pcap pcap, int tstamp_precision);
+
+	/**
+	 * Set the time stamp type returned in captures.
+	 * @param pcap pcap.
+	 * @param type time stamp type.
+	 * @return 0 on success if specified time type precision is expected to be supported
+	 * by operating system.
+	 */
+	public static native int PcapSetTStampType(Pcap pcap, int type);
 
 	/**
 	 * Get the time stamp precision returned in captures.
 	 * @param pcap pcap instance.
 	 * @return the precision of the time stamp returned in packet captures on the pcap descriptor.
 	 */
-	// public static native int PcapGetTStampPrecision(Pcap pcap);
+	public static native int PcapGetTStampPrecision(Pcap pcap);
+
+	/**
+	 * Get list of datalinks.
+	 * @param pcap pcap instance.
+	 * @param dtl_buffer datalinks.
+	 * @return list of datalinks.
+	 */
+	public static native int PcapListDataLinks(Pcap pcap, List<Integer> dtl_buffer);
+
+	/**
+	 * Get link of time stamp types.
+	 * @param pcap pcap instance.
+	 * @param tstamp_typesp time stamp types.
+	 * @return time stamp types.
+	 */
+	public static native int PcapListTStampTypes(Pcap pcap, List<Integer> tstamp_typesp);
 
 	static {
 		if (!Application.getInstance().isLoaded()) {

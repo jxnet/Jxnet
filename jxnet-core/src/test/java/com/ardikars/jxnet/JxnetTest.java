@@ -450,6 +450,52 @@ public class JxnetTest {
         }
     }
 
+    @Test
+    public void Test27_PcapGetTStampPrecisionAndPcapSetTStampPrecision() {
+        int timestamp = PcapGetTStampPrecision(pcap);
+        System.out.println("Time stamp precision (before): " + timestamp);
+        if ((resultCode = PcapSetTStampPrecision(pcap, (timestamp == 0 ? 1 : 0))) != OK) {
+            logger.warning("Timestamp precision not supported by operation system.");
+        }
+        timestamp = PcapGetTStampPrecision(pcap);
+        System.out.println("Time stamp precision (after) : " + timestamp);
+    }
+
+    @Test
+    public void Test28_PcapSetTStampType() {
+        if ((resultCode = PcapSetTStampType(pcap, 1)) != OK) {
+            logger.warning("Timestamp type not supported by operation system.");
+        }
+    }
+
+    @Test
+    public void Test29_PcapListDatalinks() {
+        List<Integer> datalinks = new ArrayList<Integer>();
+        if ((resultCode = PcapListDataLinks(pcap, datalinks)) < 0) {
+            logger.warning("PcapListDataLinks:PcapListDataLinks(): " + PcapStrError(resultCode));
+            return;
+        }
+        System.out.print("DataLinks:");
+        for (Integer datalink : datalinks) {
+            System.out.print(" " + datalink);
+        }
+        PcapFreeDataLinks(datalinks);
+    }
+
+    @Test
+    public void Test30_PcapListTStampTypes() {
+        List<Integer> tsTypes = new ArrayList<Integer>();
+        if ((resultCode = PcapListTStampTypes(pcap, tsTypes)) < 0) {
+            logger.warning("PcapListTStampTypes:PcapListTStampTypes(): " + PcapStrError(resultCode));
+            return;
+        }
+        System.out.print("Time Stamp Types:");
+        for (Integer tsType : tsTypes) {
+            System.out.print(" " + tsType);
+        }
+        PcapFreeTStampTypes(tsTypes);
+    }
+
     @After
     public void destroy() {
         PcapClose(pcap);

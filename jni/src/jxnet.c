@@ -1236,3 +1236,78 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetDirection
 #endif
 	return -1;
 }
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapSetTStampPrecision
+ * Signature: (Lcom/ardikars/jxnet/Pcap;I)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetTStampPrecision
+		(JNIEnv *env, jclass jclazz, jobject jpcap, jint jtstamp_precision) {
+	return pcap_set_tstamp_precision(GetPcap(env, jpcap), jtstamp_precision);
+}
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapSetTStampType
+ * Signature: (Lcom/ardikars/jxnet/Pcap;I)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetTStampType
+		(JNIEnv *env, jclass jclazz, jobject jpcap, jint jtype) {
+	return pcap_set_tstamp_type(GetPcap(env, jpcap), jtype);
+}
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapGetTStampPrecision
+ * Signature: (Lcom/ardikars/jxnet/Pcap;)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapGetTStampPrecision
+		(JNIEnv *env, jclass jclazz, jobject jpcap) {
+	return pcap_get_tstamp_precision(GetPcap(env, jpcap));
+}
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapListDataLinks
+ * Signature: (Lcom/ardikars/jxnet/Pcap;Ljava/util/List;)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapListDataLinks
+        (JNIEnv *env, jclass jclazz, jobject jpcap, jobject jdtl_buffer) {
+    SetListIDs(env);
+    int *dtl_buffer;
+    int count = pcap_list_datalinks(GetPcap(env, jpcap), &dtl_buffer);
+    int i;
+    for (i=0; i<count; i++) {
+        jclass jclazz = (*env)->FindClass(env, "java/lang/Integer");
+        jobject jinteger = (*env)->NewObject(env, jclazz, (*env)->GetMethodID(env, jclazz, "<init>", "(I)V"), dtl_buffer[i]);
+        if ((*env)->CallBooleanMethod(env, jdtl_buffer, ListAddMID, jinteger) == JNI_FALSE) {
+            (*env)->DeleteLocalRef(env, jinteger);
+            return (jint) -1;
+        }
+    }
+    pcap_free_datalinks(dtl_buffer);
+    return count;
+}
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapListTStampTypes
+ * Signature: (Lcom/ardikars/jxnet/Pcap;Ljava/util/List;)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapListTStampTypes
+        (JNIEnv *env, jclass jclazz, jobject jpcap, jobject jtstamp_typesp) {
+    int *list_tstamp_type;
+    int count = pcap_list_tstamp_types(GetPcap(env, jpcap), &list_tstamp_type);
+    int i;
+    for (i=0; i<count; i++) {
+        jclass jclazz = (*env)->FindClass(env, "java/lang/Integer");
+        jobject jinteger = (*env)->NewObject(env, jclazz, (*env)->GetMethodID(env, jclazz, "<init>", "(I)V"), list_tstamp_type[i]);
+        if ((*env)->CallBooleanMethod(env, jtstamp_typesp, ListAddMID, jinteger) == JNI_FALSE) {
+            (*env)->DeleteLocalRef(env, jinteger);
+            return (jint) -1;
+        }
+    }
+    pcap_free_tstamp_types(list_tstamp_type);
+    return count;
+}
