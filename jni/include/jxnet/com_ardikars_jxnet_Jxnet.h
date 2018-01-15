@@ -393,6 +393,110 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapActivate
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetDirection
   (JNIEnv *, jclass, jobject, jobject);
 
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapSetTStampPrecision
+ * Signature: (Lcom/ardikars/jxnet/Pcap;I)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetTStampPrecision
+  (JNIEnv *, jclass, jobject, jint);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapSetTStampType
+ * Signature: (Lcom/ardikars/jxnet/Pcap;I)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetTStampType
+  (JNIEnv *, jclass, jobject, jint);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapGetTStampPrecision
+ * Signature: (Lcom/ardikars/jxnet/Pcap;)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapGetTStampPrecision
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapListDataLinks
+ * Signature: (Lcom/ardikars/jxnet/Pcap;Ljava/util/List;)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapListDataLinks
+  (JNIEnv *, jclass, jobject, jobject);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapListTStampTypes
+ * Signature: (Lcom/ardikars/jxnet/Pcap;Ljava/util/List;)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapListTStampTypes
+  (JNIEnv *, jclass, jobject, jobject);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapTStampTypeNameToVal
+ * Signature: (Ljava/lang/String;)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapTStampTypeNameToVal
+  (JNIEnv *, jclass, jstring);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapTStampTypeValToName
+ * Signature: (I)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_Jxnet_PcapTStampTypeValToName
+  (JNIEnv *, jclass, jint);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapTStampTypeValToDescription
+ * Signature: (I)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_Jxnet_PcapTStampTypeValToDescription
+  (JNIEnv *, jclass, jint);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapStatusToStr
+ * Signature: (I)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_Jxnet_PcapStatusToStr
+  (JNIEnv *, jclass, jint);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapOpenDeadWithTStampPrecision
+ * Signature: (III)Lcom/ardikars/jxnet/Pcap;
+ */
+JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapOpenDeadWithTStampPrecision
+  (JNIEnv *, jclass, jint, jint, jint);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapOfflineFilter
+ * Signature: (Lcom/ardikars/jxnet/BpfProgram;Lcom/ardikars/jxnet/PcapPktHdr;Ljava/nio/ByteBuffer;)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapOfflineFilter
+  (JNIEnv *, jclass, jobject, jobject, jobject);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapOpenOfflineWithTStampPrecision
+ * Signature: (Ljava/lang/String;ILjava/lang/StringBuilder;)Lcom/ardikars/jxnet/Pcap;
+ */
+JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapOpenOfflineWithTStampPrecision
+  (JNIEnv *, jclass, jstring, jint, jobject);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapInject
+ * Signature: (Lcom/ardikars/jxnet/Pcap;Ljava/nio/ByteBuffer;I)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapInject
+  (JNIEnv *, jclass, jobject, jobject, jint);
+
 #ifdef __cplusplus
 }
 #endif

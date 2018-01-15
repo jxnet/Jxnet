@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2017  Ardika Rommy Sanjaya
+ * Copyright (C) 2018  Ardika Rommy Sanjaya
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,27 +18,31 @@
 package com.ardikars.jxnet.exception;
 
 /**
- * Not Supported Platform Exception
+ * Operation Not Supported Exception
  *
  * @author Ardika Rommy Sanjaya
- * @since 1.1.0
+ * @since 1.1.5
  */
-public class NotSupportedPlatformException extends RuntimeException {
+public class OperationNotSupportedException extends RuntimeException {
 
-    public NotSupportedPlatformException() {
+    public OperationNotSupportedException() {
         super();
     }
 
-    public NotSupportedPlatformException(String message) {
-        super(message);
+    public OperationNotSupportedException(String s) {
+        super(s);
     }
 
-    public NotSupportedPlatformException(String message, Throwable cause) {
-        super(message, cause);
+    public OperationNotSupportedException(String s, Throwable throwable) {
+        super(s, throwable);
     }
 
-    public NotSupportedPlatformException(Throwable cause) {
-        super(cause);
+    public OperationNotSupportedException(Throwable throwable) {
+        super(throwable);
+    }
+
+    protected OperationNotSupportedException(String s, Throwable throwable, boolean b, boolean b1) {
+        super(s, throwable, b, b1);
     }
 
 }

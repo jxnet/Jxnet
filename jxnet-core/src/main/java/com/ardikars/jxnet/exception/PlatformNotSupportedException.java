@@ -15,25 +15,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet;
+package com.ardikars.jxnet.exception;
 
 /**
+ * Platform Not Supported Exception
+ *
  * @author Ardika Rommy Sanjaya
- * @since 1.1.4
- * Not implemented yet.
+ * @since 1.1.0
  */
-public enum TimestampPrecision {
+public class PlatformNotSupportedException extends RuntimeException {
 
-    TIMESTAMP_MICRO(0), TIMESTAMP_NANO(1);
-
-    private final int value;
-
-    TimestampPrecision(final int value) {
-        this.value = value;
+    public PlatformNotSupportedException() {
+        super();
     }
 
-    public int getValue() {
-        return value;
+    public PlatformNotSupportedException(String message) {
+        super(message);
+    }
+
+    public PlatformNotSupportedException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public PlatformNotSupportedException(Throwable cause) {
+        super(cause);
     }
 
 }

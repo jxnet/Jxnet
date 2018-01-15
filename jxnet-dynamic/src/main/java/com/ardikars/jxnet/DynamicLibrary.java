@@ -22,6 +22,7 @@ public class DynamicLibrary implements Library.Loader {
                 break;
             case WINDOWS:
                 System.setProperty("java.library.path", "C:\\Windows\\System32\\Npcap");
+                System.load("wpcap");
                 if (Platforms.is64Bit()) {
                     Library.loadLibrary("/dynamic/windows/lib/x64/jxnet.dll");
                 } else {

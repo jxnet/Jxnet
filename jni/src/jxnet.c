@@ -1176,7 +1176,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetImmediateMode
 		(JNIEnv *env, jclass jclazz, jobject jpcap, jint jimmediate) {
 
 #if defined(WIN32)
-	ThrowNew(env, NOT_SUPPORTED_PLATFORM_EXCEPTION, NULL);
+	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
 	return -1;
 #else
 
@@ -1207,7 +1207,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetDirection
 		(JNIEnv *env, jclass jclazz, jobject jpcap, jobject jdirection) {
 
 #if defined(WIN32)
-	ThrowNew(env, NOT_SUPPORTED_PLATFORM_EXCEPTION, NULL);
+	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
 	return -1;
 #else
 
@@ -1235,4 +1235,237 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetDirection
 	return ret;
 #endif
 	return -1;
+}
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapSetTStampPrecision
+ * Signature: (Lcom/ardikars/jxnet/Pcap;I)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetTStampPrecision
+		(JNIEnv *env, jclass jclazz, jobject jpcap, jint jtstamp_precision) {
+	return pcap_set_tstamp_precision(GetPcap(env, jpcap), jtstamp_precision);
+}
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapSetTStampType
+ * Signature: (Lcom/ardikars/jxnet/Pcap;I)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetTStampType
+		(JNIEnv *env, jclass jclazz, jobject jpcap, jint jtype) {
+	return pcap_set_tstamp_type(GetPcap(env, jpcap), jtype);
+}
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapGetTStampPrecision
+ * Signature: (Lcom/ardikars/jxnet/Pcap;)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapGetTStampPrecision
+		(JNIEnv *env, jclass jclazz, jobject jpcap) {
+	return pcap_get_tstamp_precision(GetPcap(env, jpcap));
+}
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapListDataLinks
+ * Signature: (Lcom/ardikars/jxnet/Pcap;Ljava/util/List;)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapListDataLinks
+		(JNIEnv *env, jclass jclazz, jobject jpcap, jobject jdtl_buffer) {
+	SetListIDs(env);
+	int *dtl_buffer;
+	int count = pcap_list_datalinks(GetPcap(env, jpcap), &dtl_buffer);
+	int i;
+	for (i=0; i<count; i++) {
+		jclass jclazz = (*env)->FindClass(env, "java/lang/Integer");
+		jobject jinteger = (*env)->NewObject(env, jclazz, (*env)->GetMethodID(env, jclazz, "<init>", "(I)V"), dtl_buffer[i]);
+		if ((*env)->CallBooleanMethod(env, jdtl_buffer, ListAddMID, jinteger) == JNI_FALSE) {
+			(*env)->DeleteLocalRef(env, jinteger);
+			return (jint) -1;
+		}
+	}
+	pcap_free_datalinks(dtl_buffer);
+	return count;
+}
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapListTStampTypes
+ * Signature: (Lcom/ardikars/jxnet/Pcap;Ljava/util/List;)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapListTStampTypes
+		(JNIEnv *env, jclass jclazz, jobject jpcap, jobject jtstamp_typesp) {
+	int *list_tstamp_type;
+	int count = pcap_list_tstamp_types(GetPcap(env, jpcap), &list_tstamp_type);
+	int i;
+	for (i=0; i<count; i++) {
+		jclass jclazz = (*env)->FindClass(env, "java/lang/Integer");
+		jobject jinteger = (*env)->NewObject(env, jclazz, (*env)->GetMethodID(env, jclazz, "<init>", "(I)V"), list_tstamp_type[i]);
+		if ((*env)->CallBooleanMethod(env, jtstamp_typesp, ListAddMID, jinteger) == JNI_FALSE) {
+			(*env)->DeleteLocalRef(env, jinteger);
+			return (jint) -1;
+		}
+	}
+	pcap_free_tstamp_types(list_tstamp_type);
+	return count;
+}
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapTStampTypeNameToVal
+ * Signature: (Ljava/lang/String;)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapTStampTypeNameToVal
+		(JNIEnv *env, jclass jclazz, jstring jname) {
+
+	if (CheckNotNull(env, jname, NULL) == NULL) return -1;
+
+	const char *name = (*env)->GetStringUTFChars(env, jname, 0);
+
+	int r = pcap_tstamp_type_name_to_val(name);
+	(*env)->ReleaseStringUTFChars(env, jname, name);
+
+	return r;
+}
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapTStampTypeValToName
+ * Signature: (I)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_Jxnet_PcapTStampTypeValToName
+		(JNIEnv *env, jclass jclazz, jint jtstamp_type) {
+
+	if (!CheckArgument(env, (jtstamp_type > -1), NULL)) return NULL;
+
+	return (*env)->NewStringUTF(env, (char *) pcap_tstamp_type_val_to_name((jint) jtstamp_type));
+}
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapTStampTypeValToDescription
+ * Signature: (I)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_Jxnet_PcapTStampTypeValToDescription
+		(JNIEnv *env, jclass jclazz, jint jtstamp_type) {
+
+	if (!CheckArgument(env, (jtstamp_type > -1), NULL)) return NULL;
+
+	return (*env)->NewStringUTF(env, (char *) pcap_tstamp_type_val_to_description((jint) jtstamp_type));
+}
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapStatusToStr
+ * Signature: (I)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_Jxnet_PcapStatusToStr
+		(JNIEnv *env, jclass jclazz, jint jerrnum) {
+	return (*env)->NewStringUTF(env, (char *) pcap_statustostr((jint) jerrnum));
+}
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapOpenDeadWithTStampPrecision
+ * Signature: (III)Lcom/ardikars/jxnet/Pcap;
+ */
+JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapOpenDeadWithTStampPrecision
+		(JNIEnv *env, jclass jclazz, jint jlinktype, jint jsnaplen, jint jprecision) {
+
+	if (!CheckArgument(env, (jlinktype > -1), NULL)) return NULL;
+	if (!CheckArgument(env, (jsnaplen > 0 || jsnaplen < 65535), NULL)) return NULL;
+	if (!CheckArgument(env, (jprecision >= 0 || jprecision <= 1), NULL)) return NULL;
+
+	pcap_t *pcap = pcap_open_dead_with_tstamp_precision(jlinktype, jsnaplen, jprecision);
+
+	// Including SetPcapIDs().
+	return SetPcap(env, pcap);
+}
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapOfflineFilter
+ * Signature: (Lcom/ardikars/jxnet/BpfProgram;Lcom/ardikars/jxnet/PcapPktHdr;Ljava/nio/ByteBuffer;)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapOfflineFilter
+		(JNIEnv *env, jclass jclazz, jobject jfp, jobject jh, jobject jpkt) {
+
+	if (CheckNotNull(env, jfp, NULL) == NULL) return -1;
+	if (CheckNotNull(env, jh, NULL) == NULL) return -1;
+	if (CheckNotNull(env, jpkt, NULL) == NULL) return -1;
+
+	struct bpf_program *fp = GetBpfProgram(env, jfp);
+	if (fp == NULL) {
+		ThrowNew(env, BPF_PROGRAM_CLOSE_EXCEPTION, "");
+		return (jint) -1;
+	}
+
+	struct pcap_pkthdr hdr;
+	hdr.ts.tv_sec = (int) (*env)->GetIntField(env, jh, PcapPktHdrTvSecFID);
+	hdr.ts.tv_usec = (int) (*env)->GetLongField(env, jh, PcapPktHdrTvUsecFID);
+	hdr.caplen = (int) (*env)->GetIntField(env, jh, PcapPktHdrCaplenFID);
+	hdr.len = (int) (*env)->GetIntField(env, jh, PcapPktHdrLenFID);
+
+	u_char *sp = (u_char *) (*env)->GetDirectBufferAddress(env, jpkt);
+
+	return (jint) pcap_offline_filter(fp, &hdr, sp);
+}
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapOpenOfflineWithTStampPrecision
+ * Signature: (Ljava/lang/String;ILjava/lang/StringBuilder;)Lcom/ardikars/jxnet/Pcap;
+ */
+JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapOpenOfflineWithTStampPrecision
+		(JNIEnv *env, jclass jclazz, jstring jfname, jint jtstamp_precision, jobject jerrbuf) {
+
+	if (CheckNotNull(env, jfname, NULL) == NULL) return NULL;
+	if (!CheckArgument(env, (jtstamp_precision >= 0 || jtstamp_precision <= 1), NULL)) return NULL;
+	if (CheckNotNull(env, jerrbuf, NULL) == NULL) return NULL;
+
+	char errbuf[PCAP_ERRBUF_SIZE];
+	errbuf[0] = '\0';
+	const char *fname = (*env)->GetStringUTFChars(env, jfname, 0);
+
+	pcap_t *pcap = pcap_open_offline_with_tstamp_precision(fname, jtstamp_precision, errbuf);
+	(*env)->ReleaseStringUTFChars(env, jfname, fname);
+
+	if (pcap == NULL) {
+		// Including SetStringBuilderIDs().
+		SetStringBuilder(env, jerrbuf, errbuf);
+		return NULL;
+	}
+	// Including SetPcapIDs().
+	return SetPcap(env, pcap);
+}
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapInject
+ * Signature: (Lcom/ardikars/jxnet/Pcap;Ljava/nio/ByteBuffer;I)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapInject
+		(JNIEnv *env, jclass jclazz, jobject jpcap, jobject jbuf, jint jsize) {
+
+	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
+	if (CheckNotNull(env, jbuf, NULL) == NULL) return -1;
+	if (!CheckArgument(env, (jsize > 0), NULL)) return -1;
+
+	// Including SetPcapIDs().
+	pcap_t *pcap = GetPcap(env, jpcap); // Exception already thrown
+
+	if (pcap == NULL) {
+		return (jint) -1;
+	}
+
+	const u_char *buf = (u_char *) (*env)->GetDirectBufferAddress(env, jbuf);
+
+	if (buf == NULL) {
+		ThrowNew(env, NULL_PTR_EXCEPTION, "Unable to retrive address from ByteBuffer");
+		return (jint) -1;
+	}
+
+	return (jint) pcap_inject(pcap, buf + (int) 0, (int) jsize);
 }
