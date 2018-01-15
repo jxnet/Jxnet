@@ -33,17 +33,13 @@ cache:
 
 # environment variables
 environment:
-  JAVA_HOME: C:\Program Files (x86)\Java\jdk1.8.0
+  JAVA_HOME: C:\Program Files (x86)\Java\jdk1.7.0
 
 # scripts that run after cloning repository
 install:
   # Install WinPcap
   #- cmd: choco install -y winpcap
-
-  # Install nmap which includes WinPcap instead of WinPcap itself to avoid an issue where
-  # installation of autohotkey.portable which is used by choco install script for WinPcap
-  # randomly fails somehow.
-  - cmd: choco install -y nmap
+  - ps: .\.scripts\InstallNpcap.ps1
 
 #---------------------------------#
 #       build configuration       #
@@ -53,14 +49,17 @@ install:
 platform: Any CPU
 
 build_script:
-  - cmd: gradlew.bat clean build --info --no-daemon
+  - cmd: gradlew.bat clean build -x test --info --no-daemon
 
 #---------------------------------#
 #       tests configuration       #
 #---------------------------------#
 
 test_script:
-  - cmd: gradlew.bat test --info --no-daemon
+  - cmd: gradlew.bat clean codeCoverageReport --info --no-daemon
+
+after_test:
+  - cmd: gradlew.bat clean --info --no-daemon
 
 #---------------------------------#
 #         notifications           #

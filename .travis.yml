@@ -50,7 +50,7 @@ before_script:
 
 script:
   - sudo ./gradlew clean build -x test --info --no-daemon
-  - sudo ./gradlew codeCoverageReport
+  - sudo ./gradlew codeCoverageReport -info --no-daemon
 
 after_success:
   - sudo bash <(curl -s https://codecov.io/bash)
