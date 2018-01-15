@@ -3,8 +3,8 @@
 #      general configuration      #
 #---------------------------------#
 
-$urlPath = "https://nmap.org/npcap/dist/npcap-0.97.exe"
-$checksum = "d5d8c9ea81a57a25a406a03b8b3186e19e972a43c71b315d4e28e0ff2d42f526"
+$urlPath = "https://nmap.org/npcap/dist/npcap-0.96.exe"
+$checksum = "83667e1306fdcf7f9967c10277b36b87e50ee8812e1ee2bb9443bdd065dc04a1"
 
 # Download the file
 wget $urlPath -UseBasicParsing -OutFile $PSScriptRoot"\npcap.exe"
