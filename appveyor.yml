@@ -15,6 +15,10 @@ branches:
 # Do not build on tags
 skip_tags: true
 
+# Skipping commits with particular message or from specific user
+skip_commits:
+  message: /Created.*\.(png|jpg|jpeg|bmp|gif)/      # Regex for matching commit message
+
 #---------------------------------#
 #    environment configuration    #
 #---------------------------------#
@@ -30,10 +34,6 @@ cache:
   - C:\Users\appveyor\.gradle\native
   - C:\Users\appveyor\.gradle\daemon
 #  - C:\Users\appveyor\.gradle\caches
-
-# environment variables
-environment:
-  JAVA_HOME: C:\Program Files (x86)\Java\jdk1.7.0
 
 # scripts that run after cloning repository
 install:
