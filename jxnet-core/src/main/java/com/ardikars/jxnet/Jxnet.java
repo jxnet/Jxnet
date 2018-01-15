@@ -560,6 +560,22 @@ public final class Jxnet extends Core {
 	 */
 	public static native int PcapListTStampTypes(Pcap pcap, List<Integer> tstamp_typesp);
 
+	public static native int PcapTStampTypeNameToVal(String name);
+
+	public static native String PcapTStampTypeValToName(int tstamp_type);
+
+	public static native String PcapTStampTypeValToDescription(int tstamp_type);
+
+	public static native String PcapStatusToStr(int errnum);
+
+	public static native Pcap PcapOpenDeadWithTStampPrecision(int linktype, int snaplen, int precision);
+
+	public static native int PcapOfflineFilter(BpfProgram fp, PcapPktHdr h, ByteBuffer pkt);
+
+	public static native Pcap PcapOpenOfflineWithTStampPrecision(String fname, int tstamp_precision, StringBuilder errbuf);
+
+	public static native int PcapInject(Pcap pcap, ByteBuffer buf, int size);
+
 	static {
 		if (!Application.getInstance().isLoaded()) {
             ApplicationInitializer initializer = new ApplicationInitializer() {

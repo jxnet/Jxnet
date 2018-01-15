@@ -18,26 +18,26 @@
 package com.ardikars.jxnet.exception;
 
 /**
- * Not Supported Platform Exception
+ * Platform Not Supported Exception
  *
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public class NotSupportedPlatformException extends RuntimeException {
+public class PlatformNotSupportedException extends RuntimeException {
 
-    public NotSupportedPlatformException() {
+    public PlatformNotSupportedException() {
         super();
     }
 
-    public NotSupportedPlatformException(String message) {
+    public PlatformNotSupportedException(String message) {
         super(message);
     }
 
-    public NotSupportedPlatformException(String message, Throwable cause) {
+    public PlatformNotSupportedException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public NotSupportedPlatformException(Throwable cause) {
+    public PlatformNotSupportedException(Throwable cause) {
         super(cause);
     }
 

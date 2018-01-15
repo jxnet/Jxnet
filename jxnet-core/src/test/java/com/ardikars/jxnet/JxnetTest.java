@@ -40,6 +40,7 @@ public class JxnetTest {
     private final int optimize = 1;
     private final int bufferSize = 1500;
     private final String filter = "icmp";
+    private final int precision = 0;
 
     private final int maxPkt = 5;
     private static int cntPkt = 0;
@@ -494,6 +495,62 @@ public class JxnetTest {
             System.out.print(" " + tsType);
         }
         PcapFreeTStampTypes(tsTypes);
+    }
+
+    @Test
+    public void Test31_PcapTStampTypeNameToValPcapTStampTypeValToNameAndPcapTStampTypeValToDescription() {
+        int tsVal = TimeStampType.PCAP_TSTAMP_HOST.getType();
+        String tsName = PcapTStampTypeValToName(tsVal);
+        System.out.println("Time stamp name       : " + tsName);
+        System.out.println("Time stamp value      : " + PcapTStampTypeNameToVal(tsName));
+        System.out.println("Time stamp description: " + PcapTStampTypeValToDescription(tsVal));
+    }
+
+    @Test
+    public void Test32_PcapStatusToStr() {
+        int errNum = 2;
+        System.out.println("Pcap Error ("+errNum+"): " + PcapStatusToStr(errNum));
+    }
+
+    @Test
+    public void Test33_PcapOpenDeadWithTStampPrecisionAndPcapClose() {
+        DataLinkType linkType = DataLinkType.LINUX_SLL;
+        Pcap pcap = PcapOpenDeadWithTStampPrecision(linkType.getValue(), snaplen, precision);
+        if (pcap == null) {
+            logger.warning("PcapOpenDeadWithTStampPrecisionAndPcapClose:" +
+                    "PcapOpenDeadWithTStampPrecision(): ");
+            return;
+        }
+        PcapClose(pcap);
+    }
+
+    @Test
+    public void Test34_PcapOfflineFilterPcapOpenOfflineWithTStampPrecisionAndPcapClose() {
+        Pcap pcap = PcapOpenOfflineWithTStampPrecision(resourceDumpFile, precision, errbuf);
+        if (pcap == null) {
+            logger.warning("PcapOfflineFilterPcapOpenOfflineWithTStampPrecisionAndPcapClose:" +
+                    "PcapOpenOfflineWithTStampPrecision(): " + errbuf.toString());
+            return;
+        }
+        if ((resultCode = PcapCompile(pcap, bpfProgram, filter, optimize, maskp.toInt())) != OK) {
+            logger.warning("PcapCompilePcapSetFilterAndPcapLoop:PcapCompile(): " + PcapStrError(resultCode));
+            return;
+        }
+        pkt = ByteBuffer.allocateDirect(snaplen);
+        if ((resultCode = PcapOfflineFilter(bpfProgram, pktHdr, pkt)) != OK) {
+            logger.warning("PcapOfflineFilterPcapOpenOfflineWithTStampPrecisionAndPcapClose:" +
+                    "PcapOfflineFilter");
+        }
+        if ((resultCode = PcapLoop(pcap, maxPkt, callback, "This Is User Argument")) < 0) {
+            logger.warning("PcapOfflineFilterPcapOpenOfflineWithTStampPrecisionAndPcapClose:" +
+                    "PcapLoop(): ");
+        }
+        PcapClose(pcap);
+    }
+
+    @Test
+    public void Test35_PcapInject() {
+//        Do nothing
     }
 
     @After

@@ -15,11 +15,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <pcap.h>
+package com.ardikars.jxnet.exception;
 
-int main(void) {
-    printf("%s\n", pcap_lib_version());
-    return 0;
+/**
+ * Operation Not Supported Exception
+ *
+ * @author Ardika Rommy Sanjaya
+ * @since 1.1.5
+ */
+public class OperationNotSupportedException extends RuntimeException {
+
+    public OperationNotSupportedException() {
+        super();
+    }
+
+    public OperationNotSupportedException(String s) {
+        super(s);
+    }
+
+    public OperationNotSupportedException(String s, Throwable throwable) {
+        super(s, throwable);
+    }
+
+    public OperationNotSupportedException(Throwable throwable) {
+        super(throwable);
+    }
+
+    protected OperationNotSupportedException(String s, Throwable throwable, boolean b, boolean b1) {
+        super(s, throwable, b, b1);
+    }
+
 }

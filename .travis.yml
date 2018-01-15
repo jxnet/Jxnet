@@ -1,19 +1,30 @@
 
+#---------------------------------#
+#      general configuration      #
+#---------------------------------#
+
 sudo: required
 
 language: java
 
+# Ubuntu release code name
 dist:
   - trusty
 
+# JDK Version
 jdk:
   - openjdk7
 
+# Operation System Type
 os:
   - linux
 
 group:
   - stable
+
+#---------------------------------#
+#       Cache Configuration       #
+#---------------------------------#
 
 before_cache:
   - sudo rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -30,6 +41,10 @@ branches:
   only:
     - master
 
+#---------------------------------#
+#       build configuration       #
+#---------------------------------#
+
 before_script:
   - chmod +x gradlew
 
@@ -39,6 +54,10 @@ script:
 
 after_success:
   - sudo bash <(curl -s https://codecov.io/bash)
+
+#---------------------------------#
+#         notifications           #
+#---------------------------------#
 
 notifications:
   email:
