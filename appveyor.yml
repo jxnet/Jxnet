@@ -56,7 +56,7 @@ build_script:
 #---------------------------------#
 
 test_script:
-  - cmd: gradlew.bat clean codeCoverageReport
+  - cmd: gradlew.bat clean codeCoverageReport -i
 
 after_test:
   - cmd: gradlew.bat clean
