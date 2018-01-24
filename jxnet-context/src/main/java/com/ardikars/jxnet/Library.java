@@ -17,9 +17,12 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.jxnet.util.Platforms;
 import com.ardikars.jxnet.util.Validate;
 
 import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
@@ -27,6 +30,8 @@ import java.util.regex.Pattern;
  * @since 1.1.5
  */
 public final class Library {
+
+    private static final Logger LOGGER = Logger.getLogger(Library.class.getName());
 
     public interface Loader {
         void load() throws UnsatisfiedLinkError;
@@ -73,7 +78,21 @@ public final class Library {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.load(temp.getAbsolutePath());
+        if (Platforms.isWindows()) {
+            if (!new File("C:\\Windows\\System32\\wpcap.dll").exists()) {
+                System.load(temp.getAbsolutePath());
+                LOGGER.info("Successfully loaded the jxnet native library.");
+            } else {
+                if (new File("C:\\Windows\\System32\\Npcap\\wpcap.dll").exists()) {
+                    LOGGER.log(Level.ALL, "Npcap is installed with no winpcap supported mode.");
+                } else {
+                    LOGGER.log(Level.ALL, "Npcap is not installed.");
+                }
+            }
+        } else {
+            System.load(temp.getAbsolutePath());
+            LOGGER.info("Successfully loaded the jxnet native library.");
+        }
     };
 
 }
