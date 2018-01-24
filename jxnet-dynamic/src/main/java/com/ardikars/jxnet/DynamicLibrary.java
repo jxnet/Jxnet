@@ -2,6 +2,8 @@ package com.ardikars.jxnet;
 
 import com.ardikars.jxnet.util.Platforms;
 
+import java.io.File;
+
 public class DynamicLibrary implements Library.Loader {
 
     @Override
@@ -21,12 +23,18 @@ public class DynamicLibrary implements Library.Loader {
                 }
                 break;
             case WINDOWS:
-                System.setProperty("java.library.path", "C:\\Windows\\System32\\Npcap");
-                System.load("wpcap");
-                if (Platforms.is64Bit()) {
-                    Library.loadLibrary("/dynamic/windows/lib/x64/jxnet.dll");
+                if (!new File("C:\\Windows\\System32\\wpcap.dll").exists()) {
+                    if (Platforms.is64Bit()) {
+                        Library.loadLibrary("/dynamic/windows/lib/x64/jxnet.dll");
+                    } else {
+                        Library.loadLibrary("/dynamic/windows/lib/x86/jxnet.dll");
+                    }
                 } else {
-                    Library.loadLibrary("/dynamic/windows/lib/x86/jxnet.dll");
+                    if (new File("C:\\Windows\\System32\\Npcap\\wpcap.dll").exists()) {
+                        throw new UnsatisfiedLinkError("Npcap is not installed yet.");
+                    } else {
+                        throw new UnsatisfiedLinkError("Npcap is installed, but with no Winpcap supported mode.");
+                    }
                 }
                 break;
             case FREEBSD:

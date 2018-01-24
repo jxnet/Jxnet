@@ -10,9 +10,9 @@ import java.util.logging.Logger;
 import static com.ardikars.jxnet.Jxnet.*;
 
 @RunWith(JUnit4.class)
-public class Tests {
+public class FreakTest {
 
-    private Logger logger = Logger.getLogger(Tests.class.getName());
+    private Logger logger = Logger.getLogger(FreakTest.class.getName());
 
     private Pcap pcap;
     private int snaplen = 65535;

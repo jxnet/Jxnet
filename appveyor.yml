@@ -49,17 +49,17 @@ install:
 platform: Any CPU
 
 build_script:
-  - cmd: gradlew.bat clean build -x test --info --no-daemon
+  - cmd: gradlew.bat clean build -x test
 
 #---------------------------------#
 #       tests configuration       #
 #---------------------------------#
 
 test_script:
-  - cmd: gradlew.bat clean codeCoverageReport --info --no-daemon
+  - cmd: gradlew.bat clean codeCoverageReport
 
 after_test:
-  - cmd: gradlew.bat clean --info --no-daemon
+  - cmd: gradlew.bat clean
 
 #---------------------------------#
 #         notifications           #
