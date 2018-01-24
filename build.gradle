@@ -9,10 +9,14 @@ buildscript {
 
 	repositories {
 		jcenter()
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
 	}
 
 	dependencies {
 		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+		classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.14.0"
 	}
 
 }
@@ -24,6 +28,7 @@ allprojects {
 	apply plugin: 'signing'
 	apply plugin: 'jacoco'
 	apply plugin: 'com.jfrog.bintray'
+	apply plugin: 'license'
 
 	group = "${GROUP}"
 	version = "${VERSION}"
@@ -62,7 +67,17 @@ allprojects {
 			showFromProtected()
 //			addStringOption 'Xdoclint:all,-reference', '-quiet'
 		}
-	}	
+	}
+
+	license {
+		ext.year = "2017-${Calendar.getInstance().get(Calendar.YEAR)}"
+		ext.name = 'Ardika Rommy Sanjaya'
+		ext.email = 'contact@ardikars.com'
+		include '**/*.java'
+		exclude '**/*Test.java'
+		header rootProject.file('gradle/resources/license.header')
+		strictCheck true
+	}
 
 	task javadocJar(type: Jar) {
 		classifier = 'javadoc'
@@ -168,6 +183,12 @@ task codeCoverageReport(type: JacocoReport) {
 		xml.enabled false
 		html.enabled true
 		csv.enabled false
+	}
+}
+
+test {
+	testLogging {
+		showStandardStreams = true
 	}
 }
 
