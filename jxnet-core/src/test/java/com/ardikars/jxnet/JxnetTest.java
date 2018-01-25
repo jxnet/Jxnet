@@ -1,21 +1,5 @@
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.util.Platforms;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-import org.junit.runners.MethodSorters;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-
 import static com.ardikars.jxnet.Core.PcapFreeAllDevs;
 import static com.ardikars.jxnet.Core.PcapFreeDataLinks;
 import static com.ardikars.jxnet.Core.PcapFreeTStampTypes;
@@ -78,6 +62,23 @@ import static com.ardikars.jxnet.Jxnet.PcapTStampTypeNameToVal;
 import static com.ardikars.jxnet.Jxnet.PcapTStampTypeValToDescription;
 import static com.ardikars.jxnet.Jxnet.PcapTStampTypeValToName;
 
+import com.ardikars.jxnet.util.Platforms;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+import org.junit.runners.MethodSorters;
+
 @RunWith(JUnit4.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class JxnetTest {
@@ -122,6 +123,10 @@ public class JxnetTest {
         }
     };
 
+    /**
+     * Initialize
+     * @throws Exception Exception.
+     */
     @Before
     public void create() throws Exception {
         if ((resultCode = PcapFindAllDevs(alldevsp, errbuf)) != OK) {
@@ -616,6 +621,9 @@ public class JxnetTest {
         // Do nothing
     }
 
+    /**
+     * Destroy.
+     */
     @After
     public void destroy() {
         PcapClose(pcap);

@@ -206,6 +206,10 @@ public final class Inet6Address extends InetAddress {
 		return Arrays.hashCode(address);
 	}
 
+	/**
+	 * Returning ipv6 string.
+	 * @return ipv6 string.
+	 */
 	public String toString() {
 		int cmprHextet = -1;
 		int cmprSize = 0;

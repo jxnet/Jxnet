@@ -1,17 +1,16 @@
 package com.ardikars.jxnet;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import static com.ardikars.jxnet.Jxnet.OK;
+import static com.ardikars.jxnet.Jxnet.PcapFindAllDevs;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import static com.ardikars.jxnet.Jxnet.OK;
-import static com.ardikars.jxnet.Jxnet.PcapFindAllDevs;
-
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
 public class MacAddressTest {
@@ -24,6 +23,10 @@ public class MacAddressTest {
     private List<PcapIf> alldevsp = new ArrayList<PcapIf>();
     private StringBuilder errbuf = new StringBuilder();
 
+    /**
+     * Initialize.
+     * @throws Exception Exception.
+     */
     @Before
     public void create() throws Exception {
         if ((resultCode = PcapFindAllDevs(alldevsp, errbuf)) != OK) {

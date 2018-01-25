@@ -1,20 +1,5 @@
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.util.Platforms;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-import org.junit.runners.MethodSorters;
-
-import java.io.File;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-
 import static com.ardikars.jxnet.Core.LookupNetworkInterface;
 import static com.ardikars.jxnet.Core.PcapCompile;
 import static com.ardikars.jxnet.Core.PcapCompileNoPcap;
@@ -45,6 +30,22 @@ import static com.ardikars.jxnet.Jxnet.PcapSetFilter;
 import static com.ardikars.jxnet.Jxnet.PcapSetSnaplen;
 import static com.ardikars.jxnet.Jxnet.PcapSetTimeout;
 import static com.ardikars.jxnet.Jxnet.PcapStrError;
+
+import com.ardikars.jxnet.util.Platforms;
+
+import java.io.File;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+import org.junit.runners.MethodSorters;
 
 @RunWith(JUnit4.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -92,6 +93,10 @@ public class CoreTest {
         }
     };
 
+    /**
+     * Initialize
+     * @throws Exception Exception.
+     */
     @Before
     public void create() throws Exception {
         if ((resultCode = PcapFindAllDevs(alldevsp, errbuf)) != OK) {
@@ -150,7 +155,7 @@ public class CoreTest {
 
         bpfProgram = new BpfProgram();
 
-        java.io.File file = File.createTempFile("dump", ".pcap");
+        File file = File.createTempFile("dump", ".pcap");
         if (!file.delete()) {
             logger.warning("create:File.delete()");
             return;
@@ -278,6 +283,9 @@ public class CoreTest {
         PcapFreeTStampTypes0(tsTypes);
     }
 
+    /**
+     * Destroy method.
+     */
     @After
     public void destroy() {
         PcapClose(pcap);

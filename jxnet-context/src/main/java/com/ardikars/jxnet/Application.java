@@ -80,6 +80,13 @@ public class Application {
         return properties.get(key);
     }
 
+    /**
+     * Used for bootstraping Jxnet.
+     * @param applicationName application name.
+     * @param applicationVersion application version.
+     * @param initializer initializer.
+     * @throws UnsatisfiedLinkError UnsatisfiedLinkError.
+     */
     public static void run(String applicationName, String applicationVersion, ApplicationInitializer initializer) throws UnsatisfiedLinkError {
         getInstance().applicationName = applicationName;
         getInstance().applicationVersion = applicationVersion;
@@ -151,6 +158,10 @@ public class Application {
         return context;
     }
 
+    /**
+     * Get application context.
+      * @return application context.
+     */
     public static Application.Context getApplicationContext() {
         Application.Context context = getInstance().getContext();
         if (context == null) {
