@@ -109,8 +109,8 @@ public enum DataLinkType {
      * @return datalink.
      */
     public static DataLinkType valueOf(final short dataLinkType) {
-        for(DataLinkType f : values()) {
-            if(f.getValue() == dataLinkType) {
+        for (DataLinkType f : values()) {
+            if (f.getValue() == dataLinkType) {
                 return f;
             }
         }

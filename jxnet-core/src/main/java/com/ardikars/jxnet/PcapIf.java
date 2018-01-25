@@ -73,14 +73,24 @@ public final class PcapIf {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
 		PcapIf pcapIf = (PcapIf) o;
 
-		if (getFlags() != pcapIf.getFlags()) return false;
-		if (!getName().equals(pcapIf.getName())) return false;
-		if (!getDescription().equals(pcapIf.getDescription())) return false;
+		if (getFlags() != pcapIf.getFlags()) {
+			return false;
+		}
+		if (!getName().equals(pcapIf.getName())) {
+			return false;
+		}
+		if (!getDescription().equals(pcapIf.getDescription())) {
+			return false;
+		}
 		return getAddresses().equals(pcapIf.getAddresses());
 	}
 

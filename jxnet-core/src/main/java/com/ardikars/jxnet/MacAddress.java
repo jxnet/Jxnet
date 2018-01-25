@@ -149,8 +149,8 @@ public final class MacAddress {
 	 */
 	public long toLong() {
 		long addr = 0;
-		for (int i=0; i<MAC_ADDRESS_LENGTH; i++) {
-			long tmp = (this.address[i] & 0xffL) << (5 - i) *8;
+		for (int i = 0; i < MAC_ADDRESS_LENGTH; i++) {
+			long tmp = (this.address[i] & 0xffL) << (5 - i) * 8;
 			addr |= tmp;
 		}
 		return addr;
@@ -182,8 +182,12 @@ public final class MacAddress {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
 		MacAddress that = (MacAddress) o;
 

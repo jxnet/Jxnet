@@ -29,6 +29,7 @@ allprojects {
 	apply plugin: 'jacoco'
 	apply plugin: 'com.jfrog.bintray'
 	apply plugin: 'license'
+	apply plugin: 'checkstyle'
 
 	group = "${GROUP}"
 	version = "${VERSION}"
@@ -77,6 +78,24 @@ allprojects {
 		exclude '**/*Test.java'
 		header rootProject.file('gradle/resources/license.header')
 		strictCheck true
+	}
+
+	checkstyle {
+		ignoreFailures = true
+		configFile rootProject.file('gradle/resources/checkstyle.xml')
+		checkstyleMain {
+			source = sourceSets.main.allSource
+		}
+		configurations {
+			checkstyle
+		}
+		checkstyleMain {
+			reports {
+				html {
+					destination "${project.buildDir}/checkstyle.html"
+				}
+			}
+		}
 	}
 
 	task javadocJar(type: Jar) {

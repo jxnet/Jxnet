@@ -50,7 +50,7 @@ public class MacAddressTest {
 
     @Test
     public void Test() {
-        System.out.println("Mac Address ("+source+"): " + MacAddress.fromNicName(source));
+        System.out.println("Mac Address (" + source + "): " + MacAddress.fromNicName(source));
     }
 
 }

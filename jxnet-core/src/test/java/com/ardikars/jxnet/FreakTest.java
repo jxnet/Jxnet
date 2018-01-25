@@ -7,7 +7,16 @@ import org.junit.runners.JUnit4;
 
 import java.util.logging.Logger;
 
-import static com.ardikars.jxnet.Jxnet.*;
+import static com.ardikars.jxnet.Core.PcapOpenDead;
+import static com.ardikars.jxnet.Jxnet.OK;
+import static com.ardikars.jxnet.Jxnet.PcapCanSetRfMon;
+import static com.ardikars.jxnet.Jxnet.PcapClose;
+import static com.ardikars.jxnet.Jxnet.PcapDataLink;
+import static com.ardikars.jxnet.Jxnet.PcapGetErr;
+import static com.ardikars.jxnet.Jxnet.PcapSetDirection;
+import static com.ardikars.jxnet.Jxnet.PcapSetRfMon;
+import static com.ardikars.jxnet.Jxnet.PcapSnapshot;
+import static com.ardikars.jxnet.Jxnet.PcapStrError;
 
 @RunWith(JUnit4.class)
 public class FreakTest {

@@ -20,7 +20,12 @@ package com.ardikars.jxnet;
 import com.ardikars.jxnet.util.Platforms;
 import com.ardikars.jxnet.util.Validate;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -93,6 +98,6 @@ public final class Library {
             System.load(temp.getAbsolutePath());
             LOGGER.info("Successfully loaded the jxnet native library.");
         }
-    };
+    }
 
 }

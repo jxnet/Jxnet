@@ -55,13 +55,21 @@ public final class PcapStat {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
 		PcapStat pcapStat = (PcapStat) o;
 
-		if (ps_recv != pcapStat.ps_recv) return false;
-		if (ps_drop != pcapStat.ps_drop) return false;
+		if (ps_recv != pcapStat.ps_recv) {
+			return false;
+		}
+		if (ps_drop != pcapStat.ps_drop) {
+			return false;
+		}
 		return ps_ifdrop == pcapStat.ps_ifdrop;
 	}
 

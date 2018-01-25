@@ -54,7 +54,7 @@ public class Platforms {
         return name == Name.ANDROID;
     }
 
-    public static final boolean isFreeBSD() {
+    public static final boolean isFreeBsd() {
         return name == Name.FREEBSD;
     }
 

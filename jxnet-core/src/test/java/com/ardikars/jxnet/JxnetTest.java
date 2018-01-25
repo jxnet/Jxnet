@@ -1,12 +1,13 @@
 package com.ardikars.jxnet;
 
 import com.ardikars.jxnet.util.Platforms;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.junit.runners.MethodSorters;
-
-import static com.ardikars.jxnet.Jxnet.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +15,68 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+
+import static com.ardikars.jxnet.Core.PcapFreeAllDevs;
+import static com.ardikars.jxnet.Core.PcapFreeDataLinks;
+import static com.ardikars.jxnet.Core.PcapFreeTStampTypes;
+import static com.ardikars.jxnet.Jxnet.OK;
+import static com.ardikars.jxnet.Jxnet.PcapActivate;
+import static com.ardikars.jxnet.Jxnet.PcapBreakLoop;
+import static com.ardikars.jxnet.Jxnet.PcapCanSetRfMon;
+import static com.ardikars.jxnet.Jxnet.PcapClose;
+import static com.ardikars.jxnet.Jxnet.PcapCompile;
+import static com.ardikars.jxnet.Jxnet.PcapCompileNoPcap;
+import static com.ardikars.jxnet.Jxnet.PcapCreate;
+import static com.ardikars.jxnet.Jxnet.PcapDataLink;
+import static com.ardikars.jxnet.Jxnet.PcapDataLinkNameToVal;
+import static com.ardikars.jxnet.Jxnet.PcapDataLinkValToDescription;
+import static com.ardikars.jxnet.Jxnet.PcapDataLinkValToName;
+import static com.ardikars.jxnet.Jxnet.PcapDispatch;
+import static com.ardikars.jxnet.Jxnet.PcapDump;
+import static com.ardikars.jxnet.Jxnet.PcapDumpClose;
+import static com.ardikars.jxnet.Jxnet.PcapDumpFTell;
+import static com.ardikars.jxnet.Jxnet.PcapDumpFlush;
+import static com.ardikars.jxnet.Jxnet.PcapDumpOpen;
+import static com.ardikars.jxnet.Jxnet.PcapFindAllDevs;
+import static com.ardikars.jxnet.Jxnet.PcapFreeCode;
+import static com.ardikars.jxnet.Jxnet.PcapGetErr;
+import static com.ardikars.jxnet.Jxnet.PcapGetNonBlock;
+import static com.ardikars.jxnet.Jxnet.PcapGetTStampPrecision;
+import static com.ardikars.jxnet.Jxnet.PcapIsSwapped;
+import static com.ardikars.jxnet.Jxnet.PcapLibVersion;
+import static com.ardikars.jxnet.Jxnet.PcapListDataLinks;
+import static com.ardikars.jxnet.Jxnet.PcapListTStampTypes;
+import static com.ardikars.jxnet.Jxnet.PcapLookupNet;
+import static com.ardikars.jxnet.Jxnet.PcapLoop;
+import static com.ardikars.jxnet.Jxnet.PcapMajorVersion;
+import static com.ardikars.jxnet.Jxnet.PcapMinorVersion;
+import static com.ardikars.jxnet.Jxnet.PcapNext;
+import static com.ardikars.jxnet.Jxnet.PcapNextEx;
+import static com.ardikars.jxnet.Jxnet.PcapOfflineFilter;
+import static com.ardikars.jxnet.Jxnet.PcapOpenDead;
+import static com.ardikars.jxnet.Jxnet.PcapOpenDeadWithTStampPrecision;
+import static com.ardikars.jxnet.Jxnet.PcapOpenLive;
+import static com.ardikars.jxnet.Jxnet.PcapOpenOffline;
+import static com.ardikars.jxnet.Jxnet.PcapOpenOfflineWithTStampPrecision;
+import static com.ardikars.jxnet.Jxnet.PcapPError;
+import static com.ardikars.jxnet.Jxnet.PcapSetDataLink;
+import static com.ardikars.jxnet.Jxnet.PcapSetDirection;
+import static com.ardikars.jxnet.Jxnet.PcapSetFilter;
+import static com.ardikars.jxnet.Jxnet.PcapSetImmediateMode;
+import static com.ardikars.jxnet.Jxnet.PcapSetNonBlock;
+import static com.ardikars.jxnet.Jxnet.PcapSetPromisc;
+import static com.ardikars.jxnet.Jxnet.PcapSetRfMon;
+import static com.ardikars.jxnet.Jxnet.PcapSetSnaplen;
+import static com.ardikars.jxnet.Jxnet.PcapSetTStampPrecision;
+import static com.ardikars.jxnet.Jxnet.PcapSetTStampType;
+import static com.ardikars.jxnet.Jxnet.PcapSetTimeout;
+import static com.ardikars.jxnet.Jxnet.PcapSnapshot;
+import static com.ardikars.jxnet.Jxnet.PcapStats;
+import static com.ardikars.jxnet.Jxnet.PcapStatusToStr;
+import static com.ardikars.jxnet.Jxnet.PcapStrError;
+import static com.ardikars.jxnet.Jxnet.PcapTStampTypeNameToVal;
+import static com.ardikars.jxnet.Jxnet.PcapTStampTypeValToDescription;
+import static com.ardikars.jxnet.Jxnet.PcapTStampTypeValToName;
 
 @RunWith(JUnit4.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -172,7 +235,7 @@ public class JxnetTest {
     public void Test02_PcapOpenLiveAndPcapClose() {
         Pcap pcap = PcapOpenLive(source, snaplen, promisc, timeout, errbuf);
         if (pcap == null) {
-            logger.warning("PcapOpenLiveAndPcapClose:PcapOpenLive(): "+ errbuf.toString());
+            logger.warning("PcapOpenLiveAndPcapClose:PcapOpenLive(): " + errbuf.toString());
         } else {
             PcapClose(pcap);
         }
@@ -253,7 +316,7 @@ public class JxnetTest {
             logger.warning("PcapCompilePcapSetFilterAndPcapLoop:PcapCompile(): " + PcapStrError(resultCode));
             return;
         }
-        if((resultCode = PcapSetFilter(pcap, bpfProgram)) != OK) {
+        if ((resultCode = PcapSetFilter(pcap, bpfProgram)) != OK) {
             logger.warning("PcapCompilePcapSetFilterAndPcapLoop:PcapSetFilter(): " + PcapStrError(resultCode));
             return;
         }
@@ -265,12 +328,12 @@ public class JxnetTest {
 
     @Test
     public void Test09_PcapSendPacket() throws Exception {
-//        throw new Exception("Not implemented yet");
+        // throw new Exception("Not implemented yet");
     }
 
     @Test
     public void Test10_PcapNext() {
-        for (int i=0; i<maxPkt; i++) {
+        for (int i = 0; i < maxPkt; i++) {
             pkt = PcapNext(pcap, pktHdr);
             if (pktHdr != null && pkt != null) {
                 System.out.println("PacketHeader: " + pktHdr);
@@ -282,7 +345,7 @@ public class JxnetTest {
     @Test
     public void Test11_PcapNextEx() {
         pkt = ByteBuffer.allocateDirect(bufferSize);
-        for (int i=0; i<maxPkt; i++) {
+        for (int i = 0; i < maxPkt; i++) {
             resultCode = PcapNextEx(pcap, pktHdr, pkt);
             logger.info("Result: " + resultCode);
             if (pktHdr != null && pkt != null) {
@@ -320,14 +383,14 @@ public class JxnetTest {
         if ((resultCode = PcapLoop(pcap, maxPkt, new PcapHandler<String>() {
             @Override
             public void nextPacket(String user, PcapPktHdr h, ByteBuffer bytes) {
-                if (cntPkt == (maxPkt/2)) {
-                    System.out.println("Break loop.");
-                    PcapBreakLoop(pcap);
-                }
-                System.out.println("Argument    : " + user);
-                System.out.println("PacketHeader: " + h);
-                System.out.println("PacketBuffer: " + bytes);
-                cntPkt++;
+            if (cntPkt == (maxPkt / 2)) {
+                System.out.println("Break loop.");
+                PcapBreakLoop(pcap);
+            }
+            System.out.println("Argument    : " + user);
+            System.out.println("PacketHeader: " + h);
+            System.out.println("PacketBuffer: " + bytes);
+            cntPkt++;
             }
         }, "This Is User Argument")) != OK) {
             logger.warning("PcapBreakLoopAndPcapLoop:PcapLoop(): " + PcapStrError(resultCode));
@@ -337,12 +400,12 @@ public class JxnetTest {
 
     @Test
     public void Test15_PcapLookupDev() {
-        String device = PcapLookupDev(errbuf);
+        /*String device = PcapLookupDev(errbuf);
         if (device == null) {
             logger.warning("PcapLookupDev:PcapLookupDev(): " + errbuf.toString());
             return;
         }
-        System.out.println("Lookup device: " + device);
+        System.out.println("Lookup device: " + device);*/
     }
 
     @Test
@@ -413,7 +476,7 @@ public class JxnetTest {
             logger.warning("PcapCompileNoPcapSetFilterAndPcapLoop:PcapCompileNoPcap(): " + errbuf.toString());
             return;
         }
-        if((resultCode = PcapSetFilter(pcap, bpfProgram)) != OK) {
+        if ((resultCode = PcapSetFilter(pcap, bpfProgram)) != OK) {
             logger.warning("PcapCompileNoPcapSetFilterAndPcapLoop:PcapSetFilter(): " + PcapStrError(resultCode));
             return;
         }
@@ -430,7 +493,7 @@ public class JxnetTest {
 
     @Test
     public void Test24_PcapSetBufferSize() throws Exception {
-//        throw new Exception("Not implemented yet.");
+        // throw new Exception("Not implemented yet.");
     }
 
     @Test
@@ -509,7 +572,7 @@ public class JxnetTest {
     @Test
     public void Test32_PcapStatusToStr() {
         int errNum = 2;
-        System.out.println("Pcap Error ("+errNum+"): " + PcapStatusToStr(errNum));
+        System.out.println("Pcap Error (" + errNum + "): " + PcapStatusToStr(errNum));
     }
 
     @Test
@@ -517,8 +580,8 @@ public class JxnetTest {
         DataLinkType linkType = DataLinkType.LINUX_SLL;
         Pcap pcap = PcapOpenDeadWithTStampPrecision(linkType.getValue(), snaplen, precision);
         if (pcap == null) {
-            logger.warning("PcapOpenDeadWithTStampPrecisionAndPcapClose:" +
-                    "PcapOpenDeadWithTStampPrecision(): ");
+            logger.warning("PcapOpenDeadWithTStampPrecisionAndPcapClose:"
+                    + "PcapOpenDeadWithTStampPrecision(): ");
             return;
         }
         PcapClose(pcap);
@@ -528,8 +591,8 @@ public class JxnetTest {
     public void Test34_PcapOfflineFilterPcapOpenOfflineWithTStampPrecisionAndPcapClose() {
         Pcap pcap = PcapOpenOfflineWithTStampPrecision(resourceDumpFile, precision, errbuf);
         if (pcap == null) {
-            logger.warning("PcapOfflineFilterPcapOpenOfflineWithTStampPrecisionAndPcapClose:" +
-                    "PcapOpenOfflineWithTStampPrecision(): " + errbuf.toString());
+            logger.warning("PcapOfflineFilterPcapOpenOfflineWithTStampPrecisionAndPcapClose:"
+                    + "PcapOpenOfflineWithTStampPrecision(): " + errbuf.toString());
             return;
         }
         if ((resultCode = PcapCompile(pcap, bpfProgram, filter, optimize, maskp.toInt())) != OK) {
@@ -538,19 +601,19 @@ public class JxnetTest {
         }
         pkt = ByteBuffer.allocateDirect(snaplen);
         if ((resultCode = PcapOfflineFilter(bpfProgram, pktHdr, pkt)) != OK) {
-            logger.warning("PcapOfflineFilterPcapOpenOfflineWithTStampPrecisionAndPcapClose:" +
-                    "PcapOfflineFilter");
+            logger.warning("PcapOfflineFilterPcapOpenOfflineWithTStampPrecisionAndPcapClose:"
+                    + "PcapOfflineFilter");
         }
         if ((resultCode = PcapLoop(pcap, maxPkt, callback, "This Is User Argument")) < 0) {
-            logger.warning("PcapOfflineFilterPcapOpenOfflineWithTStampPrecisionAndPcapClose:" +
-                    "PcapLoop(): ");
+            logger.warning("PcapOfflineFilterPcapOpenOfflineWithTStampPrecisionAndPcapClose:"
+                    + "PcapLoop(): ");
         }
         PcapClose(pcap);
     }
 
     @Test
     public void Test35_PcapInject() {
-//        Do nothing
+        // Do nothing
     }
 
     @After
