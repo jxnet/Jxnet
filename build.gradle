@@ -31,7 +31,7 @@ allprojects {
 	apply plugin: 'license'
 	apply plugin: 'checkstyle'
 	apply plugin: 'findbugs'
-//	apply plugin: 'pmd'
+	apply plugin: 'pmd'
 
 	group = "${GROUP}"
 	version = "${VERSION}"
@@ -117,15 +117,15 @@ allprojects {
 		}
 	}
 
-//	pmd {
-//		ignoreFailures = true
-//		sourceSets = [sourceSets.main]
-//		reportsDir = file("$project.buildDir/reports/pmd")
+	pmd {
+		ignoreFailures = true
+		sourceSets = [sourceSets.main]
+		reportsDir = file("$project.buildDir/reports/pmd")
 //		ruleSets = [
 //				"basic",
 //				"braces"
 //		]
-//	}
+	}
 
 	task javadocJar(type: Jar) {
 		classifier = 'javadoc'

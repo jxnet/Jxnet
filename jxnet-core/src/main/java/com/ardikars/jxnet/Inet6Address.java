@@ -50,7 +50,11 @@ public final class Inet6Address extends InetAddress {
 	 */
 	public static final short IPV6_ADDRESS_LENGTH = 16;
 	
-	private byte[] address = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
+	private byte[] address;
+
+	{
+		address = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
+	}
 
 	private Inet6Address() {
 	}
@@ -165,7 +169,7 @@ public final class Inet6Address extends InetAddress {
 	 * @return bytes ipv6 address.
 	 */
 	public byte[] toBytes() {
-		return this.address;
+		return this.address.clone();
 	}
 
 	private long toLong() {

@@ -98,7 +98,7 @@ public final class SockAddr {
      * @return bytes address.
      */
     public byte[] getData() {
-        return this.data;
+        return this.data.clone();
     }
 
     @Override

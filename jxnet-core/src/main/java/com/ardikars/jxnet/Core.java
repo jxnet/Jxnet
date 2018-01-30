@@ -22,6 +22,7 @@ import com.ardikars.jxnet.util.Validate;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,7 +125,7 @@ class Core {
      * Compile a packet filter without the need of opening an adapter.
      * This function converts an high level filtering expression (see Filtering expression syntax)
      * in a program that can be interpreted by the kernel-level filtering engine.
-     * @param snaplen_arg snapshot length.
+     * @param snaplenArg snapshot length.
      * @param linkType datalink type.
      * @param program bpf.
      * @param buf filter.
@@ -298,7 +299,8 @@ class Core {
             }
         }
         System.out.println(sb.toString());
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, Charset.forName("UTF-8")));
+        PcapIf pcapIf = null;
         while (true) {
             System.out.print("Select a device number, or enter 'q' to quit -> ");
             String input;
@@ -307,10 +309,12 @@ class Core {
                 i = Integer.parseInt(input);
             } catch (IOException e) {
                 errbuf.append(e.toString());
-                return null;
+                pcapIf = null;
+                break;
             }
-            return pcapIfs.get(i - 1);
+            pcapIf = pcapIfs.get(i - 1);
         }
+        return pcapIf;
     }
 
     /**
