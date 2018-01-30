@@ -19,7 +19,6 @@ package com.ardikars.jxnet;
 
 import com.ardikars.jxnet.util.Validate;
 
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 /**
@@ -69,7 +68,7 @@ public final class Inet4Address extends InetAddress {
 			Validate.illegalArgument(parts[i] != null || parts[i].length() != 0);
 			Validate.illegalArgument(!(parts[i].length() > 1 && parts[i].startsWith("0")));
 			result[i] = Integer.valueOf(parts[i]).byteValue();
-			Validate.illegalArgument(result[i] <= 0xff);
+			Validate.illegalArgument(result[i] <= (byte) 0xff);
 		}
 		return Inet4Address.valueOf(result);
 	}
