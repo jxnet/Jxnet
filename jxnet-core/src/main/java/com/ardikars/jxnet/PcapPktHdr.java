@@ -43,26 +43,26 @@ public final class PcapPktHdr {
 	 * Create PcapPktHdr instance.
 	 * @param caplen capture length.
 	 * @param len length.
-	 * @param tv_sec tv_sec.
-	 * @param tv_usec tv_usec.
+	 * @param tvSec tv_sec.
+	 * @param tvUsec tv_usec.
 	 */
-	public PcapPktHdr(int caplen, int len, int tv_sec, long tv_usec) {
+	public PcapPktHdr(int caplen, int len, int tvSec, long tvUsec) {
 		this.caplen = caplen;
 		this.len = len;
-		this.tv_sec = tv_sec;
-		this.tv_usec = tv_usec;
+		this.tv_sec = tvSec;
+		this.tv_usec = tvUsec;
 	}
 
 	/**
 	 * Create new PcapPktHdr instance.
 	 * @param caplen capture length.
 	 * @param len length.
-	 * @param tv_sec tv_sec.
-	 * @param tv_usec tv_usec.
+	 * @param tvSec tv_sec.
+	 * @param tvUsec tv_usec.
 	 * @return PcapPktHdr.
 	 */
-	public static PcapPktHdr newInstance(int caplen, int len, int tv_sec, long tv_usec) {
-		return new PcapPktHdr(caplen, len, tv_sec, tv_usec);
+	public static PcapPktHdr newInstance(int caplen, int len, int tvSec, long tvUsec) {
+		return new PcapPktHdr(caplen, len, tvSec, tvUsec);
 	}
 
 	/**
@@ -99,14 +99,24 @@ public final class PcapPktHdr {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
 		PcapPktHdr that = (PcapPktHdr) o;
 
-		if (caplen != that.caplen) return false;
-		if (getLen() != that.getLen()) return false;
-		if (tv_sec != that.tv_sec) return false;
+		if (caplen != that.caplen) {
+			return false;
+		}
+		if (getLen() != that.getLen()) {
+			return false;
+		}
+		if (tv_sec != that.tv_sec) {
+			return false;
+		}
 		return tv_usec == that.tv_usec;
 	}
 

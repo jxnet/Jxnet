@@ -1,13 +1,37 @@
 package com.ardikars.jxnet;
 
+import static com.ardikars.jxnet.Core.LookupNetworkInterface;
+import static com.ardikars.jxnet.Core.PcapCompile;
+import static com.ardikars.jxnet.Core.PcapCompileNoPcap;
+import static com.ardikars.jxnet.Core.PcapCreate;
+import static com.ardikars.jxnet.Core.PcapDatalink;
+import static com.ardikars.jxnet.Core.PcapFreeAllDevs;
+import static com.ardikars.jxnet.Core.PcapFreeDataLinks0;
+import static com.ardikars.jxnet.Core.PcapFreeTStampTypes0;
+import static com.ardikars.jxnet.Core.PcapGetTStampPrecision0;
+import static com.ardikars.jxnet.Core.PcapListDataLinks0;
+import static com.ardikars.jxnet.Core.PcapListTStampTypes0;
+import static com.ardikars.jxnet.Core.PcapOpenDead;
+import static com.ardikars.jxnet.Core.PcapOpenLive;
+import static com.ardikars.jxnet.Core.PcapSetDatalink;
+import static com.ardikars.jxnet.Core.PcapSetImmediateMode;
+import static com.ardikars.jxnet.Core.PcapSetPromisc;
+import static com.ardikars.jxnet.Core.PcapSetTStampType;
+import static com.ardikars.jxnet.Jxnet.OK;
+import static com.ardikars.jxnet.Jxnet.PcapActivate;
+import static com.ardikars.jxnet.Jxnet.PcapClose;
+import static com.ardikars.jxnet.Jxnet.PcapDumpClose;
+import static com.ardikars.jxnet.Jxnet.PcapDumpOpen;
+import static com.ardikars.jxnet.Jxnet.PcapFindAllDevs;
+import static com.ardikars.jxnet.Jxnet.PcapFreeCode;
+import static com.ardikars.jxnet.Jxnet.PcapLookupNet;
+import static com.ardikars.jxnet.Jxnet.PcapLoop;
+import static com.ardikars.jxnet.Jxnet.PcapSetFilter;
+import static com.ardikars.jxnet.Jxnet.PcapSetSnaplen;
+import static com.ardikars.jxnet.Jxnet.PcapSetTimeout;
+import static com.ardikars.jxnet.Jxnet.PcapStrError;
+
 import com.ardikars.jxnet.util.Platforms;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-import org.junit.runners.MethodSorters;
 
 import java.io.File;
 import java.nio.ByteBuffer;
@@ -15,9 +39,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import static com.ardikars.jxnet.Core.PcapFreeAllDevs;
-import static com.ardikars.jxnet.Jxnet.*;
-import static com.ardikars.jxnet.Jxnet.OK;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+import org.junit.runners.MethodSorters;
 
 @RunWith(JUnit4.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -65,6 +93,10 @@ public class CoreTest {
         }
     };
 
+    /**
+     * Initialize
+     * @throws Exception Exception.
+     */
     @Before
     public void create() throws Exception {
         if ((resultCode = PcapFindAllDevs(alldevsp, errbuf)) != OK) {
@@ -123,7 +155,7 @@ public class CoreTest {
 
         bpfProgram = new BpfProgram();
 
-        java.io.File file = File.createTempFile("dump", ".pcap");
+        File file = File.createTempFile("dump", ".pcap");
         if (!file.delete()) {
             logger.warning("create:File.delete()");
             return;
@@ -143,7 +175,7 @@ public class CoreTest {
     public void Test01_PcapOpenLiveAndPcapClose() {
         Pcap pcap = PcapOpenLive(source, snaplen, promisc, timeout, errbuf);
         if (pcap == null) {
-            logger.warning("PcapOpenLiveAndPcapClose:PcapOpenLive(): "+ errbuf.toString());
+            logger.warning("PcapOpenLiveAndPcapClose:PcapOpenLive(): " + errbuf.toString());
         } else {
             PcapClose(pcap);
         }
@@ -155,7 +187,7 @@ public class CoreTest {
             logger.warning("PcapCompilePcapSetFilterAndPcapLoop:PcapCompile(): " + PcapStrError(resultCode));
             return;
         }
-        if((resultCode = PcapSetFilter(pcap, bpfProgram)) != OK) {
+        if ((resultCode = PcapSetFilter(pcap, bpfProgram)) != OK) {
             logger.warning("PcapCompilePcapSetFilterAndPcapLoop:PcapSetFilter(): " + PcapStrError(resultCode));
             return;
         }
@@ -172,7 +204,7 @@ public class CoreTest {
             logger.warning("PcapCompileNoPcapSetFilterAndPcapLoop:PcapCompileNoPcap(): " + errbuf.toString());
             return;
         }
-        if((resultCode = PcapSetFilter(pcap, bpfProgram)) != OK) {
+        if ((resultCode = PcapSetFilter(pcap, bpfProgram)) != OK) {
             logger.warning("PcapCompileNoPcapSetFilterAndPcapLoop:PcapSetFilter(): " + PcapStrError(resultCode));
             return;
         }
@@ -251,6 +283,9 @@ public class CoreTest {
         PcapFreeTStampTypes0(tsTypes);
     }
 
+    /**
+     * Destroy method.
+     */
     @After
     public void destroy() {
         PcapClose(pcap);

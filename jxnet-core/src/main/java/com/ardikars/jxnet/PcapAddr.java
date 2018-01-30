@@ -70,14 +70,24 @@ public final class PcapAddr {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
 		PcapAddr pcapAddr = (PcapAddr) o;
 
-		if (!getAddr().equals(pcapAddr.getAddr())) return false;
-		if (!getNetmask().equals(pcapAddr.getNetmask())) return false;
-		if (!getBroadAddr().equals(pcapAddr.getBroadAddr())) return false;
+		if (!getAddr().equals(pcapAddr.getAddr())) {
+			return false;
+		}
+		if (!getNetmask().equals(pcapAddr.getNetmask())) {
+			return false;
+		}
+		if (!getBroadAddr().equals(pcapAddr.getBroadAddr())) {
+			return false;
+		}
 		return getDstAddr().equals(pcapAddr.getDstAddr());
 	}
 

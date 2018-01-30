@@ -53,8 +53,8 @@ public enum TimeStampType {
      * @return time stamp type.
      */
     public static TimeStampType valueOf(final int type) {
-        for(TimeStampType timeStampType : values()) {
-            if(timeStampType.getType() == type) {
+        for (TimeStampType timeStampType : values()) {
+            if (timeStampType.getType() == type) {
                 return timeStampType;
             }
         }

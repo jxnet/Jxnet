@@ -20,7 +20,12 @@ package com.ardikars.jxnet;
 import com.ardikars.jxnet.util.Platforms;
 import com.ardikars.jxnet.util.Validate;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -62,21 +67,29 @@ public final class Library {
         OutputStream os = null;
         try {
             os = new FileOutputStream(temp);
+            while ((readBytes = is.read(buffer)) != -1) {
+                try {
+                    os.write(buffer, 0, readBytes);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }
-        try {
-            while ((readBytes = is.read(buffer)) != -1) {
-                os.write(buffer, 0, readBytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (os != null) {
+                    os.close();
+                }
+                if (is != null) {
+                    is.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            is.close();
-            os.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         if (Platforms.isWindows()) {
             if (!new File("C:\\Windows\\System32\\wpcap.dll").exists()) {
@@ -93,6 +106,6 @@ public final class Library {
             System.load(temp.getAbsolutePath());
             LOGGER.info("Successfully loaded the jxnet native library.");
         }
-    };
+    }
 
 }

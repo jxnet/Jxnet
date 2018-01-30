@@ -22,6 +22,7 @@ import com.ardikars.jxnet.util.Validate;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,12 +58,11 @@ class Core {
      * on Linux systems with 2.2 or later kernels, a source argument of "any" or NULL
      * can be used to capture packets from all interfaces.
      *
-     * The returned handle must be activated with PcapActivate() before packets can be captured with it;
-     * options for the capture, such as promiscuous mode, can be set on the handle before activating it.
+     * <p>The returned handle must be activated with PcapActivate() before packets can be captured with it;
+     * options for the capture, such as promiscuous mode, can be set on the handle before activating it.</p>
      * @param source network device.
      * @param errbuf errof buffer.
-     * @return returns a pcap instance on success and NULL on failure. If NULL is returned, errbuf is filled in with an
-     * appropriate error message.
+     * @return returns a pcap instance on success and NULL on failure. If NULL is returned, errbuf is filled in with an appropriate error message.
      * @since 1.1.5
      */
     public static Pcap PcapCreate(PcapIf source, StringBuilder errbuf) {
@@ -125,7 +125,7 @@ class Core {
      * Compile a packet filter without the need of opening an adapter.
      * This function converts an high level filtering expression (see Filtering expression syntax)
      * in a program that can be interpreted by the kernel-level filtering engine.
-     * @param snaplen_arg snapshot length.
+     * @param snaplenArg snapshot length.
      * @param linkType datalink type.
      * @param program bpf.
      * @param buf filter.
@@ -134,15 +134,15 @@ class Core {
      * @return -1 on error.
      * @since 1.1.5
      */
-    public static int PcapCompileNoPcap(int snaplen_arg, DataLinkType linkType, BpfProgram program,
+    public static int PcapCompileNoPcap(int snaplenArg, DataLinkType linkType, BpfProgram program,
                                   String buf, BpfProgram.BpfCompileMode optimize, Inet4Address netmask) {
-        Validate.between(0, 65536, snaplen_arg);
+        Validate.between(0, 65536, snaplenArg);
         Validate.nullPointer(linkType);
         Validate.nullPointer(program);
         buf = Validate.nullPointer(buf, "");
         Validate.nullPointer(optimize);
         netmask = Validate.nullPointer(netmask, Inet4Address.valueOf("255.255.255.0"));
-        return Jxnet.PcapCompileNoPcap(snaplen_arg, linkType.getValue(), program, buf,
+        return Jxnet.PcapCompileNoPcap(snaplenArg, linkType.getValue(), program, buf,
                 optimize.getValue(), netmask.toInt());
     }
 
@@ -198,45 +198,45 @@ class Core {
 
     /**
      * Removes all of the elements.
-     * @param dtl_list datalinks.
+     * @param dtlList datalinks.
      */
-    public static void PcapFreeDataLinks(List<Integer> dtl_list) {
-        Validate.nullPointer(dtl_list);
-        if (!dtl_list.isEmpty()) {
-            dtl_list.clear();
+    public static void PcapFreeDataLinks(List<Integer> dtlList) {
+        Validate.nullPointer(dtlList);
+        if (!dtlList.isEmpty()) {
+            dtlList.clear();
         }
     }
 
     /**
      * Removes all of the elements.
-     * @param tstamp_type_list time stamp types.
+     * @param tstampTypeList time stamp types.
      */
-    public static void PcapFreeTStampTypes(List<Integer> tstamp_type_list) {
-        Validate.nullPointer(tstamp_type_list);
-        if (!tstamp_type_list.isEmpty()) {
-            tstamp_type_list.clear();
+    public static void PcapFreeTStampTypes(List<Integer> tstampTypeList) {
+        Validate.nullPointer(tstampTypeList);
+        if (!tstampTypeList.isEmpty()) {
+            tstampTypeList.clear();
         }
     }
 
     /**
      * Removes all of the elements.
-     * @param dtl_list datalinks.
+     * @param dtlList datalinks.
      */
-    public static void PcapFreeDataLinks0(List<DataLinkType> dtl_list) {
-        Validate.nullPointer(dtl_list);
-        if (!dtl_list.isEmpty()) {
-            dtl_list.clear();
+    public static void PcapFreeDataLinks0(List<DataLinkType> dtlList) {
+        Validate.nullPointer(dtlList);
+        if (!dtlList.isEmpty()) {
+            dtlList.clear();
         }
     }
 
     /**
      * Removes all of the elements.
-     * @param tstamp_type_list time stamp types.
+     * @param tstampTypeList time stamp types.
      */
-    public static void PcapFreeTStampTypes0(List<TimeStampType> tstamp_type_list) {
-        Validate.nullPointer(tstamp_type_list);
-        if (!tstamp_type_list.isEmpty()) {
-            tstamp_type_list.clear();
+    public static void PcapFreeTStampTypes0(List<TimeStampType> tstampTypeList) {
+        Validate.nullPointer(tstampTypeList);
+        if (!tstampTypeList.isEmpty()) {
+            tstampTypeList.clear();
         }
     }
 
@@ -290,16 +290,17 @@ class Core {
             return null;
         }
         StringBuilder sb = new StringBuilder();
-        int i=0;
+        int i = 0;
         for (PcapIf pcapIf : pcapIfs) {
-            sb.append("NO[" + ++i +"]\t=> ");
+            sb.append("NO[" + ++i + "]\t=> ");
             sb.append("NAME: " + pcapIf.getName() + " (" + pcapIf.getDescription() + " )\n");
             for (PcapAddr pcapAddr : pcapIf.getAddresses()) {
                 sb.append("\t\tADDRESS: " + pcapAddr.getAddr().toString() + "\n");
             }
         }
         System.out.println(sb.toString());
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, Charset.forName("UTF-8")));
+        PcapIf pcapIf = null;
         while (true) {
             System.out.print("Select a device number, or enter 'q' to quit -> ");
             String input;
@@ -308,10 +309,12 @@ class Core {
                 i = Integer.parseInt(input);
             } catch (IOException e) {
                 errbuf.append(e.toString());
-                return null;
+                pcapIf = null;
+                break;
             }
-            return pcapIfs.get(i-1);
+            pcapIf = pcapIfs.get(i - 1);
         }
+        return pcapIf;
     }
 
     /**
@@ -358,8 +361,7 @@ class Core {
      * Set the time stamp type returned in captures.
      * @param pcap pcap.
      * @param timeStampPrecision time stamp type.
-     * @return 0 on success if specified time type precision is expected to be supported
-     * by operating system.
+     * @return 0 on success if specified time type precision is expected to be supported by operating system.
      */
     public static int PcapSetTStampType(Pcap pcap, TimeStampPrecision timeStampPrecision) {
         return Jxnet.PcapSetTStampPrecision(pcap, timeStampPrecision.getValue());

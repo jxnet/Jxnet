@@ -50,7 +50,11 @@ public final class Inet6Address extends InetAddress {
 	 */
 	public static final short IPV6_ADDRESS_LENGTH = 16;
 	
-	private byte[] address = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
+	private byte[] address;
+
+	{
+		address = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
+	}
 
 	private Inet6Address() {
 	}
@@ -79,8 +83,8 @@ public final class Inet6Address extends InetAddress {
 
 		inet6Address = Validate.nullPointer(inet6Address, "::");
 
-		final int IPV6_MAX_HEX_GROUPS = 8;
-		final int IPV6_MAX_HEX_DIGITS_PER_GROUP = 4;
+		final int ipv6MaxHexGroups = 8;
+		final int ipv6MaxHexDigitsPerGroup = 4;
 
 		boolean containsCompressedZeroes = inet6Address.contains("::");
 		Validate.illegalArgument(!(containsCompressedZeroes && (inet6Address.indexOf("::") != inet6Address.lastIndexOf("::"))));
@@ -96,7 +100,7 @@ public final class Inet6Address extends InetAddress {
 			}
 			parts = partsAsList.toArray(new String[partsAsList.size()]);
 		}
-		Validate.illegalArgument(!(parts.length > IPV6_MAX_HEX_GROUPS && parts.length < 3));
+		Validate.illegalArgument(!(parts.length > ipv6MaxHexGroups && parts.length < 3));
 		int validOctets = 0;
 		int emptyOctets = 0;
 		for (int index = 0; index < parts.length; index++) {
@@ -116,11 +120,11 @@ public final class Inet6Address extends InetAddress {
 					validOctets += 2;
 					continue;
 				}
-				Validate.illegalArgument(!(octet.length() > IPV6_MAX_HEX_DIGITS_PER_GROUP));
+				Validate.illegalArgument(!(octet.length() > ipv6MaxHexDigitsPerGroup));
 			}
 			validOctets++;
 		}
-		Validate.illegalArgument(!(validOctets > IPV6_MAX_HEX_GROUPS || (validOctets < IPV6_MAX_HEX_GROUPS && !containsCompressedZeroes)));
+		Validate.illegalArgument(!(validOctets > ipv6MaxHexGroups || (validOctets < ipv6MaxHexGroups && !containsCompressedZeroes)));
 		parts = inet6Address.split(":", 8 + 2);
 		Validate.illegalArgument(!(parts.length < 3 || parts.length > 8 + 1));
 		int skipIndex = -1;
@@ -165,7 +169,7 @@ public final class Inet6Address extends InetAddress {
 	 * @return bytes ipv6 address.
 	 */
 	public byte[] toBytes() {
-		return this.address;
+		return this.address.clone();
 	}
 
 	private long toLong() {
@@ -189,8 +193,12 @@ public final class Inet6Address extends InetAddress {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
 		Inet6Address that = (Inet6Address) o;
 
@@ -202,6 +210,10 @@ public final class Inet6Address extends InetAddress {
 		return Arrays.hashCode(address);
 	}
 
+	/**
+	 * Returning ipv6 string.
+	 * @return ipv6 string.
+	 */
 	public String toString() {
 		int cmprHextet = -1;
 		int cmprSize = 0;

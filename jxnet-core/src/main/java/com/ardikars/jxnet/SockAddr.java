@@ -61,8 +61,8 @@ public final class SockAddr {
          * @return value type.
          */
         public static Family valueOf(final short family) {
-            for(Family f : values()) {
-                if(f.getValue() == family) {
+            for (Family f : values()) {
+                if (f.getValue() == family) {
                     return f;
                 }
             }
@@ -83,7 +83,7 @@ public final class SockAddr {
      * @return address value type.
      */
     public Family getSaFamily() {
-        switch(sa_family) {
+        switch (sa_family) {
             case 2:
                 return Family.AF_INET;
             case 10:
@@ -98,17 +98,23 @@ public final class SockAddr {
      * @return bytes address.
      */
     public byte[] getData() {
-        return this.data;
+        return this.data.clone();
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         SockAddr sockAddr = (SockAddr) o;
 
-        if (sa_family != sockAddr.sa_family) return false;
+        if (sa_family != sockAddr.sa_family) {
+            return false;
+        }
         return Arrays.equals(getData(), sockAddr.getData());
     }
 
@@ -122,7 +128,9 @@ public final class SockAddr {
     @Override
     public String toString() {
         Family family = getSaFamily();
-        if (family == null) return null;
+        if (family == null) {
+            return null;
+        }
         switch (family) {
             case AF_INET:
                 return Inet4Address.valueOf(data).toString();

@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.ardikars.jxnet;
 
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.4
- * Not implemented yet.
  */
 public enum TimeStampPrecision {
 
@@ -41,7 +41,7 @@ public enum TimeStampPrecision {
 
     /**
      * Get time stamp precision.
-     * @param value
+     * @param value value.
      * @return time stamp precision
      */
     public static TimeStampPrecision valueOf(final int value) {

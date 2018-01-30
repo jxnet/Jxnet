@@ -19,7 +19,6 @@ package com.ardikars.jxnet;
 
 import com.ardikars.jxnet.util.Validate;
 
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 /**
@@ -62,15 +61,14 @@ public final class Inet4Address extends InetAddress {
 	 */
 	public static Inet4Address valueOf(String inet4Address) {
 		inet4Address = Validate.nullPointer(inet4Address, "0.0.0.0");
-		//Preconditions.CheckArgument(inet4Address.matches("\\b((25[0–5]|2[0–4]\\d|[01]?\\d\\d?)(\\.)){3}(25[0–5]|2[0–4]\\d|[01]?\\d\\d?)\\b"));
 		String[] parts = inet4Address.split("\\.");
 		byte[] result = new byte[parts.length];
 		Validate.illegalArgument(result.length == IPV4_ADDRESS_LENGTH);
-		for (int i=0; i<result.length; i++) {
+		for (int i = 0; i < result.length; i++) {
 			Validate.illegalArgument(parts[i] != null || parts[i].length() != 0);
 			Validate.illegalArgument(!(parts[i].length() > 1 && parts[i].startsWith("0")));
 			result[i] = Integer.valueOf(parts[i]).byteValue();
-			Validate.illegalArgument(result[i] <= 0xff);
+			Validate.illegalArgument((result[i] & 0xff) <= 0xff);
 		}
 		return Inet4Address.valueOf(result);
 	}
@@ -127,8 +125,12 @@ public final class Inet4Address extends InetAddress {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
 		Inet4Address that = (Inet4Address) o;
 

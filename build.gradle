@@ -29,6 +29,9 @@ allprojects {
 	apply plugin: 'jacoco'
 	apply plugin: 'com.jfrog.bintray'
 	apply plugin: 'license'
+	apply plugin: 'checkstyle'
+	apply plugin: 'findbugs'
+	apply plugin: 'pmd'
 
 	group = "${GROUP}"
 	version = "${VERSION}"
@@ -77,6 +80,51 @@ allprojects {
 		exclude '**/*Test.java'
 		header rootProject.file('gradle/resources/license.header')
 		strictCheck true
+	}
+
+	checkstyle {
+		ignoreFailures = true
+
+		configFile = project(':').file('gradle/resources/checkstyle/checkstyle.xml')
+		configProperties = [ "suppressionFile" : project(':').file('gradle/resources/checkstyle/suppression.xml')]
+
+		checkstyleMain {
+			source = sourceSets.main.allSource
+		}
+		configurations {
+			checkstyle
+		}
+		checkstyleMain {
+			reports {
+				html {
+					destination "${project.buildDir}/reports/checkstyle.html"
+				}
+			}
+		}
+	}
+
+	findbugs {
+		ignoreFailures = true
+		toolVersion = "2.0.1"
+		sourceSets = [sourceSets.main]
+		reportsDir = file("$project.buildDir/reports/findbugs")
+		effort = "max"
+		findbugsMain {
+			reports {
+				xml.enabled = false
+				html.enabled = true
+			}
+		}
+	}
+
+	pmd {
+		ignoreFailures = true
+		sourceSets = [sourceSets.main]
+		reportsDir = file("$project.buildDir/reports/pmd")
+//		ruleSets = [
+//				"basic",
+//				"braces"
+//		]
 	}
 
 	task javadocJar(type: Jar) {
