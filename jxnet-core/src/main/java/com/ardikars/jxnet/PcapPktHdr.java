@@ -132,8 +132,8 @@ public final class PcapPktHdr {
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder("PcapPktHdr{");
-		sb.append("caplen=").append(caplen);
+		final StringBuilder sb = new StringBuilder(94);
+		sb.append("PcapPktHdr{caplen=").append(caplen);
 		sb.append(", len=").append(len);
 		sb.append(", tv_sec=").append(tv_sec);
 		sb.append(", tv_usec=").append(tv_usec);

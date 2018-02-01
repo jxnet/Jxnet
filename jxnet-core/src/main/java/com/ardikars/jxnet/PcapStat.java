@@ -83,8 +83,8 @@ public final class PcapStat {
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder("PcapStat{");
-		sb.append("ps_recv=").append(ps_recv);
+		final StringBuilder sb = new StringBuilder(100);
+		sb.append("PcapStat{ps_recv=").append(ps_recv);
 		sb.append(", ps_drop=").append(ps_drop);
 		sb.append(", ps_ifdrop=").append(ps_ifdrop);
 		sb.append('}');

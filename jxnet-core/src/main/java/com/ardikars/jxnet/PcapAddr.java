@@ -102,8 +102,8 @@ public final class PcapAddr {
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder("PcapAddr{");
-		sb.append("addr=").append(addr);
+		final StringBuilder sb = new StringBuilder(63);
+		sb.append("PcapAddr{addr=").append(addr);
 		sb.append(", netmask=").append(netmask);
 		sb.append(", broadaddr=").append(broadaddr);
 		sb.append(", dstaddr=").append(dstaddr);

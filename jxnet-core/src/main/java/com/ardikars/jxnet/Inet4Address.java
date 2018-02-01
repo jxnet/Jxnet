@@ -52,11 +52,7 @@ public final class Inet4Address extends InetAddress {
 		super();
 		Validate.nullPointer(address);
 		Validate.illegalArgument(address.length == IPV4_ADDRESS_LENGTH);
-		if (address == null) {
-			this.address = new byte[0];
-		} else {
-			System.arraycopy(address, 0, this.address, 0, address.length);
-		}
+		System.arraycopy(address, 0, this.address, 0, address.length);
 	}
 
 	/**
@@ -72,7 +68,7 @@ public final class Inet4Address extends InetAddress {
 		for (int i = 0; i < result.length; i++) {
 			Validate.illegalArgument(parts[i] != null || parts[i].length() != 0);
 			Validate.illegalArgument(!(parts[i].length() > 1 && parts[i].startsWith("0")));
-			result[i] = Integer.valueOf(parts[i]).byteValue();
+			result[i] = Byte.valueOf(parts[i]);
 			Validate.illegalArgument((result[i] & 0xff) <= 0xff);
 		}
 		return Inet4Address.valueOf(result);

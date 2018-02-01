@@ -48,7 +48,7 @@ public final class Library {
 
     static void loadLibrary(final String path) {
         Validate.nullPointer(path);
-        if (!path.startsWith("/")) {
+        if (!(path.charAt(0) == '/')) {
             throw new IllegalArgumentException("The path has to be absolute (start with '/').");
         }
         String[] parts = Pattern.compile("/").split(path);
@@ -58,10 +58,12 @@ public final class Library {
         File temp = null;
         try {
             temp = File.createTempFile(parts[0], "." + parts[1]);
+            temp.deleteOnExit();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
         }
-        temp.deleteOnExit();
         final byte[] buffer = new byte[1024];
         int readBytes;
         final InputStream is = Library.class.getResourceAsStream(path);
@@ -85,12 +87,8 @@ public final class Library {
             e.printStackTrace();
         } finally {
             try {
-                if (os != null) {
-                    os.close();
-                }
-                if (is != null) {
-                    is.close();
-                }
+                os.close();
+                is.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }

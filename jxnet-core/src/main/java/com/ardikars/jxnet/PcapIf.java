@@ -104,9 +104,9 @@ public final class PcapIf {
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder("PcapIf{");
-		sb.append("name='").append(name).append('\'');
-		sb.append(", description='").append(description).append('\'');
+		final StringBuilder sb = new StringBuilder(500);
+		sb.append("PcapIf{name='").append(name);
+		sb.append(", description='").append(description);
 		sb.append(", addresses=").append(addresses);
 		sb.append(", flags=").append(flags);
 		sb.append('}');

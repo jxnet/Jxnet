@@ -30,7 +30,7 @@ import java.util.List;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.4
  */
-class Core {
+abstract class Core {
 
     protected Core() {
 
@@ -293,13 +293,13 @@ class Core {
         if (Jxnet.PcapFindAllDevs(pcapIfs, errbuf) != Jxnet.OK) {
             return null;
         }
-        final StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder(1000);
         int i = 0;
         for (final PcapIf pcapIf : pcapIfs) {
-            sb.append("NO[" + ++i + "]\t=> ");
-            sb.append("NAME: " + pcapIf.getName() + " (" + pcapIf.getDescription() + " )\n");
+            sb.append("NO[").append(++i).append("]\t=> ");
+            sb.append("NAME: ").append(pcapIf.getName()).append(" (").append(pcapIf.getDescription()).append(" )\n");
             for (final PcapAddr pcapAddr : pcapIf.getAddresses()) {
-                sb.append("\t\tADDRESS: " + pcapAddr.getAddr().toString() + "\n");
+                sb.append("\t\tADDRESS: ").append(pcapAddr.getAddr().toString()).append('\n');
             }
         }
         System.out.println(sb.toString());

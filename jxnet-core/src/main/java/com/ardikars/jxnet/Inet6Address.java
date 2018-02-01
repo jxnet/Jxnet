@@ -64,11 +64,7 @@ public final class Inet6Address extends InetAddress {
 		super();
 		Validate.nullPointer(address);
 		Validate.illegalArgument(address.length == IPV6_ADDRESS_LENGTH);
-		if (address == null) {
-			this.address = address;
-		} else {
-			System.arraycopy(address, 0, this.address, 0, address.length);
-		}
+		System.arraycopy(address, 0, this.address, 0, address.length);
 	}
 
 	/**
@@ -94,7 +90,7 @@ public final class Inet6Address extends InetAddress {
 
 		boolean containsCompressedZeroes = inet6Address.contains("::");
 		Validate.illegalArgument(!(containsCompressedZeroes && (inet6Address.indexOf("::") != inet6Address.lastIndexOf("::"))));
-		Validate.illegalArgument(!(inet6Address.startsWith(":") && !inet6Address.startsWith("::")
+		Validate.illegalArgument(!(inet6Address.charAt(0) == ':' && !inet6Address.startsWith("::")
 				|| (inet6Address.endsWith(":") && !inet6Address.endsWith("::"))));
 		String[] parts = inet6Address.split(":");
 		if (containsCompressedZeroes) {
@@ -223,7 +219,7 @@ public final class Inet6Address extends InetAddress {
 	public String toString() {
 		int cmprHextet = -1;
 		int cmprSize = 0;
-		for (int hextet = 0; hextet < 7; ) {
+		for (int hextet = 0; hextet < 7;) {
 			int curByte = hextet * 2;
 			int size = 0;
 			while (curByte < this.address.length && this.address[curByte] == 0

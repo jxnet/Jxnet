@@ -56,16 +56,18 @@ public class Application {
     }
 
     protected static Application getInstance() {
-        if (instance == null) {
-            instance = new Application();
-            if (instance.libraryLoaders == null) {
-                instance.libraryLoaders = new ArrayList<Library.Loader>();
+        synchronized (Application.class) {
+            if (instance == null) {
+                instance = new Application();
+                if (instance.libraryLoaders == null) {
+                    instance.libraryLoaders = new ArrayList<Library.Loader>();
+                }
+                if (instance.properties == null) {
+                    instance.properties = new HashMap<String, Object>();
+                }
             }
-            if (instance.properties == null) {
-                instance.properties = new HashMap<String, Object>();
-            }
+            return instance;
         }
-        return instance;
     }
 
     protected void addLibrary(final Library.Loader libraryLoader) {
