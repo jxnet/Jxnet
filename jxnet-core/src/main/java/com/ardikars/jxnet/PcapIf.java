@@ -18,7 +18,6 @@
 package com.ardikars.jxnet;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -72,7 +71,7 @@ public final class PcapIf {
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}
@@ -80,7 +79,7 @@ public final class PcapIf {
 			return false;
 		}
 
-		PcapIf pcapIf = (PcapIf) o;
+		final PcapIf pcapIf = (PcapIf) o;
 
 		if (getFlags() != pcapIf.getFlags()) {
 			return false;

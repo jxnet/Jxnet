@@ -57,7 +57,7 @@ public final class MacAddress {
 	
 	private byte[] address = new byte[MAC_ADDRESS_LENGTH];
 	
-	private MacAddress(byte[] address) {
+	private MacAddress(final byte[] address) {
 		Validate.nullPointer(address);
 		Validate.illegalArgument(address.length == MAC_ADDRESS_LENGTH);
 		this.address = Arrays.copyOf(address, MacAddress.MAC_ADDRESS_LENGTH);
@@ -150,7 +150,7 @@ public final class MacAddress {
 	public long toLong() {
 		long addr = 0;
 		for (int i = 0; i < MAC_ADDRESS_LENGTH; i++) {
-			long tmp = (this.address[i] & 0xffL) << (5 - i) * 8;
+			final long tmp = (this.address[i] & 0xffL) << (5 - i) * 8;
 			addr |= tmp;
 		}
 		return addr;
@@ -181,7 +181,7 @@ public final class MacAddress {
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}
@@ -189,7 +189,7 @@ public final class MacAddress {
 			return false;
 		}
 
-		MacAddress that = (MacAddress) o;
+		final MacAddress that = (MacAddress) o;
 
 		return Arrays.equals(address, that.address);
 	}
@@ -204,9 +204,9 @@ public final class MacAddress {
 		final StringBuilder sb = new StringBuilder();
 		for (final byte b : this.address) {
 			if (sb.length() > 0) {
-				sb.append(":");
+				sb.append(':');
 			}
-			String hex = Integer.toHexString(b & 0xff);
+			final String hex = Integer.toHexString(b & 0xff);
 			sb.append(hex.length() == 1 ? "0" + hex : hex);
 		}
 		return sb.toString();

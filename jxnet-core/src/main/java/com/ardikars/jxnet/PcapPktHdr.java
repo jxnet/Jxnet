@@ -22,7 +22,8 @@ package com.ardikars.jxnet;
  * @since 1.0.0
  */
 public final class PcapPktHdr {
-	
+
+	// This field will be replaced by native code
 	private int caplen;
 	private int len;
 	
@@ -46,7 +47,7 @@ public final class PcapPktHdr {
 	 * @param tvSec tv_sec.
 	 * @param tvUsec tv_usec.
 	 */
-	public PcapPktHdr(int caplen, int len, int tvSec, long tvUsec) {
+	public PcapPktHdr(final int caplen, final int len, final int tvSec, final long tvUsec) {
 		this.caplen = caplen;
 		this.len = len;
 		this.tv_sec = tvSec;
@@ -61,7 +62,7 @@ public final class PcapPktHdr {
 	 * @param tvUsec tv_usec.
 	 * @return PcapPktHdr.
 	 */
-	public static PcapPktHdr newInstance(int caplen, int len, int tvSec, long tvUsec) {
+	public static PcapPktHdr newInstance(final int caplen, final int len, final int tvSec, final long tvUsec) {
 		return new PcapPktHdr(caplen, len, tvSec, tvUsec);
 	}
 
@@ -98,7 +99,7 @@ public final class PcapPktHdr {
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}
@@ -106,7 +107,7 @@ public final class PcapPktHdr {
 			return false;
 		}
 
-		PcapPktHdr that = (PcapPktHdr) o;
+		final PcapPktHdr that = (PcapPktHdr) o;
 
 		if (caplen != that.caplen) {
 			return false;

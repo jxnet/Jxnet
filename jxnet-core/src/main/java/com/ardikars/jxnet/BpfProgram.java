@@ -57,8 +57,10 @@ public final class BpfProgram {
 	 * Get Bpf Program pointer address.
 	 * @return pointer address.
 	 */
-	public synchronized long getAddress() {
-		return this.address;
+	public long getAddress() {
+		synchronized (this) {
+			return this.address;
+		}
 	}
 
 	/**
@@ -73,7 +75,7 @@ public final class BpfProgram {
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}
@@ -81,7 +83,7 @@ public final class BpfProgram {
 			return false;
 		}
 
-		BpfProgram that = (BpfProgram) o;
+		final BpfProgram that = (BpfProgram) o;
 
 		return getAddress() == that.getAddress();
 	}

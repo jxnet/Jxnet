@@ -29,15 +29,15 @@ public final class NativeException extends RuntimeException {
 		super();
 	}
 
-	public NativeException(String message) {
+	public NativeException(final String message) {
 		super(message);
 	}
 
-	public NativeException(String message, Throwable cause) {
+	public NativeException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
-	public NativeException(Throwable cause) {
+	public NativeException(final Throwable cause) {
 		super(cause);
 	}
 	

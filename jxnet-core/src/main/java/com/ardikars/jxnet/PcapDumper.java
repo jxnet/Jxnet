@@ -33,8 +33,10 @@ public final class PcapDumper {
 	 * Get pointer address
 	 * @return pointer address.
 	 */
-	public synchronized long getAddress() {
-		return this.address;
+	public long getAddress() {
+		synchronized (this) {
+			return this.address;
+		}
 	}
 
 	/**
@@ -49,7 +51,7 @@ public final class PcapDumper {
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}
@@ -57,7 +59,7 @@ public final class PcapDumper {
 			return false;
 		}
 
-		PcapDumper that = (PcapDumper) o;
+		final PcapDumper that = (PcapDumper) o;
 
 		return getAddress() == that.getAddress();
 	}

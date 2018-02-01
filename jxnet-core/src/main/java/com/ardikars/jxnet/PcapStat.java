@@ -54,7 +54,7 @@ public final class PcapStat {
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}
@@ -62,7 +62,7 @@ public final class PcapStat {
 			return false;
 		}
 
-		PcapStat pcapStat = (PcapStat) o;
+		final PcapStat pcapStat = (PcapStat) o;
 
 		if (ps_recv != pcapStat.ps_recv) {
 			return false;

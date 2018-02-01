@@ -39,8 +39,10 @@ public final class Pcap {
 	 * Get pointer address.
 	 * @return pointer address.
 	 */
-	public synchronized long getAddress() {
-		return this.address;
+	public long getAddress() {
+		synchronized (this) {
+			return this.address;
+		}
 	}
 
 	/**
@@ -77,7 +79,7 @@ public final class Pcap {
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}
@@ -85,7 +87,7 @@ public final class Pcap {
 			return false;
 		}
 
-		Pcap pcap = (Pcap) o;
+		final Pcap pcap = (Pcap) o;
 
 		return getAddress() == pcap.getAddress();
 	}

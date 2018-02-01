@@ -24,7 +24,7 @@ import java.io.File;
 public class DynamicLibrary implements Library.Loader {
 
     @Override
-    public void load() throws UnsatisfiedLinkError {
+    public void load() {
         switch (Platforms.getName()) {
             case LINUX:
                 if (Platforms.isArm()) {

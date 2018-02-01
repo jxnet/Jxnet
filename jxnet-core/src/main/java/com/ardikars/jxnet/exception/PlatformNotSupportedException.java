@@ -29,15 +29,15 @@ public class PlatformNotSupportedException extends RuntimeException {
         super();
     }
 
-    public PlatformNotSupportedException(String message) {
+    public PlatformNotSupportedException(final String message) {
         super(message);
     }
 
-    public PlatformNotSupportedException(String message, Throwable cause) {
+    public PlatformNotSupportedException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
-    public PlatformNotSupportedException(Throwable cause) {
+    public PlatformNotSupportedException(final Throwable cause) {
         super(cause);
     }
 

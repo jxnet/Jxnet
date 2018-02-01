@@ -29,15 +29,15 @@ public final class PcapDumperCloseException extends RuntimeException {
 		super();
 	}
 	
-	public PcapDumperCloseException(String message) {
+	public PcapDumperCloseException(final String message) {
 		super(message);
 	}
 	
-	public PcapDumperCloseException(String message, Throwable cause) {
+	public PcapDumperCloseException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 	
-	public PcapDumperCloseException(Throwable cause) {
+	public PcapDumperCloseException(final Throwable cause) {
 		super(cause);
 	}
 	

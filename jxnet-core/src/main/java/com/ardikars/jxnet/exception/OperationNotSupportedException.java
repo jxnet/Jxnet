@@ -29,19 +29,19 @@ public class OperationNotSupportedException extends RuntimeException {
         super();
     }
 
-    public OperationNotSupportedException(String s) {
+    public OperationNotSupportedException(final String s) {
         super(s);
     }
 
-    public OperationNotSupportedException(String s, Throwable throwable) {
+    public OperationNotSupportedException(final String s, final Throwable throwable) {
         super(s, throwable);
     }
 
-    public OperationNotSupportedException(Throwable throwable) {
+    public OperationNotSupportedException(final Throwable throwable) {
         super(throwable);
     }
 
-    protected OperationNotSupportedException(String s, Throwable throwable, boolean b, boolean b1) {
+    protected OperationNotSupportedException(final String s, final Throwable throwable, final boolean b, final boolean b1) {
         super(s, throwable, b, b1);
     }
 

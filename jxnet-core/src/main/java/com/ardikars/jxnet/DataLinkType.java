@@ -82,7 +82,7 @@ public enum DataLinkType {
     private short value;
     private String description;
 
-    DataLinkType(Short value, String description) {
+    DataLinkType(final Short value, final String description) {
         this.value = value;
         this.description = description;
     }
@@ -109,7 +109,7 @@ public enum DataLinkType {
      * @return datalink.
      */
     public static DataLinkType valueOf(final short dataLinkType) {
-        for (DataLinkType f : values()) {
+        for (final DataLinkType f : values()) {
             if (f.getValue() == dataLinkType) {
                 return f;
             }

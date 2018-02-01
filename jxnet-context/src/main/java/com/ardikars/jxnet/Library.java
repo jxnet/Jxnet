@@ -38,11 +38,15 @@ public final class Library {
 
     private static final Logger LOGGER = Logger.getLogger(Library.class.getName());
 
-    public interface Loader {
-        void load() throws UnsatisfiedLinkError;
+    private Library() {
+
     }
 
-    static void loadLibrary(String path) throws UnsatisfiedLinkError {
+    public interface Loader {
+        void load();
+    }
+
+    static void loadLibrary(final String path) {
         Validate.nullPointer(path);
         if (!path.startsWith("/")) {
             throw new IllegalArgumentException("The path has to be absolute (start with '/').");
@@ -58,9 +62,9 @@ public final class Library {
             e.printStackTrace();
         }
         temp.deleteOnExit();
-        byte[] buffer = new byte[1024];
+        final byte[] buffer = new byte[1024];
         int readBytes;
-        InputStream is = Library.class.getResourceAsStream(path);
+        final InputStream is = Library.class.getResourceAsStream(path);
         if (is == null) {
             throw  new UnsatisfiedLinkError("Error: " + path + " not found.\n");
         }

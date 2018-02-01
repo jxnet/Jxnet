@@ -17,6 +17,8 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.jxnet.util.Strings;
+
 import java.util.Arrays;
 
 /**
@@ -34,7 +36,7 @@ public final class SockAddr {
         private short value;
         private String description;
 
-        Family(Short value, String description) {
+        Family(final Short value, final String description) {
             this.value = value;
             this.description = description;
         }
@@ -61,7 +63,7 @@ public final class SockAddr {
          * @return value type.
          */
         public static Family valueOf(final short family) {
-            for (Family f : values()) {
+            for (final Family f : values()) {
                 if (f.getValue() == family) {
                     return f;
                 }
@@ -102,7 +104,7 @@ public final class SockAddr {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -110,7 +112,7 @@ public final class SockAddr {
             return false;
         }
 
-        SockAddr sockAddr = (SockAddr) o;
+        final SockAddr sockAddr = (SockAddr) o;
 
         if (sa_family != sockAddr.sa_family) {
             return false;
@@ -127,9 +129,9 @@ public final class SockAddr {
 
     @Override
     public String toString() {
-        Family family = getSaFamily();
+        final Family family = getSaFamily();
         if (family == null) {
-            return null;
+            return Strings.EMPTY;
         }
         switch (family) {
             case AF_INET:
@@ -137,7 +139,7 @@ public final class SockAddr {
             case AF_INET6:
                 return Inet6Address.valueOf(data).toString();
             default:
-                return null;
+                return Strings.EMPTY;
         }
     }
 

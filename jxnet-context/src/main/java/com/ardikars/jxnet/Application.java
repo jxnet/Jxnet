@@ -34,7 +34,7 @@ public class Application {
 
     private List<Library.Loader> libraryLoaders;
     private boolean loaded;
-    private boolean developmentMode = false;
+    private boolean developmentMode;
 
     private static Application instance;
 
@@ -68,15 +68,15 @@ public class Application {
         return instance;
     }
 
-    protected void addLibrary(Library.Loader libraryLoader) {
+    protected void addLibrary(final Library.Loader libraryLoader) {
         libraryLoaders.add(libraryLoader);
     }
 
-    protected void addProperty(String key, Object value) {
+    protected void addProperty(final String key, final Object value) {
         properties.put(key, value);
     }
 
-    protected Object getProperty(String key) {
+    protected Object getProperty(final String key) {
         return properties.get(key);
     }
 
@@ -87,7 +87,8 @@ public class Application {
      * @param initializer initializer.
      * @throws UnsatisfiedLinkError UnsatisfiedLinkError.
      */
-    public static void run(String applicationName, String applicationVersion, ApplicationInitializer initializer) throws UnsatisfiedLinkError {
+    public static void run(final String applicationName, final String applicationVersion
+            , final ApplicationInitializer initializer) {
         getInstance().applicationName = applicationName;
         getInstance().applicationVersion = applicationVersion;
         getInstance().context = new ApplicationContext();
@@ -95,12 +96,12 @@ public class Application {
         initializer.initialize(getInstance().getContext());
 
         if (Platforms.isWindows()) {
-            String path = "C:\\Windows\\System32\\Npcap";
             String paths = System.getProperty("java.library.path");
-            String pathSparator = File.pathSeparator;
-            String[] libraryPaths = paths.split(pathSparator);
+            final String path = "C:\\Windows\\System32\\Npcap";
+            final String pathSparator = File.pathSeparator;
+            final String[] libraryPaths = paths.split(pathSparator);
             boolean isAdded = false;
-            for (String str : libraryPaths) {
+            for (final String str : libraryPaths) {
                 if (str.equals(path)) {
                     isAdded = true;
                     break;
@@ -133,7 +134,7 @@ public class Application {
             }
         } else {
             if (!getInstance().loaded && getInstance().libraryLoaders != null && !getInstance().libraryLoaders.isEmpty()) {
-                for (Library.Loader loader : getInstance().libraryLoaders) {
+                for (final Library.Loader loader : getInstance().libraryLoaders) {
                     try {
                         loader.load();
                         getInstance().loaded = true;
@@ -163,7 +164,7 @@ public class Application {
       * @return application context.
      */
     public static Application.Context getApplicationContext() {
-        Application.Context context = getInstance().getContext();
+        final Application.Context context = getInstance().getContext();
         if (context == null) {
             throw new NullPointerException("No application context found.");
         }

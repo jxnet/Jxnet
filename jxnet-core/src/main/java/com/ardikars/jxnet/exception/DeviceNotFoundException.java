@@ -29,15 +29,15 @@ public final class DeviceNotFoundException extends RuntimeException {
 		super();
 	}
 
-	public DeviceNotFoundException(String message) {
+	public DeviceNotFoundException(final String message) {
 		super(message);
 	}
 
-	public DeviceNotFoundException(String message, Throwable cause) {
+	public DeviceNotFoundException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
-	public DeviceNotFoundException(Throwable cause) {
+	public DeviceNotFoundException(final Throwable cause) {
 		super(cause);
 	}
 	

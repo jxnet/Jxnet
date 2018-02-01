@@ -69,7 +69,7 @@ public final class PcapAddr {
 
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}
@@ -77,7 +77,7 @@ public final class PcapAddr {
 			return false;
 		}
 
-		PcapAddr pcapAddr = (PcapAddr) o;
+		final PcapAddr pcapAddr = (PcapAddr) o;
 
 		if (!getAddr().equals(pcapAddr.getAddr())) {
 			return false;

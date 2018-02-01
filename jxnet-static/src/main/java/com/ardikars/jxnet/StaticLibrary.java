@@ -22,7 +22,7 @@ import com.ardikars.jxnet.util.Platforms;
 public class StaticLibrary implements Library.Loader {
 
     @Override
-    public void load() throws UnsatisfiedLinkError {
+    public void load() {
         switch (Platforms.getName()) {
             case LINUX:
                 if (Platforms.isArm()) {

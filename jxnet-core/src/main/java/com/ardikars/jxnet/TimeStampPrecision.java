@@ -45,7 +45,7 @@ public enum TimeStampPrecision {
      * @return time stamp precision
      */
     public static TimeStampPrecision valueOf(final int value) {
-        for (TimeStampPrecision timeStampPrecision : values()) {
+        for (final TimeStampPrecision timeStampPrecision : values()) {
             if (timeStampPrecision.getValue() == value) {
                 return timeStampPrecision;
             }
