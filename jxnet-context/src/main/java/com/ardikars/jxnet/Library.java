@@ -87,7 +87,7 @@ public final class Library {
             e.printStackTrace();
         } finally {
             try {
-                if (os !=null) {
+                if (os != null) {
                     os.close();
                 }
                 if (is != null) {

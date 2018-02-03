@@ -89,8 +89,8 @@ public class Application {
      * @param initializer initializer.
      * @throws UnsatisfiedLinkError UnsatisfiedLinkError.
      */
-    public static void run(final String applicationName, final String applicationVersion
-            , final ApplicationInitializer initializer) {
+    public static void run(final String applicationName, final String applicationVersion,
+                           final ApplicationInitializer initializer) {
         getInstance().applicationName = applicationName;
         getInstance().applicationVersion = applicationVersion;
         getInstance().context = new ApplicationContext();
