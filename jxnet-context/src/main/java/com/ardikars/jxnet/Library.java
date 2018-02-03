@@ -87,8 +87,12 @@ public final class Library {
             e.printStackTrace();
         } finally {
             try {
-                os.close();
-                is.close();
+                if (os !=null) {
+                    os.close();
+                }
+                if (is != null) {
+                    is.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

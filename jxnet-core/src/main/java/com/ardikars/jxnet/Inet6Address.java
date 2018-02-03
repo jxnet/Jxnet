@@ -53,7 +53,7 @@ public final class Inet6Address extends InetAddress {
 	private byte[] address;
 
 	{
-		address = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
+		this.address = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
 	}
 
 	private Inet6Address() {
@@ -88,7 +88,7 @@ public final class Inet6Address extends InetAddress {
 		final int ipv6MaxHexGroups = 8;
 		final int ipv6MaxHexDigitsPerGroup = 4;
 
-		boolean containsCompressedZeroes = inet6Address.contains("::");
+		final boolean containsCompressedZeroes = inet6Address.contains("::");
 		Validate.illegalArgument(!(containsCompressedZeroes && (inet6Address.indexOf("::") != inet6Address.lastIndexOf("::"))));
 		Validate.illegalArgument(!(inet6Address.charAt(0) == ':' && !inet6Address.startsWith("::")
 				|| (inet6Address.endsWith(":") && !inet6Address.endsWith("::"))));
@@ -204,12 +204,12 @@ public final class Inet6Address extends InetAddress {
 
 		final Inet6Address that = (Inet6Address) o;
 
-		return Arrays.equals(address, that.address);
+		return Arrays.equals(this.address, that.address);
 	}
 
 	@Override
 	public int hashCode() {
-		return Arrays.hashCode(address);
+		return Arrays.hashCode(this.address);
 	}
 
 	/**

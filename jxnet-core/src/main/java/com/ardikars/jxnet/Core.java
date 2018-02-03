@@ -253,8 +253,9 @@ abstract class Core {
     public static PcapIf LookupNetworkInterface(final StringBuilder errbuf) {
         Validate.nullPointer(errbuf);
         final List<PcapIf> pcapIfs = new ArrayList<>();
+        PcapIf result = null;
         if (Jxnet.PcapFindAllDevs(pcapIfs, errbuf) != Jxnet.OK) {
-            return null;
+            return result;
         }
         for (final PcapIf pcapIf : pcapIfs) {
             for (final PcapAddr pcapAddr : pcapIf.getAddresses()) {
@@ -272,13 +273,14 @@ abstract class Core {
                     }
                     if (!address.equals(Inet4Address.ZERO) && !address.equals(Inet4Address.LOCALHOST)
                             && !netmask.equals(Inet4Address.ZERO) && !bcastaddr.equals(Inet4Address.ZERO)) {
-                        return pcapIf;
+                        result = pcapIf;
+                        break;
                     }
                 }
             }
         }
         errbuf.append("Check your network connection.\n");
-        return null;
+        return result;
     }
 
     /**
@@ -293,10 +295,10 @@ abstract class Core {
         if (Jxnet.PcapFindAllDevs(pcapIfs, errbuf) != Jxnet.OK) {
             return null;
         }
+        int index = 0;
         final StringBuilder sb = new StringBuilder(1000);
-        int i = 0;
         for (final PcapIf pcapIf : pcapIfs) {
-            sb.append("NO[").append(++i).append("]\t=> ");
+            sb.append("NO[").append(++index).append("]\t=> ");
             sb.append("NAME: ").append(pcapIf.getName()).append(" (").append(pcapIf.getDescription()).append(" )\n");
             for (final PcapAddr pcapAddr : pcapIf.getAddresses()) {
                 sb.append("\t\tADDRESS: ").append(pcapAddr.getAddr().toString()).append('\n');
@@ -305,18 +307,29 @@ abstract class Core {
         System.out.println(sb.toString());
         final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, Charset.forName("UTF-8")));
         PcapIf pcapIf = null;
-        while (true) {
+        index = 0;
+        while (index == 0) {
             System.out.print("Select a device number, or enter 'q' to quit -> ");
-            String input;
             try {
-                input = reader.readLine();
-                i = Integer.parseInt(input);
+                final String input = reader.readLine();
+                index = Integer.parseInt(input);
+                if (index > pcapIfs.size() || index <= 0) {
+                    index = 0;
+                } else {
+                    pcapIf = pcapIfs.get(index - 1);
+                    reader.close();
+                }
+            } catch (NumberFormatException e) {
+                index = 0;
             } catch (IOException e) {
-                errbuf.append(e.toString());
-                pcapIf = null;
-                break;
+                index = -1;
+                errbuf.append(e.getMessage());
+                try {
+                    reader.close();
+                } catch (IOException e1) {
+                    errbuf.append(e1.getMessage());
+                }
             }
-            pcapIf = pcapIfs.get(i - 1);
         }
         return pcapIf;
     }

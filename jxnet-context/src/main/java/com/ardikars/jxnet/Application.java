@@ -44,7 +44,7 @@ public class Application {
     private Context context;
 
     protected boolean isLoaded() {
-        return loaded;
+        return this.loaded;
     }
 
     public void enableDevelopmentMode() {
@@ -71,15 +71,15 @@ public class Application {
     }
 
     protected void addLibrary(final Library.Loader libraryLoader) {
-        libraryLoaders.add(libraryLoader);
+        this.libraryLoaders.add(libraryLoader);
     }
 
     protected void addProperty(final String key, final Object value) {
-        properties.put(key, value);
+        this.properties.put(key, value);
     }
 
     protected Object getProperty(final String key) {
-        return properties.get(key);
+        return this.properties.get(key);
     }
 
     /**
@@ -150,15 +150,15 @@ public class Application {
     }
 
     protected String getApplicationName() {
-        return applicationName;
+        return this.applicationName;
     }
 
     protected String getApplicationVersion() {
-        return applicationVersion;
+        return this.applicationVersion;
     }
 
     protected Context getContext() {
-        return context;
+        return this.context;
     }
 
     /**

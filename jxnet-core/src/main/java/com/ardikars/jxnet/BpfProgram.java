@@ -37,7 +37,7 @@ public final class BpfProgram {
 		}
 
 		public int getValue() {
-			return value;
+			return this.value;
 		}
 
 	}
@@ -68,7 +68,7 @@ public final class BpfProgram {
 	 * @return true if closed.
 	 */
 	public boolean isClosed() {
-		if (this.address == 0) {
+		if (this.getAddress() == 0) {
 			return true;
 		}
 		return false;
@@ -85,18 +85,18 @@ public final class BpfProgram {
 
 		final BpfProgram that = (BpfProgram) o;
 
-		return getAddress() == that.getAddress();
+		return this.getAddress() == that.getAddress();
 	}
 
 	@Override
 	public int hashCode() {
-		return (int) (getAddress() ^ (getAddress() >>> 32));
+		return (int) (this.getAddress() ^ (this.getAddress() >>> 32));
 	}
 
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder("BpfProgram{");
-		sb.append("address=").append(address);
+		sb.append("address=").append(this.getAddress());
 		sb.append('}');
 		return sb.toString();
 	}

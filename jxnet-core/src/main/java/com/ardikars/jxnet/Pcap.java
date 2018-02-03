@@ -72,7 +72,7 @@ public final class Pcap {
 	 * @return true if closed.
 	 */
 	public boolean isClosed() {
-		if (this.address == 0) {
+		if (this.getAddress() == 0) {
 			return true;
 		}
 		return false;
@@ -89,18 +89,18 @@ public final class Pcap {
 
 		final Pcap pcap = (Pcap) o;
 
-		return getAddress() == pcap.getAddress();
+		return this.getAddress() == pcap.getAddress();
 	}
 
 	@Override
 	public int hashCode() {
-		return (int) (getAddress() ^ (getAddress() >>> 32));
+		return (int) (this.getAddress() ^ (this.getAddress() >>> 32));
 	}
 
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder("Pcap{");
-		sb.append("address=").append(address);
+		sb.append("address=").append(this.getAddress());
 		sb.append('}');
 		return sb.toString();
 	}

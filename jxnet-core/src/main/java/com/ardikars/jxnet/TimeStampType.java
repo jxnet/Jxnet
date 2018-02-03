@@ -44,7 +44,7 @@ public enum TimeStampType {
      * @return time stamp type.
      */
     public int getType() {
-        return type;
+        return this.type;
     }
 
     /**

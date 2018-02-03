@@ -44,7 +44,7 @@ public final class PcapDumper {
 	 * @return true if PcapDumper is closed, false otherwise.
 	 */
 	public boolean isClosed() {
-		if (this.address == 0) {
+		if (this.getAddress() == 0) {
 			return true;
 		}
 		return false;
@@ -61,18 +61,18 @@ public final class PcapDumper {
 
 		final PcapDumper that = (PcapDumper) o;
 
-		return getAddress() == that.getAddress();
+		return this.getAddress() == that.getAddress();
 	}
 
 	@Override
 	public int hashCode() {
-		return (int) (getAddress() ^ (getAddress() >>> 32));
+		return (int) (this.getAddress() ^ (this.getAddress() >>> 32));
 	}
 
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder("PcapDumper{");
-		sb.append("address=").append(address);
+		sb.append("address=").append(this.getAddress());
 		sb.append('}');
 		return sb.toString();
 	}

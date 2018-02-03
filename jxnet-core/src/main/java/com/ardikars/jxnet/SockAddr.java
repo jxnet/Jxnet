@@ -31,7 +31,7 @@ public final class SockAddr {
 
         AF_INET((short) 2, "AF_INET"),
         AF_INET6((short) 10, "AF_INET6"),
-        ;
+        UNKNOWN((short) -1, "UNKNOWN");
 
         private short value;
         private String description;
@@ -68,7 +68,7 @@ public final class SockAddr {
                     return f;
                 }
             }
-            return null;
+            return Family.UNKNOWN;
         }
     }
 
@@ -85,14 +85,13 @@ public final class SockAddr {
      * @return address value type.
      */
     public Family getSaFamily() {
-        switch (sa_family) {
-            case 2:
-                return Family.AF_INET;
-            case 10:
-                return Family.AF_INET6;
-            default:
-                return null;
+        Family result = Family.UNKNOWN;
+        if (this.sa_family == 2) {
+            result = Family.AF_INET;
+        } else if (this.sa_family == 10) {
+            result = Family.AF_INET6;
         }
+        return result;
     }
 
     /**
@@ -114,30 +113,27 @@ public final class SockAddr {
 
         final SockAddr sockAddr = (SockAddr) o;
 
-        if (sa_family != sockAddr.sa_family) {
+        if (this.sa_family != sockAddr.sa_family) {
             return false;
         }
-        return Arrays.equals(getData(), sockAddr.getData());
+        return Arrays.equals(this.data, sockAddr.getData());
     }
 
     @Override
     public int hashCode() {
-        int result = (int) sa_family;
-        result = 31 * result + Arrays.hashCode(getData());
+        int result = (int) this.sa_family;
+        result = 31 * result + Arrays.hashCode(this.data);
         return result;
     }
 
     @Override
     public String toString() {
-        final Family family = getSaFamily();
-        if (family == null) {
-            return Strings.EMPTY;
-        }
+        final Family family = this.getSaFamily();
         switch (family) {
             case AF_INET:
-                return Inet4Address.valueOf(data).toString();
+                return Inet4Address.valueOf(this.data).toString();
             case AF_INET6:
-                return Inet6Address.valueOf(data).toString();
+                return Inet6Address.valueOf(this.data).toString();
             default:
                 return Strings.EMPTY;
         }

@@ -36,7 +36,7 @@ public enum TimeStampPrecision {
      * @return time stamp precision value;
      */
     public int getValue() {
-        return value;
+        return this.value;
     }
 
     /**

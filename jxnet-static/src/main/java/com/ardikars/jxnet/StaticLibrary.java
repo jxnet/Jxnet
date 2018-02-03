@@ -26,7 +26,7 @@ public class StaticLibrary implements Library.Loader {
         switch (Platforms.getName()) {
             case LINUX:
                 if (Platforms.isArm()) {
-                    if (Platforms.getVersion().equals("v7") || Platforms.getVersion().equals("v6")) {
+                    if ("v7".equals(Platforms.getVersion()) || "v6".equals(Platforms.getVersion())) {
                         Library.loadLibrary("/static/linux/lib/arm32/libjxnet.so");
                     }
                 } else {

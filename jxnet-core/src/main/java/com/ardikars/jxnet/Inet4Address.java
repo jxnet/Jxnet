@@ -135,12 +135,12 @@ public final class Inet4Address extends InetAddress {
 
 		final Inet4Address that = (Inet4Address) o;
 
-		return Arrays.equals(address, that.address);
+		return Arrays.equals(this.address, that.address);
 	}
 
 	@Override
 	public int hashCode() {
-		return Arrays.hashCode(address);
+		return Arrays.hashCode(this.address);
 	}
 
 	@Override

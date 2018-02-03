@@ -79,34 +79,34 @@ public final class PcapAddr {
 
 		final PcapAddr pcapAddr = (PcapAddr) o;
 
-		if (!getAddr().equals(pcapAddr.getAddr())) {
+		if (!this.getAddr().equals(pcapAddr.getAddr())) {
 			return false;
 		}
-		if (!getNetmask().equals(pcapAddr.getNetmask())) {
+		if (!this.getNetmask().equals(pcapAddr.getNetmask())) {
 			return false;
 		}
-		if (!getBroadAddr().equals(pcapAddr.getBroadAddr())) {
+		if (!this.getBroadAddr().equals(pcapAddr.getBroadAddr())) {
 			return false;
 		}
-		return getDstAddr().equals(pcapAddr.getDstAddr());
+		return this.getDstAddr().equals(pcapAddr.getDstAddr());
 	}
 
 	@Override
 	public int hashCode() {
-		int result = getAddr().hashCode();
-		result = 31 * result + getNetmask().hashCode();
-		result = 31 * result + getBroadAddr().hashCode();
-		result = 31 * result + getDstAddr().hashCode();
+		int result = this.getAddr().hashCode();
+		result = 31 * result + this.getNetmask().hashCode();
+		result = 31 * result + this.getBroadAddr().hashCode();
+		result = 31 * result + this.getDstAddr().hashCode();
 		return result;
 	}
 
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder(63);
-		sb.append("PcapAddr{addr=").append(addr);
-		sb.append(", netmask=").append(netmask);
-		sb.append(", broadaddr=").append(broadaddr);
-		sb.append(", dstaddr=").append(dstaddr);
+		sb.append("PcapAddr{addr=").append(this.addr);
+		sb.append(", netmask=").append(this.netmask);
+		sb.append(", broadaddr=").append(this.broadaddr);
+		sb.append(", dstaddr=").append(this.dstaddr);
 		sb.append('}');
 		return sb.toString();
 	}

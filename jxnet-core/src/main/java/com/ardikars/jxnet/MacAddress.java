@@ -191,12 +191,12 @@ public final class MacAddress {
 
 		final MacAddress that = (MacAddress) o;
 
-		return Arrays.equals(address, that.address);
+		return Arrays.equals(this.address, that.address);
 	}
 
 	@Override
 	public int hashCode() {
-		return Arrays.hashCode(address);
+		return Arrays.hashCode(this.address);
 	}
 
 	@Override

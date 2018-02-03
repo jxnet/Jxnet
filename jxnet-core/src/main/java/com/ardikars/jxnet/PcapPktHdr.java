@@ -109,34 +109,34 @@ public final class PcapPktHdr {
 
 		final PcapPktHdr that = (PcapPktHdr) o;
 
-		if (caplen != that.caplen) {
+		if (this.caplen != that.caplen) {
 			return false;
 		}
-		if (getLen() != that.getLen()) {
+		if (this.len != that.getLen()) {
 			return false;
 		}
-		if (tv_sec != that.tv_sec) {
+		if (this.tv_sec != that.tv_sec) {
 			return false;
 		}
-		return tv_usec == that.tv_usec;
+		return this.tv_usec == that.tv_usec;
 	}
 
 	@Override
 	public int hashCode() {
-		int result = caplen;
-		result = 31 * result + getLen();
-		result = 31 * result + tv_sec;
-		result = 31 * result + (int) (tv_usec ^ (tv_usec >>> 32));
+		int result = this.caplen;
+		result = 31 * result + this.getLen();
+		result = 31 * result + this.getTvSec();
+		result = 31 * result + (int) (this.getTvSec() ^ (this.getTvUsec() >>> 32));
 		return result;
 	}
 
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder(94);
-		sb.append("PcapPktHdr{caplen=").append(caplen);
-		sb.append(", len=").append(len);
-		sb.append(", tv_sec=").append(tv_sec);
-		sb.append(", tv_usec=").append(tv_usec);
+		sb.append("PcapPktHdr{caplen=").append(this.caplen);
+		sb.append(", len=").append(this.len);
+		sb.append(", tv_sec=").append(this.tv_sec);
+		sb.append(", tv_usec=").append(this.tv_usec);
 		sb.append('}');
 		return sb.toString();
 	}
