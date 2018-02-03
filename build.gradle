@@ -101,11 +101,11 @@ allprojects {
 				}
 			}
 		}
+		toolVersion = '6.18'
 	}
 
 	findbugs {
 		ignoreFailures = true
-		toolVersion = "2.0.1"
 		sourceSets = [sourceSets.main]
 		reportsDir = file("$project.buildDir/reports/findbugs")
 		effort = "max"
@@ -115,16 +115,14 @@ allprojects {
 				html.enabled = true
 			}
 		}
+		toolVersion '3.0.1'
 	}
 
 	pmd {
 		ignoreFailures = true
 		sourceSets = [sourceSets.main]
 		reportsDir = file("$project.buildDir/reports/pmd")
-//		ruleSets = [
-//				"basic",
-//				"braces"
-//		]
+		toolVersion '4.3'
 	}
 
 	task javadocJar(type: Jar) {
