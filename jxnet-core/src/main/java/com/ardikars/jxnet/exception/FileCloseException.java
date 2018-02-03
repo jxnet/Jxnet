@@ -29,15 +29,15 @@ public final class FileCloseException extends RuntimeException {
         super();
     }
 
-    public FileCloseException(String message) {
+    public FileCloseException(final String message) {
         super(message);
     }
 
-    public FileCloseException(String message, Throwable cause) {
+    public FileCloseException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
-    public FileCloseException(Throwable cause) {
+    public FileCloseException(final Throwable cause) {
         super(cause);
     }
 

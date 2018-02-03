@@ -34,7 +34,7 @@ public class Application {
 
     private List<Library.Loader> libraryLoaders;
     private boolean loaded;
-    private boolean developmentMode = false;
+    private boolean developmentMode;
 
     private static Application instance;
 
@@ -44,7 +44,7 @@ public class Application {
     private Context context;
 
     protected boolean isLoaded() {
-        return loaded;
+        return this.loaded;
     }
 
     public void enableDevelopmentMode() {
@@ -56,28 +56,30 @@ public class Application {
     }
 
     protected static Application getInstance() {
-        if (instance == null) {
-            instance = new Application();
-            if (instance.libraryLoaders == null) {
-                instance.libraryLoaders = new ArrayList<Library.Loader>();
+        synchronized (Application.class) {
+            if (instance == null) {
+                instance = new Application();
+                if (instance.libraryLoaders == null) {
+                    instance.libraryLoaders = new ArrayList<Library.Loader>();
+                }
+                if (instance.properties == null) {
+                    instance.properties = new HashMap<String, Object>();
+                }
             }
-            if (instance.properties == null) {
-                instance.properties = new HashMap<String, Object>();
-            }
+            return instance;
         }
-        return instance;
     }
 
-    protected void addLibrary(Library.Loader libraryLoader) {
-        libraryLoaders.add(libraryLoader);
+    protected void addLibrary(final Library.Loader libraryLoader) {
+        this.libraryLoaders.add(libraryLoader);
     }
 
-    protected void addProperty(String key, Object value) {
-        properties.put(key, value);
+    protected void addProperty(final String key, final Object value) {
+        this.properties.put(key, value);
     }
 
-    protected Object getProperty(String key) {
-        return properties.get(key);
+    protected Object getProperty(final String key) {
+        return this.properties.get(key);
     }
 
     /**
@@ -87,7 +89,8 @@ public class Application {
      * @param initializer initializer.
      * @throws UnsatisfiedLinkError UnsatisfiedLinkError.
      */
-    public static void run(String applicationName, String applicationVersion, ApplicationInitializer initializer) throws UnsatisfiedLinkError {
+    public static void run(final String applicationName, final String applicationVersion,
+                           final ApplicationInitializer initializer) {
         getInstance().applicationName = applicationName;
         getInstance().applicationVersion = applicationVersion;
         getInstance().context = new ApplicationContext();
@@ -95,12 +98,12 @@ public class Application {
         initializer.initialize(getInstance().getContext());
 
         if (Platforms.isWindows()) {
-            String path = "C:\\Windows\\System32\\Npcap";
             String paths = System.getProperty("java.library.path");
-            String pathSparator = File.pathSeparator;
-            String[] libraryPaths = paths.split(pathSparator);
+            final String path = "C:\\Windows\\System32\\Npcap";
+            final String pathSparator = File.pathSeparator;
+            final String[] libraryPaths = paths.split(pathSparator);
             boolean isAdded = false;
-            for (String str : libraryPaths) {
+            for (final String str : libraryPaths) {
                 if (str.equals(path)) {
                     isAdded = true;
                     break;
@@ -133,7 +136,7 @@ public class Application {
             }
         } else {
             if (!getInstance().loaded && getInstance().libraryLoaders != null && !getInstance().libraryLoaders.isEmpty()) {
-                for (Library.Loader loader : getInstance().libraryLoaders) {
+                for (final Library.Loader loader : getInstance().libraryLoaders) {
                     try {
                         loader.load();
                         getInstance().loaded = true;
@@ -147,15 +150,15 @@ public class Application {
     }
 
     protected String getApplicationName() {
-        return applicationName;
+        return this.applicationName;
     }
 
     protected String getApplicationVersion() {
-        return applicationVersion;
+        return this.applicationVersion;
     }
 
     protected Context getContext() {
-        return context;
+        return this.context;
     }
 
     /**
@@ -163,7 +166,7 @@ public class Application {
       * @return application context.
      */
     public static Application.Context getApplicationContext() {
-        Application.Context context = getInstance().getContext();
+        final Application.Context context = getInstance().getContext();
         if (context == null) {
             throw new NullPointerException("No application context found.");
         }

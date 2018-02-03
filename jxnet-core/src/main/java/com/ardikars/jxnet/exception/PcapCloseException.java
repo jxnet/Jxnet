@@ -29,15 +29,15 @@ public final class PcapCloseException extends RuntimeException {
 		super();
 	}
 	
-	public PcapCloseException(String message) {
+	public PcapCloseException(final String message) {
 		super(message);
 	}
 	
-	public PcapCloseException(String message, Throwable cause) {
+	public PcapCloseException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 	
-	public PcapCloseException(Throwable cause) {
+	public PcapCloseException(final Throwable cause) {
 		super(cause);
 	}
 	

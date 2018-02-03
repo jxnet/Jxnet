@@ -20,4 +20,5 @@ dependencies {
     compile project(':jxnet-static')
     compile project(':jxnet-core')
     testCompile "junit:junit:${JUNIT_VERSION}"
+    testCompile "org.mockito:mockito-core:${MOCKITO_VERSION}"
 }

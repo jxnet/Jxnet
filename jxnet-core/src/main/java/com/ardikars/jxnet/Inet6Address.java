@@ -48,21 +48,23 @@ public final class Inet6Address extends InetAddress {
 	/**
 	 * IPv6 Address Length.
 	 */
-	public static final short IPV6_ADDRESS_LENGTH = 16;
+	public static final int IPV6_ADDRESS_LENGTH = 16;
 	
 	private byte[] address;
 
 	{
-		address = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
+		this.address = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
 	}
 
 	private Inet6Address() {
+		super();
 	}
 
-	private Inet6Address(byte[] address) {
+	private Inet6Address(final byte[] address) {
+		super();
 		Validate.nullPointer(address);
 		Validate.illegalArgument(address.length == IPV6_ADDRESS_LENGTH);
-		this.address = address;
+		System.arraycopy(address, 0, this.address, 0, address.length);
 	}
 
 	/**
@@ -86,13 +88,13 @@ public final class Inet6Address extends InetAddress {
 		final int ipv6MaxHexGroups = 8;
 		final int ipv6MaxHexDigitsPerGroup = 4;
 
-		boolean containsCompressedZeroes = inet6Address.contains("::");
+		final boolean containsCompressedZeroes = inet6Address.contains("::");
 		Validate.illegalArgument(!(containsCompressedZeroes && (inet6Address.indexOf("::") != inet6Address.lastIndexOf("::"))));
-		Validate.illegalArgument(!((inet6Address.startsWith(":") && !inet6Address.startsWith("::"))
+		Validate.illegalArgument(!(inet6Address.charAt(0) == ':' && !inet6Address.startsWith("::")
 				|| (inet6Address.endsWith(":") && !inet6Address.endsWith("::"))));
 		String[] parts = inet6Address.split(":");
 		if (containsCompressedZeroes) {
-			List<String> partsAsList = new ArrayList<String>(Arrays.asList(parts));
+			final List<String> partsAsList = new ArrayList<String>(Arrays.asList(parts));
 			if (inet6Address.endsWith("::")) {
 				partsAsList.add("");
 			} else if (inet6Address.startsWith("::") && !partsAsList.isEmpty()) {
@@ -104,7 +106,7 @@ public final class Inet6Address extends InetAddress {
 		int validOctets = 0;
 		int emptyOctets = 0;
 		for (int index = 0; index < parts.length; index++) {
-			String octet = parts[index];
+			final String octet = parts[index];
 			if (octet.length() == 0) {
 				emptyOctets++;
 				Validate.illegalArgument(!(emptyOctets > 1));
@@ -113,9 +115,9 @@ public final class Inet6Address extends InetAddress {
 				if (index == parts.length - 1 && octet.contains(".")) {
 					byte[] quad;
 					quad = Inet4Address.valueOf(octet).toBytes();
-					String initialPart = inet6Address.substring(0, inet6Address.lastIndexOf(":") + 1);
-					String penultimate = Integer.toHexString(((quad[0] & 0xff) << 8) | (quad[1] & 0xff));
-					String ultimate = Integer.toHexString(((quad[2] & 0xff) << 8) | (quad[3] & 0xff));
+					final String initialPart = inet6Address.substring(0, inet6Address.lastIndexOf(':') + 1);
+					final String penultimate = Integer.toHexString(((quad[0] & 0xff) << 8) | (quad[1] & 0xff));
+					final String ultimate = Integer.toHexString(((quad[2] & 0xff) << 8) | (quad[3] & 0xff));
 					inet6Address = initialPart + penultimate + ultimate;
 					validOctets += 2;
 					continue;
@@ -145,9 +147,9 @@ public final class Inet6Address extends InetAddress {
 			partsHi = parts.length;
 			partsLo = 0;
 		}
-		int partsSkipped = 8 - (partsHi + partsLo);
+		final int partsSkipped = 8 - (partsHi + partsLo);
 		Validate.illegalArgument((skipIndex >= 0 ? partsSkipped >= 1 : partsSkipped == 0));
-		ByteBuffer rawBytes = ByteBuffer.allocate(2 * 8);
+		final ByteBuffer rawBytes = ByteBuffer.allocate(2 * 8);
 		try {
 			for (int i = 0; i < partsHi; i++) {
 				rawBytes.putShort(parseHextet(parts[i]));
@@ -173,13 +175,13 @@ public final class Inet6Address extends InetAddress {
 	}
 
 	private long toLong() {
-		ByteBuffer bb = ByteBuffer.allocate(this.address.length);
+		final ByteBuffer bb = ByteBuffer.allocate(this.address.length);
 		bb.put(this.address);
 		return bb.getLong();
 	}
 
 	private static short parseHextet(final String ipPart) {
-		int hextet = Integer.parseInt(ipPart, 16);
+		final int hextet = Integer.parseInt(ipPart, 16);
 		if (hextet > 0xffff) {
 			throw new NumberFormatException();
 		}
@@ -192,7 +194,7 @@ public final class Inet6Address extends InetAddress {
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}
@@ -200,14 +202,14 @@ public final class Inet6Address extends InetAddress {
 			return false;
 		}
 
-		Inet6Address that = (Inet6Address) o;
+		final Inet6Address that = (Inet6Address) o;
 
-		return Arrays.equals(address, that.address);
+		return Arrays.equals(this.address, that.address);
 	}
 
 	@Override
 	public int hashCode() {
-		return Arrays.hashCode(address);
+		return Arrays.hashCode(this.address);
 	}
 
 	/**
@@ -217,7 +219,7 @@ public final class Inet6Address extends InetAddress {
 	public String toString() {
 		int cmprHextet = -1;
 		int cmprSize = 0;
-		for (int hextet = 0; hextet < 7; ) {
+		for (int hextet = 0; hextet < 7;) {
 			int curByte = hextet * 2;
 			int size = 0;
 			while (curByte < this.address.length && this.address[curByte] == 0
@@ -231,7 +233,7 @@ public final class Inet6Address extends InetAddress {
 			}
 			hextet = (curByte / 2) + 1;
 		}
-		StringBuilder sb = new StringBuilder(39);
+		final StringBuilder sb = new StringBuilder(39);
 		if (cmprHextet == -1 || cmprSize < 2) {
 			ipv6toStr(sb, this.address, 0, 8);
 			return sb.toString();
@@ -242,8 +244,8 @@ public final class Inet6Address extends InetAddress {
 		return sb.toString();
 	}
 	
-	private static final void ipv6toStr(StringBuilder sb, byte[] src,
-	                                    int fromHextet, int toHextet) {
+	private static void ipv6toStr(final StringBuilder sb, final byte[] src,
+	                                    final int fromHextet, final int toHextet) {
 		for (int i = fromHextet; i < toHextet; i++) {
 			sb.append(Integer.toHexString(((src[i << 1] << 8) & 0xff00)
 					| (src[(i << 1) + 1] & 0xff)));

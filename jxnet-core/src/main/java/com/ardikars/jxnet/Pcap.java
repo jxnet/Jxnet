@@ -39,8 +39,10 @@ public final class Pcap {
 	 * Get pointer address.
 	 * @return pointer address.
 	 */
-	public synchronized long getAddress() {
-		return this.address;
+	public long getAddress() {
+		synchronized (this) {
+			return this.address;
+		}
 	}
 
 	/**
@@ -70,14 +72,14 @@ public final class Pcap {
 	 * @return true if closed.
 	 */
 	public boolean isClosed() {
-		if (this.address == 0) {
+		if (this.getAddress() == 0) {
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}
@@ -85,20 +87,20 @@ public final class Pcap {
 			return false;
 		}
 
-		Pcap pcap = (Pcap) o;
+		final Pcap pcap = (Pcap) o;
 
-		return getAddress() == pcap.getAddress();
+		return this.getAddress() == pcap.getAddress();
 	}
 
 	@Override
 	public int hashCode() {
-		return (int) (getAddress() ^ (getAddress() >>> 32));
+		return (int) (this.getAddress() ^ (this.getAddress() >>> 32));
 	}
 
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder("Pcap{");
-		sb.append("address=").append(address);
+		sb.append("address=").append(this.getAddress());
 		sb.append('}');
 		return sb.toString();
 	}

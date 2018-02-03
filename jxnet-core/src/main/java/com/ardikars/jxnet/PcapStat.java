@@ -54,7 +54,7 @@ public final class PcapStat {
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}
@@ -62,31 +62,31 @@ public final class PcapStat {
 			return false;
 		}
 
-		PcapStat pcapStat = (PcapStat) o;
+		final PcapStat pcapStat = (PcapStat) o;
 
-		if (ps_recv != pcapStat.ps_recv) {
+		if (this.ps_recv != pcapStat.ps_recv) {
 			return false;
 		}
-		if (ps_drop != pcapStat.ps_drop) {
+		if (this.ps_drop != pcapStat.ps_drop) {
 			return false;
 		}
-		return ps_ifdrop == pcapStat.ps_ifdrop;
+		return this.ps_ifdrop == pcapStat.ps_ifdrop;
 	}
 
 	@Override
 	public int hashCode() {
-		int result = (int) (ps_recv ^ (ps_recv >>> 32));
-		result = 31 * result + (int) (ps_drop ^ (ps_drop >>> 32));
-		result = 31 * result + (int) (ps_ifdrop ^ (ps_ifdrop >>> 32));
+		int result = (int) (this.ps_recv ^ (this.ps_recv >>> 32));
+		result = 31 * result + (int) (this.ps_drop ^ (this.ps_drop >>> 32));
+		result = 31 * result + (int) (this.ps_ifdrop ^ (this.ps_ifdrop >>> 32));
 		return result;
 	}
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder("PcapStat{");
-		sb.append("ps_recv=").append(ps_recv);
-		sb.append(", ps_drop=").append(ps_drop);
-		sb.append(", ps_ifdrop=").append(ps_ifdrop);
+		final StringBuilder sb = new StringBuilder(100);
+		sb.append("PcapStat{ps_recv=").append(this.ps_recv);
+		sb.append(", ps_drop=").append(this.ps_drop);
+		sb.append(", ps_ifdrop=").append(this.ps_ifdrop);
 		sb.append('}');
 		return sb.toString();
 	}

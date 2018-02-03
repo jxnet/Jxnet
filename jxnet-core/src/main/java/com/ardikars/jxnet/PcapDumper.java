@@ -33,8 +33,10 @@ public final class PcapDumper {
 	 * Get pointer address
 	 * @return pointer address.
 	 */
-	public synchronized long getAddress() {
-		return this.address;
+	public long getAddress() {
+		synchronized (this) {
+			return this.address;
+		}
 	}
 
 	/**
@@ -42,14 +44,14 @@ public final class PcapDumper {
 	 * @return true if PcapDumper is closed, false otherwise.
 	 */
 	public boolean isClosed() {
-		if (this.address == 0) {
+		if (this.getAddress() == 0) {
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}
@@ -57,20 +59,20 @@ public final class PcapDumper {
 			return false;
 		}
 
-		PcapDumper that = (PcapDumper) o;
+		final PcapDumper that = (PcapDumper) o;
 
-		return getAddress() == that.getAddress();
+		return this.getAddress() == that.getAddress();
 	}
 
 	@Override
 	public int hashCode() {
-		return (int) (getAddress() ^ (getAddress() >>> 32));
+		return (int) (this.getAddress() ^ (this.getAddress() >>> 32));
 	}
 
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder("PcapDumper{");
-		sb.append("address=").append(address);
+		sb.append("address=").append(this.getAddress());
 		sb.append('}');
 		return sb.toString();
 	}

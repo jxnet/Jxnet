@@ -30,7 +30,7 @@ public abstract class InetAddress {
 	 * @param ipString ipv4 or ipv6 string address.
 	 * @return Inet4Address or Inet6Address.
 	 */
-	public static InetAddress valueOf(String ipString) {
+	public static InetAddress valueOf(final String ipString) {
 		if (ipString.contains(":")) {
 			return Inet6Address.valueOf(ipString);
 		} else {
@@ -43,7 +43,7 @@ public abstract class InetAddress {
 	 * @param ipString ipv4 or ipv6 string address.
 	 * @return true is valid, false otherwise.
 	 */
-	public static boolean isValidAddress(String ipString) {
+	public static boolean isValidAddress(final String ipString) {
 		try {
 			valueOf(ipString);
 			return true;

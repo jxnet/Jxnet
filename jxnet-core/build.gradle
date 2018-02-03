@@ -18,6 +18,7 @@ dependencies {
 	compile project(":jxnet-static")
 	compile project(":jxnet-android")
 	testCompile "junit:junit:${JUNIT_VERSION}"
+	testCompile "org.mockito:mockito-core:${MOCKITO_VERSION}"
 }
 
 task generateJNIHeaders(type: Exec, dependsOn: classes) {

@@ -45,13 +45,14 @@ public final class Inet4Address extends InetAddress {
 	private byte[] address = new byte[Inet4Address.IPV4_ADDRESS_LENGTH];
 
 	private Inet4Address() {
-
+		super();
 	}
 
 	private Inet4Address(final byte[] address) {
+		super();
 		Validate.nullPointer(address);
 		Validate.illegalArgument(address.length == IPV4_ADDRESS_LENGTH);
-		this.address = address;
+		System.arraycopy(address, 0, this.address, 0, address.length);
 	}
 
 	/**
@@ -61,13 +62,13 @@ public final class Inet4Address extends InetAddress {
 	 */
 	public static Inet4Address valueOf(String inet4Address) {
 		inet4Address = Validate.nullPointer(inet4Address, "0.0.0.0");
-		String[] parts = inet4Address.split("\\.");
-		byte[] result = new byte[parts.length];
+		final String[] parts = inet4Address.split("\\.");
+		final byte[] result = new byte[parts.length];
 		Validate.illegalArgument(result.length == IPV4_ADDRESS_LENGTH);
 		for (int i = 0; i < result.length; i++) {
 			Validate.illegalArgument(parts[i] != null || parts[i].length() != 0);
 			Validate.illegalArgument(!(parts[i].length() > 1 && parts[i].startsWith("0")));
-			result[i] = Integer.valueOf(parts[i]).byteValue();
+			result[i] = Byte.valueOf(parts[i]);
 			Validate.illegalArgument((result[i] & 0xff) <= 0xff);
 		}
 		return Inet4Address.valueOf(result);
@@ -124,7 +125,7 @@ public final class Inet4Address extends InetAddress {
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}
@@ -132,22 +133,22 @@ public final class Inet4Address extends InetAddress {
 			return false;
 		}
 
-		Inet4Address that = (Inet4Address) o;
+		final Inet4Address that = (Inet4Address) o;
 
-		return Arrays.equals(address, that.address);
+		return Arrays.equals(this.address, that.address);
 	}
 
 	@Override
 	public int hashCode() {
-		return Arrays.hashCode(address);
+		return Arrays.hashCode(this.address);
 	}
 
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
-		sb.append(this.address[0] & 0xff).append(".");
-		sb.append(this.address[1] & 0xff).append(".");
-		sb.append(this.address[2] & 0xff).append(".");
+		sb.append(this.address[0] & 0xff).append('.');
+		sb.append(this.address[1] & 0xff).append('.');
+		sb.append(this.address[2] & 0xff).append('.');
 		sb.append(this.address[3] & 0xff);
 		return sb.toString();
 	}

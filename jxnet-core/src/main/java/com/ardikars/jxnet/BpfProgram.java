@@ -37,7 +37,7 @@ public final class BpfProgram {
 		}
 
 		public int getValue() {
-			return value;
+			return this.value;
 		}
 
 	}
@@ -57,8 +57,10 @@ public final class BpfProgram {
 	 * Get Bpf Program pointer address.
 	 * @return pointer address.
 	 */
-	public synchronized long getAddress() {
-		return this.address;
+	public long getAddress() {
+		synchronized (this) {
+			return this.address;
+		}
 	}
 
 	/**
@@ -66,14 +68,14 @@ public final class BpfProgram {
 	 * @return true if closed.
 	 */
 	public boolean isClosed() {
-		if (this.address == 0) {
+		if (this.getAddress() == 0) {
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}
@@ -81,20 +83,20 @@ public final class BpfProgram {
 			return false;
 		}
 
-		BpfProgram that = (BpfProgram) o;
+		final BpfProgram that = (BpfProgram) o;
 
-		return getAddress() == that.getAddress();
+		return this.getAddress() == that.getAddress();
 	}
 
 	@Override
 	public int hashCode() {
-		return (int) (getAddress() ^ (getAddress() >>> 32));
+		return (int) (this.getAddress() ^ (this.getAddress() >>> 32));
 	}
 
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder("BpfProgram{");
-		sb.append("address=").append(address);
+		sb.append("address=").append(this.getAddress());
 		sb.append('}');
 		return sb.toString();
 	}

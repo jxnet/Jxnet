@@ -18,7 +18,6 @@
 package com.ardikars.jxnet;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -72,7 +71,7 @@ public final class PcapIf {
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}
@@ -80,36 +79,36 @@ public final class PcapIf {
 			return false;
 		}
 
-		PcapIf pcapIf = (PcapIf) o;
+		final PcapIf pcapIf = (PcapIf) o;
 
-		if (getFlags() != pcapIf.getFlags()) {
+		if (this.getFlags() != pcapIf.getFlags()) {
 			return false;
 		}
-		if (!getName().equals(pcapIf.getName())) {
+		if (!this.getName().equals(pcapIf.getName())) {
 			return false;
 		}
-		if (!getDescription().equals(pcapIf.getDescription())) {
+		if (!this.getDescription().equals(pcapIf.getDescription())) {
 			return false;
 		}
-		return getAddresses().equals(pcapIf.getAddresses());
+		return this.getAddresses().equals(pcapIf.getAddresses());
 	}
 
 	@Override
 	public int hashCode() {
-		int result = getName().hashCode();
-		result = 31 * result + getDescription().hashCode();
-		result = 31 * result + getAddresses().hashCode();
-		result = 31 * result + getFlags();
+		int result = this.getName().hashCode();
+		result = 31 * result + this.getDescription().hashCode();
+		result = 31 * result + this.getAddresses().hashCode();
+		result = 31 * result + this.getFlags();
 		return result;
 	}
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder("PcapIf{");
-		sb.append("name='").append(name).append('\'');
-		sb.append(", description='").append(description).append('\'');
-		sb.append(", addresses=").append(addresses);
-		sb.append(", flags=").append(flags);
+		final StringBuilder sb = new StringBuilder(500);
+		sb.append("PcapIf{name='").append(this.name);
+		sb.append(", description='").append(this.description);
+		sb.append(", addresses=").append(this.addresses);
+		sb.append(", flags=").append(this.flags);
 		sb.append('}');
 		return sb.toString();
 	}

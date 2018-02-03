@@ -76,13 +76,12 @@ public enum DataLinkType {
     /**
      * Unknown
      */
-    UNKNOWN((short) -1, "Unknown")
-    ;
+    UNKNOWN((short) -1, "Unknown");
 
     private short value;
     private String description;
 
-    DataLinkType(Short value, String description) {
+    DataLinkType(final Short value, final String description) {
         this.value = value;
         this.description = description;
     }
@@ -109,9 +108,9 @@ public enum DataLinkType {
      * @return datalink.
      */
     public static DataLinkType valueOf(final short dataLinkType) {
-        for (DataLinkType f : values()) {
-            if (f.getValue() == dataLinkType) {
-                return f;
+        for (final DataLinkType linkType : values()) {
+            if (linkType.getValue() == dataLinkType) {
+                return linkType;
             }
         }
         return null;

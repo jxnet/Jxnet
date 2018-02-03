@@ -29,15 +29,15 @@ public class BpfProgramFreeCodeException extends RuntimeException {
         super();
     }
 
-    public BpfProgramFreeCodeException(String message) {
+    public BpfProgramFreeCodeException(final String message) {
         super(message);
     }
 
-    public BpfProgramFreeCodeException(String message, Throwable cause) {
+    public BpfProgramFreeCodeException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
-    public BpfProgramFreeCodeException(Throwable cause) {
+    public BpfProgramFreeCodeException(final Throwable cause) {
         super(cause);
     }
 

@@ -17,6 +17,8 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.jxnet.util.Strings;
+
 import java.util.Arrays;
 
 /**
@@ -29,12 +31,12 @@ public final class SockAddr {
 
         AF_INET((short) 2, "AF_INET"),
         AF_INET6((short) 10, "AF_INET6"),
-        ;
+        UNKNOWN((short) -1, "UNKNOWN");
 
         private short value;
         private String description;
 
-        Family(Short value, String description) {
+        Family(final Short value, final String description) {
             this.value = value;
             this.description = description;
         }
@@ -61,12 +63,12 @@ public final class SockAddr {
          * @return value type.
          */
         public static Family valueOf(final short family) {
-            for (Family f : values()) {
+            for (final Family f : values()) {
                 if (f.getValue() == family) {
                     return f;
                 }
             }
-            return null;
+            return Family.UNKNOWN;
         }
     }
 
@@ -83,14 +85,13 @@ public final class SockAddr {
      * @return address value type.
      */
     public Family getSaFamily() {
-        switch (sa_family) {
-            case 2:
-                return Family.AF_INET;
-            case 10:
-                return Family.AF_INET6;
-            default:
-                return null;
+        Family result = Family.UNKNOWN;
+        if (this.sa_family == 2) {
+            result = Family.AF_INET;
+        } else if (this.sa_family == 10) {
+            result = Family.AF_INET6;
         }
+        return result;
     }
 
     /**
@@ -102,7 +103,7 @@ public final class SockAddr {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -110,34 +111,31 @@ public final class SockAddr {
             return false;
         }
 
-        SockAddr sockAddr = (SockAddr) o;
+        final SockAddr sockAddr = (SockAddr) o;
 
-        if (sa_family != sockAddr.sa_family) {
+        if (this.sa_family != sockAddr.sa_family) {
             return false;
         }
-        return Arrays.equals(getData(), sockAddr.getData());
+        return Arrays.equals(this.data, sockAddr.getData());
     }
 
     @Override
     public int hashCode() {
-        int result = (int) sa_family;
-        result = 31 * result + Arrays.hashCode(getData());
+        int result = (int) this.sa_family;
+        result = 31 * result + Arrays.hashCode(this.data);
         return result;
     }
 
     @Override
     public String toString() {
-        Family family = getSaFamily();
-        if (family == null) {
-            return null;
-        }
+        final Family family = this.getSaFamily();
         switch (family) {
             case AF_INET:
-                return Inet4Address.valueOf(data).toString();
+                return Inet4Address.valueOf(this.data).toString();
             case AF_INET6:
-                return Inet6Address.valueOf(data).toString();
+                return Inet6Address.valueOf(this.data).toString();
             default:
-                return null;
+                return Strings.EMPTY;
         }
     }
 

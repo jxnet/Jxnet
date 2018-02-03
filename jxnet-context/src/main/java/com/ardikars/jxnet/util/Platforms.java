@@ -23,12 +23,20 @@ package com.ardikars.jxnet.util;
  */
 public class Platforms {
 
+    private static final String OS_ARCH = "os.arch";
+    private static final String OS_NAME = "os.name";
+    private static final String JAVA_VM_NAME = "java.vm.name";
+
     public enum Name {
         WINDOWS, LINUX, ANDROID, FREEBSD, DARWIN, UNKNOWN;
     }
 
     public enum Architecture {
         _32_BIT, _64_BIT;
+    }
+
+    private Platforms() {
+
     }
 
     private static Name name;
@@ -71,16 +79,16 @@ public class Platforms {
     }
 
     public static final boolean isArm() {
-        return (System.getProperty("os.arch").toLowerCase().trim().startsWith("arm"));
+        return System.getProperty(OS_ARCH).toLowerCase().trim().startsWith("arm");
     }
 
     public static final boolean isIntel() {
-        String arch = System.getProperty("os.arch").toLowerCase().trim();
-        return (arch.startsWith("x86") || arch.startsWith("x64"));
+        final String arch = System.getProperty(OS_ARCH).toLowerCase().trim();
+        return arch.startsWith("x86") || arch.startsWith("x64");
     }
 
     public static final boolean isAmd() {
-        return System.getProperty("os.arch").toLowerCase().trim().startsWith("amd");
+        return System.getProperty(OS_ARCH).toLowerCase().trim().startsWith("amd");
     }
 
     /**
@@ -88,18 +96,18 @@ public class Platforms {
      * @return CPU Version
      */
     public static final String getVersion() {
-        String version = System.getProperty("os.version");
-        if (Character.isDigit(version.charAt(version.indexOf("v") + 1))) {
-            return String.valueOf("v" + version.charAt(version.indexOf("v") + 1));
+        final String version = System.getProperty("os.version");
+        if (Character.isDigit(version.charAt(version.indexOf('v') + 1))) {
+            return String.valueOf("v" + version.charAt(version.indexOf('v') + 1));
         }
-        return null;
+        return Strings.EMPTY;
     }
 
     static {
-        String osName = System.getProperty("os.name").toUpperCase().trim();
-        String osArch = System.getProperty("os.arch").toLowerCase().trim();
+        final String osName = System.getProperty(OS_NAME).toUpperCase().trim();
+        final String osArch = System.getProperty(OS_ARCH).toLowerCase().trim();
         if (osName.startsWith("LINUX")) {
-            if (new String("DALVIK").equals(System.getProperty("java.vm.name").toUpperCase().trim())) {
+            if ("DALVIK".equals(System.getProperty(JAVA_VM_NAME).toUpperCase().trim())) {
                 name = Name.ANDROID;
             } else {
                 name = Name.LINUX;

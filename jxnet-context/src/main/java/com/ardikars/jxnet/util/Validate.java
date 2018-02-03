@@ -23,13 +23,17 @@ package com.ardikars.jxnet.util;
  */
 public final class Validate {
 
+    private Validate() {
+
+    }
+
     /**
      * Check null pointer.
      * @param reference reference.
      * @param exception NullPointerException.
      * @param <T> type of reference.
      */
-    public static <T> void nullPointer(T reference, NullPointerException exception) {
+    public static <T> void nullPointer(final T reference, final NullPointerException exception) {
         if (reference == null) {
             if (exception == null) {
                 throw new NullPointerException();
@@ -44,7 +48,7 @@ public final class Validate {
      * @param reference reference.
      * @param <T> type of reference.
      */
-    public static <T> void nullPointer(T reference) {
+    public static <T> void nullPointer(final T reference) {
         nullPointer(reference, null);
     }
 
@@ -55,7 +59,7 @@ public final class Validate {
      * @param <T> type of reference and new value.
      * @return reference if not null, newVal otherwise.
      */
-    public static <T> T nullPointer(T reference, T newVal) {
+    public static <T> T nullPointer(final T reference, final T newVal) {
         if (reference == null) {
             return newVal;
         } else {
@@ -68,7 +72,7 @@ public final class Validate {
      * @param expression expression.
      * @param exception IllegalArgumentException.
      */
-    public static void illegalArgument(boolean expression, IllegalArgumentException exception) {
+    public static void illegalArgument(final boolean expression, final IllegalArgumentException exception) {
         if (!expression) {
             if (exception == null) {
                 throw new IllegalArgumentException();
@@ -82,7 +86,7 @@ public final class Validate {
      * Check illegal argument.
      * @param expression expression.
      */
-    public static void illegalArgument(boolean expression) {
+    public static void illegalArgument(final boolean expression) {
         illegalArgument(expression, null);
     }
 
@@ -94,7 +98,7 @@ public final class Validate {
      * @param <T> type of reference and new value.
      * @return reference if not null, newVal otherwise.
      */
-    public static <T> T illegalArgument(boolean expression, T reference, T newVal) {
+    public static <T> T illegalArgument(final boolean expression, final T reference, final T newVal) {
         if (!expression) {
             return newVal;
         } else {
@@ -110,8 +114,8 @@ public final class Validate {
      * @param <T> type of object.
      * @return obj1 if obj1 equal to obj2, newVal otherwise.
      */
-    public static <T> T equals(T obj1, T obj2, T newVal) {
-        return (obj1.equals(obj2)) ? obj1 : newVal;
+    public static <T> T equals(final T obj1, final T obj2, final T newVal) {
+        return obj1.equals(obj2) ? obj1 : newVal;
     }
 
     /**
@@ -120,7 +124,7 @@ public final class Validate {
      * @param offset offset.
      * @param length length.
      */
-    public static void bounds(byte[] array, int offset, int length) {
+    public static void bounds(final byte[] array, final int offset, final int length) {
         nullPointer(array, new NullPointerException("array is null."));
         illegalArgument(array.length > 0, new IllegalArgumentException("array is empty."));
         illegalArgument(length > 0, new IllegalArgumentException("length is zero."));
@@ -135,7 +139,7 @@ public final class Validate {
      * @param offset offset.
      * @param length length.
      */
-    public static void bounds(char[] array, int offset, int length) {
+    public static void bounds(final char[] array, final int offset, final int length) {
         nullPointer(array, new NullPointerException("array is null."));
         illegalArgument(array.length > 0, new IllegalArgumentException("array is empty."));
         illegalArgument(length > 0, new IllegalArgumentException("length is zero."));
@@ -150,7 +154,7 @@ public final class Validate {
      * @param offset offset.
      * @param length length.
      */
-    public static void bounds(short[] array, int offset, int length) {
+    public static void bounds(final short[] array, final int offset, final int length) {
         nullPointer(array, new NullPointerException("array is null."));
         illegalArgument(array.length > 0, new IllegalArgumentException("array is empty."));
         illegalArgument(length > 0, new IllegalArgumentException("length is zero."));
@@ -165,7 +169,7 @@ public final class Validate {
      * @param offset offset.
      * @param length length.
      */
-    public static void bounds(int[] array, int offset, int length) {
+    public static void bounds(final int[] array, final int offset, final int length) {
         nullPointer(array, new NullPointerException("array is null."));
         illegalArgument(array.length > 0, new IllegalArgumentException("array is empty."));
         illegalArgument(length > 0, new IllegalArgumentException("length is zero."));
@@ -180,7 +184,7 @@ public final class Validate {
      * @param offset offset.
      * @param length length.
      */
-    public static void bounds(float[] array, int offset, int length) {
+    public static void bounds(final float[] array, final int offset, final int length) {
         nullPointer(array, new NullPointerException("array is null."));
         illegalArgument(array.length > 0, new IllegalArgumentException("array is empty."));
         illegalArgument(length > 0, new IllegalArgumentException("length is zero."));
@@ -195,7 +199,7 @@ public final class Validate {
      * @param offset offset.
      * @param length length.
      */
-    public static void bounds(long[] array, int offset, int length) {
+    public static void bounds(final long[] array, final int offset, final int length) {
         nullPointer(array, new NullPointerException("array is null."));
         illegalArgument(array.length > 0, new IllegalArgumentException("array is empty."));
         illegalArgument(length > 0, new IllegalArgumentException("length is zero."));
@@ -210,7 +214,7 @@ public final class Validate {
      * @param offset offset.
      * @param length length.
      */
-    public static void bounds(double[] array, int offset, int length) {
+    public static void bounds(final double[] array, final int offset, final int length) {
         nullPointer(array, new NullPointerException("array is null."));
         illegalArgument(array.length > 0, new IllegalArgumentException("array is empty."));
         illegalArgument(length > 0, new IllegalArgumentException("length is zero."));
@@ -226,7 +230,7 @@ public final class Validate {
      * @param length length.
      * @param <T> type of array.
      */
-    public static <T> void bounds(T[] array, int offset, int length) {
+    public static <T> void bounds(final T[] array, final int offset, final int length) {
         nullPointer(array, new NullPointerException("array is null."));
         illegalArgument(array.length > 0, new IllegalArgumentException("array is empty."));
         illegalArgument(length > 0, new IllegalArgumentException("length is zero."));
@@ -242,10 +246,10 @@ public final class Validate {
      * @param value value.
      * @param <T> type of Number.
      */
-    public static <T extends Number & Comparable<T>> void between(T start, T end, T value) {
+    public static <T extends Number & Comparable<T>> void between(final T start, final T end, final T value) {
         illegalArgument(!(start.compareTo(end) >= 0), new IllegalArgumentException("start (" + start
                 + ") should be less then end (" + end + ")."));
-        illegalArgument((value.compareTo(start) >= 0 && value.compareTo(end) <= 0),
+        illegalArgument(value.compareTo(start) >= 0 && value.compareTo(end) <= 0,
                 new IllegalArgumentException(value + " not in range between "
                         + start + " and " + end + "."));
     }

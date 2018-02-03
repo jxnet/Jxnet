@@ -22,7 +22,8 @@ package com.ardikars.jxnet;
  * @since 1.0.0
  */
 public final class PcapPktHdr {
-	
+
+	// This field will be replaced by native code
 	private int caplen;
 	private int len;
 	
@@ -46,7 +47,7 @@ public final class PcapPktHdr {
 	 * @param tvSec tv_sec.
 	 * @param tvUsec tv_usec.
 	 */
-	public PcapPktHdr(int caplen, int len, int tvSec, long tvUsec) {
+	public PcapPktHdr(final int caplen, final int len, final int tvSec, final long tvUsec) {
 		this.caplen = caplen;
 		this.len = len;
 		this.tv_sec = tvSec;
@@ -61,7 +62,7 @@ public final class PcapPktHdr {
 	 * @param tvUsec tv_usec.
 	 * @return PcapPktHdr.
 	 */
-	public static PcapPktHdr newInstance(int caplen, int len, int tvSec, long tvUsec) {
+	public static PcapPktHdr newInstance(final int caplen, final int len, final int tvSec, final long tvUsec) {
 		return new PcapPktHdr(caplen, len, tvSec, tvUsec);
 	}
 
@@ -98,7 +99,7 @@ public final class PcapPktHdr {
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}
@@ -106,36 +107,36 @@ public final class PcapPktHdr {
 			return false;
 		}
 
-		PcapPktHdr that = (PcapPktHdr) o;
+		final PcapPktHdr that = (PcapPktHdr) o;
 
-		if (caplen != that.caplen) {
+		if (this.caplen != that.caplen) {
 			return false;
 		}
-		if (getLen() != that.getLen()) {
+		if (this.len != that.getLen()) {
 			return false;
 		}
-		if (tv_sec != that.tv_sec) {
+		if (this.tv_sec != that.tv_sec) {
 			return false;
 		}
-		return tv_usec == that.tv_usec;
+		return this.tv_usec == that.tv_usec;
 	}
 
 	@Override
 	public int hashCode() {
-		int result = caplen;
-		result = 31 * result + getLen();
-		result = 31 * result + tv_sec;
-		result = 31 * result + (int) (tv_usec ^ (tv_usec >>> 32));
+		int result = this.caplen;
+		result = 31 * result + this.getLen();
+		result = 31 * result + this.getTvSec();
+		result = 31 * result + (int) (this.getTvSec() ^ (this.getTvUsec() >>> 32));
 		return result;
 	}
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder("PcapPktHdr{");
-		sb.append("caplen=").append(caplen);
-		sb.append(", len=").append(len);
-		sb.append(", tv_sec=").append(tv_sec);
-		sb.append(", tv_usec=").append(tv_usec);
+		final StringBuilder sb = new StringBuilder(94);
+		sb.append("PcapPktHdr{caplen=").append(this.caplen);
+		sb.append(", len=").append(this.len);
+		sb.append(", tv_sec=").append(this.tv_sec);
+		sb.append(", tv_usec=").append(this.tv_usec);
 		sb.append('}');
 		return sb.toString();
 	}

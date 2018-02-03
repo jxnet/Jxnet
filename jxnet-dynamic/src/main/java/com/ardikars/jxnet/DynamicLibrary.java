@@ -24,11 +24,11 @@ import java.io.File;
 public class DynamicLibrary implements Library.Loader {
 
     @Override
-    public void load() throws UnsatisfiedLinkError {
+    public void load() {
         switch (Platforms.getName()) {
             case LINUX:
                 if (Platforms.isArm()) {
-                    if (Platforms.getVersion().equals("v7") || Platforms.getVersion().equals("v6")) {
+                    if ("v7".equals(Platforms.getVersion()) || "v6".equals(Platforms.getVersion())) {
                         Library.loadLibrary("/dynamic/linux/lib/arm32/libjxnet.so");
                     }
                 } else {

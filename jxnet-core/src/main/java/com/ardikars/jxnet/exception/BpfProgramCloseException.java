@@ -29,15 +29,15 @@ public final class BpfProgramCloseException extends RuntimeException {
 		super();
 	}
 	
-	public BpfProgramCloseException(String message) {
+	public BpfProgramCloseException(final String message) {
 		super(message);
 	}
 	
-	public BpfProgramCloseException(String message, Throwable cause) {
+	public BpfProgramCloseException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 	
-	public BpfProgramCloseException(Throwable cause) {
+	public BpfProgramCloseException(final Throwable cause) {
 		super(cause);
 	}
 	
