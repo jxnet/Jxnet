@@ -68,7 +68,7 @@ public final class Inet4Address extends InetAddress {
 		for (int i = 0; i < result.length; i++) {
 			Validate.illegalArgument(parts[i] != null || parts[i].length() != 0);
 			Validate.illegalArgument(!(parts[i].length() > 1 && parts[i].startsWith("0")));
-			result[i] = Byte.valueOf(parts[i]);
+			result[i] = Integer.valueOf(parts[i]).byteValue();
 			Validate.illegalArgument((result[i] & 0xff) <= 0xff);
 		}
 		return Inet4Address.valueOf(result);

@@ -99,7 +99,14 @@ public final class SockAddr {
      * @return bytes address.
      */
     public byte[] getData() {
-        return this.data.clone();
+        byte[] data;
+        if (this.data != null) {
+            data = new byte[this.data.length];
+        } else {
+            data = new byte[0];
+        }
+        System.arraycopy(this.data, 0, data, 0, data.length);
+        return data;
     }
 
     @Override
@@ -131,9 +138,9 @@ public final class SockAddr {
         final Family family = this.getSaFamily();
         switch (family) {
             case AF_INET:
-                return Inet4Address.valueOf(this.data).toString();
+                return Inet4Address.valueOf(this.getData()).toString();
             case AF_INET6:
-                return Inet6Address.valueOf(this.data).toString();
+                return Inet6Address.valueOf(this.getData()).toString();
             default:
                 return Strings.EMPTY;
         }

@@ -102,7 +102,7 @@ public final class Inet6Address extends InetAddress {
 			}
 			parts = partsAsList.toArray(new String[partsAsList.size()]);
 		}
-		Validate.illegalArgument(!(parts.length > ipv6MaxHexGroups && parts.length < 3));
+		Validate.illegalArgument(!(parts.length > ipv6MaxHexGroups/*&& parts.length < 3*/));
 		int validOctets = 0;
 		int emptyOctets = 0;
 		for (int index = 0; index < parts.length; index++) {
@@ -171,7 +171,7 @@ public final class Inet6Address extends InetAddress {
 	 * @return bytes ipv6 address.
 	 */
 	public byte[] toBytes() {
-		return this.address.clone();
+		return Arrays.copyOf(this.address, this.address.length);
 	}
 
 	private long toLong() {

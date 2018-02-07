@@ -85,8 +85,8 @@ allprojects {
 	checkstyle {
 		ignoreFailures = true
 
-		configFile = project(':').file('gradle/resources/checkstyle/checkstyle.xml')
-		configProperties = [ "suppressionFile" : project(':').file('gradle/resources/checkstyle/suppression.xml')]
+		configFile = rootProject.file('gradle/resources/checkstyle/checkstyle.xml')
+		configProperties = [ "suppressionFile" : rootProject.file('gradle/resources/checkstyle/suppression.xml')]
 
 		checkstyleMain {
 			source = sourceSets.main.allSource
@@ -109,6 +109,7 @@ allprojects {
 		sourceSets = [sourceSets.main]
 		reportsDir = file("$project.buildDir/reports/findbugs")
 		effort = "max"
+		excludeFilter rootProject.file('gradle/resources/findbugs/findbugs-exclude.xml')
 		findbugsMain {
 			reports {
 				xml.enabled = false
@@ -122,6 +123,7 @@ allprojects {
 		ignoreFailures = true
 		sourceSets = [sourceSets.main]
 		reportsDir = file("$project.buildDir/reports/pmd")
+		ruleSetFiles = rootProject.files("./gradle/resources/pmd/pmd.xml")
 		toolVersion '4.3'
 	}
 
