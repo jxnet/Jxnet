@@ -1,0 +1,8 @@
+<FindBugsFilter>
+    <Match>
+        <Class name="~.*Manifest\$.*"/>
+    </Match>
+    <Match>
+        <Bug pattern="UWF_UNWRITTEN_FIELD"/>
+    </Match>
+</FindBugsFilter>
