@@ -27,6 +27,11 @@
 
     <property name="severity" value="warning"/>
 
+    <!-- Verify that EVERY source file has the appropriate license -->
+    <module name="Header">
+        <property name="headerFile" value="${headerFile}"/>
+    </module>
+
     <property name="fileExtensions" value="java, properties, xml"/>
     <!-- Checks for whitespace                               -->
     <!-- See http://checkstyle.sf.net/config_whitespace.html -->
