@@ -17,6 +17,11 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.jxnet.util.Scanners;
+
+import java.util.List;
+import java.util.Set;
+
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.5
@@ -34,11 +39,6 @@ public class ApplicationContext implements Application.Context {
     }
 
     @Override
-    public void addProperty(final String key, final Object value) {
-        Application.getInstance().addProperty(key, value);
-    }
-
-    @Override
     public Object getProperty(final String key) {
         return Application.getInstance().getProperty(key);
     }
@@ -46,6 +46,12 @@ public class ApplicationContext implements Application.Context {
     @Override
     public void addLibrary(final Library.Loader libraryLoader) {
         Application.getInstance().addLibrary(libraryLoader);
+    }
+
+    @Override
+    public void configuration(String basePackage) {
+        Set<Class> classes = Scanners.getClasses(basePackage);
+        Application.getInstance().addConfigrationClass(classes);
     }
 
 }
