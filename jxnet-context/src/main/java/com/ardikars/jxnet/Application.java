@@ -17,14 +17,23 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.jxnet.annotation.Inject;
+import com.ardikars.jxnet.annotation.Property;
 import com.ardikars.jxnet.util.Platforms;
 
 import java.io.File;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.WeakHashMap;
 
 /**
  * @author Ardika Rommy Sanjaya
@@ -41,6 +50,7 @@ public class Application {
     private String applicationName;
     private String applicationVersion;
     private Map<String, Object> properties;
+    private Set<Class> classes;
     private Context context;
 
     protected boolean isLoaded() {
@@ -63,7 +73,10 @@ public class Application {
                     instance.libraryLoaders = new ArrayList<Library.Loader>();
                 }
                 if (instance.properties == null) {
-                    instance.properties = new HashMap<String, Object>();
+                    instance.properties = Collections.synchronizedMap(new WeakHashMap<String, Object>());
+                }
+                if (instance.classes == null) {
+                    instance.classes = new HashSet<>();
                 }
             }
             return instance;
@@ -80,6 +93,10 @@ public class Application {
 
     protected Object getProperty(final String key) {
         return this.properties.get(key);
+    }
+
+    protected void addConfigrationClass(Set<Class> classes) {
+        this.classes.addAll(classes);
     }
 
     /**
@@ -112,7 +129,7 @@ public class Application {
             if (!isAdded) {
                 paths = paths.concat(pathSparator + path);
                 System.setProperty("java.library.path", paths);
-                Field sysPathsField = null;
+                Field sysPathsField;
                 try {
                     sysPathsField = ClassLoader.class.getDeclaredField("sys_paths");
                 } catch (NoSuchFieldException e) {
@@ -147,6 +164,115 @@ public class Application {
                 }
             }
         }
+
+        try {
+            initializeProperties(getInstance().classes);
+            injectProperties();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void initializeProperties(Set<Class> classes) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+        for (Class clazz : classes) {
+
+            Annotation[] classAnnotations = clazz.getAnnotations();
+            for (Annotation annotation : classAnnotations) {
+                if (annotation instanceof Property) {
+                    Property property = (Property) annotation;
+                    Object object = clazz.newInstance();
+                    String key = property.value().trim();
+                    if (key == null || key.equals("")) {
+                        throw new IllegalAccessException("Property name should be not empty or null.");
+                    }
+                    if (getInstance().properties.containsKey(key)) {
+                        throw new IllegalAccessException("Property with name " + key + " is already exist.");
+                    } else {
+                        getInstance().addProperty(key, object);
+                    }
+                }
+            }
+
+            // Method
+            Method[] methods = clazz.getMethods();
+            for (Method method : methods) {
+                Annotation[] annotations = method.getDeclaredAnnotations();
+                for (Annotation annotation : annotations) {
+                    if (annotation instanceof Property) {
+                        Property property = (Property) annotation;
+                        Object object = clazz.newInstance();
+                        Object[] objects = new Object[0];
+                        object = method.invoke(object, objects);
+                        if (object == null) {
+                            throw new NullPointerException("Property should be not null.");
+                        }
+                        String key = property.value();
+                        if (key == null || key.equals("")) {
+                            throw new IllegalAccessException("Property name should be not empty or null.");
+                        }
+                        if (getInstance().properties.containsKey(key)) {
+                            throw new IllegalAccessException("Property with name " + key + " is already exist.");
+                        } else {
+                            getInstance().addProperty(key, object);
+                        }
+                    }
+                }
+            }
+
+            // Field
+            Field[] fields = clazz.getFields();
+            for (Field field : fields) {
+                field.setAccessible(true);
+                Annotation[] annotations = field.getDeclaredAnnotations();
+                for (Annotation annotation : annotations) {
+                    if (annotation instanceof Property) {
+                        Property property = (Property) annotation;
+                        Object object = clazz.newInstance();
+                        object = field.get(object);
+                        if (object == null) {
+                            throw new NullPointerException("Property should be not null.");
+                        }
+                        String key = property.value().trim();
+                        if (key == null || key.equals("")) {
+                            throw new IllegalAccessException("Property name should be not empty or null.");
+                        }
+                        if (getInstance().properties.containsKey(key)) {
+                            throw new IllegalAccessException("Property with name " + key + " is already exist.");
+                        } else {
+                            getInstance().addProperty(key, object);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private static void injectProperties() throws IllegalAccessException {
+        for (Map.Entry<String, Object> entry : getInstance().properties.entrySet()) {
+            Object value = entry.getValue();
+            Class clazz = value.getClass();
+            Field[] fields = clazz.getFields();
+            for (Field field : fields) {
+                field.setAccessible(true);
+                Annotation[] annotations = field.getDeclaredAnnotations();
+                for (Annotation annotation : annotations) {
+                    if (annotation instanceof Inject) {
+                        Inject inject = (Inject) annotation;
+                        String injectorKey = inject.value().trim();
+                        if (injectorKey == null || injectorKey.equals("")) {
+                            throw new IllegalAccessException("Property name should be not empty or null.");
+                        }
+                        Object injectorValue = getInstance().getContext().getProperty(injectorKey);
+                        field.set(value, injectorValue);
+                    }
+                }
+            }
+        }
+
     }
 
     protected String getApplicationName() {
@@ -179,11 +305,11 @@ public class Application {
 
         String getApplicationVersion();
 
-        void addProperty(String key, Object value);
-
         Object getProperty(String key);
 
         void addLibrary(Library.Loader libraryLoader);
+
+        void configuration(String basePackage);
 
     }
 

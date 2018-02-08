@@ -15,23 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet;
+package com.ardikars.jxnet.annotation;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
-        JxnetTest.class,
-        CoreTest.class,
-        MacAddress.class,
-        FreakTest.class
-})
-public class SuiteTest {
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD, ElementType.FIELD, ElementType.TYPE})
+public @interface Property {
 
-    @Test
-    public void LibraryTest() {
-    }
+	String value();
 
 }

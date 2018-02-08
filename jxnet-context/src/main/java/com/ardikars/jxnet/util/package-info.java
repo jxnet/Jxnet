@@ -15,23 +15,4 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
-        JxnetTest.class,
-        CoreTest.class,
-        MacAddress.class,
-        FreakTest.class
-})
-public class SuiteTest {
-
-    @Test
-    public void LibraryTest() {
-    }
-
-}
+package com.ardikars.jxnet.util;
