@@ -17,16 +17,19 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.util.Scanners;
+import com.ardikars.jxnet.exception.PropertyNotFoundException;
 
-import java.util.List;
-import java.util.Set;
+import javax.xml.bind.PropertyException;
+import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.5
  */
 public class ApplicationContext implements Application.Context {
+
+	private final Logger logger = Logger.getLogger(ApplicationContext.class.getName());
 
     @Override
     public String getApplicationName() {
@@ -39,19 +42,45 @@ public class ApplicationContext implements Application.Context {
     }
 
     @Override
-    public Object getProperty(final String key) {
+    public Object getProperty(final String key) throws PropertyNotFoundException{
         return Application.getInstance().getProperty(key);
     }
 
-    @Override
+	@Override
+	public <T> T getProperty(String name, Class<T> requiredType) throws ClassCastException, PropertyNotFoundException {
+		Object object = Application.getInstance().getProperty(name);
+		if (requiredType != null) {
+			if (object.getClass() != requiredType) {
+				throw new ClassCastException(object.getClass().getName() + " can't cast to " + requiredType.getName() + ".");
+			}
+		}
+    	return (T) object;
+	}
+
+	@Override
+	public Map<String, Object> getProperties() {
+		return Application.getInstance().getProperties();
+	}
+
+	@Override
     public void addLibrary(final Library.Loader libraryLoader) {
         Application.getInstance().addLibrary(libraryLoader);
     }
 
     @Override
     public void configuration(String basePackage) {
-        Set<Class> classes = Scanners.getClasses(basePackage);
-        Application.getInstance().addConfigrationClass(classes);
+	    try {
+		    Application.getInstance().configure(basePackage);
+	    } catch (PropertyException e) {
+	    	logger.warning(e.getMessage());
+		    e.printStackTrace();
+	    } catch (InstantiationException e) {
+	    	logger.warning(e.getMessage());
+		    e.printStackTrace();
+	    } catch (IllegalAccessException e) {
+	    	logger.warning(e.getMessage());
+		    e.printStackTrace();
+	    }
     }
 
 }

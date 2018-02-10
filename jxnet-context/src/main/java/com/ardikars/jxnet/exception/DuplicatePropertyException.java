@@ -15,4 +15,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet;
+/**
+ * @author Ardika Rommy Sanjaya
+ * @since 1.1.5
+ */
+package com.ardikars.jxnet.exception;
+
+public class DuplicatePropertyException extends RuntimeException {
+
+	public DuplicatePropertyException() {
+		super();
+	}
+
+	public DuplicatePropertyException(String message) {
+		super(message);
+	}
+
+	public DuplicatePropertyException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	public DuplicatePropertyException(Throwable cause) {
+		super(cause);
+	}
+
+	protected DuplicatePropertyException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
+	}
+
+}
