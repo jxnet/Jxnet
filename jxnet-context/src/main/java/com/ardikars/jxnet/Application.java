@@ -17,26 +17,21 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.annotation.Component;
-import com.ardikars.jxnet.annotation.Configuration;
-import com.ardikars.jxnet.annotation.Inject;
-import com.ardikars.jxnet.annotation.Property;
-import com.ardikars.jxnet.exception.DuplicatePropertyException;
 import com.ardikars.jxnet.exception.PropertyNotFoundException;
 import com.ardikars.jxnet.util.Platforms;
 import com.ardikars.jxnet.util.PropertyUtils;
 
-import javax.xml.bind.PropertyException;
 import java.io.File;
-import java.lang.annotation.Annotation;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.logging.Logger;
@@ -59,7 +54,9 @@ public class Application {
     private Context context;
 
     private final List<Library.Loader> libraryLoaders = new ArrayList<>();
-    private final Map<String, Object> properties = Collections.synchronizedMap(new WeakHashMap<String, Object>());
+    private final Map<String, Object> registry = Collections.synchronizedMap(new WeakHashMap<String, Object>());
+    private final List<Properties> propertyFiles = new ArrayList<>();
+    private final Set<Class> classes = Collections.synchronizedSet(new HashSet<Class>());
 
     protected boolean isLoaded() {
         return this.loaded;
@@ -84,27 +81,63 @@ public class Application {
     }
 
     protected Object getProperty(final String key) throws PropertyNotFoundException{
-        if (this.properties.get(key) == null) {
+        if (this.getProperties().get(key) == null) {
             throw new PropertyNotFoundException("Property with name " + key + " not found.");
         }
-        return this.properties.get(key);
+        return this.getProperties().get(key);
+    }
+
+    protected void addPropertyPackages(String basePackage) {
+        Set<Class> classes = PropertyUtils.getClasses(basePackage);
+        getInstance().classes.addAll(classes);
+    }
+
+    protected void addPropertyClasses(Class... classes) {
+        for (Class aClass : classes) {
+            getInstance().classes.add(aClass);
+        }
+    }
+
+    protected void addPropertyFiles(String... propertyFiles) {
+        final String classpath = "classpath:";
+        for (String propertyFile : propertyFiles) {
+            if (propertyFile.startsWith(classpath)) {
+                propertyFile = propertyFile.substring(classpath.length(), propertyFile.length());
+                InputStream stream = ClassLoader.getSystemResourceAsStream(propertyFile);
+                Properties properties = new Properties();
+                try {
+                    properties.load(stream);
+                    getInstance().propertyFiles.add(properties);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     /**
      * Used for bootstraping Jxnet.
      * @param applicationName application name.
      * @param applicationVersion application version.
-     * @param initializer initializer.
+     * @param initializerClass initializer class.
      * @throws UnsatisfiedLinkError UnsatisfiedLinkError.
      */
     public static void run(final String applicationName, final String applicationVersion,
-                           final ApplicationInitializer initializer) {
+                           Class initializerClass) {
 
         getInstance().applicationName = applicationName;
         getInstance().applicationVersion = applicationVersion;
         getInstance().context = new ApplicationContext();
 
-        initializer.initialize(getInstance().getContext());
+        ApplicationInitializer initializer = null;
+        try {
+            initializer = (ApplicationInitializer) initializerClass.newInstance();
+            initializer.initialize(getInstance().context);
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
 
         if (Platforms.isWindows()) {
             String paths = System.getProperty("java.library.path");
@@ -158,195 +191,45 @@ public class Application {
                 }
             }
         }
-    }
 
-    protected static void configure(String basePackage) throws PropertyException, InstantiationException, IllegalAccessException {
-
-    	Set<Class> classSet = PropertyUtils.getClasses(basePackage);
-        Set<Class> classes = PropertyUtils.processConfigurationOrder(classSet);
-        Set<Class> components = PropertyUtils.processComponentOrder(classSet);
-        Set<Method> methods = Collections.synchronizedSet(new LinkedHashSet<Method>());
-        Set<Field> fields = Collections.synchronizedSet(new LinkedHashSet<Field>());
-
-        for (Class clazz : classes) {
-            if (!clazz.isInterface() && !clazz.isAnnotation() && !clazz.isAnonymousClass() && !clazz.isEnum()) {
-                for (Method method : clazz.getMethods()) {
-                    methods.add(method);
-                }
-                for (Field field : clazz.getFields()) {
-                    fields.add(field);
-                }
-            }
+        if (getInstance().classes == null || getInstance().classes.size() <= 0) {
+            getInstance().addPropertyPackages(initializerClass.getPackage().toString());
         }
-        methods = PropertyUtils.processMethodOrder(methods);
-        fields = PropertyUtils.processFieldOrder(fields);
-        for (Field field : fields) {
-            System.out.println(field);
-        }
-        for (Class clazz : classes) {
-            Annotation[] typeAnnotations = clazz.getAnnotations();
-            for (Annotation annotation : typeAnnotations) {
-                if (annotation instanceof Configuration) {
-                    Configuration configuration = (Configuration) annotation;
-                    String key = configuration.value().trim();
-                    if (key == null || key.equals("")) {
-                        throw new PropertyException("Property name in " + clazz.getName() + " should be not null or empty string.");
-                    }
-                    if (getInstance().properties.containsKey(key)) {
-                        throw new DuplicatePropertyException("Property in " + clazz.getName() + " with name " + key + " already exist.");
-                    }
-                    Object object;
-                    try {
-                        object = clazz.newInstance();
-                    } catch (InstantiationException e) {
-                        throw new InstantiationException("Is " + clazz.getName() + " abstract class? " + e.getMessage());
-                    } catch (IllegalAccessException e) {
-                        throw new IllegalAccessException("Is the constructor in " + clazz.getName() + " accessible? " + e.getMessage());
-                    }
-                    getInstance().properties.put(key, object);
-                }
+
+        getInstance().getProperties().put("applicationInitializer", initializer);
+        getInstance().getProperties().put("applicationContext", Application.getInstance().getContext());
+
+        for (Properties propertyFile : getInstance().propertyFiles) {
+            for (Map.Entry<Object, Object> property : propertyFile.entrySet()) {
+                getInstance().getProperties().put((String) property.getKey(), property.getValue());
             }
         }
 
-        for (Method method : methods) {
-            Annotation[] methodAnnotations = method.getDeclaredAnnotations();
-            for (Annotation annotation : methodAnnotations) {
-                if (annotation instanceof Property) {
-                    Property property = (Property) annotation;
-                    String key = property.value();
-                    boolean replaced = property.replaced();
-                    if (key == null || key.equals("")) {
-                        throw new PropertyException("Property name in " + method.getDeclaringClass() + ":" + method.getName() + "() should be not null or empty string.");
-                    }
-                    if (getInstance().properties.containsKey(key)) {
-                        if (!replaced) {
-                            throw new DuplicatePropertyException("Property in " + method.getDeclaringClass() + ":" + method.getName() + "() with name " + key + " already exist.");
-                        }
-                    }
-                    if (method.getParameterTypes().length > 0) {
-                        throw new PropertyException("Method should be not have any parameters.");
-                    }
-                    Object object;
-                    try {
-                        object = method.getDeclaringClass().newInstance();
-                    } catch (InstantiationException e) {
-                        throw new InstantiationException("Is " + method.getDeclaringClass() + ":" + method.getName() + "() abstract class? " + e.getMessage());
-                    } catch (IllegalAccessException e) {
-                        throw new IllegalAccessException("Is the constructor in " + method.getDeclaringClass() + " accessible? " + e.getMessage());
-                    }
-                    Object[] parameters = new Object[0];
-                    try {
-                        method.setAccessible(true);
-                        object = method.invoke(object, parameters);
-                    } catch (IllegalAccessException e) {
-                        throw new InstantiationException("Is " + method.getDeclaringClass() + ":" + method.getName() + "() abstract class? " + e.getMessage());
-                    } catch (InvocationTargetException e) {
-                        throw new IllegalAccessException("Is the method " + method.getDeclaringClass() + ":" +method.getName() + "() accessible or throwing exception? " + e.getMessage());
-                    }
-                    if (object == null) {
-                        throw new PropertyException("Method return value should be not null.");
-                    }
-                    getInstance().properties.put(key, object);
-                }
+        Set<Class> classes = PropertyUtils.processClassOrder(getInstance().classes);
+
+        try {
+            PropertyUtils.createClassProperties(getInstance().getProperties(), classes);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        for (Class aClass : classes) {
+            Set<Method> methods = PropertyUtils.processMethodOrder(aClass);
+            try {
+                PropertyUtils.createMethodProperties(getInstance().getProperties(), methods);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+            Set<Field> fields = PropertyUtils.processFieldOrder(aClass);
+            try {
+                PropertyUtils.createFieldProperties(getInstance().getProperties(), fields);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
             }
         }
-
-        for (Field field : fields) {
-            Annotation[] fieldAnnotations = field.getDeclaredAnnotations();
-            for (Annotation annotation : fieldAnnotations) {
-                if (annotation instanceof Property) {
-                    Property property = (Property) annotation;
-                    String key = property.value();
-                    boolean replaced = property.replaced();
-                    if (key == null || key.equals("")) {
-                        throw new PropertyException("Property name should be not null or empty string.");
-                    }
-                    if (getInstance().properties.containsKey(key)) {
-                        if (!replaced) {
-                            throw new DuplicatePropertyException("Property with name " + key + " already exist.");
-                        }
-                    }
-                    Object object;
-                    try {
-                        object = field.getDeclaringClass().newInstance();
-                    } catch (InstantiationException e) {
-                        throw new InstantiationException("Is it an abstract class? " + e.getMessage());
-                    } catch (IllegalAccessException e) {
-                        throw new IllegalAccessException("Is the field accessible? " + e.getMessage());
-                    }
-                    try {
-                        field.setAccessible(true);
-                        object = field.get(object);
-                    } catch (IllegalAccessException e) {
-                        throw new IllegalAccessException("Is the field accessible? " + e.getMessage());
-                    }
-                    if (object == null) {
-                        throw new PropertyException("Field value should be not null");
-                    }
-                    getInstance().properties.put(key, object);
-                }
-            }
-        }
-
-        injectProperties();
-
-	    for (Class clazz : components) {
-		    Annotation[] typeAnnotations = clazz.getAnnotations();
-		    for (Annotation annotation : typeAnnotations) {
-			    if (annotation instanceof Component) {
-				    Component component = (Component) annotation;
-				    String key = component.value().trim();
-				    if (key == null || key.equals("")) {
-					    throw new PropertyException("Property name in " + clazz.getName() + " should be not null or empty string.");
-				    }
-				    if (getInstance().properties.containsKey(key)) {
-					    throw new DuplicatePropertyException("Property in " + clazz.getName() + " with name " + key + " already exist.");
-				    }
-				    Object object;
-				    try {
-					    object = clazz.newInstance();
-				    } catch (InstantiationException e) {
-					    throw new InstantiationException("Is " + clazz.getName() + " abstract class? " + e.getMessage());
-				    } catch (IllegalAccessException e) {
-					    throw new IllegalAccessException("Is the constructor in " + clazz.getName() + " accessible? " + e.getMessage());
-				    }
-				    getInstance().properties.put(key, object);
-			    }
-		    }
-	    }
-        injectProperties();
-    }
-
-    protected static void injectProperties() throws PropertyException, IllegalAccessException {
-        for (Map.Entry<String, Object> entry : getInstance().properties.entrySet()) {
-            Object value = entry.getValue();
-            Class valueClass = value.getClass();
-            Field[] fields = valueClass.getFields();
-            for (Field field : fields) {
-                Annotation[] fieldAnnotations = field.getDeclaredAnnotations();
-                for (Annotation annotation : fieldAnnotations) {
-                    if (annotation instanceof Inject) {
-                        Inject inject = (Inject) annotation;
-                        String injectKey = inject.value();
-                        boolean isRequired = inject.required();
-                        if (injectKey == null || injectKey.equals("")) {
-                            throw new PropertyException("Property name in " + field.getDeclaringClass() + "." + field.getName() + " should be not null or empty string.");
-                        }
-                        if (!getInstance().properties.containsKey(injectKey)) {
-                            if (isRequired) {
-                                throw new PropertyException("Property in " + field.getDeclaringClass() + "." + field.getName() + " with name " + injectKey + " not found.");
-                            }
-                        }
-                        Object injectValue = getInstance().getProperty(injectKey);
-                        try {
-                            field.setAccessible(true);
-                            field.set(value, injectValue);
-                        } catch (IllegalAccessException e) {
-                            throw new IllegalAccessException("Is " + field.getDeclaringClass() + "." + field.getName() + " field accessible? " + e.getMessage());
-                        }
-                    }
-                }
-            }
+        try {
+            PropertyUtils.injectProperties(getInstance().getProperties());
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
         }
     }
 
@@ -363,7 +246,9 @@ public class Application {
     }
 
     public Map<String, Object> getProperties() {
-        return properties;
+        synchronized (this) {
+            return registry;
+        }
     }
 
     /**
@@ -388,11 +273,17 @@ public class Application {
 
         <T> T getProperty(String name, Class<T> requiredType) throws ClassCastException, PropertyNotFoundException;
 
+        void removeProperty(String key) throws PropertyNotFoundException;
+
         Map<String, Object> getProperties();
 
         void addLibrary(Library.Loader libraryLoader);
 
-        void configuration(String basePackage);
+        void addPropertyFiles(String... propertyFiles);
+
+        void addPropertyPackages(String basePackage);
+
+        void addPropertyClassses(Class... classes);
 
     }
 

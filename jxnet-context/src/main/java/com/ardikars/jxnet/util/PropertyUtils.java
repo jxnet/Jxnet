@@ -3,22 +3,25 @@ package com.ardikars.jxnet.util;
 
 import com.ardikars.jxnet.annotation.Component;
 import com.ardikars.jxnet.annotation.Configuration;
+import com.ardikars.jxnet.annotation.Inject;
 import com.ardikars.jxnet.annotation.Order;
 import com.ardikars.jxnet.annotation.Property;
-import com.ardikars.jxnet.exception.DuplicateOrderException;
-import com.ardikars.jxnet.exception.OrderException;
+import com.ardikars.jxnet.exception.DuplicatePropertyException;
+import com.ardikars.jxnet.exception.DuplicatePropertyOrderException;
+import com.ardikars.jxnet.exception.PropertyCreationException;
+import com.ardikars.jxnet.exception.PropertyOrderException;
 import com.ardikars.jxnet.exception.PropertyException;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -37,6 +40,7 @@ public class PropertyUtils {
 			resources = classLoader.getResources(path);
 		} catch (IOException e) {
 			LOGGER.warning(e.getMessage());
+			e.printStackTrace();
 		}
 		Set<File> dirs = new LinkedHashSet<>();
 		while (resources.hasMoreElements()) {
@@ -65,183 +69,269 @@ public class PropertyUtils {
 					classes.add(Class.forName(packageName + '.' + file.getName().substring(0, file.getName().length() - 6)));
 				} catch (ClassNotFoundException e) {
 					LOGGER.warning(e.getMessage());
+					e.printStackTrace();
 				}
 			}
 		}
 		return classes;
 	}
 
-	private static Order validateOrder(Annotation annotation) {
-		Order order = order = (Order) annotation;
-		if (order.value() <= 0) {
-			throw new OrderException("Order value should be greater then 0.");
+	private static <T> void processAnnotation(Map<Integer, T> orderedData, Set<T> sets, Annotation[] annotations, T data) {
+		Order order = null;
+		for (Annotation annotation : annotations) {
+			if (annotation instanceof Order) {
+				order = (Order) annotation;
+				int orderValue = order.value();
+				if (orderValue <= 0) {
+					throw new PropertyOrderException("Order value should be greater then 0.");
+				}
+				if (orderedData.containsKey(orderValue)) {
+					throw new DuplicatePropertyOrderException("Property with order number " + order.value() + " alredy exist.");
+				}
+			}
 		}
-		return order;
+		for (Annotation annotation : annotations) {
+			if (annotation instanceof Configuration) {
+				Configuration configuration = (Configuration) annotation;
+				String key = configuration.value().trim();
+				if (key == null || key.equals("")) {
+					throw new PropertyException("Property name should be not null or empty string.");
+				}
+				if (order != null) {
+					orderedData.put(order.value(), data);
+				} else {
+					sets.add(data);
+				}
+			} else if (annotation instanceof Property) {
+				Property property = (Property) annotation;
+				String key = property.value().trim();
+				if (key == null || key.equals("")) {
+					throw new PropertyException("Property name should be not null or empty string.");
+				}
+				if (order != null) {
+					orderedData.put(order.value(), data);
+				} else {
+					sets.add(data);
+				}
+			} else if (annotation instanceof Component) {
+				Component component = (Component) annotation;
+				String key = component.value().trim();
+				if (key == null || key.equals("")) {
+					throw new PropertyException("Property name should be not null or empty string.");
+				}
+				if (order != null) {
+					orderedData.put(order.value(), data);
+				} else {
+					sets.add(data);
+				}
+			}
+		}
 	}
 
-	public static Set<Class> processConfigurationOrder(Set<Class> classes) throws PropertyException {
+
+	public static Set<Method> processMethodOrder(Class aClass) {
+
+		Set<Method> configurationMethods = Collections.synchronizedSet(new HashSet<Method>());
+		Map<Integer, Method> configurationMethodsAscendingOrder = Collections.synchronizedMap(new TreeMap<Integer, Method>());
+
+		for (Method method : aClass.getMethods()) {
+			processAnnotation(configurationMethodsAscendingOrder, configurationMethods, method.getAnnotations(), method);
+		}
+		Set<Method> methods = Collections.synchronizedSet(new LinkedHashSet<Method>());
+		methods.addAll(configurationMethodsAscendingOrder.values());
+		methods.addAll(configurationMethods);
+		return methods;
+	}
+
+	public static Set<Field> processFieldOrder(Class aClass) {
+
+		Set<Field> configurationFields = Collections.synchronizedSet(new HashSet<Field>());
+		Map<Integer, Field> configurationFieldsAscendingOrder = Collections.synchronizedMap(new TreeMap<Integer, Field>());
+
+		for (Field field : aClass.getFields()) {
+			processAnnotation(configurationFieldsAscendingOrder, configurationFields, field.getAnnotations(), field);
+		}
+		Set<Field> fields = Collections.synchronizedSet(new LinkedHashSet<Field>());
+		fields.addAll(configurationFieldsAscendingOrder.values());
+		fields.addAll(configurationFields);
+		return fields;
+	}
+
+	public static Set<Class> processClassOrder(Set<Class> classes) throws PropertyException {
 		
-		Set<Class> classSet = Collections.synchronizedSet(new HashSet<Class>());
-		Map<Integer, Class> classAscendingOrder = Collections.synchronizedMap(new TreeMap<Integer, Class>());
-		
-		Iterator<Class> classIterator = classes.iterator();
-		while (classIterator.hasNext()) {
-			Class clazz = classIterator.next();
-			Annotation[] annotations = clazz.getDeclaredAnnotations();
-			Order order = null;
-			for (Annotation annotation : annotations) {
-				if (annotation instanceof Order) {
-					try {
-						order = validateOrder(annotation);
-						if (classAscendingOrder.containsKey(order.value())) {
-							throw new DuplicateOrderException("Property with order number " + order.value() + " alredy exist.");
-						}
-					} catch (OrderException e) {
-						throw e;
-					}
-				}
+		Set<Class> configuratioClass = Collections.synchronizedSet(new HashSet<Class>());
+		Map<Integer, Class> configurationClassAscendingOrder = Collections.synchronizedMap(new TreeMap<Integer, Class>());
+
+		for (Class aClass : classes) {
+			processAnnotation(configurationClassAscendingOrder, configuratioClass, aClass.getAnnotations(), aClass);
+		}
+		classes = Collections.synchronizedSet(new LinkedHashSet<Class>());
+		classes.addAll(configurationClassAscendingOrder.values());
+		classes.addAll(configuratioClass);
+		return classes;
+	}
+
+	public static void createClassProperties(Map<String, Object> registry, Set<Class> classes) throws IllegalAccessException {
+		for (Class clazz : classes) {
+			Annotation[] typeAnnotations = clazz.getAnnotations();
+			for (Annotation annotation : typeAnnotations) {
 				if (annotation instanceof Configuration) {
 					Configuration configuration = (Configuration) annotation;
 					String key = configuration.value().trim();
 					if (key == null || key.equals("")) {
-						throw new PropertyException("Property name should be not null or empty string.");
+						throw new PropertyCreationException("Property name in " + clazz.getName() + " should be not null or empty string.");
 					}
-					if (order != null) {
-						classAscendingOrder.put(order.value(), clazz);
-					} else {
-						classSet.add(clazz);
+					if (registry.containsKey(key)) {
+						throw new DuplicatePropertyException("Property in " + clazz.getName() + " with name " + key + " already exist.");
 					}
-				}
-			}
-		}
-		Set<Class> result = Collections.synchronizedSet(Collections.synchronizedSet(new LinkedHashSet<Class>()));
-		result.addAll(classAscendingOrder.values());
-		result.addAll(classSet);
-		return result;
-	}
-
-	public static Set<Method> processMethodOrder(Set<Method> methods) {
-
-		Set<Method> methodSet = Collections.synchronizedSet(new HashSet<Method>());
-		Map<Integer, Method> methodAscendingOrder = Collections.synchronizedMap(new TreeMap<Integer, Method>());
-
-		Iterator<Method> methodIterator = methods.iterator();
-		while (methodIterator.hasNext()) {
-			Method method = methodIterator.next();
-			Annotation[] annotations = method.getDeclaredAnnotations();
-			Order order = null;
-			for (Annotation annotation : annotations) {
-				if (annotation instanceof Order) {
+					Object object;
 					try {
-						order = validateOrder(annotation);
-						if (methodAscendingOrder.containsKey(order.value())) {
-							throw new DuplicateOrderException("Property with order number " + order.value() + " alredy exist.");
-						}
-					} catch (OrderException e) {
-						throw e;
+						object = clazz.newInstance();
+					} catch (InstantiationException e) {
+						throw new PropertyCreationException("Error creating property with name " + key + " in class " + clazz.getName() + ".");
+					} catch (IllegalAccessException e) {
+						throw new PropertyCreationException("Error creating property with name " + key + " in class " + clazz.getName() + ".");
 					}
-				}
-				if (annotation instanceof Property) {
-					Property property = (Property) annotation;
-					String key = property.value().trim();
-					if (key == null || key.equals("")) {
-						throw new PropertyException("Property name should be not null or empty string.");
-					}
-					if (order != null) {
-						methodAscendingOrder.put(order.value(), method);
-					} else {
-						methodSet.add(method);
-					}
-				}
-			}
-		}
-
-		Set<Method> result = Collections.synchronizedSet(new LinkedHashSet<Method>());
-		result.addAll(methodAscendingOrder.values());
-		result.addAll(methodSet);
-		return result;
-	}
-
-	public static Set<Field> processFieldOrder(Set<Field> fields) {
-
-		Set<Field> fieldSet = Collections.synchronizedSet(new HashSet<Field>());
-		Map<Integer, Field> fieldAscendingOrder = Collections.synchronizedMap(new TreeMap<Integer, Field>());
-
-		Iterator<Field> fieldIterator = fields.iterator();
-		while (fieldIterator.hasNext()) {
-			Field field = fieldIterator.next();
-			Annotation[] annotations = field.getDeclaredAnnotations();
-			Order order = null;
-			for (Annotation annotation : annotations) {
-				if (annotation instanceof Order) {
-					try {
-						order = validateOrder(annotation);
-						if (fieldAscendingOrder.containsKey(order.value())) {
-							throw new DuplicateOrderException("Property with order number " + order.value() + " alredy exist.");
-						}
-					} catch (OrderException e) {
-						throw e;
-					}
-				}
-				if (annotation instanceof Property) {
-					Property property = (Property) annotation;
-					String key = property.value().trim();
-					if (key == null || key.equals("")) {
-						throw new PropertyException("Property name should be not null or empty string.");
-					}
-					if (order != null) {
-						fieldAscendingOrder.put(order.value(), field);
-					} else {
-						fieldSet.add(field);
-					}
-				}
-			}
-		}
-		Set<Field> result = Collections.synchronizedSet(new LinkedHashSet<Field>());
-		result.addAll(fieldAscendingOrder.values());
-		result.addAll(fieldSet);
-		return result;
-	}
-
-	public static Set<Class> processComponentOrder(Set<Class> classes) throws PropertyException {
-
-		Set<Class> classSet = Collections.synchronizedSet(new HashSet<Class>());
-		Map<Integer, Class> classAscendingOrder = Collections.synchronizedMap(new TreeMap<Integer, Class>());
-
-		Iterator<Class> classIterator = classes.iterator();
-		while (classIterator.hasNext()) {
-			Class clazz = classIterator.next();
-			Annotation[] annotations = clazz.getDeclaredAnnotations();
-			Order order = null;
-			for (Annotation annotation : annotations) {
-				if (annotation instanceof Order) {
-					try {
-						order = validateOrder(annotation);
-						if (classAscendingOrder.containsKey(order.value())) {
-							throw new DuplicateOrderException("Property with order number " + order.value() + " alredy exist.");
-						}
-					} catch (OrderException e) {
-						throw e;
-					}
-				}
-				if (annotation instanceof Component) {
+					registry.put(key, object);
+				} else if (annotation instanceof Component) {
 					Component component = (Component) annotation;
 					String key = component.value().trim();
 					if (key == null || key.equals("")) {
-						throw new PropertyException("Property name should be not null or empty string.");
+						throw new PropertyCreationException("Property name in " + clazz.getName() + " should be not null or empty string.");
 					}
-					if (order != null) {
-						classAscendingOrder.put(order.value(), clazz);
-					} else {
-						classSet.add(clazz);
+					if (registry.containsKey(key)) {
+						throw new DuplicatePropertyException("Property in " + clazz.getName() + " with name " + key + " already exist.");
+					}
+					Object object;
+					try {
+						object = clazz.newInstance();
+					} catch (InstantiationException e) {
+						throw new PropertyCreationException("Error creating property with name " + key + " in class " + clazz.getName() + ".");
+					} catch (IllegalAccessException e) {
+						throw new PropertyCreationException("Error creating property with name " + key + " in class " + clazz.getName() + ".");
+					}
+					registry.put(key, object);
+				}
+			}
+		}
+	}
+
+	public static void createMethodProperties(Map<String, Object> registry, Set<Method> methods) throws IllegalAccessException {
+		for (Method method : methods) {
+			Annotation[] methodAnnotations = method.getAnnotations();
+			for (Annotation annotation : methodAnnotations) {
+				if (annotation instanceof Property) {
+					Property property = (Property) annotation;
+					String key = property.value();
+					boolean replaced = property.replaced();
+					if (key == null || key.equals("")) {
+						throw new PropertyCreationException("Property name in " + method.getAnnotations() + ":" + method.getName() + "() should be not null or empty string.");
+					}
+					if (registry.containsKey(key)) {
+						if (!replaced) {
+							throw new DuplicatePropertyException("Property in " + method.getAnnotations() + ":" + method.getName() + "() with name " + key + " already exist.");
+						}
+					}
+					if (method.getParameterTypes().length > 0) {
+						throw new PropertyCreationException("Method should be not have any parameters.");
+					}
+					Object object;
+					try {
+						object = method.getDeclaringClass().newInstance();
+					} catch (InstantiationException e) {
+						throw new PropertyCreationException("Error creating property with name " + key + " in method " + method.getDeclaringClass() + ":" +method.getName() + "()");
+					} catch (IllegalAccessException e) {
+						throw new PropertyCreationException("Error creating property with name " + key + " in method " + method.getDeclaringClass() + ":" +method.getName() + "()");
+					}
+					Object[] parameters = new Object[0];
+					try {
+						method.setAccessible(true);
+						object = method.invoke(object, parameters);
+					} catch (IllegalAccessException e) {
+						throw new PropertyCreationException("Error creating property with name " + key + " in method " + method.getDeclaringClass() + ":" +method.getName() + "()");
+					} catch (InvocationTargetException e) {
+						throw new PropertyCreationException("Error creating property with name " + key + " in method " + method.getDeclaringClass() + ":" +method.getName() + "()");
+					}
+					if (object == null) {
+						throw new PropertyCreationException("Method return value should be not null.");
+					}
+					registry.put(key, object);
+				}
+			}
+		}
+	}
+
+	public static void createFieldProperties(Map<String, Object> registry, Set<Field> fields) throws IllegalAccessException {
+		for (Field field : fields) {
+			Annotation[] fieldAnnotations = field.getDeclaredAnnotations();
+			for (Annotation annotation : fieldAnnotations) {
+				if (annotation instanceof Property) {
+					Property property = (Property) annotation;
+					String key = property.value();
+					boolean replaced = property.replaced();
+					if (key == null || key.equals("")) {
+						throw new PropertyCreationException("Property name in " + field.getDeclaringClass() + ":" + field.getName() + " should be not null or empty string.");
+					}
+					if (registry.containsKey(key)) {
+						if (!replaced) {
+							throw new DuplicatePropertyException("Property with name " + key + " in field " + field.getDeclaringClass() + "." + field.getName() + " already exist.");
+						}
+					}
+					Object object;
+					try {
+						object = field.getDeclaringClass().newInstance();
+					} catch (InstantiationException e) {
+						throw new PropertyCreationException("Error creating property with name " + key + " in field " + field.getDeclaringClass() + ":" + field.getName() + "()");
+					} catch (IllegalAccessException e) {
+						throw new PropertyCreationException("Error creating property with name " + key + " in field " + field.getDeclaringClass() + ":" + field.getName() + "()");
+					}
+					try {
+						field.setAccessible(true);
+						object = field.get(object);
+					} catch (IllegalAccessException e) {
+						throw new PropertyCreationException("Error creating property with name " + key + " in field " + field.getDeclaringClass() + ":" + field.getName() + "()");
+					}
+					if (object == null) {
+						throw new PropertyException("Field value should be not null");
+					}
+					registry.put(key, object);
+				}
+			}
+		}
+	}
+
+	public static void injectProperties(Map<String, Object> registry) throws PropertyException, IllegalAccessException {
+		for (Map.Entry<String, Object> entry : registry.entrySet()) {
+			Object value = entry.getValue();
+			Class valueClass = value.getClass();
+			Field[] fields = valueClass.getFields();
+			for (Field field : fields) {
+				Annotation[] fieldAnnotations = field.getDeclaredAnnotations();
+				for (Annotation annotation : fieldAnnotations) {
+					if (annotation instanceof Inject) {
+						Inject inject = (Inject) annotation;
+						String injectKey = inject.value();
+						boolean isRequired = inject.required();
+						if (injectKey == null || injectKey.equals("")) {
+							throw new PropertyException("Property name in " + field.getDeclaringClass() + "." + field.getName() + " should be not null or empty string.");
+						}
+						if (!registry.containsKey(injectKey)) {
+							if (isRequired) {
+								throw new PropertyException("Property in " + field.getDeclaringClass() + "." + field.getName() + " with name " + injectKey + " not found.");
+							}
+						}
+						Object injectValue = registry.get(injectKey);
+						try {
+							field.setAccessible(true);
+							field.set(value, injectValue);
+						} catch (IllegalAccessException e) {
+							throw new IllegalAccessException("Is " + field.getDeclaringClass() + "." + field.getName() + " field accessible? " + e.getMessage());
+						}
 					}
 				}
 			}
 		}
-		Set<Class> result = Collections.synchronizedSet(Collections.synchronizedSet(new LinkedHashSet<Class>()));
-		result.addAll(classAscendingOrder.values());
-		result.addAll(classSet);
-		return result;
 	}
+
 
 }

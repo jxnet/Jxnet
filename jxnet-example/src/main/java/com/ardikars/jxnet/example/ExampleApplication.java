@@ -17,42 +17,30 @@ package com.ardikars.jxnet.example; /**
 
 import com.ardikars.jxnet.Application;
 import com.ardikars.jxnet.annotation.Component;
-import com.ardikars.jxnet.annotation.Configuration;
 import com.ardikars.jxnet.annotation.Inject;
 import com.ardikars.jxnet.annotation.Order;
+import com.ardikars.jxnet.example.configuration.ExampleApplicationInitializer;
 
-//@Order(2)
-@Configuration("exampleApplication")
+@Order(2)
+@Component("exampleApplication")
 public class ExampleApplication {
 
-    @Inject("libraryVersion")
-    public String libVersion;
-
-    @Inject("errbuf")
-    public StringBuilder errbuf;
-
-//    @Inject("source")
-//    public String source;
+    @Inject("applicationContext") public Application.Context context;
+    @Inject("errbuf")             public StringBuilder errbuf;
+    @Inject("snaplen")            public int snaplen;
+    @Inject("promisc")            public int promisc;
+    @Inject("timeout")            public int timeout;
 
     public ExampleApplication() {
 
     }
 
+
+
+
     public static void main(final String[] args) {
-        Application.run("Example Application", "0.0.1", new ExampleApplicationInitializer());
-        Application.Context context = Application.getApplicationContext();
-        ExampleApplication exampleApplication = context.getProperty("exampleApplication", ExampleApplication.class);
-        System.out.println(exampleApplication);
-
-    }
-
-    @Override
-    public String toString() {
-        return "ExampleApplication{" +
-                "libVersion='" + libVersion + '\'' +
-                ", errbuf=" + errbuf +
-//                ", source='" + source + '\'' +
-                '}';
+        Application.run("Example Application", "0.0.1", ExampleApplicationInitializer.class);
+        ExampleApplication exampleApplication = Application.getApplicationContext().getProperty("exampleApplication", ExampleApplication.class);
     }
 
 }

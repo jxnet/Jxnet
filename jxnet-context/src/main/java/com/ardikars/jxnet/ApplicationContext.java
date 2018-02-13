@@ -19,7 +19,6 @@ package com.ardikars.jxnet;
 
 import com.ardikars.jxnet.exception.PropertyNotFoundException;
 
-import javax.xml.bind.PropertyException;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -58,6 +57,11 @@ public class ApplicationContext implements Application.Context {
 	}
 
 	@Override
+	public void removeProperty(String key) throws PropertyNotFoundException {
+		Application.getInstance().getProperties().remove(key);
+	}
+
+	@Override
 	public Map<String, Object> getProperties() {
 		return Application.getInstance().getProperties();
 	}
@@ -67,20 +71,19 @@ public class ApplicationContext implements Application.Context {
         Application.getInstance().addLibrary(libraryLoader);
     }
 
-    @Override
-    public void configuration(String basePackage) {
-	    try {
-		    Application.getInstance().configure(basePackage);
-	    } catch (PropertyException e) {
-	    	logger.warning(e.getMessage());
-		    e.printStackTrace();
-	    } catch (InstantiationException e) {
-	    	logger.warning(e.getMessage());
-		    e.printStackTrace();
-	    } catch (IllegalAccessException e) {
-	    	logger.warning(e.getMessage());
-		    e.printStackTrace();
-	    }
-    }
+	@Override
+	public void addPropertyFiles(String... propertyFiles) {
+		Application.getInstance().addPropertyFiles(propertyFiles);
+	}
+
+	@Override
+	public void addPropertyPackages(String basePackage) {
+		Application.getInstance().addPropertyPackages(basePackage);
+	}
+
+	@Override
+	public void addPropertyClassses(Class... classes) {
+		Application.getInstance().addPropertyClasses(classes);
+	}
 
 }
