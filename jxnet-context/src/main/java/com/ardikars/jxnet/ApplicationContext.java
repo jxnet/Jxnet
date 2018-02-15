@@ -17,16 +17,18 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.util.Scanners;
+import com.ardikars.jxnet.exception.PropertyNotFoundException;
 
-import java.util.List;
-import java.util.Set;
+import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.5
  */
 public class ApplicationContext implements Application.Context {
+
+	private final Logger logger = Logger.getLogger(ApplicationContext.class.getName());
 
     @Override
     public String getApplicationName() {
@@ -39,19 +41,49 @@ public class ApplicationContext implements Application.Context {
     }
 
     @Override
-    public Object getProperty(final String key) {
+    public Object getProperty(final String key) throws PropertyNotFoundException{
         return Application.getInstance().getProperty(key);
     }
 
-    @Override
+	@Override
+	public <T> T getProperty(String name, Class<T> requiredType) throws ClassCastException, PropertyNotFoundException {
+		Object object = Application.getInstance().getProperty(name);
+		if (requiredType != null) {
+			if (object.getClass() != requiredType) {
+				throw new ClassCastException(object.getClass().getName() + " can't cast to " + requiredType.getName() + ".");
+			}
+		}
+    	return (T) object;
+	}
+
+	@Override
+	public void removeProperty(String key) throws PropertyNotFoundException {
+		Application.getInstance().getProperties().remove(key);
+	}
+
+	@Override
+	public Map<String, Object> getProperties() {
+		return Application.getInstance().getProperties();
+	}
+
+	@Override
     public void addLibrary(final Library.Loader libraryLoader) {
         Application.getInstance().addLibrary(libraryLoader);
     }
 
-    @Override
-    public void configuration(String basePackage) {
-        Set<Class> classes = Scanners.getClasses(basePackage);
-        Application.getInstance().addConfigrationClass(classes);
-    }
+	@Override
+	public void addPropertyFiles(String... propertyFiles) {
+		Application.getInstance().addPropertyFiles(propertyFiles);
+	}
+
+	@Override
+	public void addPropertyPackages(String basePackage) {
+		Application.getInstance().addPropertyPackages(basePackage);
+	}
+
+	@Override
+	public void addPropertyClassses(Class... classes) {
+		Application.getInstance().addPropertyClasses(classes);
+	}
 
 }

@@ -21,7 +21,7 @@ package com.ardikars.jxnet;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
-public final class Pcap {
+public final class Pcap implements Cloneable {
 
 	public static final Inet4Address PCAP_NETMASK_UNKNOWN = Inet4Address.valueOf(0xffffffff);
 
@@ -95,6 +95,13 @@ public final class Pcap {
 	@Override
 	public int hashCode() {
 		return (int) (this.getAddress() ^ (this.getAddress() >>> 32));
+	}
+
+	@Override
+	protected Object clone() {
+		Pcap pcap = new Pcap();
+		pcap.address = this.address;
+		return pcap;
 	}
 
 	@Override

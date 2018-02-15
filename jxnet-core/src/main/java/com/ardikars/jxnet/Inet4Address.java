@@ -25,7 +25,7 @@ import java.util.Arrays;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
-public final class Inet4Address extends InetAddress {
+public final class Inet4Address extends InetAddress implements Cloneable {
 
 	/**
 	 * IPv4 Address (0.0.0.0).
@@ -42,7 +42,9 @@ public final class Inet4Address extends InetAddress {
 	 */
 	public static final int IPV4_ADDRESS_LENGTH = 4;
 	
-	private byte[] address = new byte[Inet4Address.IPV4_ADDRESS_LENGTH];
+	{
+		address = new byte[Inet4Address.IPV4_ADDRESS_LENGTH];
+	}
 
 	private Inet4Address() {
 		super();
@@ -141,6 +143,13 @@ public final class Inet4Address extends InetAddress {
 	@Override
 	public int hashCode() {
 		return Arrays.hashCode(this.address);
+	}
+
+	@Override
+	protected Object clone() {
+		Inet4Address inet4Address = new Inet4Address();
+		inet4Address.address = this.address;
+		return inet4Address;
 	}
 
 	@Override

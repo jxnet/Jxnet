@@ -28,7 +28,7 @@ import java.util.List;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
-public final class Inet6Address extends InetAddress {
+public final class Inet6Address extends InetAddress implements Cloneable {
 
 	/**
 	 * Zero IPv6 Address.
@@ -50,10 +50,8 @@ public final class Inet6Address extends InetAddress {
 	 */
 	public static final int IPV6_ADDRESS_LENGTH = 16;
 	
-	private byte[] address;
-
 	{
-		this.address = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
+		address = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
 	}
 
 	private Inet6Address() {
@@ -210,6 +208,13 @@ public final class Inet6Address extends InetAddress {
 	@Override
 	public int hashCode() {
 		return Arrays.hashCode(this.address);
+	}
+
+	@Override
+	protected Object clone() {
+		Inet6Address inet6Address = new Inet6Address();
+		inet6Address.address = this.address;
+		return inet6Address;
 	}
 
 	/**

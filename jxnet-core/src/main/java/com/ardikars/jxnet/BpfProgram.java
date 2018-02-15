@@ -21,7 +21,7 @@ package com.ardikars.jxnet;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
-public final class BpfProgram {
+public final class BpfProgram implements Cloneable {
 
 	/**
 	 * Bpf compile mode
@@ -91,6 +91,13 @@ public final class BpfProgram {
 	@Override
 	public int hashCode() {
 		return (int) (this.getAddress() ^ (this.getAddress() >>> 32));
+	}
+
+	@Override
+	protected Object clone() {
+		BpfProgram bpfProgram = new BpfProgram();
+		bpfProgram.address = this.address;
+		return bpfProgram;
 	}
 
 	@Override

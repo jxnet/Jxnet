@@ -23,6 +23,8 @@ package com.ardikars.jxnet;
  */
 public abstract class InetAddress {
 
+	protected byte[] address;
+
 	public abstract byte[] toBytes();
 
 	/**

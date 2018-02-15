@@ -21,7 +21,7 @@ package com.ardikars.jxnet;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
-public final class PcapStat {
+public final class PcapStat implements Cloneable {
 
 	private long ps_recv;
 	
@@ -79,6 +79,15 @@ public final class PcapStat {
 		result = 31 * result + (int) (this.ps_drop ^ (this.ps_drop >>> 32));
 		result = 31 * result + (int) (this.ps_ifdrop ^ (this.ps_ifdrop >>> 32));
 		return result;
+	}
+
+	@Override
+	protected Object clone() {
+		PcapStat pcapStat = new PcapStat();
+		pcapStat.ps_recv = this.ps_recv;
+		pcapStat.ps_drop = this.ps_drop;
+		pcapStat.ps_ifdrop = this.ps_ifdrop;
+		return pcapStat;
 	}
 
 	@Override

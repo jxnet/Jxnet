@@ -18,13 +18,14 @@
 package com.ardikars.jxnet;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
-public final class PcapIf {
+public final class PcapIf implements Cloneable {
 
 	private volatile String name;
 	
@@ -67,7 +68,8 @@ public final class PcapIf {
 	 * @return interface addresses.
 	 */
 	public List<PcapAddr> getAddresses() {
-		return this.addresses;
+		List<PcapAddr> addrs = Collections.unmodifiableList(this.addresses);
+		return addresses;
 	}
 
 	@Override
@@ -100,6 +102,16 @@ public final class PcapIf {
 		result = 31 * result + this.getAddresses().hashCode();
 		result = 31 * result + this.getFlags();
 		return result;
+	}
+
+	@Override
+	protected Object clone() {
+		PcapIf pcapIf = new PcapIf();
+		pcapIf.name = this.name;
+		pcapIf.addresses = this.addresses;
+		pcapIf.description = this.description;
+		pcapIf.flags = this.flags;
+		return pcapIf;
 	}
 
 	@Override

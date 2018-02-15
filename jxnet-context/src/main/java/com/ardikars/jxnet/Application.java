@@ -17,23 +17,24 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.annotation.Inject;
-import com.ardikars.jxnet.annotation.Property;
+import com.ardikars.jxnet.exception.PropertyNotFoundException;
 import com.ardikars.jxnet.util.Platforms;
+import com.ardikars.jxnet.util.PropertyUtils;
 
 import java.io.File;
-import java.lang.annotation.Annotation;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.logging.Logger;
 
 /**
  * @author Ardika Rommy Sanjaya
@@ -41,17 +42,21 @@ import java.util.WeakHashMap;
  */
 public class Application {
 
-    private List<Library.Loader> libraryLoaders;
+    private static final Logger LOGGER = Logger.getLogger(Application.class.getName());
+
     private boolean loaded;
     private boolean developmentMode;
 
-    private static Application instance;
+    private static final Application instance = new Application();
 
     private String applicationName;
     private String applicationVersion;
-    private Map<String, Object> properties;
-    private Set<Class> classes;
     private Context context;
+
+    private final List<Library.Loader> libraryLoaders = new ArrayList<>();
+    private final Map<String, Object> registry = Collections.synchronizedMap(new WeakHashMap<String, Object>());
+    private final List<Properties> propertyFiles = new ArrayList<>();
+    private final Set<Class> classes = Collections.synchronizedSet(new HashSet<Class>());
 
     protected boolean isLoaded() {
         return this.loaded;
@@ -67,18 +72,6 @@ public class Application {
 
     protected static Application getInstance() {
         synchronized (Application.class) {
-            if (instance == null) {
-                instance = new Application();
-                if (instance.libraryLoaders == null) {
-                    instance.libraryLoaders = new ArrayList<Library.Loader>();
-                }
-                if (instance.properties == null) {
-                    instance.properties = Collections.synchronizedMap(new WeakHashMap<String, Object>());
-                }
-                if (instance.classes == null) {
-                    instance.classes = new HashSet<>();
-                }
-            }
             return instance;
         }
     }
@@ -87,32 +80,64 @@ public class Application {
         this.libraryLoaders.add(libraryLoader);
     }
 
-    protected void addProperty(final String key, final Object value) {
-        this.properties.put(key, value);
+    protected Object getProperty(final String key) throws PropertyNotFoundException{
+        if (this.getProperties().get(key) == null) {
+            throw new PropertyNotFoundException("Property with name " + key + " not found.");
+        }
+        return this.getProperties().get(key);
     }
 
-    protected Object getProperty(final String key) {
-        return this.properties.get(key);
+    protected void addPropertyPackages(String basePackage) {
+        Set<Class> classes = PropertyUtils.getClasses(basePackage);
+        getInstance().classes.addAll(classes);
     }
 
-    protected void addConfigrationClass(Set<Class> classes) {
-        this.classes.addAll(classes);
+    protected void addPropertyClasses(Class... classes) {
+        for (Class aClass : classes) {
+            getInstance().classes.add(aClass);
+        }
+    }
+
+    protected void addPropertyFiles(String... propertyFiles) {
+        final String classpath = "classpath:";
+        for (String propertyFile : propertyFiles) {
+            if (propertyFile.startsWith(classpath)) {
+                propertyFile = propertyFile.substring(classpath.length(), propertyFile.length());
+                InputStream stream = ClassLoader.getSystemResourceAsStream(propertyFile);
+                Properties properties = new Properties();
+                try {
+                    properties.load(stream);
+                    getInstance().propertyFiles.add(properties);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     /**
      * Used for bootstraping Jxnet.
      * @param applicationName application name.
      * @param applicationVersion application version.
-     * @param initializer initializer.
+     * @param initializerClass initializer class.
      * @throws UnsatisfiedLinkError UnsatisfiedLinkError.
      */
     public static void run(final String applicationName, final String applicationVersion,
-                           final ApplicationInitializer initializer) {
+                           Class initializerClass) {
+
         getInstance().applicationName = applicationName;
         getInstance().applicationVersion = applicationVersion;
         getInstance().context = new ApplicationContext();
 
-        initializer.initialize(getInstance().getContext());
+        ApplicationInitializer initializer = null;
+        try {
+            initializer = (ApplicationInitializer) initializerClass.newInstance();
+            initializer.initialize(getInstance().context);
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
 
         if (Platforms.isWindows()) {
             String paths = System.getProperty("java.library.path");
@@ -133,12 +158,14 @@ public class Application {
                 try {
                     sysPathsField = ClassLoader.class.getDeclaredField("sys_paths");
                 } catch (NoSuchFieldException e) {
+                    LOGGER.warning(e.getMessage());
                     throw new UnsatisfiedLinkError(e.getMessage());
                 }
                 sysPathsField.setAccessible(true);
                 try {
                     sysPathsField.set(null, null);
                 } catch (IllegalAccessException e) {
+                    LOGGER.warning(e.getMessage());
                     throw new UnsatisfiedLinkError(e.getMessage());
                 }
             }
@@ -165,114 +192,45 @@ public class Application {
             }
         }
 
+        if (getInstance().classes == null || getInstance().classes.size() <= 0) {
+            getInstance().addPropertyPackages(initializerClass.getPackage().toString());
+        }
+
+        getInstance().getProperties().put("applicationInitializer", initializer);
+        getInstance().getProperties().put("applicationContext", Application.getInstance().getContext());
+
+        for (Properties propertyFile : getInstance().propertyFiles) {
+            for (Map.Entry<Object, Object> property : propertyFile.entrySet()) {
+                getInstance().getProperties().put((String) property.getKey(), property.getValue());
+            }
+        }
+
+        Set<Class> classes = PropertyUtils.processClassOrder(getInstance().classes);
+
         try {
-            initializeProperties(getInstance().classes);
-            injectProperties();
+            PropertyUtils.createClassProperties(getInstance().getProperties(), classes);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
-        } catch (InstantiationException e) {
+        }
+        for (Class aClass : classes) {
+            Set<Method> methods = PropertyUtils.processMethodOrder(aClass);
+            try {
+                PropertyUtils.createMethodProperties(getInstance().getProperties(), methods);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+            Set<Field> fields = PropertyUtils.processFieldOrder(aClass);
+            try {
+                PropertyUtils.createFieldProperties(getInstance().getProperties(), fields);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            PropertyUtils.injectProperties(getInstance().getProperties());
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
         }
-    }
-
-    private static void initializeProperties(Set<Class> classes) throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        for (Class clazz : classes) {
-
-            Annotation[] classAnnotations = clazz.getAnnotations();
-            for (Annotation annotation : classAnnotations) {
-                if (annotation instanceof Property) {
-                    Property property = (Property) annotation;
-                    Object object = clazz.newInstance();
-                    String key = property.value().trim();
-                    if (key == null || key.equals("")) {
-                        throw new IllegalAccessException("Property name should be not empty or null.");
-                    }
-                    if (getInstance().properties.containsKey(key)) {
-                        throw new IllegalAccessException("Property with name " + key + " is already exist.");
-                    } else {
-                        getInstance().addProperty(key, object);
-                    }
-                }
-            }
-
-            // Method
-            Method[] methods = clazz.getMethods();
-            for (Method method : methods) {
-                Annotation[] annotations = method.getDeclaredAnnotations();
-                for (Annotation annotation : annotations) {
-                    if (annotation instanceof Property) {
-                        Property property = (Property) annotation;
-                        Object object = clazz.newInstance();
-                        Object[] objects = new Object[0];
-                        object = method.invoke(object, objects);
-                        if (object == null) {
-                            throw new NullPointerException("Property should be not null.");
-                        }
-                        String key = property.value();
-                        if (key == null || key.equals("")) {
-                            throw new IllegalAccessException("Property name should be not empty or null.");
-                        }
-                        if (getInstance().properties.containsKey(key)) {
-                            throw new IllegalAccessException("Property with name " + key + " is already exist.");
-                        } else {
-                            getInstance().addProperty(key, object);
-                        }
-                    }
-                }
-            }
-
-            // Field
-            Field[] fields = clazz.getFields();
-            for (Field field : fields) {
-                field.setAccessible(true);
-                Annotation[] annotations = field.getDeclaredAnnotations();
-                for (Annotation annotation : annotations) {
-                    if (annotation instanceof Property) {
-                        Property property = (Property) annotation;
-                        Object object = clazz.newInstance();
-                        object = field.get(object);
-                        if (object == null) {
-                            throw new NullPointerException("Property should be not null.");
-                        }
-                        String key = property.value().trim();
-                        if (key == null || key.equals("")) {
-                            throw new IllegalAccessException("Property name should be not empty or null.");
-                        }
-                        if (getInstance().properties.containsKey(key)) {
-                            throw new IllegalAccessException("Property with name " + key + " is already exist.");
-                        } else {
-                            getInstance().addProperty(key, object);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private static void injectProperties() throws IllegalAccessException {
-        for (Map.Entry<String, Object> entry : getInstance().properties.entrySet()) {
-            Object value = entry.getValue();
-            Class clazz = value.getClass();
-            Field[] fields = clazz.getFields();
-            for (Field field : fields) {
-                field.setAccessible(true);
-                Annotation[] annotations = field.getDeclaredAnnotations();
-                for (Annotation annotation : annotations) {
-                    if (annotation instanceof Inject) {
-                        Inject inject = (Inject) annotation;
-                        String injectorKey = inject.value().trim();
-                        if (injectorKey == null || injectorKey.equals("")) {
-                            throw new IllegalAccessException("Property name should be not empty or null.");
-                        }
-                        Object injectorValue = getInstance().getContext().getProperty(injectorKey);
-                        field.set(value, injectorValue);
-                    }
-                }
-            }
-        }
-
     }
 
     protected String getApplicationName() {
@@ -287,9 +245,15 @@ public class Application {
         return this.context;
     }
 
+    public Map<String, Object> getProperties() {
+        synchronized (this) {
+            return registry;
+        }
+    }
+
     /**
      * Get application context.
-      * @return application context.
+     * @return application context.
      */
     public static Application.Context getApplicationContext() {
         final Application.Context context = getInstance().getContext();
@@ -305,11 +269,21 @@ public class Application {
 
         String getApplicationVersion();
 
-        Object getProperty(String key);
+        Object getProperty(String key) throws PropertyNotFoundException;
+
+        <T> T getProperty(String name, Class<T> requiredType) throws ClassCastException, PropertyNotFoundException;
+
+        void removeProperty(String key) throws PropertyNotFoundException;
+
+        Map<String, Object> getProperties();
 
         void addLibrary(Library.Loader libraryLoader);
 
-        void configuration(String basePackage);
+        void addPropertyFiles(String... propertyFiles);
+
+        void addPropertyPackages(String basePackage);
+
+        void addPropertyClassses(Class... classes);
 
     }
 

@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
-public final class MacAddress {
+public final class MacAddress implements Cloneable {
 
 	/**
 	 * MAC Address Length.
@@ -56,11 +56,15 @@ public final class MacAddress {
 	public static final MacAddress IPV4_MULTICAST_MASK = valueOf("ff:ff:ff:80:00:00");
 	
 	private byte[] address = new byte[MAC_ADDRESS_LENGTH];
+
+	private MacAddress() {
+
+	}
 	
 	private MacAddress(final byte[] address) {
 		Validate.nullPointer(address);
 		Validate.illegalArgument(address.length == MAC_ADDRESS_LENGTH);
-		this.address = Arrays.copyOf(address, MacAddress.MAC_ADDRESS_LENGTH);
+		System.arraycopy(address, 0, this.address, 0, address.length);
 	}
 
 	/**
@@ -197,6 +201,13 @@ public final class MacAddress {
 	@Override
 	public int hashCode() {
 		return Arrays.hashCode(this.address);
+	}
+
+	@Override
+	protected Object clone() {
+		MacAddress macAddress = new MacAddress();
+		macAddress.address = this.address;
+		return macAddress;
 	}
 
 	@Override
