@@ -25,7 +25,7 @@ import java.util.Arrays;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
-public final class SockAddr {
+public final class SockAddr implements Cloneable {
 
     public enum Family {
 
@@ -131,6 +131,14 @@ public final class SockAddr {
         int result = (int) this.sa_family;
         result = 31 * result + Arrays.hashCode(this.data);
         return result;
+    }
+
+    @Override
+    protected Object clone() {
+        SockAddr sockAddr = new SockAddr();
+        sockAddr.data = this.data;
+        sockAddr.sa_family = this.sa_family;
+        return sockAddr;
     }
 
     @Override

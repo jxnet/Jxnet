@@ -4,3 +4,7 @@
  */
 
 description = "Common module for Jxnet."
+
+dependencies {
+    testCompile "junit:junit:${JUNIT_VERSION}"
+}

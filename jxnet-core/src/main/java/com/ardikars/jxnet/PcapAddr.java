@@ -21,7 +21,7 @@ package com.ardikars.jxnet;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
-public final class PcapAddr {
+public final class PcapAddr implements Cloneable {
 	
 	private volatile SockAddr addr;
 	
@@ -40,7 +40,7 @@ public final class PcapAddr {
 	 * @return interface address.
 	 */
 	public SockAddr getAddr() {
-		return this.addr;
+		return (SockAddr) this.addr.clone();
 	}
 
 	/**
@@ -48,7 +48,7 @@ public final class PcapAddr {
 	 * @return interface netmask.
 	 */
 	public SockAddr getNetmask() {
-		return this.netmask;
+		return (SockAddr) this.netmask.clone();
 	}
 
 	/**
@@ -56,7 +56,7 @@ public final class PcapAddr {
 	 * @return interface broadcast address.
 	 */
 	public SockAddr getBroadAddr() {
-		return this.broadaddr;
+		return (SockAddr) this.broadaddr.clone();
 	}
 
 	/**
@@ -64,7 +64,7 @@ public final class PcapAddr {
 	 * @return interface destination address.
 	 */
 	public SockAddr getDstAddr() {
-		return this.dstaddr;
+		return (SockAddr) this.dstaddr.clone();
 	}
 
 
@@ -98,6 +98,16 @@ public final class PcapAddr {
 		result = 31 * result + this.getBroadAddr().hashCode();
 		result = 31 * result + this.getDstAddr().hashCode();
 		return result;
+	}
+
+	@Override
+	protected Object clone() {
+		PcapAddr pcapAddr = new PcapAddr();
+		pcapAddr.addr = this.addr;
+		pcapAddr.broadaddr = this.broadaddr;
+		pcapAddr.dstaddr = this.dstaddr;
+		pcapAddr.netmask = this.netmask;
+		return pcapAddr;
 	}
 
 	@Override

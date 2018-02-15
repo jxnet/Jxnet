@@ -21,7 +21,7 @@ package com.ardikars.jxnet;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
-public final class PcapPktHdr {
+public final class PcapPktHdr implements Cloneable {
 
 	// This field will be replaced by native code
 	private int caplen;
@@ -128,6 +128,16 @@ public final class PcapPktHdr {
 		result = 31 * result + this.getTvSec();
 		result = 31 * result + (int) (this.getTvSec() ^ (this.getTvUsec() >>> 32));
 		return result;
+	}
+
+	@Override
+	protected Object clone() {
+		PcapPktHdr pcapPktHdr = new PcapPktHdr();
+		pcapPktHdr.caplen = this.caplen;
+		pcapPktHdr.len = this.len;
+		pcapPktHdr.tv_sec = this.tv_sec;
+		pcapPktHdr.tv_usec = this.tv_usec;
+		return pcapPktHdr;
 	}
 
 	@Override

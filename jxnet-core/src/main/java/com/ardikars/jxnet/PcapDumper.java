@@ -21,7 +21,7 @@ package com.ardikars.jxnet;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
-public final class PcapDumper {
+public final class PcapDumper implements Cloneable {
 
 	private long address;
 
@@ -67,6 +67,13 @@ public final class PcapDumper {
 	@Override
 	public int hashCode() {
 		return (int) (this.getAddress() ^ (this.getAddress() >>> 32));
+	}
+
+	@Override
+	protected Object clone() {
+		PcapDumper pcapDumper = new PcapDumper();
+		pcapDumper.address = this.address;
+		return pcapDumper;
 	}
 
 	@Override
