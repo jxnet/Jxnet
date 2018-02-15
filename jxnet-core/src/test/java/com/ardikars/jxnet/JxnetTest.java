@@ -228,6 +228,9 @@ public class JxnetTest {
             System.out.println("Name                  = " + dev.getName());
             System.out.println("Description           = " + dev.getDescription());
             System.out.println("Flags                 = " + dev.getFlags());
+            System.out.println("Is loopback           = " + dev.isLoopback());
+            System.out.println("Is Up                 = " + dev.isUp());
+            System.out.println("Is Running            = " + dev.isRunning());
             for (PcapAddr addr : dev.getAddresses()) {
                 if (addr.getAddr().getSaFamily() == SockAddr.Family.AF_INET) {
                     System.out.println("------------------------------------------------");

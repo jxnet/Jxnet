@@ -131,7 +131,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapFindAllDevs
 
 		}
 
-		(*env)->SetIntField(env, pcap_if, PcapIfFlagsFID, (jint) alldevsp->flags);
+		(*env)->SetIntField(env, pcap_if, PcapIfFlagsFID, (jint) dev->flags);
 
 		if ((*env)->CallBooleanMethod(env, jlist_pcap_if, ListAddMID, pcap_if) == JNI_FALSE) {
 			(*env)->DeleteLocalRef(env, pcap_if);

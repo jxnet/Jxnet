@@ -27,6 +27,21 @@ import java.util.List;
  */
 public final class PcapIf implements Cloneable {
 
+	/**
+	 * Loopback interface.
+	 */
+	private static final int PCAP_IF_LOOPBACK = 0x00000001;
+
+	/**
+	 * Interface is up.
+	 */
+	private static final int PCAP_IF_UP = 0x00000002;
+
+	/**
+	 * Interface is running.
+	 */
+	private static final int PCAP_IF_RUNNING = 0x00000004;
+
 	private volatile String name;
 	
 	private volatile String description;
@@ -70,6 +85,30 @@ public final class PcapIf implements Cloneable {
 	public List<PcapAddr> getAddresses() {
 		List<PcapAddr> addrs = Collections.unmodifiableList(this.addresses);
 		return addresses;
+	}
+
+	/**
+	 * Is loopback interface?
+	 * @return true if loopback interface, false otherwise.
+	 */
+	public boolean isLoopback() {
+		return (this.flags & PCAP_IF_LOOPBACK) != 0;
+	}
+
+	/**
+	 * Is interface is up?
+	 * @return true if interface is up, false otherwise.
+	 */
+	public boolean isUp() {
+		return (this.flags & PCAP_IF_UP) != 0;
+	}
+
+	/**
+	 * Is interface is running?
+	 * @return true if interface is running, false otherwise.
+	 */
+	public boolean isRunning() {
+		return (this.flags & PCAP_IF_RUNNING) != 0;
 	}
 
 	@Override
