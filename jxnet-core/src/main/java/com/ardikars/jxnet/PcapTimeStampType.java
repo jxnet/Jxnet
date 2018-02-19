@@ -15,21 +15,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet.annotation;
+package com.ardikars.jxnet;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+/**
+ * @author Ardika Rommy Sanjaya
+ * @since 1.1.5
+ */
+public enum  PcapTimeStampType {
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-@Documented
-public @interface Property {
+	HOST(0), HOST_LOWPREC(1), HOST_HIPREC(2), ADAPTER(3), ADAPTER_UNSYNCED(4);
 
-	String value();
+	private final int value;
 
-	boolean replaced() default false;
+	PcapTimeStampType(final int value) {
+		this.value = value;
+	}
+
+	/**
+	 * Get timestamp type value.
+	 * @return integer value.
+	 */
+	public int getValue() {
+		return this.value;
+	}
 
 }

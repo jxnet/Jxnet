@@ -21,7 +21,7 @@ package com.ardikars.jxnet;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
-public abstract class InetAddress {
+public abstract class InetAddress implements Cloneable {
 
 	protected byte[] address;
 

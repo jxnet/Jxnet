@@ -131,12 +131,8 @@ public final class PcapPktHdr implements Cloneable {
 	}
 
 	@Override
-	protected Object clone() {
-		PcapPktHdr pcapPktHdr = new PcapPktHdr();
-		pcapPktHdr.caplen = this.caplen;
-		pcapPktHdr.len = this.len;
-		pcapPktHdr.tv_sec = this.tv_sec;
-		pcapPktHdr.tv_usec = this.tv_usec;
+	protected Object clone() throws CloneNotSupportedException {
+		PcapPktHdr pcapPktHdr = (PcapPktHdr) super.clone();
 		return pcapPktHdr;
 	}
 

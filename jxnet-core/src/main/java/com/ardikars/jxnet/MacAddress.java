@@ -204,9 +204,8 @@ public final class MacAddress implements Cloneable {
 	}
 
 	@Override
-	protected Object clone() {
-		MacAddress macAddress = new MacAddress();
-		macAddress.address = this.address;
+	protected Object clone() throws CloneNotSupportedException {
+		MacAddress macAddress = (MacAddress) super.clone();
 		return macAddress;
 	}
 

@@ -17,6 +17,8 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.jxnet.util.Validate;
+
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
@@ -40,7 +42,15 @@ public final class PcapAddr implements Cloneable {
 	 * @return interface address.
 	 */
 	public SockAddr getAddr() {
-		return (SockAddr) this.addr.clone();
+		SockAddr sockAddr = null;
+		if (this.addr != null) {
+			try {
+				sockAddr = (SockAddr) this.addr.clone();
+			} catch (CloneNotSupportedException e) {
+				sockAddr = null;
+			}
+		}
+		return sockAddr;
 	}
 
 	/**
@@ -48,7 +58,15 @@ public final class PcapAddr implements Cloneable {
 	 * @return interface netmask.
 	 */
 	public SockAddr getNetmask() {
-		return (SockAddr) this.netmask.clone();
+		SockAddr sockAddr = null;
+		if (this.netmask != null) {
+			try {
+				sockAddr = (SockAddr) this.netmask.clone();
+			} catch (CloneNotSupportedException e) {
+				sockAddr = null;
+			}
+		}
+		return sockAddr;
 	}
 
 	/**
@@ -56,7 +74,15 @@ public final class PcapAddr implements Cloneable {
 	 * @return interface broadcast address.
 	 */
 	public SockAddr getBroadAddr() {
-		return (SockAddr) this.broadaddr.clone();
+		SockAddr sockAddr = null;
+		if (this.broadaddr != null) {
+			try {
+				sockAddr = (SockAddr) this.broadaddr.clone();
+			} catch (CloneNotSupportedException e) {
+				sockAddr = null;
+			}
+		}
+		return sockAddr;
 	}
 
 	/**
@@ -64,7 +90,15 @@ public final class PcapAddr implements Cloneable {
 	 * @return interface destination address.
 	 */
 	public SockAddr getDstAddr() {
-		return (SockAddr) this.dstaddr.clone();
+		SockAddr sockAddr = null;
+		if (this.dstaddr != null) {
+			try {
+				sockAddr = (SockAddr) this.dstaddr.clone();
+			} catch (CloneNotSupportedException e) {
+				sockAddr = null;
+			}
+		}
+		return sockAddr;
 	}
 
 
@@ -101,12 +135,8 @@ public final class PcapAddr implements Cloneable {
 	}
 
 	@Override
-	protected Object clone() {
-		PcapAddr pcapAddr = new PcapAddr();
-		pcapAddr.addr = this.addr;
-		pcapAddr.broadaddr = this.broadaddr;
-		pcapAddr.dstaddr = this.dstaddr;
-		pcapAddr.netmask = this.netmask;
+	protected Object clone() throws CloneNotSupportedException {
+		PcapAddr pcapAddr = (PcapAddr) super.clone();
 		return pcapAddr;
 	}
 
