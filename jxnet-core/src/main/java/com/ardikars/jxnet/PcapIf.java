@@ -28,7 +28,7 @@ import java.util.List;
 public final class PcapIf implements Cloneable {
 
 	/**
-	 * Loopback interface.
+	 * Interface is loopback.
 	 */
 	private static final int PCAP_IF_LOOPBACK = 0x00000001;
 
@@ -84,7 +84,7 @@ public final class PcapIf implements Cloneable {
 	 */
 	public List<PcapAddr> getAddresses() {
 		List<PcapAddr> addrs = Collections.unmodifiableList(this.addresses);
-		return addresses;
+		return addrs;
 	}
 
 	/**
@@ -144,12 +144,8 @@ public final class PcapIf implements Cloneable {
 	}
 
 	@Override
-	protected Object clone() {
-		PcapIf pcapIf = new PcapIf();
-		pcapIf.name = this.name;
-		pcapIf.addresses = this.addresses;
-		pcapIf.description = this.description;
-		pcapIf.flags = this.flags;
+	protected Object clone() throws CloneNotSupportedException {
+		PcapIf pcapIf = (PcapIf) super.clone();
 		return pcapIf;
 	}
 

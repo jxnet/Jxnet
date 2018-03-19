@@ -15,19 +15,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet.annotation;
+package com.ardikars.jxnet;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+/**
+ * @author Ardika Rommy Sanjaya
+ * @since 1.1.5
+ */
+public enum  PcapTimeStampPrecision {
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.METHOD, ElementType.TYPE})
-@Documented
-public @interface Order {
+	MICRO(0), NANO(1);
 
-	int value();
+	private final int value;
+
+	PcapTimeStampPrecision(final int value) {
+		this.value = value;
+	}
+
+	/**
+	 * Get timestamp precision value.
+	 * @return integer value.
+	 */
+	public int getValue() {
+		return this.value;
+	}
 
 }

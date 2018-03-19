@@ -94,7 +94,7 @@ abstract class Core {
      * immediate mode will be set, otherwise it will not be set.
      * @param pcap pcap instance.
      * @param immediateMode immediate_mode.
-     * @return 0 on success.
+     * @return returns 0 on success or PCAP_ERROR_ACTIVATED if called on a capture handle that has been activated.
      * @since 1.1.5
      */
     public static int PcapSetImmediateMode(final Pcap pcap, final ImmediateMode immediateMode) {

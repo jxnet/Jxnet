@@ -26,6 +26,23 @@ public class Tests {
 
 	@Test
 	public void ex() {
+		StringBuilder errbuf = new StringBuilder();
+		Pcap pcap = Pcap.newInstance(
+				Pcap.builder()
+				.errbuf(errbuf)
+				.source("wlp2s0")
+		);
+
+		BpfProgram bpfProgram = BpfProgram.newInstance(
+				BpfProgram.builder()
+				.filter("icmp")
+				.bpfCompileMode(BpfProgram.BpfCompileMode.OPTIMIZE)
+				.netmask(Inet4Address.valueOf("255.255.255.0"))
+				.pcap(pcap)
+		);
+		System.out.println(bpfProgram);
+		Jxnet.PcapFreeCode(bpfProgram);
+		Jxnet.PcapClose(pcap);
 	}
 
 }

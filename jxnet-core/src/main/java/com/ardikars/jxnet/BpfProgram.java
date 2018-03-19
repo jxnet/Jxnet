@@ -17,11 +17,14 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.jxnet.exception.NativeException;
+import com.ardikars.jxnet.util.Validate;
+
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
-public final class BpfProgram implements Cloneable {
+public final class BpfProgram implements PointerHandler {
 
 	/**
 	 * Bpf compile mode
@@ -54,9 +57,27 @@ public final class BpfProgram implements Cloneable {
 	}
 
 	/**
+	 * Create instance of BpfProgram and initialize it.
+	 * @param builder filter builder.
+	 * @return BpfProgram (filter handle).
+	 */
+	public static BpfProgram newInstance(Builder builder) {
+		return builder.build();
+	}
+
+	/**
+	 * Bpf program builder.
+	 * @return BpfProgram instance.
+	 */
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	/**
 	 * Get Bpf Program pointer address.
 	 * @return pointer address.
 	 */
+	@Override
 	public long getAddress() {
 		synchronized (this) {
 			return this.address;
@@ -94,9 +115,8 @@ public final class BpfProgram implements Cloneable {
 	}
 
 	@Override
-	protected Object clone() {
-		BpfProgram bpfProgram = new BpfProgram();
-		bpfProgram.address = this.address;
+	protected Object clone() throws CloneNotSupportedException {
+		BpfProgram bpfProgram = (BpfProgram) super.clone();
 		return bpfProgram;
 	}
 
@@ -106,6 +126,76 @@ public final class BpfProgram implements Cloneable {
 		sb.append("address=").append(this.getAddress());
 		sb.append('}');
 		return sb.toString();
+	}
+
+	/**
+	 * Builder class for BpfProgram.
+	 */
+	public static final class Builder implements com.ardikars.jxnet.common.Builder<BpfProgram> {
+
+		private Pcap pcap;
+		private String filter;
+		private Inet4Address netmask;
+		private BpfCompileMode bpfCompileMode;
+
+		/**
+		 * Pcap handle.
+		 * @param pcap pcap handle.
+		 * @return Builder.
+		 */
+		public Builder pcap(final Pcap pcap) {
+			this.pcap = pcap;
+			return this;
+		}
+
+		/**
+		 * Filter pattern.
+		 * @param filter filter pattern.
+		 * @return Builder.
+		 */
+		public Builder filter(final String filter) {
+			this.filter = filter;
+			return this;
+		}
+
+		/**
+		 * Inet4Address netmask.
+		 * @param netmask netmask.
+		 * @return Builder.
+		 */
+		public Builder netmask(final Inet4Address netmask) {
+			this.netmask = netmask;
+			return this;
+		}
+
+		/**
+		 * Bpf compile mode.
+		 * @param bpfCompileMode bpf compile mode.
+		 * @return Builder.
+		 */
+		public Builder bpfCompileMode(final BpfCompileMode bpfCompileMode) {
+			this.bpfCompileMode = bpfCompileMode;
+			return this;
+		}
+
+		@Override
+		public BpfProgram build() {
+			Validate.nullPointer(pcap);
+			Validate.illegalArgument(!pcap.isClosed(), new IllegalArgumentException("Pcap handle is closed."));
+			Validate.illegalArgument(filter != null && !filter.equals(""));
+			Validate.nullPointer(netmask);
+			Validate.nullPointer(bpfCompileMode);
+
+			BpfProgram bpfProgram = new BpfProgram();
+			if (Jxnet.PcapCompile(pcap, bpfProgram, filter, bpfCompileMode.getValue(), netmask.toInt()) != Jxnet.OK) {
+				throw new NativeException();
+			}
+			if (Jxnet.PcapSetFilter(pcap, bpfProgram) != Jxnet.OK) {
+				throw new NativeException();
+			}
+			return bpfProgram;
+		}
+
 	}
 
 	static {

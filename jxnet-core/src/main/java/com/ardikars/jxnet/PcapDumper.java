@@ -70,9 +70,8 @@ public final class PcapDumper implements Cloneable {
 	}
 
 	@Override
-	protected Object clone() {
-		PcapDumper pcapDumper = new PcapDumper();
-		pcapDumper.address = this.address;
+	protected Object clone() throws CloneNotSupportedException {
+		PcapDumper pcapDumper = (PcapDumper) super.clone();
 		return pcapDumper;
 	}
 

@@ -28,7 +28,7 @@ import java.util.List;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
-public final class Inet6Address extends InetAddress implements Cloneable {
+public final class Inet6Address extends InetAddress {
 
 	/**
 	 * Zero IPv6 Address.
@@ -211,9 +211,8 @@ public final class Inet6Address extends InetAddress implements Cloneable {
 	}
 
 	@Override
-	protected Object clone() {
-		Inet6Address inet6Address = new Inet6Address();
-		inet6Address.address = this.address;
+	protected Object clone() throws CloneNotSupportedException {
+		Inet6Address inet6Address = (Inet6Address) super.clone();
 		return inet6Address;
 	}
 

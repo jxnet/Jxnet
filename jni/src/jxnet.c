@@ -867,7 +867,7 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapOpenDead
 		(JNIEnv *env, jclass jcls, jint jlinktype, jint jsnaplen) {
 
 	if (!CheckArgument(env, (jlinktype > -1), NULL)) return NULL;
-	if (!CheckArgument(env, (jsnaplen > 0 || jsnaplen < 65535), NULL)) return NULL;
+	if (!CheckArgument(env, (jsnaplen > 0 || jsnaplen < 65536), NULL)) return NULL;
 
 	pcap_t *pcap = pcap_open_dead((int) jlinktype, (int) jsnaplen);
 
@@ -1099,7 +1099,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetSnaplen
 		(JNIEnv *env, jclass jclazz, jobject jpcap, jint jsnaplen) {
 
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
-	if (!CheckArgument(env, (jsnaplen > 0 && jsnaplen < 65535), NULL)) return -1;
+	if (!CheckArgument(env, (jsnaplen > 0 && jsnaplen < 65536), NULL)) return -1;
 	return pcap_set_snaplen(GetPcap(env, jpcap), jsnaplen);
 }
 
@@ -1138,7 +1138,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetBufferSize
 		(JNIEnv *env, jclass jclazz, jobject jpcap, jint jbuffer_size) {
 
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
-	if (!CheckArgument(env, (jbuffer_size > 0 && jbuffer_size < 65535), NULL)) return -1;
+	if (!CheckArgument(env, (jbuffer_size > 0 && jbuffer_size < 65536), NULL)) return -1;
 	return pcap_set_buffer_size(GetPcap(env, jpcap), jbuffer_size);
 }
 
@@ -1426,7 +1426,7 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapOpenDeadWithTStampPr
 		(JNIEnv *env, jclass jclazz, jint jlinktype, jint jsnaplen, jint jprecision) {
 
 	if (!CheckArgument(env, (jlinktype > -1), NULL)) return NULL;
-	if (!CheckArgument(env, (jsnaplen > 0 || jsnaplen < 65535), NULL)) return NULL;
+	if (!CheckArgument(env, (jsnaplen > 0 || jsnaplen < 65536), NULL)) return NULL;
 	if (!CheckArgument(env, (jprecision >= 0 || jprecision <= 1), NULL)) return NULL;
 #if defined(WIN32)
 	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);

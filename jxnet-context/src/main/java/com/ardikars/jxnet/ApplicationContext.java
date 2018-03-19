@@ -18,7 +18,9 @@
 package com.ardikars.jxnet;
 
 import com.ardikars.jxnet.exception.PropertyNotFoundException;
+import com.ardikars.jxnet.util.Validate;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -41,49 +43,45 @@ public class ApplicationContext implements Application.Context {
     }
 
     @Override
-    public Object getProperty(final String key) throws PropertyNotFoundException{
+    public Object getProperty(final String key) throws PropertyNotFoundException {
+	    Validate.nullPointer(key);
+	    Object object = Application.getInstance().getProperty(key);
+	    if (object == null) {
+	    	throw new PropertyNotFoundException();
+	    }
         return Application.getInstance().getProperty(key);
     }
 
 	@Override
 	public <T> T getProperty(String name, Class<T> requiredType) throws ClassCastException, PropertyNotFoundException {
-		Object object = Application.getInstance().getProperty(name);
-		if (requiredType != null) {
-			if (object.getClass() != requiredType) {
-				throw new ClassCastException(object.getClass().getName() + " can't cast to " + requiredType.getName() + ".");
-			}
+		Validate.nullPointer(name);
+		Validate.nullPointer(requiredType);
+    	Object object = Application.getInstance().getProperty(name);
+		if (object == null) {
+			throw new PropertyNotFoundException();
+		}
+		if (object.getClass() != requiredType) {
+			throw new ClassCastException(object.getClass().getName() + " can't cast to " + requiredType.getName() + ".");
 		}
     	return (T) object;
 	}
 
 	@Override
-	public void removeProperty(String key) throws PropertyNotFoundException {
+	public void removeProperty(String key) {
+    	Validate.nullPointer(key);
 		Application.getInstance().getProperties().remove(key);
 	}
 
 	@Override
 	public Map<String, Object> getProperties() {
-		return Application.getInstance().getProperties();
+    	Map<String, Object> properties = Collections.unmodifiableMap(Application.getInstance().getProperties());
+		return properties;
 	}
 
 	@Override
     public void addLibrary(final Library.Loader libraryLoader) {
+    	Validate.nullPointer(libraryLoader);
         Application.getInstance().addLibrary(libraryLoader);
     }
-
-	@Override
-	public void addPropertyFiles(String... propertyFiles) {
-		Application.getInstance().addPropertyFiles(propertyFiles);
-	}
-
-	@Override
-	public void addPropertyPackages(String basePackage) {
-		Application.getInstance().addPropertyPackages(basePackage);
-	}
-
-	@Override
-	public void addPropertyClassses(Class... classes) {
-		Application.getInstance().addPropertyClasses(classes);
-	}
 
 }

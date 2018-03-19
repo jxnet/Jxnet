@@ -25,7 +25,7 @@ import java.util.Arrays;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
-public final class Inet4Address extends InetAddress implements Cloneable {
+public final class Inet4Address extends InetAddress {
 
 	/**
 	 * IPv4 Address (0.0.0.0).
@@ -146,9 +146,8 @@ public final class Inet4Address extends InetAddress implements Cloneable {
 	}
 
 	@Override
-	protected Object clone() {
-		Inet4Address inet4Address = new Inet4Address();
-		inet4Address.address = this.address;
+	protected Object clone() throws CloneNotSupportedException {
+		Inet4Address inet4Address = (Inet4Address) super.clone();
 		return inet4Address;
 	}
 

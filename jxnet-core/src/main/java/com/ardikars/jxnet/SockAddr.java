@@ -134,10 +134,8 @@ public final class SockAddr implements Cloneable {
     }
 
     @Override
-    protected Object clone() {
-        SockAddr sockAddr = new SockAddr();
-        sockAddr.data = this.data;
-        sockAddr.sa_family = this.sa_family;
+    protected Object clone() throws CloneNotSupportedException {
+        SockAddr sockAddr = (SockAddr) super.clone();
         return sockAddr;
     }
 

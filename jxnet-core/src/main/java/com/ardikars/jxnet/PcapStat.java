@@ -30,24 +30,25 @@ public final class PcapStat implements Cloneable {
 	private long ps_ifdrop;
 
 	/**
-	 * Returning recieved packets.
-	 * @return recieved packets.
+	 * Returns recieved packets.
+	 * @return number of packets received;
 	 */
 	public long getPsRecv() {
 		return this.ps_recv;
 	}
 
 	/**
-	 * Returning dropped packets.
-	 * @return dropped packets.
+	 * Returns number of packets dropped because there was no room in the operating
+	 * system`s buffer when they arrived, because packets weren`t being read fast enough.
+	 * @return number of packets dropped because there was no room in the operating system's buffer.
 	 */
 	public long getPsDrop() {
 		return this.ps_drop;
 	}
 
 	/**
-	 * Returning dropped packets by interface.
-	 * @return dropped packets by interface.
+	 * Returns dropped packets by interface.
+	 * @return number of packets dropped by the network interface or its driver.
 	 */
 	public long getPsIfdrop() {
 		return this.ps_ifdrop;
@@ -82,11 +83,8 @@ public final class PcapStat implements Cloneable {
 	}
 
 	@Override
-	protected Object clone() {
-		PcapStat pcapStat = new PcapStat();
-		pcapStat.ps_recv = this.ps_recv;
-		pcapStat.ps_drop = this.ps_drop;
-		pcapStat.ps_ifdrop = this.ps_ifdrop;
+	protected Object clone() throws CloneNotSupportedException {
+		PcapStat pcapStat = (PcapStat) super.clone();
 		return pcapStat;
 	}
 
