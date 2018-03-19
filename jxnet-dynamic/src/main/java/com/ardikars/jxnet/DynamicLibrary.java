@@ -20,8 +20,11 @@ package com.ardikars.jxnet;
 import com.ardikars.jxnet.util.Platforms;
 
 import java.io.File;
+import java.util.logging.Logger;
 
 public class DynamicLibrary implements Library.Loader {
+
+    private static final Logger LOGGER = Logger.getLogger(DynamicLibrary.class.getName());
 
     @Override
     public void load() {
@@ -42,7 +45,7 @@ public class DynamicLibrary implements Library.Loader {
             case WINDOWS:
                 if (new File("C:\\Windows\\System32\\Npcap\\wpcap.dll").exists())  {
                     if (!new File("C:\\Windows\\System32\\wpcap.dll").exists()) {
-                        throw new UnsatisfiedLinkError("Npcap is installed, but with no Winpcap supported mode.");
+                        System.load("C:\\Windows\\System32\\Npcap\\wpcap.dll");
                     }
                     if (Platforms.is64Bit()) {
                         Library.loadLibrary("/dynamic/windows/lib/x64/jxnet.dll");
