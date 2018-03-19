@@ -1244,7 +1244,13 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetDirection
  */
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetTStampPrecision
 		(JNIEnv *env, jclass jclazz, jobject jpcap, jint jtstamp_precision) {
+#if defined(WIN32)
+	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
+	return -1;
+#else
 	return pcap_set_tstamp_precision(GetPcap(env, jpcap), jtstamp_precision);
+#endif
+    return -1;
 }
 
 /*
@@ -1254,7 +1260,13 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetTStampPrecision
  */
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetTStampType
 		(JNIEnv *env, jclass jclazz, jobject jpcap, jint jtype) {
+#if defined(WIN32)
+	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
+	return -1;
+#else
 	return pcap_set_tstamp_type(GetPcap(env, jpcap), jtype);
+#endif
+    return -1;
 }
 
 /*
@@ -1264,7 +1276,13 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetTStampType
  */
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapGetTStampPrecision
 		(JNIEnv *env, jclass jclazz, jobject jpcap) {
+#if defined(WIN32)
+	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
+	return -1;
+#else
 	return pcap_get_tstamp_precision(GetPcap(env, jpcap));
+#endif
+    return -1;
 }
 
 /*
@@ -1275,6 +1293,10 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapGetTStampPrecision
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapListDataLinks
 		(JNIEnv *env, jclass jclazz, jobject jpcap, jobject jdtl_buffer) {
 	SetListIDs(env);
+#if defined(WIN32)
+	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
+	return -1;
+#else
 	int *dtl_buffer;
 	int count = pcap_list_datalinks(GetPcap(env, jpcap), &dtl_buffer);
 	int i;
@@ -1288,6 +1310,8 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapListDataLinks
 	}
 	pcap_free_datalinks(dtl_buffer);
 	return count;
+#endif
+    return -1;
 }
 
 /*
@@ -1297,6 +1321,10 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapListDataLinks
  */
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapListTStampTypes
 		(JNIEnv *env, jclass jclazz, jobject jpcap, jobject jtstamp_typesp) {
+#if defined(WIN32)
+	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
+	return -1;
+#else
 	int *list_tstamp_type;
 	int count = pcap_list_tstamp_types(GetPcap(env, jpcap), &list_tstamp_type);
 	int i;
@@ -1310,6 +1338,8 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapListTStampTypes
 	}
 	pcap_free_tstamp_types(list_tstamp_type);
 	return count;
+#endif
+    return -1;
 }
 
 /*
@@ -1321,13 +1351,18 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapTStampTypeNameToVal
 		(JNIEnv *env, jclass jclazz, jstring jname) {
 
 	if (CheckNotNull(env, jname, NULL) == NULL) return -1;
-
+#if defined(WIN32)
+	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
+	return -1;
+#else
 	const char *name = (*env)->GetStringUTFChars(env, jname, 0);
 
 	int r = pcap_tstamp_type_name_to_val(name);
 	(*env)->ReleaseStringUTFChars(env, jname, name);
 
 	return r;
+#endif
+    return -1;
 }
 
 /*
@@ -1339,8 +1374,13 @@ JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_Jxnet_PcapTStampTypeValToName
 		(JNIEnv *env, jclass jclazz, jint jtstamp_type) {
 
 	if (!CheckArgument(env, (jtstamp_type > -1), NULL)) return NULL;
-
+#if defined(WIN32)
+	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
+	return NULL;
+#else
 	return (*env)->NewStringUTF(env, (char *) pcap_tstamp_type_val_to_name((jint) jtstamp_type));
+#endif
+    return NULL;
 }
 
 /*
@@ -1352,8 +1392,13 @@ JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_Jxnet_PcapTStampTypeValToDescr
 		(JNIEnv *env, jclass jclazz, jint jtstamp_type) {
 
 	if (!CheckArgument(env, (jtstamp_type > -1), NULL)) return NULL;
-
+#if defined(WIN32)
+	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
+	return NULL;
+#else
 	return (*env)->NewStringUTF(env, (char *) pcap_tstamp_type_val_to_description((jint) jtstamp_type));
+#endif
+    return NULL;
 }
 
 /*
@@ -1363,7 +1408,13 @@ JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_Jxnet_PcapTStampTypeValToDescr
  */
 JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_Jxnet_PcapStatusToStr
 		(JNIEnv *env, jclass jclazz, jint jerrnum) {
+#if defined(WIN32)
+	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
+	return NULL;
+#else
 	return (*env)->NewStringUTF(env, (char *) pcap_statustostr((jint) jerrnum));
+#endif
+    return NULL;
 }
 
 /*
@@ -1377,11 +1428,15 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapOpenDeadWithTStampPr
 	if (!CheckArgument(env, (jlinktype > -1), NULL)) return NULL;
 	if (!CheckArgument(env, (jsnaplen > 0 || jsnaplen < 65536), NULL)) return NULL;
 	if (!CheckArgument(env, (jprecision >= 0 || jprecision <= 1), NULL)) return NULL;
-
+#if defined(WIN32)
+	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
+	return NULL;
+#else
 	pcap_t *pcap = pcap_open_dead_with_tstamp_precision(jlinktype, jsnaplen, jprecision);
-
 	// Including SetPcapIDs().
 	return SetPcap(env, pcap);
+#endif
+    return NULL;
 }
 
 /*
@@ -1425,6 +1480,10 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapOpenOfflineWithTStam
 	if (!CheckArgument(env, (jtstamp_precision >= 0 || jtstamp_precision <= 1), NULL)) return NULL;
 	if (CheckNotNull(env, jerrbuf, NULL) == NULL) return NULL;
 
+#if defined(WIN32)
+	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
+	return NULL;
+#else
 	char errbuf[PCAP_ERRBUF_SIZE];
 	errbuf[0] = '\0';
 	const char *fname = (*env)->GetStringUTFChars(env, jfname, 0);
@@ -1439,6 +1498,8 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapOpenOfflineWithTStam
 	}
 	// Including SetPcapIDs().
 	return SetPcap(env, pcap);
+#endif
+    return NULL;
 }
 
 /*
@@ -1453,6 +1514,10 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapInject
 	if (CheckNotNull(env, jbuf, NULL) == NULL) return -1;
 	if (!CheckArgument(env, (jsize > 0), NULL)) return -1;
 
+#if defined(WIN32)
+	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
+	return -1;
+#else
 	// Including SetPcapIDs().
 	pcap_t *pcap = GetPcap(env, jpcap); // Exception already thrown
 
@@ -1468,4 +1533,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapInject
 	}
 
 	return (jint) pcap_inject(pcap, buf + (int) 0, (int) jsize);
+#endif
+    return -1;
 }
