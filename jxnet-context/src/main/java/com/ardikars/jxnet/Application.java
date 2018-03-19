@@ -19,7 +19,6 @@ package com.ardikars.jxnet;
 
 import com.ardikars.jxnet.exception.PropertyNotFoundException;
 import com.ardikars.jxnet.util.Platforms;
-import com.sun.javafx.fxml.PropertyNotFoundException;
 
 import java.util.Collections;
 import java.util.HashSet;
