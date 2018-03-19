@@ -40,18 +40,17 @@ public class DynamicLibrary implements Library.Loader {
                 }
                 break;
             case WINDOWS:
-                if (!new File("C:\\Windows\\System32\\wpcap.dll").exists()) {
+                if (new File("C:\\Windows\\System32\\Npcap\\wpcap.dll").exists())  {
+                    if (!new File("C:\\Windows\\System32\\wpcap.dll").exists()) {
+                        throw new UnsatisfiedLinkError("Npcap is installed, but with no Winpcap supported mode.");
+                    }
                     if (Platforms.is64Bit()) {
                         Library.loadLibrary("/dynamic/windows/lib/x64/jxnet.dll");
                     } else {
                         Library.loadLibrary("/dynamic/windows/lib/x86/jxnet.dll");
                     }
                 } else {
-                    if (new File("C:\\Windows\\System32\\Npcap\\wpcap.dll").exists()) {
-                        throw new UnsatisfiedLinkError("Npcap is not installed yet.");
-                    } else {
-                        throw new UnsatisfiedLinkError("Npcap is installed, but with no Winpcap supported mode.");
-                    }
+                    throw new UnsatisfiedLinkError("Npcap is not installed yet.");
                 }
                 break;
             case FREEBSD:
