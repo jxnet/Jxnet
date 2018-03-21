@@ -286,8 +286,8 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDump
 
 	// Including SetPcapDumperIDs().
 	pcap_dumper_t *pcap_dumper = GetPcapDumper(env, jpcap_dumper);
+
 	if (pcap_dumper == NULL) {
-		ThrowNew(env, PCAP_DUMPER_CLOSE_EXCEPTION, NULL);
 		return;
 	}
 
@@ -351,7 +351,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCompile
 	struct bpf_program *fp = GetBpfProgram(env, jfp);
 
 	if (fp == NULL) {
-		ThrowNew(env, BPF_PROGRAM_CLOSE_EXCEPTION, pcap_geterr(pcap));
 		return (jint) -1;
 	}
 
@@ -385,7 +384,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetFilter
 	struct bpf_program *fp = GetBpfProgram(env, jfp);
 
 	if (fp == NULL) {
-		ThrowNew(env, BPF_PROGRAM_CLOSE_EXCEPTION, pcap_geterr(pcap));
 		return (jint) -1;
 	}
 
@@ -529,7 +527,13 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDumpFlush
 
 	if (CheckNotNull(env, jpcap_dumper, NULL) == NULL) return -1;
 
-	return (jint) pcap_dump_flush(GetPcapDumper(env, jpcap_dumper));
+    pcap_dumper_t *pcap_dumper = GetPcapDumper(env, jpcap_dumper);
+
+    if (pcap_dumper == NULL) {
+        return -1;
+    }
+
+	return (jint) pcap_dump_flush(pcap_dumper);
 }
 
 /*
@@ -542,7 +546,13 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDumpClose
 
 	if (CheckNotNull(env, jpcap_dumper, NULL) == NULL) return;
 
-	pcap_dump_close(GetPcapDumper(env, jpcap_dumper));
+    pcap_dumper_t *pcap_dumper = GetPcapDumper(env, jpcap_dumper);
+
+	if (pcap_dumper == NULL) {
+		return;
+	}
+
+	pcap_dump_close(pcap_dumper);
 
 	(*env)->SetLongField(env, jpcap_dumper, PcapDumperAddressFID, (jlong) 0);
 }
@@ -885,7 +895,13 @@ JNIEXPORT jlong JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDumpFTell
 
 	if (CheckNotNull(env, jpcap_dumper, NULL) == NULL) return (jlong) -1;
 
-	return (jlong) pcap_dump_ftell (GetPcapDumper(env, jpcap_dumper));
+    pcap_dumper_t *pcap_dumper = GetPcapDumper(env, jpcap_dumper);
+
+	if (pcap_dumper == NULL) {
+		return -1;
+	}
+
+	return (jlong) pcap_dump_ftell(pcap_dumper);
 }
 
 /*
@@ -901,31 +917,10 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxnet_Jxnet_PcapFreeCode
 	struct bpf_program *fp = GetBpfProgram(env, jfp);
 
 	if (fp == NULL) {
-		ThrowNew(env, BPF_PROGRAM_CLOSE_EXCEPTION, NULL);
 		return;
 	}
 
 	pcap_freecode(fp);
-}
-
-/*
- * Class:     com_ardikars_jxnet_Jxnet
- * Method:    PcapFile
- * Signature: (Lcom/ardikars/jxnet/Pcap;)Lcom/ardikars/jxnet/File;
- */
-JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapFile
-		(JNIEnv *env, jclass jcls, jobject jpcap) {
-
-	if (CheckNotNull(env, jpcap, NULL) == NULL) return NULL;
-
-	// Including SetPcapIDs().
-	FILE *file = pcap_file(GetPcap(env, jpcap));
-
-	if (file == NULL) {
-		return NULL;
-	}
-	// Including SetFileIDs().
-	return SetFile(env, file);
 }
 
 /*
@@ -938,8 +933,14 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDumpFile
 
 	if (CheckNotNull(env, jpcap_dumper, NULL) == NULL) return NULL;
 
+    pcap_dumper_t *pcap_dumper = GetPcapDumper(env, jpcap_dumper);
+
+	if (pcap_dumper == NULL) {
+		return NULL;
+	}
+
 	// Including SetPcapDumperIDs().
-	FILE *file = pcap_dump_file(GetPcapDumper(env, jpcap_dumper));
+	FILE *file = pcap_dump_file(pcap_dumper);
 
 	// Including SetFileIDs().
 	return SetFile(env, file);
@@ -958,10 +959,16 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapStats
 
 	SetPcapStatIDs(env);
 
+    pcap_t *pcap = GetPcap(env, jpcap);
+
+    if (pcap == NULL) {
+        return -1;
+    }
+
 	struct pcap_stat stats;
 	memset(&stats, 0, sizeof(struct pcap_stat));
 
-	int r = pcap_stats(GetPcap(env, jpcap), &stats);
+	int r = pcap_stats(pcap, &stats);
 
 	if (r == 0) {
 		(*env)->SetLongField(env, jpcap_stat, PcapStatPsRecvFID, (jlong) stats.ps_recv);
@@ -1033,7 +1040,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCompileNoPcap
 	struct bpf_program *program = GetBpfProgram(env, jprogram);
 
 	if (program == NULL) {
-		ThrowNew(env, BPF_PROGRAM_CLOSE_EXCEPTION, NULL);
 		return (jint) -1;
 	}
 
@@ -1058,9 +1064,15 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxnet_Jxnet_PcapPError
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return;
 	if (CheckNotNull(env, jprefix, NULL) == NULL) return;
 
+    pcap_t *pcap = GetPcap(env, jpcap);
+
+    if (pcap == NULL) {
+        return;
+    }
+
 	const char *prefix =  (*env)->GetStringUTFChars(env, jprefix, 0);
 
-	pcap_perror(GetPcap(env, jpcap), (char *) prefix);
+	pcap_perror(pcap, (char *) prefix);
 	(*env)->ReleaseStringUTFChars(env, jprefix, prefix);
 }
 
@@ -1100,7 +1112,14 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetSnaplen
 
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
 	if (!CheckArgument(env, (jsnaplen > 0 && jsnaplen < 65536), NULL)) return -1;
-	return pcap_set_snaplen(GetPcap(env, jpcap), jsnaplen);
+
+	pcap_t *pcap = GetPcap(env, jpcap);
+
+	if (pcap == NULL) {
+	    return -1;
+	}
+
+	return pcap_set_snaplen(pcap, jsnaplen);
 }
 
 /*
@@ -1113,7 +1132,14 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetPromisc
 
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
 	if (!CheckArgument(env, (jpromisc == 0 || jpromisc == 1), NULL)) return -1;
-	return pcap_set_promisc(GetPcap(env, jpcap), jpromisc);
+
+	pcap_t *pcap = GetPcap(env, jpcap);
+
+	if (pcap == NULL) {
+	    return -1;
+	}
+
+	return pcap_set_promisc(pcap, jpromisc);
 }
 
 /*
@@ -1126,7 +1152,14 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetTimeout
 
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
 	if (!CheckArgument(env, (jtimeout > 0), NULL)) return -1;
-	return pcap_set_timeout(GetPcap(env, jpcap), jtimeout);
+
+	pcap_t *pcap = GetPcap(env, jpcap);
+
+	if (pcap == NULL) {
+	    return -1;
+	}
+
+	return pcap_set_timeout(pcap, jtimeout);
 }
 
 /*
@@ -1139,7 +1172,14 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetBufferSize
 
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
 	if (!CheckArgument(env, (jbuffer_size > 0 && jbuffer_size < 65536), NULL)) return -1;
-	return pcap_set_buffer_size(GetPcap(env, jpcap), jbuffer_size);
+
+	pcap_t *pcap = GetPcap(env, jpcap);
+
+	if (pcap == NULL) {
+	    return -1;
+	}
+
+	return pcap_set_buffer_size(pcap, jbuffer_size);
 }
 
 /*
@@ -1151,7 +1191,14 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCanSetRfMon
 		(JNIEnv *env, jclass jclazz, jobject jpcap) {
 
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
-	return pcap_can_set_rfmon(GetPcap(env, jpcap));
+
+	pcap_t *pcap = GetPcap(env, jpcap);
+
+	if (pcap == NULL) {
+	    return -1;
+	}
+
+	return pcap_can_set_rfmon(pcap);
 }
 
 /*
@@ -1164,7 +1211,14 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetRfMon
 
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
 	if (!CheckArgument(env, (jrfmon == 0 || jrfmon == 1), NULL)) return -1;
-	return pcap_set_rfmon(GetPcap(env, jpcap), jrfmon);
+
+	pcap_t *pcap = GetPcap(env, jpcap);
+
+	if (pcap == NULL) {
+	    return -1;
+	}
+
+	return pcap_set_rfmon(pcap, jrfmon);
 }
 
 /*
@@ -1181,7 +1235,14 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetImmediateMode
 #else
 
 	if (!CheckArgument(env, (jimmediate == 0 || jimmediate == 1), NULL)) return -1;
-	return pcap_set_immediate_mode(GetPcap(env, jpcap), jimmediate);
+
+	pcap_t *pcap = GetPcap(env, jpcap);
+
+	if (pcap == NULL) {
+	    return -1;
+	}
+
+	return pcap_set_immediate_mode(pcap, jimmediate);
 #endif
 	return -1;
 }
@@ -1195,7 +1256,14 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapActivate
 		(JNIEnv *env, jclass jclazz, jobject jpcap) {
 
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
-	return pcap_activate(GetPcap(env, jpcap));
+
+	pcap_t *pcap = GetPcap(env, jpcap);
+
+	if (pcap == NULL) {
+	    return -1;
+	}
+
+	return pcap_activate(pcap);
 }
 
 /*
@@ -1215,17 +1283,25 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetDirection
 	if (CheckNotNull(env, jdirection, NULL) == NULL) return -1;
 
 	SetPcapDirectionIDs(env);
+
+    pcap_t *pcap = GetPcap(env, jpcap);
+
+    if (pcap == NULL) {
+        return -1;
+    }
+
 	jstring direction = (jstring) (*env)->CallObjectMethod(env, jdirection, PcapDirectionNameMID);
 	const char *enumName = (*env)->GetStringUTFChars(env, direction, 0);
+
 
 	int ret;
 
 	if (strncmp(enumName, "PCAP_D_INOUT", 12) == 0) {
-		ret = pcap_setdirection(GetPcap(env, jpcap), PCAP_D_INOUT);
+		ret = pcap_setdirection(pcap, PCAP_D_INOUT);
 	} else if (strncmp(enumName, "PCAP_D_OUT", 10) == 0) {
-		ret = pcap_setdirection(GetPcap(env, jpcap), PCAP_D_OUT);
+		ret = pcap_setdirection(pcap, PCAP_D_OUT);
 	} else if (strncmp(enumName, "PCAP_D_IN", 9) == 0) {
-		ret = pcap_setdirection(GetPcap(env, jpcap), PCAP_D_IN);
+		ret = pcap_setdirection(pcap, PCAP_D_IN);
 	} else {
 		ret = -1;
 	}
@@ -1248,7 +1324,14 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetTStampPrecision
 	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
 	return -1;
 #else
-	return pcap_set_tstamp_precision(GetPcap(env, jpcap), jtstamp_precision);
+
+    pcap_t *pcap = GetPcap(env, jpcap);
+
+    if (pcap == NULL) {
+        return -1;
+    }
+
+	return pcap_set_tstamp_precision(pcap, jtstamp_precision);
 #endif
     return -1;
 }
@@ -1264,7 +1347,14 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetTStampType
 	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
 	return -1;
 #else
-	return pcap_set_tstamp_type(GetPcap(env, jpcap), jtype);
+
+    pcap_t *pcap = GetPcap(env, jpcap);
+
+    if (pcap == NULL) {
+        return -1;
+    }
+
+	return pcap_set_tstamp_type(pcap, jtype);
 #endif
     return -1;
 }
@@ -1280,7 +1370,14 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapGetTStampPrecision
 	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
 	return -1;
 #else
-	return pcap_get_tstamp_precision(GetPcap(env, jpcap));
+
+    pcap_t *pcap = GetPcap(env, jpcap);
+
+    if (pcap == NULL) {
+        return -1;
+    }
+
+	return pcap_get_tstamp_precision(pcap);
 #endif
     return -1;
 }
@@ -1297,8 +1394,15 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapListDataLinks
 	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
 	return -1;
 #else
+
+    pcap_t *pcap = GetPcap(env, jpcap);
+
+    if (pcap == NULL) {
+        return -1;
+    }
+
 	int *dtl_buffer;
-	int count = pcap_list_datalinks(GetPcap(env, jpcap), &dtl_buffer);
+	int count = pcap_list_datalinks(pcap, &dtl_buffer);
 	int i;
 	for (i=0; i<count; i++) {
 		jclass jclazz = (*env)->FindClass(env, "java/lang/Integer");
@@ -1325,8 +1429,15 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapListTStampTypes
 	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
 	return -1;
 #else
+
+    pcap_t *pcap = GetPcap(env, jpcap);
+
+    if (pcap == NULL) {
+        return -1;
+    }
+
 	int *list_tstamp_type;
-	int count = pcap_list_tstamp_types(GetPcap(env, jpcap), &list_tstamp_type);
+	int count = pcap_list_tstamp_types(pcap, &list_tstamp_type);
 	int i;
 	for (i=0; i<count; i++) {
 		jclass jclazz = (*env)->FindClass(env, "java/lang/Integer");
@@ -1452,8 +1563,8 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapOfflineFilter
 	if (CheckNotNull(env, jpkt, NULL) == NULL) return -1;
 
 	struct bpf_program *fp = GetBpfProgram(env, jfp);
+
 	if (fp == NULL) {
-		ThrowNew(env, BPF_PROGRAM_CLOSE_EXCEPTION, "");
 		return (jint) -1;
 	}
 
