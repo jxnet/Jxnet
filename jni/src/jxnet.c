@@ -16,7 +16,11 @@
  */
 
 #include "../include/jxnet/com_ardikars_jxnet_Jxnet.h"
+#ifndef WIN32
 #include "../include/jxnet/pcap/pcap-int.h"
+#else
+#include "../include/pcap-int.h"
+#endif
 
 #include <pcap.h>
 #include <string.h>
@@ -382,10 +386,12 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetFilter
 		return (jint) -1;
 	}
 
+#ifndef WIN32
 	if (pcap->setfilter_op == NULL) {
 	    ThrowNew(env, NATIVE_EXCEPTION, NULL);
 	    return (jint) -1;
 	}
+#endif
 
 	struct bpf_program *fp = GetBpfProgram(env, jfp);
 
@@ -601,10 +607,12 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetDataLink
 		return (jint) -1;
 	}
 
+#ifndef WIN32
 	if (pcap->set_datalink_op == NULL) {
 	    ThrowNew(env, NATIVE_EXCEPTION, NULL);
         return (jint) -1;
 	}
+#endif
 
 	return (jint) pcap_set_datalink(pcap, (int) jdtl);
 }
@@ -842,10 +850,12 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetNonBlock
 		return (jint) -1;
 	}
 
+#ifndef WIN32
 	if (pcap->setnonblock_op == NULL) {
         ThrowNew(env, NATIVE_EXCEPTION, NULL);
         return -1;
     }
+#endif
 
 	char errbuf[PCAP_ERRBUF_SIZE];
 	errbuf[0] = '\0';
@@ -876,10 +886,12 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapGetNonBlock
 		return (jint) -1;
 	}
 
+#ifndef WIN32
 	if (pcap->getnonblock_op == NULL) {
 	    ThrowNew(env, NATIVE_EXCEPTION, NULL);
 	    return (jint) -1;
 	}
+#endif
 
 	char errbuf[PCAP_ERRBUF_SIZE];
 	errbuf[0] = '\0';
@@ -986,10 +998,12 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapStats
         return -1;
     }
 
+#ifndef WIN32
     if (pcap->stats_op == NULL) {
         ThrowNew(env, NATIVE_EXCEPTION, NULL);
         return -1;
     }
+#endif
 
 	struct pcap_stat stats;
 	memset(&stats, 0, sizeof(struct pcap_stat));
@@ -1224,10 +1238,12 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCanSetRfMon
 	    return -1;
 	}
 
+#ifndef WIN32
 	if (pcap->can_set_rfmon_op == NULL) {
 	    ThrowNew(env, NATIVE_EXCEPTION, NULL);
 	    return -1;
 	}
+#endif
 
 	return pcap_can_set_rfmon(pcap);
 }
@@ -1294,10 +1310,12 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapActivate
 	    return -1;
 	}
 
+#ifndef WIN32
 	if (pcap->activate_op == NULL) {
 	    ThrowNew(env, NATIVE_EXCEPTION, NULL);
 	    return (PCAP_ERROR_ACTIVATED);
 	}
+#endif
 
 	return pcap_activate(pcap);
 }
@@ -1326,10 +1344,12 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetDirection
         return -1;
     }
 
+#ifndef WIN32
     if (pcap->setdirection_op == NULL) {
         ThrowNew(env, NATIVE_EXCEPTION, NULL);
         return -1;
     }
+#endif
 
 	jstring direction = (jstring) (*env)->CallObjectMethod(env, jdirection, PcapDirectionNameMID);
 	const char *enumName = (*env)->GetStringUTFChars(env, direction, 0);
@@ -1677,10 +1697,12 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapInject
 		return (jint) -1;
 	}
 
+#ifndef WIN32
 	if (pcap->inject_op == NULL) {
 	    ThrowNew(env, NATIVE_EXCEPTION, NULL);
 	    return (jint) -1;
 	}
+#endif
 
 	const u_char *buf = (u_char *) (*env)->GetDirectBufferAddress(env, jbuf);
 
