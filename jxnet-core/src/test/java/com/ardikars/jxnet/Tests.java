@@ -27,22 +27,21 @@ public class Tests {
 	@Test
 	public void ex() {
 		StringBuilder errbuf = new StringBuilder();
-		Pcap pcap = Pcap.newInstance(
+		Pcap pcap = Pcap.dead(
 				Pcap.builder()
 				.errbuf(errbuf)
-				.source("wlp2s0")
+				.dataLinkType(DataLinkType.EN10MB)
 		);
 
-		BpfProgram bpfProgram = BpfProgram.newInstance(
+		BpfProgram bpfProgram = BpfProgram.bpf(
 				BpfProgram.builder()
 				.filter("icmp")
-				.bpfCompileMode(BpfProgram.BpfCompileMode.OPTIMIZE)
-				.netmask(Inet4Address.valueOf("255.255.255.0"))
 				.pcap(pcap)
 		);
 		System.out.println(bpfProgram);
 		Jxnet.PcapFreeCode(bpfProgram);
 		Jxnet.PcapClose(pcap);
+
 	}
 
 }

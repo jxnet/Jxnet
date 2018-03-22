@@ -79,6 +79,7 @@ import static com.ardikars.jxnet.Jxnet.PcapTStampTypeNameToVal;
 import static com.ardikars.jxnet.Jxnet.PcapTStampTypeValToDescription;
 import static com.ardikars.jxnet.Jxnet.PcapTStampTypeValToName;
 
+import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 import com.ardikars.jxnet.util.Platforms;
 
 import java.io.File;
@@ -533,36 +534,61 @@ public class JxnetTest {
 
     @Test
     public void Test26_PcapSetDirection() {
-        if ((resultCode = PcapSetDirection(pcap, PcapDirection.PCAP_D_IN)) != OK) {
-            logger.warning("PcapSetDirection:PcapSetDirection() " + PcapStrError(resultCode));
-            return;
+        try {
+            if ((resultCode = PcapSetDirection(pcap, PcapDirection.PCAP_D_IN)) != OK) {
+                logger.warning("PcapSetDirection:PcapSetDirection() " + PcapStrError(resultCode));
+                return;
+            }
+        } catch (PlatformNotSupportedException e) {
+            logger.warning(e.getMessage());
         }
     }
 
     @Test
     public void Test27_PcapGetTStampPrecisionAndPcapSetTStampPrecision() {
-        int timestamp = PcapGetTStampPrecision(pcap);
-        System.out.println("Time stamp precision (before): " + timestamp);
-        if ((resultCode = PcapSetTStampPrecision(pcap, (timestamp == 0 ? 1 : 0))) != OK) {
-            logger.warning("Timestamp precision not supported by operation system.");
+        int timestamp = 0;
+        try {
+            timestamp = PcapGetTStampPrecision(pcap);
+        } catch (PlatformNotSupportedException e) {
+            logger.warning(e.getMessage());
         }
-        timestamp = PcapGetTStampPrecision(pcap);
+        System.out.println("Time stamp precision (before): " + timestamp);
+        try {
+            if ((resultCode = PcapSetTStampPrecision(pcap, (timestamp == 0 ? 1 : 0))) != OK) {
+                logger.warning("Timestamp precision not supported by operation system.");
+            }
+        } catch (PlatformNotSupportedException e) {
+            logger.warning(e.getMessage());
+        }
+        try {
+            timestamp = PcapGetTStampPrecision(pcap);
+        } catch (PlatformNotSupportedException e) {
+            logger.warning(e.getMessage());
+        }
         System.out.println("Time stamp precision (after) : " + timestamp);
     }
 
     @Test
     public void Test28_PcapSetTStampType() {
-        if ((resultCode = PcapSetTStampType(pcap, 1)) != OK) {
-            logger.warning("Timestamp type not supported by operation system.");
+        try {
+            if ((resultCode = PcapSetTStampType(pcap, 1)) != OK) {
+                logger.warning("Timestamp type not supported by operation system.");
+            }
+        } catch (PlatformNotSupportedException e) {
+            logger.warning(e.getMessage());
         }
     }
 
     @Test
     public void Test29_PcapListDatalinks() {
         List<Integer> datalinks = new ArrayList<Integer>();
-        if ((resultCode = PcapListDataLinks(pcap, datalinks)) < 0) {
-            logger.warning("PcapListDataLinks:PcapListDataLinks(): " + PcapStrError(resultCode));
-            return;
+        try {
+            if ((resultCode = PcapListDataLinks(pcap, datalinks)) < 0) {
+                logger.warning("PcapListDataLinks:PcapListDataLinks(): " + PcapStrError(resultCode));
+                return;
+            }
+        } catch (PlatformNotSupportedException e) {
+            logger.warning(e.getMessage());
         }
         System.out.print("DataLinks:");
         for (Integer datalink : datalinks) {
@@ -574,9 +600,13 @@ public class JxnetTest {
     @Test
     public void Test30_PcapListTStampTypes() {
         List<Integer> tsTypes = new ArrayList<Integer>();
-        if ((resultCode = PcapListTStampTypes(pcap, tsTypes)) < 0) {
-            logger.warning("PcapListTStampTypes:PcapListTStampTypes(): " + PcapStrError(resultCode));
-            return;
+        try {
+            if ((resultCode = PcapListTStampTypes(pcap, tsTypes)) < 0) {
+                logger.warning("PcapListTStampTypes:PcapListTStampTypes(): " + PcapStrError(resultCode));
+                return;
+            }
+        } catch (PlatformNotSupportedException e) {
+            logger.warning(e.getMessage());
         }
         System.out.print("Time Stamp Types:");
         for (Integer tsType : tsTypes) {
@@ -588,22 +618,44 @@ public class JxnetTest {
     @Test
     public void Test31_PcapTStampTypeNameToValPcapTStampTypeValToNameAndPcapTStampTypeValToDescription() {
         int tsVal = TimeStampType.PCAP_TSTAMP_HOST.getType();
-        String tsName = PcapTStampTypeValToName(tsVal);
+        String tsName = null;
+        try {
+            tsName = PcapTStampTypeValToName(tsVal);
+        } catch (PlatformNotSupportedException e) {
+            logger.warning(e.getMessage());
+        }
         System.out.println("Time stamp name       : " + tsName);
-        System.out.println("Time stamp value      : " + PcapTStampTypeNameToVal(tsName));
-        System.out.println("Time stamp description: " + PcapTStampTypeValToDescription(tsVal));
+        try {
+            System.out.println("Time stamp value      : " + PcapTStampTypeNameToVal(tsName));
+        } catch (PlatformNotSupportedException e) {
+            logger.warning(e.getMessage());
+        }
+        try {
+            System.out.println("Time stamp description: " + PcapTStampTypeValToDescription(tsVal));
+        } catch (PlatformNotSupportedException e) {
+            logger.warning(e.getMessage());
+        }
     }
 
     @Test
     public void Test32_PcapStatusToStr() {
         int errNum = 2;
-        System.out.println("Pcap Error (" + errNum + "): " + PcapStatusToStr(errNum));
+        try {
+            System.out.println("Pcap Error (" + errNum + "): " + PcapStatusToStr(errNum));
+        } catch (PlatformNotSupportedException e) {
+            logger.warning(e.getMessage());
+        }
     }
 
     @Test
     public void Test33_PcapOpenDeadWithTStampPrecisionAndPcapClose() {
         DataLinkType linkType = DataLinkType.LINUX_SLL;
-        Pcap pcap = PcapOpenDeadWithTStampPrecision(linkType.getValue(), snaplen, precision);
+        Pcap pcap = null;
+        try {
+            pcap = PcapOpenDeadWithTStampPrecision(linkType.getValue(), snaplen, precision);
+        } catch (PlatformNotSupportedException e) {
+            logger.warning(e.getMessage());
+        }
         if (pcap == null) {
             logger.warning("PcapOpenDeadWithTStampPrecisionAndPcapClose:"
                     + "PcapOpenDeadWithTStampPrecision(): ");
@@ -614,7 +666,12 @@ public class JxnetTest {
 
     @Test
     public void Test34_PcapOfflineFilterPcapOpenOfflineWithTStampPrecisionAndPcapClose() {
-        Pcap pcap = PcapOpenOfflineWithTStampPrecision(resourceDumpFile, precision, errbuf);
+        Pcap pcap = null;
+        try {
+            pcap = PcapOpenOfflineWithTStampPrecision(resourceDumpFile, precision, errbuf);
+        } catch (PlatformNotSupportedException e) {
+            logger.warning(e.getMessage());
+        }
         if (pcap == null) {
             logger.warning("PcapOfflineFilterPcapOpenOfflineWithTStampPrecisionAndPcapClose:"
                     + "PcapOpenOfflineWithTStampPrecision(): " + errbuf.toString());

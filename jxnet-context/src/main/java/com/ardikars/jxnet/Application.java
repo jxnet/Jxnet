@@ -20,12 +20,8 @@ package com.ardikars.jxnet;
 import com.ardikars.jxnet.exception.PropertyNotFoundException;
 import com.ardikars.jxnet.util.Platforms;
 
-import java.io.File;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -120,38 +116,6 @@ public class Application {
         } catch (IllegalAccessException e) {
             LOGGER.warning(e.getMessage());
             return;
-        }
-
-        if (Platforms.isWindows()) {
-            String paths = System.getProperty("java.library.path");
-            final String path = "C:\\Windows\\System32\\Npcap";
-            final String pathSparator = File.pathSeparator;
-            final String[] libraryPaths = paths.split(pathSparator);
-            boolean isAdded = false;
-            for (final String str : libraryPaths) {
-                if (str.equals(path)) {
-                    isAdded = true;
-                    break;
-                }
-            }
-            if (!isAdded) {
-                paths = paths.concat(pathSparator + path);
-                System.setProperty("java.library.path", paths);
-                Field sysPathsField;
-                try {
-                    sysPathsField = ClassLoader.class.getDeclaredField("sys_paths");
-                } catch (NoSuchFieldException e) {
-                    LOGGER.warning(e.getMessage());
-                    throw new UnsatisfiedLinkError(e.getMessage());
-                }
-                sysPathsField.setAccessible(true);
-                try {
-                    sysPathsField.set(null, null);
-                } catch (IllegalAccessException e) {
-                    LOGGER.warning(e.getMessage());
-                    throw new UnsatisfiedLinkError(e.getMessage());
-                }
-            }
         }
 
         if (getInstance().developmentMode && !getInstance().loaded) {

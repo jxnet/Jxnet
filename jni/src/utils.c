@@ -123,6 +123,7 @@ pcap_t *GetPcap(JNIEnv *env, jobject jpcap) {
 	jlong pcap = 0;
 	if ((pcap = (*env)->CallLongMethod(env, jpcap, PcapGetAddressMID)) == 0) {
 		ThrowNew(env, PCAP_CLOSE_EXCEPTION, NULL);
+		return NULL;
 	}
 	return JlongToPointer(pcap);
 }
@@ -132,19 +133,6 @@ jobject SetFile(JNIEnv *env, FILE *file) {
 	jobject obj = NewObject(env, "com/ardikars/jxnet/File", "<init>", "()V");
 	(*env)->SetLongField(env, obj, FileAddressFID, PointerToJlong(file));
 	return obj;
-}
-
-FILE *GetFile(JNIEnv *env, jobject jf) {
-	if (jf == NULL) {
-		ThrowNew(env, NULL_PTR_EXCEPTION, NULL);
-		return NULL;
-	}
-	SetFileIDs(env);
-	jlong file = 0;
-	if ((file = (*env)->CallLongMethod(env, jf, FileGetAddressMID)) == 0) {
-		ThrowNew(env, FILE_CLOSE_EXCEPTION, NULL);
-	}
-	return JlongToPointer(file);
 }
 
 jobject SetPcapDumper(JNIEnv *env, pcap_dumper_t *pcap_dumper) {
@@ -163,6 +151,7 @@ pcap_dumper_t *GetPcapDumper(JNIEnv *env, jobject jpcap_dumper) {
 	jlong pcap_dumper = 0;
 	if ((pcap_dumper = (*env)->CallLongMethod(env, jpcap_dumper, PcapDumperGetAddressMID)) == 0) {
 		ThrowNew(env, PCAP_DUMPER_CLOSE_EXCEPTION, NULL);
+		return NULL;
 	}
 	return JlongToPointer(pcap_dumper);
 }
@@ -182,6 +171,7 @@ struct bpf_program *GetBpfProgram(JNIEnv *env, jobject jbpf_program) {
 	jlong bpf_program = 0;
 	if ((bpf_program = (*env)->CallLongMethod(env, jbpf_program, BpfProgramGetAddressMID)) == 0) {
 		ThrowNew(env, BPF_PROGRAM_CLOSE_EXCEPTION, NULL);
+		return NULL;
 	}
 	return JlongToPointer(bpf_program);
 }

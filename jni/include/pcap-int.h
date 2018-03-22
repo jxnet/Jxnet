@@ -60,6 +60,8 @@ extern CRITICAL_SECTION g_PcapCompileCriticalSection;
 #include <io.h>
 #endif
 
+#define MAXIMUM_SNAPLEN 262144
+
 #if (defined(_MSC_VER) && (_MSC_VER <= 1200)) /* we are compiling with Visual Studio 6, that doesn't support the LL suffix*/
 
 /*
@@ -456,15 +458,15 @@ int	pcap_read(pcap_t *, int cnt, pcap_handler, u_char *);
 
 #include <stdarg.h>
 
-#if !defined(HAVE_SNPRINTF)
-#define snprintf pcap_snprintf
-extern int snprintf (char *, size_t, const char *, ...);
-#endif
+//#if !defined(HAVE_SNPRINTF)
+//#define snprintf pcap_snprintf
+//extern int snprintf (char *, size_t, const char *, ...);
+//#endif
 
-#if !defined(HAVE_VSNPRINTF)
-#define vsnprintf pcap_vsnprintf
-extern int vsnprintf (char *, size_t, const char *, va_list ap);
-#endif
+//#if !defined(HAVE_VSNPRINTF)
+//#define vsnprintf pcap_vsnprintf
+//extern int vsnprintf (char *, size_t, const char *, va_list ap);
+//#endif
 
 /*
  * Routines that most pcap implementations can use for non-blocking mode.

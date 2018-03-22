@@ -17,7 +17,6 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.util.Platforms;
 import com.ardikars.jxnet.util.Validate;
 
 import java.io.File;
@@ -26,7 +25,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
@@ -97,21 +95,8 @@ public final class Library {
                 e.printStackTrace();
             }
         }
-        if (Platforms.isWindows()) {
-            if (!new File("C:\\Windows\\System32\\wpcap.dll").exists()) {
-                System.load(temp.getAbsolutePath());
-                LOGGER.info("Successfully loaded the jxnet native library.");
-            } else {
-                if (new File("C:\\Windows\\System32\\Npcap\\wpcap.dll").exists()) {
-                    LOGGER.log(Level.ALL, "Npcap is installed with no winpcap supported mode.");
-                } else {
-                    LOGGER.log(Level.ALL, "Npcap is not installed.");
-                }
-            }
-        } else {
-            System.load(temp.getAbsolutePath());
-            LOGGER.info("Successfully loaded the jxnet native library.");
-        }
+        System.load(temp.getAbsolutePath());
+        LOGGER.info("Successfully loaded the jxnet native library.");
     }
 
 }

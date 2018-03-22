@@ -23,7 +23,7 @@ package com.ardikars.jxnet;
  */
 public final class PcapPktHdr implements Cloneable {
 
-	// This field will be replaced by native code
+	// This field value will be replaced by native code
 	private int caplen;
 	private int len;
 	

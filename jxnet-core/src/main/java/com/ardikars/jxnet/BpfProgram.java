@@ -61,8 +61,8 @@ public final class BpfProgram implements PointerHandler {
 	 * @param builder filter builder.
 	 * @return BpfProgram (filter handle).
 	 */
-	public static BpfProgram newInstance(Builder builder) {
-		return builder.build();
+	public static BpfProgram bpf(Builder builder) {
+		return builder.buildBpf();
 	}
 
 	/**
@@ -131,12 +131,12 @@ public final class BpfProgram implements PointerHandler {
 	/**
 	 * Builder class for BpfProgram.
 	 */
-	public static final class Builder implements com.ardikars.jxnet.common.Builder<BpfProgram> {
+	public static final class Builder {
 
 		private Pcap pcap;
 		private String filter;
-		private Inet4Address netmask;
-		private BpfCompileMode bpfCompileMode;
+		private Inet4Address netmask = Pcap.PCAP_NETMASK_UNKNOWN;
+		private BpfCompileMode bpfCompileMode = BpfCompileMode.OPTIMIZE;
 
 		/**
 		 * Pcap handle.
@@ -178,13 +178,10 @@ public final class BpfProgram implements PointerHandler {
 			return this;
 		}
 
-		@Override
-		public BpfProgram build() {
+		public BpfProgram buildBpf() {
 			Validate.nullPointer(pcap);
 			Validate.illegalArgument(!pcap.isClosed(), new IllegalArgumentException("Pcap handle is closed."));
 			Validate.illegalArgument(filter != null && !filter.equals(""));
-			Validate.nullPointer(netmask);
-			Validate.nullPointer(bpfCompileMode);
 
 			BpfProgram bpfProgram = new BpfProgram();
 			if (Jxnet.PcapCompile(pcap, bpfProgram, filter, bpfCompileMode.getValue(), netmask.toInt()) != Jxnet.OK) {
