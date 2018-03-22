@@ -16,7 +16,7 @@
  */
 
 #include "../include/jxnet/com_ardikars_jxnet_Jxnet.h"
-#include "../include/pcap-int.h"
+#include "../include/jxnet/pcap/pcap-int.h"
 
 #include <pcap.h>
 #include <string.h>
