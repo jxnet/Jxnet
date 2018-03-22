@@ -30,6 +30,8 @@ public final class Pcap implements PointerHandler {
 
 	public static final Inet4Address PCAP_NETMASK_UNKNOWN = Inet4Address.valueOf(0xffffffff);
 
+	public static final int MAXIMUM_SNAPLEN = 262144;
+
 	private DataLinkType dataLinkType;
 
 	private int snapshotLength;

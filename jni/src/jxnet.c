@@ -157,7 +157,7 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapOpenLive
 		 jint jto_ms, jobject jerrbuf) {
 
 	if (CheckNotNull(env, jsource, NULL) == NULL) return NULL;
-	if (!CheckArgument(env, (jsnaplen > 0 && jsnaplen < 65536 &&
+	if (!CheckArgument(env, (jsnaplen > 0 && jsnaplen <= MAXIMUM_SNAPLEN &&
 							 (jpromisc == 0 || jpromisc == 1) && jto_ms > 0), NULL)) return NULL;
 	if (CheckNotNull(env, jerrbuf, NULL) == NULL) return NULL;
 
@@ -898,7 +898,7 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapOpenDead
 		(JNIEnv *env, jclass jcls, jint jlinktype, jint jsnaplen) {
 
 	if (!CheckArgument(env, (jlinktype > -1), NULL)) return NULL;
-	if (!CheckArgument(env, (jsnaplen > 0 || jsnaplen < 65536), NULL)) return NULL;
+	if (!CheckArgument(env, (jsnaplen > 0 || jsnaplen <= MAXIMUM_SNAPLEN), NULL)) return NULL;
 
 	pcap_t *pcap = pcap_open_dead((int) jlinktype, (int) jsnaplen);
 
@@ -1057,7 +1057,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCompileNoPcap
 		(JNIEnv *env, jclass jclass, jint jsnaplen_arg, jint jlinktype_arg, jobject jprogram,
 		 jstring jbuf, jint joptimize, jint jmask) {
 
-	if (!CheckArgument(env, (jsnaplen_arg > 0 && jsnaplen_arg < 65536), NULL)) return -1;
+	if (!CheckArgument(env, (jsnaplen_arg > 0 && jsnaplen_arg <= MAXIMUM_SNAPLEN), NULL)) return -1;
 	if (!CheckArgument(env, (jlinktype_arg > -1), NULL)) return -1;
 	if (CheckNotNull(env, jprogram, NULL) == NULL) return -1;
 	if (CheckNotNull(env, jbuf, NULL) == NULL) return -1;
@@ -1137,7 +1137,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetSnaplen
 		(JNIEnv *env, jclass jclazz, jobject jpcap, jint jsnaplen) {
 
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
-	if (!CheckArgument(env, (jsnaplen > 0 && jsnaplen < 65536), NULL)) return -1;
+	if (!CheckArgument(env, (jsnaplen > 0 && jsnaplen <= MAXIMUM_SNAPLEN), NULL)) return -1;
 
 	pcap_t *pcap = GetPcap(env, jpcap);
 
@@ -1578,7 +1578,7 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapOpenDeadWithTStampPr
 		(JNIEnv *env, jclass jclazz, jint jlinktype, jint jsnaplen, jint jprecision) {
 
 	if (!CheckArgument(env, (jlinktype > -1), NULL)) return NULL;
-	if (!CheckArgument(env, (jsnaplen > 0 || jsnaplen < 65536), NULL)) return NULL;
+	if (!CheckArgument(env, (jsnaplen > 0 || jsnaplen <= MAXIMUM_SNAPLEN), NULL)) return NULL;
 	if (!CheckArgument(env, (jprecision >= 0 || jprecision <= 1), NULL)) return NULL;
 #if defined(WIN32)
 	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
