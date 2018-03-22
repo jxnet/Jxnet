@@ -28,6 +28,8 @@ import static com.ardikars.jxnet.Jxnet.PcapSetRfMon;
 import static com.ardikars.jxnet.Jxnet.PcapSnapshot;
 import static com.ardikars.jxnet.Jxnet.PcapStrError;
 
+import com.ardikars.jxnet.exception.PlatformNotSupportedException;
+
 import java.util.logging.Logger;
 
 import org.junit.After;
@@ -76,9 +78,13 @@ public class FreakTest {
 
     @Test
     public void Test04_PcapSetDirection() {
-        if ((resultCode = PcapSetDirection(pcap, PcapDirection.PCAP_D_IN)) != OK) {
-            logger.warning("PcapSetDirection:PcapSetDirection() " + PcapStrError(resultCode));
-            return;
+        try {
+            if ((resultCode = PcapSetDirection(pcap, PcapDirection.PCAP_D_IN)) != OK) {
+                logger.warning("PcapSetDirection:PcapSetDirection() " + PcapStrError(resultCode));
+                return;
+            }
+        } catch (PlatformNotSupportedException e) {
+            logger.warning(e.getMessage());
         }
     }
 
