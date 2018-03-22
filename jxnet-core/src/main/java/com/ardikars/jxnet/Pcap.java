@@ -17,6 +17,9 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.jxnet.exception.NativeException;
+import com.ardikars.jxnet.exception.PlatformNotSupportedException;
+import com.ardikars.jxnet.util.Platforms;
 import com.ardikars.jxnet.util.Validate;
 
 /**
@@ -42,8 +45,16 @@ public final class Pcap implements PointerHandler {
 	 * @param builder builder.
 	 * @return pcap handle.
 	 */
-	public static Pcap newInstance(Builder builder) {
-		return builder.build();
+	public static Pcap live(Builder builder) {
+		return builder.buildLive();
+	}
+
+	public static Pcap dead(Builder builder) {
+		return builder.buildDead();
+	}
+
+	public static Pcap offline(Builder builder) {
+		return builder.buildOffline();
 	}
 
 	public static Builder builder() {
@@ -127,7 +138,7 @@ public final class Pcap implements PointerHandler {
 		return sb.toString();
 	}
 
-	public static final class Builder implements com.ardikars.jxnet.common.Builder<Pcap> {
+	public static final class Builder {
 
 		private String source;
 		private int snaplen = 65534;
@@ -140,6 +151,10 @@ public final class Pcap implements PointerHandler {
 		private boolean enableRfMon;
 		private boolean enableNonBlock;
 		private StringBuilder errbuf;
+
+		private DataLinkType dataLinkType;
+
+		private String fileName;
 
 		public Builder source(final String source) {
 			this.source = source;
@@ -196,33 +211,99 @@ public final class Pcap implements PointerHandler {
 			return this;
 		}
 
-		@Override
-		public Pcap build() {
-			Validate.nullPointer(source);
-			Validate.illegalArgument(snaplen > 0 && snaplen < 65536);
-			Validate.illegalArgument(timeout > 0);
-			Validate.nullPointer(errbuf);
+		public Builder dataLinkType(final DataLinkType dataLinkType) {
+			this.dataLinkType = dataLinkType;
+			return this;
+		}
+
+		public Builder fileName(final String fileName) {
+			this.fileName = fileName;
+			return this;
+		}
+
+		public Pcap buildLive() {
+			Validate.nullPointer(source, new NullPointerException("Device name should be not null."));
+			Validate.illegalArgument(snaplen > 0 && snaplen < 65536,
+					new IllegalArgumentException("Snaplen should be greater then 0 and less then 65536."));
+			Validate.illegalArgument(timeout > 0, new IllegalArgumentException("Timeout should be greater then 0."));
+			Validate.nullPointer(errbuf, new NullPointerException("Error buffer should be not null."));
 
 			Pcap pcap = Jxnet.PcapCreate(source, errbuf);
-			Jxnet.PcapSetImmediateMode(pcap, immediateMode);
-			Jxnet.PcapSetSnaplen(pcap, snaplen);
-			Jxnet.PcapSetPromisc(pcap, promiscuousMode);
-			Jxnet.PcapSetTimeout(pcap, timeout);
-			Jxnet.PcapSetDirection(pcap, direction);
-			Jxnet.PcapSetTStampType(pcap, timeStampType.getValue());
-			Jxnet.PcapSetTStampPrecision(pcap, timeStampPrecision.getValue());
-			Jxnet.PcapActivate(pcap);
+			if (Jxnet.PcapSetSnaplen(pcap, snaplen) != Jxnet.OK) {
+				throw new NativeException();
+			}
+			if (Jxnet.PcapSetPromisc(pcap, promiscuousMode) != Jxnet.OK) {
+				throw new NativeException();
+			}
+			if (Jxnet.PcapSetTimeout(pcap, timeout) != Jxnet.OK) {
+				throw new NativeException();
+			}
+			if (!Platforms.isWindows()) {
+				if (Jxnet.PcapSetImmediateMode(pcap, immediateMode) != Jxnet.OK) {
+					throw new NativeException();
+				}
+				if (Jxnet.PcapSetTStampType(pcap, timeStampType.getValue()) != Jxnet.OK) {
+					throw new NativeException();
+				}
+				if (Jxnet.PcapSetTStampPrecision(pcap, timeStampPrecision.getValue()) != Jxnet.OK) {
+					throw new NativeException();
+				}
+			}
 			if (enableRfMon) {
-				if (Jxnet.PcapCanSetRfMon(pcap) == Jxnet.OK) {
-					Jxnet.PcapSetRfMon(pcap, RadioFrequencyMonitorMode.RFMON.getValue());
+				if (Jxnet.PcapCanSetRfMon(pcap) == 1) {
+					if (Jxnet.PcapSetRfMon(pcap, RadioFrequencyMonitorMode.RFMON.getValue()) != Jxnet.OK) {
+						throw new NativeException();
+					}
 				}
 			} else {
-				Jxnet.PcapSetRfMon(pcap, RadioFrequencyMonitorMode.NON_RFMON.getValue());
+				if (Jxnet.PcapSetRfMon(pcap, RadioFrequencyMonitorMode.NON_RFMON.getValue()) != Jxnet.OK) {
+					throw new NativeException();
+				}
+			}
+			if (Jxnet.PcapActivate(pcap) != Jxnet.OK) {
+				throw new NativeException();
+			}
+			if (Jxnet.PcapSetDirection(pcap, direction) != Jxnet.OK) {
+				throw new PlatformNotSupportedException();
 			}
 			if (enableNonBlock) {
-				Jxnet.PcapSetNonBlock(pcap, 1, errbuf);
+				if (Jxnet.PcapSetNonBlock(pcap, 1, errbuf) != Jxnet.OK) {
+					throw new NativeException();
+				}
 			} else {
-				Jxnet.PcapSetNonBlock(pcap, 0, errbuf);
+				if (Jxnet.PcapSetNonBlock(pcap, 0, errbuf) != Jxnet.OK) {
+					throw new NativeException();
+				}
+			}
+			return pcap;
+		}
+
+		public Pcap buildDead() {
+			Validate.nullPointer(dataLinkType, new NullPointerException("Datalink type should be not null."));
+			Pcap pcap;
+			if (Platforms.isWindows()) {
+				pcap = Jxnet.PcapOpenDead(dataLinkType.getValue(), snaplen);
+			} else {
+				pcap = Jxnet.PcapOpenDeadWithTStampPrecision(dataLinkType.getValue(), snaplen, timeStampPrecision.getValue());
+			}
+			if (pcap == null) {
+				throw new NativeException();
+			}
+			return pcap;
+		}
+
+		public Pcap buildOffline() {
+			Validate.nullPointer(fileName, new NullPointerException("File name should be not null."));
+			Validate.nullPointer(errbuf, new NullPointerException("Error buffer should be not null."));
+			Pcap pcap;
+			if (Platforms.isWindows()) {
+				pcap = Jxnet.PcapOpenOffline(fileName, errbuf);
+			} else {
+				pcap = Jxnet.PcapOpenOfflineWithTStampPrecision(fileName, timeStampPrecision.getValue(), errbuf);
+
+			}
+			if (pcap == null) {
+				throw new NativeException();
 			}
 			return pcap;
 		}

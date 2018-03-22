@@ -17,6 +17,7 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.jxnet.exception.DeviceNotFoundException;
 import com.ardikars.jxnet.util.Validate;
 
 import java.util.Arrays;
@@ -71,8 +72,9 @@ public final class MacAddress implements Cloneable {
 	 * Create MacAddress instance from NIC name.
 	 * @param nicName NIC name.
 	 * @return MacAddress instance.
+	 * @throws DeviceNotFoundException device not found exception.
 	 */
-	public static native MacAddress fromNicName(final String nicName);
+	public static native MacAddress fromNicName(final String nicName) throws DeviceNotFoundException;
 
 	/**
 	 * Create MacAddress instance.

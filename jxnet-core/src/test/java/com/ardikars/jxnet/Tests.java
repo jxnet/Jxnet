@@ -26,23 +26,27 @@ public class Tests {
 
 	@Test
 	public void ex() {
-		StringBuilder errbuf = new StringBuilder();
-		Pcap pcap = Pcap.newInstance(
-				Pcap.builder()
-				.errbuf(errbuf)
-				.source("wlp2s0")
-		);
+//		StringBuilder errbuf = new StringBuilder();
+//		Pcap pcap = Pcap.dead(
+//				Pcap.builder()
+//				.errbuf(errbuf)
+//				.dataLinkType(DataLinkType.EN10MB)
+//		);
+//
+//		BpfProgram bpfProgram = new BpfProgram();
+//
+//		Jxnet.PcapCompile(pcap, bpfProgram, "icmp", 1, Pcap.PCAP_NETMASK_UNKNOWN.toInt());
+//		Jxnet.PcapSetFilter(pcap, bpfProgram);
 
-		BpfProgram bpfProgram = BpfProgram.newInstance(
-				BpfProgram.builder()
-				.filter("icmp")
-				.bpfCompileMode(BpfProgram.BpfCompileMode.OPTIMIZE)
-				.netmask(Inet4Address.valueOf("255.255.255.0"))
-				.pcap(pcap)
-		);
-		System.out.println(bpfProgram);
-		Jxnet.PcapFreeCode(bpfProgram);
-		Jxnet.PcapClose(pcap);
+//		BpfProgram bpfProgram = BpfProgram.bpf(
+//				BpfProgram.builder()
+//				.filter("icmp")
+//				.pcap(pcap)
+//		);
+//		System.out.println(bpfProgram);
+//		Jxnet.PcapFreeCode(bpfProgram);
+//		Jxnet.PcapClose(pcap);
+
 	}
 
 }
