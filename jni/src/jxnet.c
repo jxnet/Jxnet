@@ -18,6 +18,7 @@
 #include "../include/jxnet/com_ardikars_jxnet_Jxnet.h"
 
 #include <pcap.h>
+#include <pcap/pcap-int.h>
 #include <string.h>
 
 #include "ids.h"
@@ -381,6 +382,11 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetFilter
 		return (jint) -1;
 	}
 
+	if (pcap->setfilter_op == NULL) {
+	    ThrowNew(env, NATIVE_EXCEPTION, NULL);
+	    return (jint) -1;
+	}
+
 	struct bpf_program *fp = GetBpfProgram(env, jfp);
 
 	if (fp == NULL) {
@@ -593,6 +599,11 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetDataLink
 
 	if (pcap == NULL) {
 		return (jint) -1;
+	}
+
+	if (pcap->set_datalink_op == NULL) {
+	    ThrowNew(env, NATIVE_EXCEPTION, NULL);
+        return (jint) -1;
 	}
 
 	return (jint) pcap_set_datalink(pcap, (int) jdtl);
@@ -830,6 +841,11 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetNonBlock
 	if (pcap == NULL) {
 		return (jint) -1;
 	}
+
+	if (pcap->setnonblock_op == NULL) {
+        ThrowNew(env, NATIVE_EXCEPTION, NULL);
+        return -1;
+    }
 
 	char errbuf[PCAP_ERRBUF_SIZE];
 	errbuf[0] = '\0';
@@ -1287,6 +1303,11 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetDirection
     pcap_t *pcap = GetPcap(env, jpcap);
 
     if (pcap == NULL) {
+        return -1;
+    }
+
+    if (pcap->setdirection_op == NULL) {
+        ThrowNew(env, NATIVE_EXCEPTION, NULL);
         return -1;
     }
 
