@@ -16,9 +16,9 @@
  */
 
 #include "../include/jxnet/com_ardikars_jxnet_Jxnet.h"
+#include "../include/pcap-int.h"
 
 #include <pcap.h>
-#include <pcap/pcap-int.h>
 #include <string.h>
 
 #include "ids.h"
@@ -876,6 +876,11 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapGetNonBlock
 		return (jint) -1;
 	}
 
+	if (pcap->getnonblock_op == NULL) {
+	    ThrowNew(env, NATIVE_EXCEPTION, NULL);
+	    return (jint) -1;
+	}
+
 	char errbuf[PCAP_ERRBUF_SIZE];
 	errbuf[0] = '\0';
 
@@ -978,6 +983,11 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapStats
     pcap_t *pcap = GetPcap(env, jpcap);
 
     if (pcap == NULL) {
+        return -1;
+    }
+
+    if (pcap->stats_op == NULL) {
+        ThrowNew(env, NATIVE_EXCEPTION, NULL);
         return -1;
     }
 
@@ -1214,6 +1224,11 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCanSetRfMon
 	    return -1;
 	}
 
+	if (pcap->can_set_rfmon_op == NULL) {
+	    ThrowNew(env, NATIVE_EXCEPTION, NULL);
+	    return -1;
+	}
+
 	return pcap_can_set_rfmon(pcap);
 }
 
@@ -1277,6 +1292,11 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapActivate
 
 	if (pcap == NULL) {
 	    return -1;
+	}
+
+	if (pcap->activate_op == NULL) {
+	    ThrowNew(env, NATIVE_EXCEPTION, NULL);
+	    return (PCAP_ERROR_ACTIVATED);
 	}
 
 	return pcap_activate(pcap);
@@ -1655,6 +1675,11 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapInject
 
 	if (pcap == NULL) {
 		return (jint) -1;
+	}
+
+	if (pcap->inject_op == NULL) {
+	    ThrowNew(env, NATIVE_EXCEPTION, NULL);
+	    return (jint) -1;
 	}
 
 	const u_char *buf = (u_char *) (*env)->GetDirectBufferAddress(env, jbuf);
