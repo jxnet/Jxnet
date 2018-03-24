@@ -68,9 +68,13 @@ jobject NewSockAddr(JNIEnv *env, struct sockaddr *addr);
 
 jobject SetPcap(JNIEnv *env, pcap_t *pcap);
 
+jobject SetDeadPcap(JNIEnv *env, pcap_t *pcap);
+
 jobject SetFile(JNIEnv *env, FILE *file);
 
 pcap_t *GetPcap(JNIEnv *env, jobject jpcap);
+
+pcap_t *GetNotDeadPcap(JNIEnv *env, jobject jpcap);
 
 FILE *GetFile(JNIEnv *env, jobject jf);
 

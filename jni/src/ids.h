@@ -58,7 +58,9 @@ void SetSockAddrIDs(JNIEnv *env);
 
 extern jclass PcapClass;
 extern jfieldID PcapAddressFID;
+extern jfieldID PcapIsDeadFID;
 extern jmethodID PcapGetAddressMID;
+extern jmethodID PcapIsDeadMID;
 
 void SetPcapIDs(JNIEnv *env);
 

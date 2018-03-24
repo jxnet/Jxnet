@@ -114,12 +114,38 @@ jobject SetPcap(JNIEnv *env, pcap_t *pcap) {
 	return obj;
 }
 
+jobject SetDeadPcap(JNIEnv *env, pcap_t *pcap) {
+	SetPcapIDs(env);
+	jobject obj = NewObject(env, "com/ardikars/jxnet/Pcap", "<init>", "()V");
+	(*env)->SetLongField(env, obj, PcapAddressFID, PointerToJlong(pcap));
+	(*env)->SetBooleanField(env, obj, PcapIsDeadFID, JNI_TRUE);
+	return obj;
+}
+
 pcap_t *GetPcap(JNIEnv *env, jobject jpcap) {
 	if (jpcap == NULL) {
 		ThrowNew(env, NULL_PTR_EXCEPTION, NULL);
 		return NULL;
 	}
 	SetPcapIDs(env);
+	jlong pcap = 0;
+	if ((pcap = (*env)->CallLongMethod(env, jpcap, PcapGetAddressMID)) == 0) {
+		ThrowNew(env, PCAP_CLOSE_EXCEPTION, NULL);
+		return NULL;
+	}
+	return JlongToPointer(pcap);
+}
+
+pcap_t *GetNotDeadPcap(JNIEnv *env, jobject jpcap) {
+	if (jpcap == NULL) {
+		ThrowNew(env, NULL_PTR_EXCEPTION, NULL);
+		return NULL;
+	}
+	SetPcapIDs(env);
+	if (JNI_TRUE == (*env)->CallBooleanMethod(env, jpcap, PcapIsDeadMID)) {
+        ThrowNew(env, NATIVE_EXCEPTION, "Operation not supported on a PcapOpenDead():Pcap.");
+        return NULL;
+    }
 	jlong pcap = 0;
 	if ((pcap = (*env)->CallLongMethod(env, jpcap, PcapGetAddressMID)) == 0) {
 		ThrowNew(env, PCAP_CLOSE_EXCEPTION, NULL);

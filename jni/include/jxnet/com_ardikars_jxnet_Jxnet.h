@@ -9,6 +9,8 @@ extern "C" {
 #endif
 #undef com_ardikars_jxnet_Jxnet_OK
 #define com_ardikars_jxnet_Jxnet_OK 0L
+#undef com_ardikars_jxnet_Jxnet_PCAP_ERRBUF_SIZE
+#define com_ardikars_jxnet_Jxnet_PCAP_ERRBUF_SIZE 255L
 /*
  * Class:     com_ardikars_jxnet_Jxnet
  * Method:    PcapFindAllDevs
@@ -496,6 +498,14 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapOpenOfflineWithTStam
  */
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapInject
   (JNIEnv *, jclass, jobject, jobject, jint);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapCheckActivated
+ * Signature: (Lcom/ardikars/jxnet/Pcap;)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCheckActivated
+  (JNIEnv *, jclass, jobject);
 
 #ifdef __cplusplus
 }

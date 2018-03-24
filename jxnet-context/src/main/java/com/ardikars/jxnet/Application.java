@@ -18,7 +18,6 @@
 package com.ardikars.jxnet;
 
 import com.ardikars.jxnet.exception.PropertyNotFoundException;
-import com.ardikars.jxnet.util.Platforms;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -100,11 +99,11 @@ public class Application {
      * @throws UnsatisfiedLinkError UnsatisfiedLinkError.
      */
     public static void run(final String applicationName, final String applicationVersion,
-                           Class initializerClass) {
+                           Class initializerClass, Context applicationContext) {
 
         getInstance().applicationName = applicationName;
         getInstance().applicationVersion = applicationVersion;
-        getInstance().context = new ApplicationContext();
+        getInstance().context = applicationContext;
 
         ApplicationInitializer initializer = null;
         try {
@@ -181,30 +180,12 @@ public class Application {
      * Get application context.
      * @return application context.
      */
-    public static Application.Context getApplicationContext() {
-        final Application.Context context = getInstance().getContext();
+    public static Context getApplicationContext() {
+        final Context context = getInstance().getContext();
         if (context == null) {
             throw new NullPointerException("No application context found.");
         }
         return context;
-    }
-
-    public interface Context {
-
-        String getApplicationName();
-
-        String getApplicationVersion();
-
-        Object getProperty(String key) throws PropertyNotFoundException;
-
-        <T> T getProperty(String name, Class<T> requiredType) throws ClassCastException, PropertyNotFoundException;
-
-        void removeProperty(String key);
-
-        Map<String, Object> getProperties();
-
-        void addLibrary(Library.Loader libraryLoader);
-
     }
 
 }
