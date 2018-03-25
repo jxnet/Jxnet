@@ -28,6 +28,7 @@ public class Tests {
 
 	@Test
 	public void ex() {
+		Application.run("Tests", "0.0.1", LoaderTest.Initializer.class, new ApplicationContext());
 		StringBuilder errbuf = new StringBuilder();
 		Pcap pcap = Pcap.dead(
 				Pcap.builder()

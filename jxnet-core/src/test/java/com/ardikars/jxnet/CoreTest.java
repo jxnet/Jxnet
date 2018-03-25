@@ -36,6 +36,7 @@ import static com.ardikars.jxnet.Core.PcapSetPromisc;
 import static com.ardikars.jxnet.Core.PcapSetTStampType;
 import static com.ardikars.jxnet.Jxnet.OK;
 import static com.ardikars.jxnet.Jxnet.PcapActivate;
+import static com.ardikars.jxnet.Jxnet.PcapCheckActivated;
 import static com.ardikars.jxnet.Jxnet.PcapClose;
 import static com.ardikars.jxnet.Jxnet.PcapDumpClose;
 import static com.ardikars.jxnet.Jxnet.PcapDumpOpen;
@@ -116,6 +117,10 @@ public class CoreTest {
      */
     @Before
     public void create() throws Exception {
+        Application.run("CoreTest", "0.0.1", LoaderTest.Initializer.class, new ApplicationContext());
+        if ((resultCode = PcapFindAllDevs(alldevsp, errbuf)) != OK) {
+            logger.warning("create:PcapFindAllDevs(): " + errbuf.toString());
+        }
         if ((resultCode = PcapFindAllDevs(alldevsp, errbuf)) != OK) {
             logger.warning("create:PcapFindAllDevs(): " + errbuf.toString());
         }
@@ -164,10 +169,12 @@ public class CoreTest {
                 return;
             }
         }
-        if ((resultCode = PcapActivate(pcap)) != OK) {
-            logger.warning("create:PcapActivate(): " + PcapStrError(resultCode));
-            PcapClose(pcap);
-            return;
+        if ((resultCode = PcapCheckActivated(pcap)) == 0) {
+            if ((resultCode = PcapActivate(pcap)) != OK) {
+                logger.warning("create:PcapActivate(): " + PcapStrError(resultCode));
+                PcapClose(pcap);
+                return;
+            }
         }
 
         bpfProgram = new BpfProgram();

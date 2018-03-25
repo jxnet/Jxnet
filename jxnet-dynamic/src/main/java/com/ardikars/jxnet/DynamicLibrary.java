@@ -17,6 +17,8 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.jxnet.exception.PlatformNotSupportedException;
+import com.ardikars.jxnet.util.Library;
 import com.ardikars.jxnet.util.Platforms;
 
 import java.io.File;
@@ -32,46 +34,49 @@ public class DynamicLibrary implements Library.Loader {
             case LINUX:
                 if (Platforms.isArm()) {
                     if ("v7".equals(Platforms.getVersion()) || "v6".equals(Platforms.getVersion())) {
-                        Library.loadLibrary("/dynamic/linux/lib/arm32/libjxnet.so");
+                        Library.loadLibrary(Library.DYNAMIC_LINUX_ARM32);
                     }
                 } else {
                     if (Platforms.is64Bit()) {
-                        Library.loadLibrary("/dynamic/linux/lib/x64/libjxnet.so");
+                        Library.loadLibrary(Library.DYNAMIC_LINUX_X64);
                     } else {
-                        Library.loadLibrary("/dynamic/linux/lib/x86/libjxnet.so");
+                        Library.loadLibrary(Library.DYNAMIC_LINUX_X86);
                     }
                 }
                 break;
             case WINDOWS:
-                if (new File("C:\\Windows\\System32\\Npcap\\wpcap.dll").exists())  {
-                    if (!new File("C:\\Windows\\System32\\wpcap.dll").exists()) {
-                        System.load("C:\\Windows\\System32\\Npcap\\wpcap.dll");
-                    }
+                if (new File(Library.NPCAP_DLL).exists())  {
+                    System.load(Library.NPCAP_DLL);
                     if (Platforms.is64Bit()) {
-                        Library.loadLibrary("/dynamic/windows/lib/x64/jxnet.dll");
+                        Library.loadLibrary(Library.DYNAMIC_WINDOWS_X64);
                     } else {
-                        Library.loadLibrary("/dynamic/windows/lib/x86/jxnet.dll");
+                        Library.loadLibrary(Library.DYNAMIC_WINDOWS_X86);
+                    }
+                } else if (new File(Library.WPCAP_DLL).exists()) {
+                    System.load(Library.WPCAP_DLL);
+                    if (Platforms.is64Bit()) {
+                        Library.loadLibrary(Library.DYNAMIC_WINDOWS_X64);
+                    } else {
+                        Library.loadLibrary(Library.DYNAMIC_WINDOWS_X86);
                     }
                 } else {
-                    throw new UnsatisfiedLinkError("Npcap is not installed yet.");
+                    throw new UnsatisfiedLinkError("Npcap or Winpcap is not installed yet.");
                 }
                 break;
             case FREEBSD:
                 if (Platforms.is64Bit()) {
-                    Library.loadLibrary("/dynamic/freebsd/lib/x64/libjxnet.so");
+                    Library.loadLibrary(Library.DYNAMIC_FREEBSD_X64);
                 } else {
-                    Library.loadLibrary("/dynamic/freebsd/lib/x86/libjxnet.so");
+                    Library.loadLibrary(Library.DYNAMIC_FREEBSD_X86);
                 }
                 break;
             case DARWIN:
                 if (Platforms.is64Bit()) {
-                    Library.loadLibrary("/dynamic/darwin/lib/x64/libjxnet.dylib");
-                } else {
-                    Library.loadLibrary("/dynamic/darwin/lib/x86/libjxnet.dylib");
+                    Library.loadLibrary(Library.DYNAMIC_DARWIN_X64);
                 }
                 break;
             default:
-                throw new UnsatisfiedLinkError("Not supported platform.");
+                throw new PlatformNotSupportedException("Your platform does't supported by dynamic jxnet.");
         }
     }
 

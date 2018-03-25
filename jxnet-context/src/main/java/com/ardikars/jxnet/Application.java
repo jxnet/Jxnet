@@ -17,13 +17,11 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.exception.PropertyNotFoundException;
+import com.ardikars.jxnet.util.Library;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-import java.util.WeakHashMap;
 import java.util.logging.Logger;
 
 /**
@@ -44,7 +42,6 @@ public class Application {
     private Context context;
 
     private final Set<Library.Loader> libraryLoaders = Collections.checkedSet(new HashSet<Library.Loader>(), Library.Loader.class);
-    private final Map<String, Object> registry = Collections.synchronizedMap(new WeakHashMap<String, Object>());
 
     protected boolean isLoaded() {
         return this.loaded;
@@ -80,18 +77,6 @@ public class Application {
     }
 
     /**
-     * Get property from the container.
-     * @param key property key.
-     * @return object.
-     */
-    protected Object getProperty(final String key) {
-        if (this.getProperties().get(key) == null) {
-            throw new PropertyNotFoundException("Property with name " + key + " not found.");
-        }
-        return this.getProperties().get(key);
-    }
-
-    /**
      * Used for bootstraping Jxnet.
      * @param applicationName application name.
      * @param applicationVersion application version.
@@ -105,7 +90,7 @@ public class Application {
         getInstance().applicationVersion = applicationVersion;
         getInstance().context = applicationContext;
 
-        ApplicationInitializer initializer = null;
+        ApplicationInitializer initializer;
         try {
             initializer = (ApplicationInitializer) initializerClass.newInstance();
             initializer.initialize(getInstance().context);
@@ -137,9 +122,6 @@ public class Application {
                 }
             }
         }
-
-        getInstance().getProperties().put("applicationInitializer", initializer);
-        getInstance().getProperties().put("applicationContext", Application.getInstance().getContext());
     }
 
     /**
@@ -164,16 +146,6 @@ public class Application {
      */
     protected Context getContext() {
         return this.context;
-    }
-
-    /**
-     * Get properties.
-     * @return properties.
-     */
-    public Map<String, Object> getProperties() {
-        synchronized (this) {
-            return registry;
-        }
     }
 
     /**

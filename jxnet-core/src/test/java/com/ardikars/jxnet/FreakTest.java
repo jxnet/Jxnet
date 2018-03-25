@@ -22,6 +22,7 @@ import static com.ardikars.jxnet.Jxnet.OK;
 import static com.ardikars.jxnet.Jxnet.PcapCanSetRfMon;
 import static com.ardikars.jxnet.Jxnet.PcapClose;
 import static com.ardikars.jxnet.Jxnet.PcapDataLink;
+import static com.ardikars.jxnet.Jxnet.PcapFindAllDevs;
 import static com.ardikars.jxnet.Jxnet.PcapGetErr;
 import static com.ardikars.jxnet.Jxnet.PcapSetDirection;
 import static com.ardikars.jxnet.Jxnet.PcapSetRfMon;
@@ -54,6 +55,7 @@ public class FreakTest {
      */
     @Before
     public void create() {
+        Application.run("FreakTest", "0.0.1", LoaderTest.Initializer.class, new ApplicationContext());
         pcap = PcapOpenDead(linkType, snaplen);
         if (pcap == null) {
             logger.warning("create:PcapOpenDead(): ");

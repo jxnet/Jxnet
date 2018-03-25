@@ -24,6 +24,7 @@ import static com.ardikars.jxnet.Jxnet.OK;
 import static com.ardikars.jxnet.Jxnet.PcapActivate;
 import static com.ardikars.jxnet.Jxnet.PcapBreakLoop;
 import static com.ardikars.jxnet.Jxnet.PcapCanSetRfMon;
+import static com.ardikars.jxnet.Jxnet.PcapCheckActivated;
 import static com.ardikars.jxnet.Jxnet.PcapClose;
 import static com.ardikars.jxnet.Jxnet.PcapCompile;
 import static com.ardikars.jxnet.Jxnet.PcapCompileNoPcap;
@@ -147,6 +148,7 @@ public class JxnetTest {
      */
     @Before
     public void create() throws Exception {
+        Application.run("JxnetTest", "0.0.1", LoaderTest.Initializer.class, new ApplicationContext());
         if ((resultCode = PcapFindAllDevs(alldevsp, errbuf)) != OK) {
             logger.warning("create:PcapFindAllDevs(): " + errbuf.toString());
         }
@@ -195,10 +197,12 @@ public class JxnetTest {
                 return;
             }
         }
-        if ((resultCode = PcapActivate(pcap)) != OK) {
-            logger.warning("create:PcapActivate(): " + PcapStrError(resultCode));
-            PcapClose(pcap);
-            return;
+        if ((resultCode = PcapCheckActivated(pcap)) == 0) {
+            if ((resultCode = PcapActivate(pcap)) != OK) {
+                logger.warning("create:PcapActivate(): " + PcapStrError(resultCode));
+                PcapClose(pcap);
+                return;
+            }
         }
 
         bpfProgram = new BpfProgram();

@@ -21,13 +21,11 @@ import com.ardikars.jxnet.exception.BpfProgramCloseException;
 import com.ardikars.jxnet.exception.PcapCloseException;
 import com.ardikars.jxnet.exception.PcapDumperCloseException;
 import com.ardikars.jxnet.exception.PlatformNotSupportedException;
-import com.ardikars.jxnet.exception.PropertyNotFoundException;
+import com.ardikars.jxnet.util.Library;
 import com.ardikars.jxnet.util.Validate;
 
 import java.nio.ByteBuffer;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -38,7 +36,7 @@ public class ApplicationContext implements Context {
 
 	private final Logger logger = Logger.getLogger(ApplicationContext.class.getName());
 
-	private ApplicationContext() {
+	public ApplicationContext() {
 
 	}
 
@@ -52,42 +50,6 @@ public class ApplicationContext implements Context {
         return Application.getInstance().getApplicationVersion();
     }
 
-    @Override
-    public Object getProperty(final String key) throws PropertyNotFoundException {
-	    Validate.nullPointer(key);
-	    Object object = Application.getInstance().getProperty(key);
-	    if (object == null) {
-	    	throw new PropertyNotFoundException();
-	    }
-        return Application.getInstance().getProperty(key);
-    }
-
-	@Override
-	public <T> T getProperty(String name, Class<T> requiredType) throws ClassCastException, PropertyNotFoundException {
-		Validate.nullPointer(name);
-		Validate.nullPointer(requiredType);
-    	Object object = Application.getInstance().getProperty(name);
-		if (object == null) {
-			throw new PropertyNotFoundException();
-		}
-		if (object.getClass() != requiredType) {
-			throw new ClassCastException(object.getClass().getName() + " can't cast to " + requiredType.getName() + ".");
-		}
-    	return (T) object;
-	}
-
-	@Override
-	public void removeProperty(String key) {
-    	Validate.nullPointer(key);
-		Application.getInstance().getProperties().remove(key);
-	}
-
-	@Override
-	public Map<String, Object> getProperties() {
-    	Map<String, Object> properties = Collections.unmodifiableMap(Application.getInstance().getProperties());
-		return properties;
-	}
-
 	@Override
     public void addLibrary(final Library.Loader libraryLoader) {
     	Validate.nullPointer(libraryLoader);
@@ -100,14 +62,14 @@ public class ApplicationContext implements Context {
 
 	private PcapDumper pcapDumper;
 
-	public static ApplicationContext newApplicationContext(Pcap pcap, BpfProgram bpfProgram) {
-		Validate.nullPointer(pcap);
-		Validate.nullPointer(bpfProgram);
-		ApplicationContext applicationContext = new ApplicationContext();
-		applicationContext.pcap = pcap;
-		applicationContext.bpfProgram = bpfProgram;
-		return applicationContext;
-	}
+//	public static ApplicationContext newApplicationContext(Pcap pcap, BpfProgram bpfProgram) {
+//		Validate.nullPointer(pcap);
+//		Validate.nullPointer(bpfProgram);
+//		ApplicationContext applicationContext = new ApplicationContext();
+//		applicationContext.pcap = pcap;
+//		applicationContext.bpfProgram = bpfProgram;
+//		return applicationContext;
+//	}
 
 	@Override
 	public <T> PcapCode PcapLoop(int cnt, PcapHandler<T> callback, T user) throws PcapCloseException {

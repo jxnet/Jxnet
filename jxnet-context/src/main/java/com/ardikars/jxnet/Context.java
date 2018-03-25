@@ -4,25 +4,16 @@ import com.ardikars.jxnet.exception.BpfProgramCloseException;
 import com.ardikars.jxnet.exception.PcapCloseException;
 import com.ardikars.jxnet.exception.PcapDumperCloseException;
 import com.ardikars.jxnet.exception.PlatformNotSupportedException;
-import com.ardikars.jxnet.exception.PropertyNotFoundException;
+import com.ardikars.jxnet.util.Library;
 
 import java.nio.ByteBuffer;
 import java.util.List;
-import java.util.Map;
 
 public interface Context {
 
 	String getApplicationName();
 
 	String getApplicationVersion();
-
-	Object getProperty(String key) throws PropertyNotFoundException;
-
-	<T> T getProperty(String name, Class<T> requiredType) throws ClassCastException, PropertyNotFoundException;
-
-	void removeProperty(String key);
-
-	Map<String, Object> getProperties();
 
 	void addLibrary(Library.Loader libraryLoader);
 
