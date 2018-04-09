@@ -21,7 +21,12 @@ import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 import com.ardikars.jxnet.util.Library;
 import com.ardikars.jxnet.util.Platforms;
 
+import java.io.IOException;
+import java.util.logging.Logger;
+
 public class StaticLibrary implements Library.Loader {
+
+    private final Logger logger = Logger.getLogger(StaticLibrary.class.getName());
 
     @Override
     public void load() {
@@ -29,21 +34,51 @@ public class StaticLibrary implements Library.Loader {
             case LINUX:
                 if (Platforms.isArm()) {
                     if ("v7".equals(Platforms.getVersion()) || "v6".equals(Platforms.getVersion())) {
-                        Library.loadLibrary(Library.STATIC_LINUX_ARM32);
+                        try {
+                            Library.loadLibrary(Library.STATIC_LINUX_ARM32);
+                        } catch (IllegalArgumentException e) {
+                            logger.warning(e.getMessage());
+                        } catch (IOException e) {
+                            logger.warning(e.getMessage());
+                        }
                     }
                 } else {
                     if (Platforms.is64Bit()) {
-                        Library.loadLibrary(Library.STATIC_LINUX_X64);
+                        try {
+                            Library.loadLibrary(Library.STATIC_LINUX_X64);
+                        } catch (IllegalArgumentException e) {
+                            logger.warning(e.getMessage());
+                        } catch (IOException e) {
+                            logger.warning(e.getMessage());
+                        }
                     } else {
-                        Library.loadLibrary(Library.STATIC_LINUX_X86);
+                        try {
+                            Library.loadLibrary(Library.STATIC_LINUX_X86);
+                        } catch (IllegalArgumentException e) {
+                            logger.warning(e.getMessage());
+                        } catch (IOException e) {
+                            logger.warning(e.getMessage());
+                        }
                     }
                 }
                 break;
             case FREEBSD:
                 if (Platforms.is64Bit()) {
-                    Library.loadLibrary(Library.STATIC_FREEBSD_X64);
+                    try {
+                        Library.loadLibrary(Library.STATIC_FREEBSD_X64);
+                    } catch (IllegalArgumentException e) {
+                        logger.warning(e.getMessage());
+                    } catch (IOException e) {
+                        logger.warning(e.getMessage());
+                    }
                 } else {
-                    Library.loadLibrary(Library.STATIC_LINUX_X86);
+                    try {
+                        Library.loadLibrary(Library.STATIC_FREEBSD_X86);
+                    } catch (IllegalArgumentException e) {
+                        logger.warning(e.getMessage());
+                    } catch (IOException e) {
+                        logger.warning(e.getMessage());
+                    }
                 }
                 break;
             default:

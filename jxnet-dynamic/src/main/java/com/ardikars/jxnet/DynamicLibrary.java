@@ -22,11 +22,12 @@ import com.ardikars.jxnet.util.Library;
 import com.ardikars.jxnet.util.Platforms;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.logging.Logger;
 
 public class DynamicLibrary implements Library.Loader {
 
-    private static final Logger LOGGER = Logger.getLogger(DynamicLibrary.class.getName());
+    private final Logger logger = Logger.getLogger(DynamicLibrary.class.getName());
 
     @Override
     public void load() {
@@ -34,49 +35,97 @@ public class DynamicLibrary implements Library.Loader {
             case LINUX:
                 if (Platforms.isArm()) {
                     if ("v7".equals(Platforms.getVersion()) || "v6".equals(Platforms.getVersion())) {
-                        Library.loadLibrary(Library.DYNAMIC_LINUX_ARM32);
+                        try {
+                            Library.loadLibrary(Library.DYNAMIC_LINUX_ARM32);
+                        } catch (IllegalArgumentException e) {
+                            logger.warning(e.getMessage());
+                        } catch (IOException e) {
+                            logger.warning(e.getMessage());
+                        }
                     }
                 } else {
                     if (Platforms.is64Bit()) {
-                        Library.loadLibrary(Library.DYNAMIC_LINUX_X64);
+                        try {
+                            Library.loadLibrary(Library.DYNAMIC_LINUX_X64);
+                        } catch (IllegalArgumentException e) {
+                            logger.warning(e.getMessage());
+                        } catch (IOException e) {
+                            logger.warning(e.getMessage());
+                        }
                     } else {
-                        Library.loadLibrary(Library.DYNAMIC_LINUX_X86);
+                        try {
+                            Library.loadLibrary(Library.DYNAMIC_LINUX_X86);
+                        } catch (IllegalArgumentException e) {
+                            logger.warning(e.getMessage());
+                        } catch (IOException e) {
+                            logger.warning(e.getMessage());
+                        }
                     }
                 }
                 break;
             case WINDOWS:
                 if (new File(Library.NPCAP_DLL).exists())  {
                     System.load(Library.NPCAP_DLL);
-                    if (Platforms.is64Bit()) {
-                        Library.loadLibrary(Library.DYNAMIC_WINDOWS_X64);
-                    } else {
-                        Library.loadLibrary(Library.DYNAMIC_WINDOWS_X86);
-                    }
+                    loadDynamicWindowsLibrary();
                 } else if (new File(Library.WPCAP_DLL).exists()) {
                     System.load(Library.WPCAP_DLL);
-                    if (Platforms.is64Bit()) {
-                        Library.loadLibrary(Library.DYNAMIC_WINDOWS_X64);
-                    } else {
-                        Library.loadLibrary(Library.DYNAMIC_WINDOWS_X86);
-                    }
+                    loadDynamicWindowsLibrary();
                 } else {
                     throw new UnsatisfiedLinkError("Npcap or Winpcap is not installed yet.");
                 }
                 break;
             case FREEBSD:
                 if (Platforms.is64Bit()) {
-                    Library.loadLibrary(Library.DYNAMIC_FREEBSD_X64);
+                    try {
+                        Library.loadLibrary(Library.DYNAMIC_FREEBSD_X64);
+                    } catch (IllegalArgumentException e) {
+                        logger.warning(e.getMessage());
+                    } catch (IOException e) {
+                        logger.warning(e.getMessage());
+                    }
                 } else {
-                    Library.loadLibrary(Library.DYNAMIC_FREEBSD_X86);
+                    try {
+                        Library.loadLibrary(Library.DYNAMIC_FREEBSD_X86);
+                    } catch (IllegalArgumentException e) {
+                        logger.warning(e.getMessage());
+                    } catch (IOException e) {
+                        logger.warning(e.getMessage());
+                    }
                 }
                 break;
             case DARWIN:
                 if (Platforms.is64Bit()) {
-                    Library.loadLibrary(Library.DYNAMIC_DARWIN_X64);
+                    try {
+                        Library.loadLibrary(Library.DYNAMIC_DARWIN_X64);
+                    } catch (IllegalArgumentException e) {
+                        logger.warning(e.getMessage());
+                    } catch (IOException e) {
+                        logger.warning(e.getMessage());
+                    }
                 }
                 break;
             default:
                 throw new PlatformNotSupportedException("Your platform does't supported by dynamic jxnet.");
+        }
+    }
+
+    private void loadDynamicWindowsLibrary() {
+        if (Platforms.is64Bit()) {
+            try {
+                Library.loadLibrary(Library.DYNAMIC_WINDOWS_X64);
+            } catch (IllegalArgumentException e) {
+                logger.warning(e.getMessage());
+            } catch (IOException e) {
+                logger.warning(e.getMessage());
+            }
+        } else {
+            try {
+                Library.loadLibrary(Library.DYNAMIC_WINDOWS_X86);
+            } catch (IllegalArgumentException e) {
+                logger.warning(e.getMessage());
+            } catch (IOException e) {
+                logger.warning(e.getMessage());
+            }
         }
     }
 

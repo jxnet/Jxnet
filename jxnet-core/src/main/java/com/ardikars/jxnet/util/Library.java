@@ -62,28 +62,29 @@ public final class Library {
         void load();
     }
 
-    public static void loadLibrary(final String path) {
-        Validate.nullPointer(path, "Path should be not null.");
+    public static void loadLibrary(final String path) throws IllegalArgumentException, IOException {
+        Validate.nullPointer(path, new NullPointerException("Path should be not null."));
         if (!(path.charAt(0) == '/')) {
             throw new IllegalArgumentException("The path has to be absolute (start with '/').");
         }
         String[] parts = Pattern.compile("/").split(path);
         if (parts != null && parts.length > 1) {
             parts = Pattern.compile("\\.").split(parts[parts.length - 1]);
+        } else {
+            throw new IllegalArgumentException();
         }
         File temp = null;
         try {
             temp = File.createTempFile(parts[0], "." + parts[1]);
             temp.deleteOnExit();
         } catch (IOException e) {
-            LOGGER.warning("Failed to create temporary file: " + e.getMessage());
+            throw e;
         }
         final byte[] buffer = new byte[BUFFER_SIZE];
         int readBytes;
         final InputStream is = Library.class.getResourceAsStream(path);
         if (is == null) {
-            LOGGER.warning("Error: " + path + " not found in classpath.");
-            return;
+            throw new IOException("Error: " + path + " not found in classpath.");
         }
         OutputStream os = null;
         try {
@@ -92,12 +93,11 @@ public final class Library {
                 try {
                     os.write(buffer, 0, readBytes);
                 } catch (IOException e) {
-                    LOGGER.warning("Failed to write into temporary file: " + e.getMessage());
-                    return;
+                    throw e;
                 }
             }
         } catch (IOException e) {
-            LOGGER.warning("Failed to write into temporary file: " + e.getMessage());
+            throw e;
         } finally {
             try {
                 if (os != null) {
@@ -107,8 +107,7 @@ public final class Library {
                     is.close();
                 }
             } catch (IOException e) {
-                LOGGER.warning("Failed to write into temporary file: " + e.getMessage());
-                return;
+                throw e;
             }
         }
         System.load(temp.getAbsolutePath());

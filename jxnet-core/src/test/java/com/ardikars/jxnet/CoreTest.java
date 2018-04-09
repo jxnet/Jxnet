@@ -18,37 +18,34 @@
 package com.ardikars.jxnet;
 
 import static com.ardikars.jxnet.Core.LookupNetworkInterface;
-import static com.ardikars.jxnet.Core.PcapCompile;
-import static com.ardikars.jxnet.Core.PcapCompileNoPcap;
-import static com.ardikars.jxnet.Core.PcapCreate;
-import static com.ardikars.jxnet.Core.PcapDatalink;
-import static com.ardikars.jxnet.Core.PcapFreeAllDevs;
-import static com.ardikars.jxnet.Core.PcapFreeDataLinks0;
-import static com.ardikars.jxnet.Core.PcapFreeTStampTypes0;
-import static com.ardikars.jxnet.Core.PcapGetTStampPrecision0;
-import static com.ardikars.jxnet.Core.PcapListDataLinks0;
-import static com.ardikars.jxnet.Core.PcapListTStampTypes0;
-import static com.ardikars.jxnet.Core.PcapOpenDead;
-import static com.ardikars.jxnet.Core.PcapOpenLive;
-import static com.ardikars.jxnet.Core.PcapSetDatalink;
-import static com.ardikars.jxnet.Core.PcapSetImmediateMode;
-import static com.ardikars.jxnet.Core.PcapSetPromisc;
-import static com.ardikars.jxnet.Core.PcapSetTStampType;
 import static com.ardikars.jxnet.Jxnet.OK;
 import static com.ardikars.jxnet.Jxnet.PcapActivate;
 import static com.ardikars.jxnet.Jxnet.PcapCheckActivated;
 import static com.ardikars.jxnet.Jxnet.PcapClose;
+import static com.ardikars.jxnet.Jxnet.PcapCompile;
+import static com.ardikars.jxnet.Jxnet.PcapCompileNoPcap;
+import static com.ardikars.jxnet.Jxnet.PcapCreate;
+import static com.ardikars.jxnet.Jxnet.PcapDataLink;
 import static com.ardikars.jxnet.Jxnet.PcapDumpClose;
 import static com.ardikars.jxnet.Jxnet.PcapDumpOpen;
 import static com.ardikars.jxnet.Jxnet.PcapFindAllDevs;
 import static com.ardikars.jxnet.Jxnet.PcapFreeCode;
+import static com.ardikars.jxnet.Jxnet.PcapGetTStampPrecision;
 import static com.ardikars.jxnet.Jxnet.PcapLookupNet;
 import static com.ardikars.jxnet.Jxnet.PcapLoop;
+import static com.ardikars.jxnet.Jxnet.PcapOpenDead;
+import static com.ardikars.jxnet.Jxnet.PcapOpenLive;
+import static com.ardikars.jxnet.Jxnet.PcapSetDataLink;
 import static com.ardikars.jxnet.Jxnet.PcapSetFilter;
+import static com.ardikars.jxnet.Jxnet.PcapSetImmediateMode;
+import static com.ardikars.jxnet.Jxnet.PcapSetPromisc;
 import static com.ardikars.jxnet.Jxnet.PcapSetSnaplen;
+import static com.ardikars.jxnet.Jxnet.PcapSetTStampType;
 import static com.ardikars.jxnet.Jxnet.PcapSetTimeout;
 import static com.ardikars.jxnet.Jxnet.PcapStrError;
 
+import com.ardikars.jxnet.exception.DeviceNotFoundException;
+import com.ardikars.jxnet.exception.NativeException;
 import com.ardikars.jxnet.util.Platforms;
 
 import java.io.File;
@@ -141,8 +138,7 @@ public class CoreTest {
         } else {
             System.out.println("Source: " + source);
         }
-        PcapFreeAllDevs(alldevsp);
-        pcap = PcapCreate(source, errbuf);
+        pcap = PcapCreate(source.getName(), errbuf);
         if (pcap == null) {
             logger.warning("create:PcapCreate(): " + errbuf.toString());
             return;
@@ -152,7 +148,7 @@ public class CoreTest {
             PcapClose(pcap);
             return;
         }
-        if ((resultCode = PcapSetPromisc(pcap, promisc)) != OK) {
+        if ((resultCode = PcapSetPromisc(pcap, promisc.getValue())) != OK) {
             logger.warning("create:PcapSetPromisc(): " + PcapStrError(resultCode));
             PcapClose(pcap);
             return;
@@ -163,7 +159,7 @@ public class CoreTest {
             return;
         }
         if (!Platforms.isWindows()) {
-            if ((resultCode = PcapSetImmediateMode(pcap, immediate)) != OK) {
+            if ((resultCode = PcapSetImmediateMode(pcap, immediate.getValue())) != OK) {
                 logger.warning("create:PcapSetImmediateMode(): " + PcapStrError(resultCode));
                 PcapClose(pcap);
                 return;
@@ -197,7 +193,7 @@ public class CoreTest {
 
     @Test
     public void Test01_PcapOpenLiveAndPcapClose() {
-        Pcap pcap = PcapOpenLive(source, snaplen, promisc, timeout, errbuf);
+        Pcap pcap = PcapOpenLive(source.getName(), snaplen, promisc.getValue(), timeout, errbuf);
         if (pcap == null) {
             logger.warning("PcapOpenLiveAndPcapClose:PcapOpenLive(): " + errbuf.toString());
         } else {
@@ -207,7 +203,7 @@ public class CoreTest {
 
     @Test
     public void Test02_PcapCompileAndPcapSetFilter() {
-        if ((resultCode = PcapCompile(pcap, bpfProgram, filter, optimize, maskp)) != OK) {
+        if ((resultCode = PcapCompile(pcap, bpfProgram, filter, optimize.getValue(), maskp.toInt())) != OK) {
             logger.warning("PcapCompilePcapSetFilterAndPcapLoop:PcapCompile(): " + PcapStrError(resultCode));
             return;
         }
@@ -223,8 +219,8 @@ public class CoreTest {
 
     @Test
     public void Test03_PcapCompileNoPcapSetFilterAndPcapLoop() {
-        if ((resultCode = PcapCompileNoPcap(snaplen, DataLinkType.EN10MB,
-                bpfProgram, filter, optimize, maskp)) != OK) {
+        if ((resultCode = PcapCompileNoPcap(snaplen, DataLinkType.EN10MB.getValue(),
+                bpfProgram, filter, optimize.getValue(), maskp.toInt())) != OK) {
             logger.warning("PcapCompileNoPcapSetFilterAndPcapLoop:PcapCompileNoPcap(): " + errbuf.toString());
             return;
         }
@@ -240,71 +236,73 @@ public class CoreTest {
 
     @Test
     public void Test04_PcapSetDataLinkPcapDataLinkPcapOpenDeadAndPcapClose() {
-        Pcap pcap = PcapOpenDead(DataLinkType.EN10MB, snaplen);
+        Pcap pcap = PcapOpenDead(DataLinkType.EN10MB.getValue(), snaplen);
         if (pcap == null) {
             logger.warning("PcapSetDataLinkPcapDataLinkPcapOpenDeadAndPcapClose:PcapOpenDead()");
             return;
         }
-        DataLinkType dataLinkType = PcapDatalink(pcap);
+        DataLinkType dataLinkType = DataLinkType.valueOf((short) PcapDataLink(pcap));
         System.out.println("Data Link Type (Before): " + dataLinkType);
-        if ((resultCode = PcapSetDatalink(pcap, DataLinkType.LINUX_SLL)) != OK) {
+        if ((resultCode = PcapSetDataLink(pcap, DataLinkType.LINUX_SLL.getValue())) != OK) {
             logger.warning("PcapSetDataLinkPcapDataLinkPcapOpenDeadAndPcapClose:PcapSetDataLink(): " + PcapStrError(resultCode));
             PcapClose(pcap);
             return;
         }
-        dataLinkType = PcapDatalink(pcap);
+        dataLinkType = DataLinkType.valueOf((short) PcapDataLink(pcap));
         System.out.println("Data Link Type (After): " + dataLinkType);
         PcapClose(pcap);
     }
 
     @Test
     public void Test05_LookupNetworkInterface() {
-        PcapIf networkInterface = LookupNetworkInterface(errbuf);
-        if (networkInterface == null) {
-            logger.warning("LookupNetworkInterface:LookupNetworkInterface()");
-            return;
+        try {
+            PcapIf networkInterface = LookupNetworkInterface();
+            System.out.println(networkInterface);
+        } catch (NativeException e) {
+            logger.warning(e.getLocalizedMessage());
+        } catch (DeviceNotFoundException e) {
+            logger.warning(e.getMessage());
         }
-        System.out.println(networkInterface);
     }
 
     @Test
     public void Test06_PcapGetTStampPrecisionAndPcapSetTStampPrecision() {
-        TimeStampPrecision timestamp = PcapGetTStampPrecision0(pcap);
+        TimeStampPrecision timestamp = TimeStampPrecision.valueOf(PcapGetTStampPrecision(pcap));
         System.out.println("Time stamp precision (before): " + timestamp);
         if ((resultCode = PcapSetTStampType(pcap, (timestamp == TimeStampPrecision.TIMESTAMP_MICRO)
-                ? TimeStampPrecision.TIMESTAMP_NANO : TimeStampPrecision.TIMESTAMP_MICRO)) != OK) {
+                ? 1 : 0)) != OK) {
             logger.warning("Timestamp precision not supported by operation system.");
         }
-        timestamp = PcapGetTStampPrecision0(pcap);
+        timestamp = TimeStampPrecision.valueOf(PcapGetTStampPrecision(pcap));
         System.out.println("Time stamp precision (after) : " + timestamp);
     }
 
     @Test
     public void Test07_PcapListDatalinks() {
-        List<DataLinkType> datalinks = new ArrayList<DataLinkType>();
-        if ((resultCode = PcapListDataLinks0(pcap, datalinks)) < 0) {
-            logger.warning("PcapListDataLinks:PcapListDataLinks(): " + PcapStrError(resultCode));
-            return;
-        }
-        System.out.print("DataLinks:");
-        for (DataLinkType datalink : datalinks) {
-            System.out.print(" " + datalink);
-        }
-        PcapFreeDataLinks0(datalinks);
+//        List<DataLinkType> datalinks = new ArrayList<DataLinkType>();
+//        if ((resultCode = PcapListDataLinks0(pcap, datalinks)) < 0) {
+//            logger.warning("PcapListDataLinks:PcapListDataLinks(): " + PcapStrError(resultCode));
+//            return;
+//        }
+//        System.out.print("DataLinks:");
+//        for (DataLinkType datalink : datalinks) {
+//            System.out.print(" " + datalink);
+//        }
+//        PcapFreeDataLinks0(datalinks);
     }
 
     @Test
     public void Test08_PcapListTStampTypes() {
-        List<TimeStampType> tsTypes = new ArrayList<TimeStampType>();
-        if ((resultCode = PcapListTStampTypes0(pcap, tsTypes)) < 0) {
-            logger.warning("PcapListTStampTypes:PcapListTStampTypes(): " + PcapStrError(resultCode));
-            return;
-        }
-        System.out.print("Time Stamp Types:");
-        for (TimeStampType tsType : tsTypes) {
-            System.out.print(" " + tsType);
-        }
-        PcapFreeTStampTypes0(tsTypes);
+//        List<TimeStampType> tsTypes = new ArrayList<TimeStampType>();
+//        if ((resultCode = PcapListTStampTypes0(pcap, tsTypes)) < 0) {
+//            logger.warning("PcapListTStampTypes:PcapListTStampTypes(): " + PcapStrError(resultCode));
+//            return;
+//        }
+//        System.out.print("Time Stamp Types:");
+//        for (TimeStampType tsType : tsTypes) {
+//            System.out.print(" " + tsType);
+//        }
+//        PcapFreeTStampTypes0(tsTypes);
     }
 
     /**

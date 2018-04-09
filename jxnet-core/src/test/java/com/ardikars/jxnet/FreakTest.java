@@ -17,13 +17,12 @@
 
 package com.ardikars.jxnet;
 
-import static com.ardikars.jxnet.Core.PcapOpenDead;
 import static com.ardikars.jxnet.Jxnet.OK;
 import static com.ardikars.jxnet.Jxnet.PcapCanSetRfMon;
 import static com.ardikars.jxnet.Jxnet.PcapClose;
 import static com.ardikars.jxnet.Jxnet.PcapDataLink;
-import static com.ardikars.jxnet.Jxnet.PcapFindAllDevs;
 import static com.ardikars.jxnet.Jxnet.PcapGetErr;
+import static com.ardikars.jxnet.Jxnet.PcapOpenDead;
 import static com.ardikars.jxnet.Jxnet.PcapSetDirection;
 import static com.ardikars.jxnet.Jxnet.PcapSetRfMon;
 import static com.ardikars.jxnet.Jxnet.PcapSnapshot;
@@ -56,7 +55,7 @@ public class FreakTest {
     @Before
     public void create() {
         Application.run("FreakTest", "0.0.1", LoaderTest.Initializer.class, new ApplicationContext());
-        pcap = PcapOpenDead(linkType, snaplen);
+        pcap = PcapOpenDead(linkType.getValue(), snaplen);
         if (pcap == null) {
             logger.warning("create:PcapOpenDead(): ");
             return;

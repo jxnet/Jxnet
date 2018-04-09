@@ -19,9 +19,9 @@ dependencies {
     compile project(':jxnet-dynamic')
     compile project(':jxnet-static')
     compile project(':jxnet-core')
-    compile 'org.springframework:spring-core:3.2.8.RELEASE'
-    compile 'org.springframework:spring-beans:3.2.8.RELEASE'
-    compile 'org.springframework:spring-context:3.2.8.RELEASE'
+//    compile 'org.springframework:spring-core:3.2.8.RELEASE'
+//    compile 'org.springframework:spring-beans:3.2.8.RELEASE'
+//    compile 'org.springframework:spring-context:3.2.8.RELEASE'
     testCompile "junit:junit:${JUNIT_VERSION}"
     testCompile "org.mockito:mockito-core:${MOCKITO_VERSION}"
 }

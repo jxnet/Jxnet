@@ -17,9 +17,6 @@
 
 package com.ardikars.jxnet;
 
-import static com.ardikars.jxnet.Core.PcapFreeAllDevs;
-import static com.ardikars.jxnet.Core.PcapFreeDataLinks;
-import static com.ardikars.jxnet.Core.PcapFreeTStampTypes;
 import static com.ardikars.jxnet.Jxnet.OK;
 import static com.ardikars.jxnet.Jxnet.PcapActivate;
 import static com.ardikars.jxnet.Jxnet.PcapBreakLoop;
@@ -169,7 +166,6 @@ public class JxnetTest {
         } else {
             System.out.println("Source: " + source);
         }
-        PcapFreeAllDevs(alldevsp);
         pcap = PcapCreate(source, errbuf);
         if (pcap == null) {
             logger.warning("create:PcapCreate(): " + errbuf.toString());
@@ -598,7 +594,6 @@ public class JxnetTest {
         for (Integer datalink : datalinks) {
             System.out.print(" " + datalink);
         }
-        PcapFreeDataLinks(datalinks);
     }
 
     @Test
@@ -616,7 +611,6 @@ public class JxnetTest {
         for (Integer tsType : tsTypes) {
             System.out.print(" " + tsType);
         }
-        PcapFreeTStampTypes(tsTypes);
     }
 
     @Test

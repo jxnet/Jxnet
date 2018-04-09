@@ -28,13 +28,15 @@ import com.ardikars.jxnet.util.Validate;
  */
 public final class Pcap implements PointerHandler {
 
+	/**
+	 * Default unknown netmask for PcapLookupNet function in {@link Jxnet}.
+	 */
 	public static final Inet4Address PCAP_NETMASK_UNKNOWN = Inet4Address.valueOf(0xffffffff);
 
+	/**
+	 * Maximum snapshot length.
+	 */
 	public static final int MAXIMUM_SNAPLEN = 262144;
-
-	private DataLinkType dataLinkType;
-
-	private int snapshotLength;
 
 	/**
 	 * Indentify if pcap handle is dead and used for prevent user to make a SIGSEGV.
@@ -80,28 +82,6 @@ public final class Pcap implements PointerHandler {
 	}
 
 	/**
-	 * Get datalink type.
-	 * @return datalink type.
-	 */
-	public DataLinkType getDataLinkType() {
-		if (!this.isClosed() && this.dataLinkType == null) {
-			this.dataLinkType = DataLinkType.valueOf((short) Jxnet.PcapDataLink(this));
-		}
-		return this.dataLinkType;
-	}
-
-	/**
-	 * Get shapshot length.
-	 * @return snapshot length.
-	 */
-	public int getSnapshotLength() {
-		if (!this.isClosed() && this.snapshotLength == 0) {
-			this.snapshotLength = Jxnet.PcapSnapshot(this);
-		}
-		return this.snapshotLength;
-	}
-
-	/**
 	 * Check pcap handle.
 	 * @return true if closed.
 	 */
@@ -113,7 +93,7 @@ public final class Pcap implements PointerHandler {
 	}
 
 	/**
-	 * Identiy handle is dead.
+	 * Identify handle is dead.
 	 * @return true if pcap handle opened by PcapOpenDead*.
 	 */
 	public boolean isDead() {
@@ -156,7 +136,7 @@ public final class Pcap implements PointerHandler {
 	public static final class Builder {
 
 		private String source;
-		private int snaplen = 65534;
+		private int snaplen = 65535;
 		private PromiscuousMode promiscuousMode = PromiscuousMode.PRIMISCUOUS;
 		private ImmediateMode immediateMode = ImmediateMode.IMMEDIATE;
 		private PcapDirection direction = PcapDirection.PCAP_D_INOUT;
@@ -247,14 +227,14 @@ public final class Pcap implements PointerHandler {
 			if (Jxnet.PcapSetSnaplen(pcap, snaplen) != Jxnet.OK) {
 				throw new NativeException();
 			}
-			if (Jxnet.PcapSetPromisc(pcap, promiscuousMode) != Jxnet.OK) {
+			if (Jxnet.PcapSetPromisc(pcap, promiscuousMode.getValue()) != Jxnet.OK) {
 				throw new NativeException();
 			}
 			if (Jxnet.PcapSetTimeout(pcap, timeout) != Jxnet.OK) {
 				throw new NativeException();
 			}
 			if (!Platforms.isWindows()) {
-				if (Jxnet.PcapSetImmediateMode(pcap, immediateMode) != Jxnet.OK) {
+				if (Jxnet.PcapSetImmediateMode(pcap, immediateMode.getValue()) != Jxnet.OK) {
 					throw new NativeException();
 				}
 				if (Jxnet.PcapSetTStampType(pcap, timeStampType.getValue()) != Jxnet.OK) {
@@ -315,7 +295,6 @@ public final class Pcap implements PointerHandler {
 				pcap = Jxnet.PcapOpenOffline(fileName, errbuf);
 			} else {
 				pcap = Jxnet.PcapOpenOfflineWithTStampPrecision(fileName, timeStampPrecision.getValue(), errbuf);
-
 			}
 			if (pcap == null) {
 				throw new NativeException();
