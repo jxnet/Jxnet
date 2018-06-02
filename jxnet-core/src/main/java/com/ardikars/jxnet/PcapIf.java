@@ -55,32 +55,32 @@ public final class PcapIf implements Cloneable {
 	}
 
 	/**
-	 * Returning interface name.
-	 * @return interface name.
+	 * Getting interface name.
+	 * @return returns interface name.
 	 */
 	public String getName() {
 		return this.name;
 	}
 
 	/**
-	 * Returning interface description.
-	 * @return interface description.
+	 * Getting interface description.
+	 * @return returns interface description.
 	 */
 	public String getDescription() {
 		return this.description;
 	}
 
 	/**
-	 * Returning interface flags.
-	 * @return interface flags.
+	 * Getting interface flags.
+	 * @return returns interface flags.
 	 */
 	public int getFlags() {
 		return this.flags;
 	}
 
 	/**
-	 * Returning interface addresses.
-	 * @return interface addresses.
+	 * Getting interface addresses.
+	 * @return returns interface addresses.
 	 */
 	public List<PcapAddr> getAddresses() {
 		List<PcapAddr> addrs = Collections.unmodifiableList(this.addresses);

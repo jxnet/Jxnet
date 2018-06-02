@@ -17,13 +17,11 @@
 
 package com.ardikars.jxnet;
 
-import static com.ardikars.jxnet.Core.PcapFreeAllDevs;
-import static com.ardikars.jxnet.Core.PcapFreeDataLinks;
-import static com.ardikars.jxnet.Core.PcapFreeTStampTypes;
 import static com.ardikars.jxnet.Jxnet.OK;
 import static com.ardikars.jxnet.Jxnet.PcapActivate;
 import static com.ardikars.jxnet.Jxnet.PcapBreakLoop;
 import static com.ardikars.jxnet.Jxnet.PcapCanSetRfMon;
+import static com.ardikars.jxnet.Jxnet.PcapCheckActivated;
 import static com.ardikars.jxnet.Jxnet.PcapClose;
 import static com.ardikars.jxnet.Jxnet.PcapCompile;
 import static com.ardikars.jxnet.Jxnet.PcapCompileNoPcap;
@@ -147,6 +145,7 @@ public class JxnetTest {
      */
     @Before
     public void create() throws Exception {
+        Application.run("JxnetTest", "0.0.1", LoaderTest.Initializer.class, new ApplicationContext());
         if ((resultCode = PcapFindAllDevs(alldevsp, errbuf)) != OK) {
             logger.warning("create:PcapFindAllDevs(): " + errbuf.toString());
         }
@@ -167,7 +166,6 @@ public class JxnetTest {
         } else {
             System.out.println("Source: " + source);
         }
-        PcapFreeAllDevs(alldevsp);
         pcap = PcapCreate(source, errbuf);
         if (pcap == null) {
             logger.warning("create:PcapCreate(): " + errbuf.toString());
@@ -195,10 +193,12 @@ public class JxnetTest {
                 return;
             }
         }
-        if ((resultCode = PcapActivate(pcap)) != OK) {
-            logger.warning("create:PcapActivate(): " + PcapStrError(resultCode));
-            PcapClose(pcap);
-            return;
+        if ((resultCode = PcapCheckActivated(pcap)) == 0) {
+            if ((resultCode = PcapActivate(pcap)) != OK) {
+                logger.warning("create:PcapActivate(): " + PcapStrError(resultCode));
+                PcapClose(pcap);
+                return;
+            }
         }
 
         bpfProgram = new BpfProgram();
@@ -594,7 +594,6 @@ public class JxnetTest {
         for (Integer datalink : datalinks) {
             System.out.print(" " + datalink);
         }
-        PcapFreeDataLinks(datalinks);
     }
 
     @Test
@@ -612,7 +611,6 @@ public class JxnetTest {
         for (Integer tsType : tsTypes) {
             System.out.print(" " + tsType);
         }
-        PcapFreeTStampTypes(tsTypes);
     }
 
     @Test

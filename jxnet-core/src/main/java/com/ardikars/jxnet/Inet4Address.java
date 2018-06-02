@@ -60,7 +60,7 @@ public final class Inet4Address extends InetAddress {
 	/**
 	 * Create Inet4Address instance.
 	 * @param inet4Address ipv4 string address.
-	 * @return Inet4Address instance.
+	 * @return returns Inet4Address instance.
 	 */
 	public static Inet4Address valueOf(String inet4Address) {
 		inet4Address = Validate.nullPointer(inet4Address, "0.0.0.0");
@@ -79,7 +79,7 @@ public final class Inet4Address extends InetAddress {
 	/**
 	 * Create IPv4Address instance.
 	 * @param address ipv4 bytes address.
-	 * @return IPv4Address instance.
+	 * @return returns IPv4Address instance.
 	 */
 	public static Inet4Address valueOf(final byte[] address) {
 		return new Inet4Address(address);
@@ -88,7 +88,7 @@ public final class Inet4Address extends InetAddress {
 	/**
 	 * Create Inet4Address instance.
 	 * @param address ipv4 int address.
-	 * @return Inet4Address instance.
+	 * @return returns Inet4Address instance.
 	 */
 	public static Inet4Address valueOf(final int address) {
 		return new Inet4Address(new byte[]{(byte) (address >>> 24),
@@ -97,8 +97,8 @@ public final class Inet4Address extends InetAddress {
 	}
 
 	/**
-	 * Returning int address of Inet4Address.
-	 * @return int ipv4 address.
+	 * Returns int address of Inet4Address.
+	 * @return returns ipv4 int address.
 	 */
 	public int toInt() {
 		int ip = 0;
@@ -110,8 +110,8 @@ public final class Inet4Address extends InetAddress {
 	}
 
 	/**
-	 * Returning bytes address of Inet4Address.
-	 * @return bytes ipv4 address.
+	 * Returns bytes address of Inet4Address.
+	 * @return returns ipv4 bytes address.
 	 */
 	public byte[] toBytes() {
 		return Arrays.copyOf(this.address, this.address.length);

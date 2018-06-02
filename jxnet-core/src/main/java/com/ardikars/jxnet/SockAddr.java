@@ -42,16 +42,16 @@ public final class SockAddr implements Cloneable {
         }
 
         /**
-         * Returning address value.
-         * @return address value.
+         * Returns short address value of SockAddr.
+         * @return returns short address value.
          */
         public short getValue() {
             return this.value;
         }
 
         /**
-         * Returning address value description.
-         * @return address value description.
+         * Returns SockAddr description.
+         * @return returns SockAddr description.
          */
         public String getDescription() {
             return this.description;
@@ -60,7 +60,7 @@ public final class SockAddr implements Cloneable {
         /**
          * Getting value type.
          * @param family address value type.
-         * @return value type.
+         * @return returns value type.
          */
         public static Family valueOf(final short family) {
             for (final Family f : values()) {
@@ -81,8 +81,8 @@ public final class SockAddr implements Cloneable {
     }
 
     /**
-     * Returning address value type.
-     * @return address value type.
+     * Returns SockAddr family type.
+     * @return returns family type.
      */
     public Family getSaFamily() {
         Family result = Family.UNKNOWN;
@@ -95,8 +95,8 @@ public final class SockAddr implements Cloneable {
     }
 
     /**
-     * Returning bytes address
-     * @return bytes address.
+     * Returns bytes address of SockAddr.
+     * @return returns bytes address.
      */
     public byte[] getData() {
         byte[] data;

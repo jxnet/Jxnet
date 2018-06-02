@@ -46,6 +46,7 @@ public class MacAddressTest {
      */
     @Before
     public void create() throws Exception {
+        Application.run("MacAddressTest", "0.0.1", LoaderTest.Initializer.class, new ApplicationContext());
         if ((resultCode = PcapFindAllDevs(alldevsp, errbuf)) != OK) {
             logger.warning("create:PcapFindAllDevs(): " + errbuf.toString());
         }

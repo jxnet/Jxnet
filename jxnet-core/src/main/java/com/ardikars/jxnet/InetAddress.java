@@ -30,7 +30,7 @@ public abstract class InetAddress implements Cloneable {
 	/**
 	 * Create instance of Inet4Address or Inet6Address/
 	 * @param ipString ipv4 or ipv6 string address.
-	 * @return Inet4Address or Inet6Address.
+	 * @return returns Inet4Address or Inet6Address.
 	 */
 	public static InetAddress valueOf(final String ipString) {
 		if (ipString.contains(":")) {
@@ -43,7 +43,7 @@ public abstract class InetAddress implements Cloneable {
 	/**
 	 * Validate ipv4 or ipv6 address.
 	 * @param ipString ipv4 or ipv6 string address.
-	 * @return true is valid, false otherwise.
+	 * @return returns true is valid, false otherwise.
 	 */
 	public static boolean isValidAddress(final String ipString) {
 		try {

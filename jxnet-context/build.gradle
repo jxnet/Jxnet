@@ -6,5 +6,6 @@
 description = "Common module for Jxnet."
 
 dependencies {
+    compile project(":jxnet-core")
     testCompile "junit:junit:${JUNIT_VERSION}"
 }

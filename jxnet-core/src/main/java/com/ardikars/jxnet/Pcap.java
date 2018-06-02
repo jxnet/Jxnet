@@ -28,13 +28,20 @@ import com.ardikars.jxnet.util.Validate;
  */
 public final class Pcap implements PointerHandler {
 
+	/**
+	 * Default unknown netmask for PcapLookupNet function in {@link Jxnet}.
+	 */
 	public static final Inet4Address PCAP_NETMASK_UNKNOWN = Inet4Address.valueOf(0xffffffff);
 
+	/**
+	 * Maximum snapshot length.
+	 */
 	public static final int MAXIMUM_SNAPLEN = 262144;
 
-	private DataLinkType dataLinkType;
-
-	private int snapshotLength;
+	/**
+	 * Indentify if pcap handle is dead and used for prevent user to make a SIGSEGV.
+	 */
+	private boolean isDead;
 
 	private long address;
 
@@ -45,7 +52,7 @@ public final class Pcap implements PointerHandler {
 	/**
 	 * Create pcap instance and initialize it.
 	 * @param builder builder.
-	 * @return pcap handle.
+	 * @return returns pcap handle.
 	 */
 	public static Pcap live(Builder builder) {
 		return builder.buildLive();
@@ -64,8 +71,8 @@ public final class Pcap implements PointerHandler {
 	}
 
 	/**
-	 * Get pointer address.
-	 * @return pointer address.
+	 * Getting pointer address.
+	 * @return returns pointer address.
 	 */
 	@Override
 	public long getAddress() {
@@ -75,36 +82,22 @@ public final class Pcap implements PointerHandler {
 	}
 
 	/**
-	 * Get datalink type.
-	 * @return datalink type.
-	 */
-	public DataLinkType getDataLinkType() {
-		if (!this.isClosed() && this.dataLinkType == null) {
-			this.dataLinkType = DataLinkType.valueOf((short) Jxnet.PcapDataLink(this));
-		}
-		return this.dataLinkType;
-	}
-
-	/**
-	 * Get shapshot length.
-	 * @return snapshot length.
-	 */
-	public int getSnapshotLength() {
-		if (!this.isClosed() && this.snapshotLength == 0) {
-			this.snapshotLength = Jxnet.PcapSnapshot(this);
-		}
-		return this.snapshotLength;
-	}
-
-	/**
 	 * Check pcap handle.
-	 * @return true if closed.
+	 * @return returns true if closed, false otherwise.
 	 */
 	public boolean isClosed() {
 		if (this.getAddress() == 0) {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Identify handle is dead.
+	 * @return returns true if pcap handle opened by PcapOpenDead*.
+	 */
+	public boolean isDead() {
+		return isDead;
 	}
 
 	@Override
@@ -143,7 +136,7 @@ public final class Pcap implements PointerHandler {
 	public static final class Builder {
 
 		private String source;
-		private int snaplen = 65534;
+		private int snaplen = 65535;
 		private PromiscuousMode promiscuousMode = PromiscuousMode.PRIMISCUOUS;
 		private ImmediateMode immediateMode = ImmediateMode.IMMEDIATE;
 		private PcapDirection direction = PcapDirection.PCAP_D_INOUT;
@@ -234,14 +227,14 @@ public final class Pcap implements PointerHandler {
 			if (Jxnet.PcapSetSnaplen(pcap, snaplen) != Jxnet.OK) {
 				throw new NativeException();
 			}
-			if (Jxnet.PcapSetPromisc(pcap, promiscuousMode) != Jxnet.OK) {
+			if (Jxnet.PcapSetPromisc(pcap, promiscuousMode.getValue()) != Jxnet.OK) {
 				throw new NativeException();
 			}
 			if (Jxnet.PcapSetTimeout(pcap, timeout) != Jxnet.OK) {
 				throw new NativeException();
 			}
 			if (!Platforms.isWindows()) {
-				if (Jxnet.PcapSetImmediateMode(pcap, immediateMode) != Jxnet.OK) {
+				if (Jxnet.PcapSetImmediateMode(pcap, immediateMode.getValue()) != Jxnet.OK) {
 					throw new NativeException();
 				}
 				if (Jxnet.PcapSetTStampType(pcap, timeStampType.getValue()) != Jxnet.OK) {
@@ -302,50 +295,11 @@ public final class Pcap implements PointerHandler {
 				pcap = Jxnet.PcapOpenOffline(fileName, errbuf);
 			} else {
 				pcap = Jxnet.PcapOpenOfflineWithTStampPrecision(fileName, timeStampPrecision.getValue(), errbuf);
-
 			}
 			if (pcap == null) {
 				throw new NativeException();
 			}
 			return pcap;
-		}
-
-	}
-
-	/**
-	 * Result code from pcap functions.
-	 */
-	public enum PcapCode {
-
-		PCAP_ERROR(-1),                             /* generic error code */
-		PCAP_ERROR_BREAK(-2),                       /* loop terminated by pcap_breakloop */
-		PCAP_ERROR_NOT_ACTIVATED(-3),               /* the capture needs to be activated */
-		PCAP_ERROR_ACTIVATED(-4),                   /* the operation can't be performed on already activated captures */
-		PCAP_ERROR_NO_SUCH_DEVICE(-5),              /* no such device exists */
-		PCAP_ERROR_RFMON_NOTSUP(-6),                /* this device doesn't support rfmon (monitor) mode */
-		PCAP_ERROR_NOT_RFMON(-7),                   /* operation supported only in monitor mode */
-		PCAP_ERROR_PERM_DENIED(-8),                 /* no permission to open the device */
-		PCAP_ERROR_IFACE_NOT_UP(-9),                /* interface isn't up */
-		PCAP_ERROR_CANSET_TSTAMP_TYPE(-10),         /* this device doesn't support setting the time stamp type */
-		PCAP_ERROR_PROMISC_PERM_DENIED(-11),        /* you don't have permission to capture in promiscuous mode */
-		PCAP_ERROR_TSTAMP_PRECISION_NOTSUP(-12),    /* the requested time stamp precision is not supported */
-		PCAP_OK(0),                                 /* success code */
-		PCAP_WARNING(1),                            /* generic warning code */
-		PCAP_WARNING_PROMISC_NOTSUP(2),             /* this device doesn't support promiscuous mode */
-		PCAP_WARNING_TSTAMP_TYPE_NOTSUP(3);         /* the requested time stamp type is not supported */
-
-		private final int value;
-
-		PcapCode(final int value) {
-			this.value = value;
-		}
-
-		/**
-		 * Get error code.
-		 * @return error code.
-		 */
-		public int getValue() {
-			return value;
 		}
 
 	}

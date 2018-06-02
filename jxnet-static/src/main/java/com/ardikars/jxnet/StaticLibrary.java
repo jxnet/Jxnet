@@ -17,9 +17,16 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.jxnet.exception.PlatformNotSupportedException;
+import com.ardikars.jxnet.util.Library;
 import com.ardikars.jxnet.util.Platforms;
 
+import java.io.IOException;
+import java.util.logging.Logger;
+
 public class StaticLibrary implements Library.Loader {
+
+    private final Logger logger = Logger.getLogger(StaticLibrary.class.getName());
 
     @Override
     public void load() {
@@ -27,32 +34,55 @@ public class StaticLibrary implements Library.Loader {
             case LINUX:
                 if (Platforms.isArm()) {
                     if ("v7".equals(Platforms.getVersion()) || "v6".equals(Platforms.getVersion())) {
-                        Library.loadLibrary("/static/linux/lib/arm32/libjxnet.so");
+                        try {
+                            Library.loadLibrary(Library.STATIC_LINUX_ARM32);
+                        } catch (IllegalArgumentException e) {
+                            logger.warning(e.getMessage());
+                        } catch (IOException e) {
+                            logger.warning(e.getMessage());
+                        }
                     }
                 } else {
                     if (Platforms.is64Bit()) {
-                        Library.loadLibrary("/static/linux/lib/x64/libjxnet.so");
+                        try {
+                            Library.loadLibrary(Library.STATIC_LINUX_X64);
+                        } catch (IllegalArgumentException e) {
+                            logger.warning(e.getMessage());
+                        } catch (IOException e) {
+                            logger.warning(e.getMessage());
+                        }
                     } else {
-                        Library.loadLibrary("/static/linux/lib/x86/libjxnet.so");
+                        try {
+                            Library.loadLibrary(Library.STATIC_LINUX_X86);
+                        } catch (IllegalArgumentException e) {
+                            logger.warning(e.getMessage());
+                        } catch (IOException e) {
+                            logger.warning(e.getMessage());
+                        }
                     }
                 }
                 break;
             case FREEBSD:
                 if (Platforms.is64Bit()) {
-                    Library.loadLibrary("/static/freebsd/lib/x64/libjxnet.so");
+                    try {
+                        Library.loadLibrary(Library.STATIC_FREEBSD_X64);
+                    } catch (IllegalArgumentException e) {
+                        logger.warning(e.getMessage());
+                    } catch (IOException e) {
+                        logger.warning(e.getMessage());
+                    }
                 } else {
-                    Library.loadLibrary("/static/freebsd/lib/x86/libjxnet.so");
-                }
-                break;
-            case DARWIN:
-                if (Platforms.is64Bit()) {
-                    Library.loadLibrary("/static/darwin/lib/x64/libjxnet.dylib");
-                } else {
-                    Library.loadLibrary("/static/darwin/lib/x86/libjxnet.dylib");
+                    try {
+                        Library.loadLibrary(Library.STATIC_FREEBSD_X86);
+                    } catch (IllegalArgumentException e) {
+                        logger.warning(e.getMessage());
+                    } catch (IOException e) {
+                        logger.warning(e.getMessage());
+                    }
                 }
                 break;
             default:
-                throw new UnsatisfiedLinkError("Not supported platform.");
+                throw new PlatformNotSupportedException("Your platform does't supported by static jxnet library.");
 
         }
     }

@@ -13,10 +13,10 @@ sourceSets {
 }
 
 dependencies {
-	compile project(":jxnet-context")
-	compile project(":jxnet-dynamic")
-	compile project(":jxnet-static")
-	compile project(":jxnet-android")
+	testCompile project(":jxnet-context")
+	testCompile project(":jxnet-dynamic")
+	testCompile project(":jxnet-static")
+	testCompile project(":jxnet-android")
 	testCompile "junit:junit:${JUNIT_VERSION}"
 	testCompile "org.mockito:mockito-core:${MOCKITO_VERSION}"
 }

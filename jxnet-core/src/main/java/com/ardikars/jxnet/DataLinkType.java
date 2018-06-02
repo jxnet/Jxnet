@@ -88,7 +88,7 @@ public enum DataLinkType {
 
     /**
      * Get datalink value.
-     * @return datalink value.
+     * @return returns datalink value.
      */
     public short getValue() {
         return this.value;
@@ -96,7 +96,7 @@ public enum DataLinkType {
 
     /**
      * Get dalink description
-     * @return datalink description.
+     * @return returns datalink description.
      */
     public String getDescription() {
         return this.description;
@@ -105,7 +105,7 @@ public enum DataLinkType {
     /**
      * Get datalink from value.
      * @param dataLinkType datalink value.
-     * @return datalink.
+     * @return returns datalink type.
      */
     public static DataLinkType valueOf(final short dataLinkType) {
         for (final DataLinkType linkType : values()) {

@@ -17,6 +17,8 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.jxnet.util.Library;
+
 public class Androidlibrary implements Library.Loader {
 
     @Override

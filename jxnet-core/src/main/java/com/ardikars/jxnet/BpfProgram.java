@@ -27,7 +27,7 @@ import com.ardikars.jxnet.util.Validate;
 public final class BpfProgram implements PointerHandler {
 
 	/**
-	 * Bpf compile mode
+	 * Bpf compile mode.
 	 */
 	public enum BpfCompileMode {
 
@@ -59,7 +59,7 @@ public final class BpfProgram implements PointerHandler {
 	/**
 	 * Create instance of BpfProgram and initialize it.
 	 * @param builder filter builder.
-	 * @return BpfProgram (filter handle).
+	 * @return returns BpfProgram (filter handle).
 	 */
 	public static BpfProgram bpf(Builder builder) {
 		return builder.buildBpf();
@@ -67,7 +67,7 @@ public final class BpfProgram implements PointerHandler {
 
 	/**
 	 * Bpf program builder.
-	 * @return BpfProgram instance.
+	 * @return returns Bilder instance.
 	 */
 	public static Builder builder() {
 		return new Builder();
@@ -75,7 +75,7 @@ public final class BpfProgram implements PointerHandler {
 
 	/**
 	 * Get Bpf Program pointer address.
-	 * @return pointer address.
+	 * @return returns pointer address.
 	 */
 	@Override
 	public long getAddress() {
@@ -86,7 +86,7 @@ public final class BpfProgram implements PointerHandler {
 
 	/**
 	 * Check bpf handle.
-	 * @return true if closed.
+	 * @return returns true if closed, false otherwise.
 	 */
 	public boolean isClosed() {
 		if (this.getAddress() == 0) {
@@ -141,7 +141,7 @@ public final class BpfProgram implements PointerHandler {
 		/**
 		 * Pcap handle.
 		 * @param pcap pcap handle.
-		 * @return Builder.
+		 * @return returns BpfProgram Builder.
 		 */
 		public Builder pcap(final Pcap pcap) {
 			this.pcap = pcap;
@@ -151,7 +151,7 @@ public final class BpfProgram implements PointerHandler {
 		/**
 		 * Filter pattern.
 		 * @param filter filter pattern.
-		 * @return Builder.
+		 * @return returns BpfProgram Builder.
 		 */
 		public Builder filter(final String filter) {
 			this.filter = filter;
@@ -161,7 +161,7 @@ public final class BpfProgram implements PointerHandler {
 		/**
 		 * Inet4Address netmask.
 		 * @param netmask netmask.
-		 * @return Builder.
+		 * @return returns BpfProgram Builder.
 		 */
 		public Builder netmask(final Inet4Address netmask) {
 			this.netmask = netmask;
@@ -171,13 +171,17 @@ public final class BpfProgram implements PointerHandler {
 		/**
 		 * Bpf compile mode.
 		 * @param bpfCompileMode bpf compile mode.
-		 * @return Builder.
+		 * @return returns BpfProgram Builder.
 		 */
 		public Builder bpfCompileMode(final BpfCompileMode bpfCompileMode) {
 			this.bpfCompileMode = bpfCompileMode;
 			return this;
 		}
 
+		/**
+		 * Create instance of BpfProgram.
+		 * @return returns BpfProgram.
+		 */
 		public BpfProgram buildBpf() {
 			Validate.nullPointer(pcap);
 			Validate.illegalArgument(!pcap.isClosed(), new IllegalArgumentException("Pcap handle is closed."));

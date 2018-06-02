@@ -68,7 +68,7 @@ public final class Inet6Address extends InetAddress {
 	/**
 	 * Create Inet6Address instance.
 	 * @param address ipv6 bytes address.
-	 * @return Inet6Address instance.
+	 * @return returns Inet6Address instance.
 	 */
 	public static Inet6Address valueOf(final byte[] address) {
 		return new Inet6Address(address);
@@ -77,7 +77,7 @@ public final class Inet6Address extends InetAddress {
 	/**
 	 * Create Inet6Address instance.
 	 * @param inet6Address ipv6 string address.
-	 * @return Inet6Address instance.
+	 * @return returns Inet6Address instance.
 	 */
 	public static Inet6Address valueOf(String inet6Address) {
 
@@ -165,8 +165,8 @@ public final class Inet6Address extends InetAddress {
 	}
 
 	/**
-	 * Returning bytes address of Inet6Address.
-	 * @return bytes ipv6 address.
+	 * Returns bytes address of Inet6Address.
+	 * @return returns ipv6 bytes address.
 	 */
 	public byte[] toBytes() {
 		return Arrays.copyOf(this.address, this.address.length);
@@ -186,6 +186,10 @@ public final class Inet6Address extends InetAddress {
 		return (short) hextet;
 	}
 
+	/**
+	 * Change value of Inet6Address.
+	 * @param inet6address Inet6Address.
+	 */
 	public void update(final Inet6Address inet6address) {
 		Validate.nullPointer(inet6address);
 		this.address = inet6address.toBytes();
@@ -217,8 +221,8 @@ public final class Inet6Address extends InetAddress {
 	}
 
 	/**
-	 * Returning ipv6 string.
-	 * @return ipv6 string.
+	 * Returns ipv6 string of Inet6Address.
+	 * @return returns ipv6 string address.
 	 */
 	public String toString() {
 		int cmprHextet = -1;

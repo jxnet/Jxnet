@@ -15,12 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet;
-
-import com.ardikars.jxnet.util.Validate;
+package com.ardikars.jxnet.util;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,6 +33,27 @@ public final class Library {
 
     private static final Logger LOGGER = Logger.getLogger(Library.class.getName());
 
+    public static final String NPCAP_DLL = "C:\\Windows\\System32\\Npcap\\wpcap.dll";
+    public static final String WPCAP_DLL = "C:\\Windows\\System32\\wpcap.dll";
+
+    public static final String DYNAMIC_LINUX_X64 = "/dynamic/linux/lib/x64/libjxnet.so";
+    public static final String DYNAMIC_LINUX_X86 = "/dynamic/linux/lib/x86/libjxnet.so";
+    public static final String DYNAMIC_LINUX_ARM32 = "/dynamic/linux/lib/arm32/libjxnet.so";
+    public static final String DYNAMIC_FREEBSD_X64 = "/dynamic/freebsd/lib/x64/libjxnet.so";
+    public static final String DYNAMIC_FREEBSD_X86 = "/dynamic/freebsd/lib/x86/libjxnet.so";
+    public static final String DYNAMIC_WINDOWS_X64 = "/dynamic/windows/lib/x64/jxnet.dll";
+    public static final String DYNAMIC_WINDOWS_X86 = "/dynamic/windows/lib/x86/jxnet.dll";
+    public static final String DYNAMIC_DARWIN_X64 = "/dynamic/darwin/lib/x64/libjxnet.dylib";
+
+    public static final String STATIC_LINUX_X64 = "/static/linux/lib/x64/libjxnet.so";
+    public static final String STATIC_LINUX_X86 = "/static/linux/lib/x86/libjxnet.so";
+    public static final String STATIC_LINUX_ARM32 = "/static/linux/lib/arm32/libjxnet.so";
+    public static final String STATIC_FREEBSD_X64 = "/static/freebsd/lib/x64/libjxnet.so";
+    public static final String STATIC_FREEBSD_X86 = "/static/freebsd/lib/x86/libjxnet.so";
+    public static final String STATIC_DARWIN_X64 = "/static/darwin/lib/x64/libjxnet.dylib";
+
+    private static final int BUFFER_SIZE = 1024;
+
     private Library() {
 
     }
@@ -44,29 +62,29 @@ public final class Library {
         void load();
     }
 
-    static void loadLibrary(final String path) {
-        Validate.nullPointer(path);
+    public static void loadLibrary(final String path) throws IllegalArgumentException, IOException {
+        Validate.nullPointer(path, new NullPointerException("Path should be not null."));
         if (!(path.charAt(0) == '/')) {
             throw new IllegalArgumentException("The path has to be absolute (start with '/').");
         }
         String[] parts = Pattern.compile("/").split(path);
         if (parts != null && parts.length > 1) {
             parts = Pattern.compile("\\.").split(parts[parts.length - 1]);
+        } else {
+            throw new IllegalArgumentException();
         }
         File temp = null;
         try {
             temp = File.createTempFile(parts[0], "." + parts[1]);
             temp.deleteOnExit();
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (NullPointerException ex) {
-            ex.printStackTrace();
+            throw e;
         }
-        final byte[] buffer = new byte[1024];
+        final byte[] buffer = new byte[BUFFER_SIZE];
         int readBytes;
         final InputStream is = Library.class.getResourceAsStream(path);
         if (is == null) {
-            throw  new UnsatisfiedLinkError("Error: " + path + " not found.\n");
+            throw new IOException("Error: " + path + " not found in classpath.");
         }
         OutputStream os = null;
         try {
@@ -75,14 +93,11 @@ public final class Library {
                 try {
                     os.write(buffer, 0, readBytes);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    throw e;
                 }
             }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw e;
         } finally {
             try {
                 if (os != null) {
@@ -92,7 +107,7 @@ public final class Library {
                     is.close();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                throw e;
             }
         }
         System.load(temp.getAbsolutePath());

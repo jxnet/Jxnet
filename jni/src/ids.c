@@ -209,7 +209,9 @@ void SetSockAddrIDs(JNIEnv *env) {
 
 jclass PcapClass = NULL;
 jfieldID PcapAddressFID = NULL;
+jfieldID PcapIsDeadFID = NULL;
 jmethodID PcapGetAddressMID = NULL;
+jmethodID PcapIsDeadMID = NULL;
 
 void SetPcapIDs(JNIEnv *env) {
 
@@ -231,12 +233,27 @@ void SetPcapIDs(JNIEnv *env) {
 		return;
 	}
 
+	PcapIsDeadFID = (*env)->GetFieldID(env, PcapClass, "isDead", "Z");
+
+	if (PcapIsDeadFID == NULL) {
+    	ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field Pcap.isDead:boolean");
+        return;
+	}
+
 	PcapGetAddressMID = (*env)->GetMethodID(env, PcapClass, "getAddress", "()J");
 
 	if (PcapGetAddressMID == NULL) {
-		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method Pcap.getAddress(long)");
+		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method Pcap.getAddress():long");
 		return;
 	}
+
+	PcapIsDeadMID = (*env)->GetMethodID(env, PcapClass, "isDead", "()Z");
+
+	if (PcapIsDeadMID == NULL) {
+	    ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method Pcap.isDead():boolean");
+        return;
+	}
+
 }
 
 jclass FileClass = NULL;

@@ -33,7 +33,7 @@ public enum  PcapTimeStampPrecision {
 
 	/**
 	 * Get timestamp precision value.
-	 * @return integer value.
+	 * @return returns integer value.
 	 */
 	public int getValue() {
 		return this.value;

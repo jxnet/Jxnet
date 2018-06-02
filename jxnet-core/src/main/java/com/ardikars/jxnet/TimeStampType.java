@@ -41,7 +41,7 @@ public enum TimeStampType {
 
     /**
      * Returns a time stamp type.
-     * @return time stamp type.
+     * @return returns time stamp type.
      */
     public int getType() {
         return this.type;
@@ -50,7 +50,7 @@ public enum TimeStampType {
     /**
      * Get time stamp type from value.
      * @param type time stamp value.
-     * @return time stamp type.
+     * @return returns time stamp type.
      */
     public static TimeStampType valueOf(final int type) {
         for (final TimeStampType timeStampType : values()) {

@@ -32,17 +32,17 @@ public enum TimeStampPrecision {
     }
 
     /**
-     * Get time stamp precision value;
-     * @return time stamp precision value;
+     * Get timestamp precision value;
+     * @return returns timestamp precision value;
      */
     public int getValue() {
         return this.value;
     }
 
     /**
-     * Get time stamp precision.
+     * Get timestamp precision.
      * @param value value.
-     * @return time stamp precision
+     * @return returns timestamp precision.
      */
     public static TimeStampPrecision valueOf(final int value) {
         for (final TimeStampPrecision timeStampPrecision : values()) {
