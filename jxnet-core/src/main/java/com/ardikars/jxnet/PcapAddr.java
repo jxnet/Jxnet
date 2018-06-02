@@ -17,9 +17,8 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.util.Validate;
-
 /**
+ * Representation of an interface address, used by Jxnet.PcapFindAllDevs().
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */

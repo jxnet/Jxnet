@@ -20,6 +20,7 @@ package com.ardikars.jxnet;
 import java.nio.ByteBuffer;
 
 /**
+ * Callback function used for capturing packets.
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */

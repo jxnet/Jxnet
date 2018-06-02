@@ -18,6 +18,7 @@
 package com.ardikars.jxnet;
 
 /**
+ * List of linktype available at @link https://www.tcpdump.org/linktypes.html.
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */

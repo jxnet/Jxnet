@@ -18,6 +18,7 @@
 package com.ardikars.jxnet;
 
 /**
+ * Class that keeps statistical values on an interface.
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */

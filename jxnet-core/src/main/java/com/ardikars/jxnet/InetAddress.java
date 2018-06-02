@@ -18,6 +18,7 @@
 package com.ardikars.jxnet;
 
 /**
+ * This class is a abstraction for Internet Protocol (IP) address.
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
