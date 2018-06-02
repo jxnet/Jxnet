@@ -18,6 +18,7 @@
 package com.ardikars.jxnet;
 
 /**
+ * Savefile descriptor.
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */

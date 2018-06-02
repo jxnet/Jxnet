@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * Item in a list of interfaces.
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */

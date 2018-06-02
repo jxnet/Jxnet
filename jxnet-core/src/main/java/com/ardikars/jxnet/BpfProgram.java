@@ -21,6 +21,9 @@ import com.ardikars.jxnet.exception.NativeException;
 import com.ardikars.jxnet.util.Validate;
 
 /**
+ * The Berkeley Packet Filter (BPF) allows a user-space program to attach a filter onto any socket and
+ * allow or disallow certain types of data to come through the socket to
+ * avoid useless packet copies from kernel to userspace.
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */

@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.regex.Pattern;
 
 /**
+ * This class represents an Media Access Control (MAC) address.
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */

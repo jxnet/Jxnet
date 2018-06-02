@@ -18,6 +18,10 @@
 package com.ardikars.jxnet;
 
 /**
+ * Libpcap never guarantee, that packets will be delivered immediately,
+ * the instant that they arrive, unless you enable "immediate mode"
+ * by calling pcap_set_immediate_mode() between pcap_create() and pcap_activate().
+ * @see Jxnet PcapSetImmedateMode()
  * @author Ardika Rommy Sanjaya
  * @since 1.1.4
  */
@@ -32,7 +36,7 @@ public enum ImmediateMode {
     }
 
     /**
-     * Get immediate mode.
+     * Is immediate mode enabled?.
      * @return returns true if immediate mode, false otherwise.
      */
     public int getValue() {

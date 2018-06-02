@@ -18,6 +18,7 @@
 package com.ardikars.jxnet;
 
 /**
+ * Header of a packet in the dump file.
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */

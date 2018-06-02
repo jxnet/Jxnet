@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Utility methods for Jxnet API.
  * @author Ardika Rommy Sanjaya
  * @since 1.1.4
  */

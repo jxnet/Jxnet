@@ -18,6 +18,12 @@
 package com.ardikars.jxnet;
 
 /**
+ * Direction of packets.
+ * typedef enum {
+ *   PCAP_D_INOUT = 0,
+ *   PCAP_D_IN,
+ *   PCAP_D_OUT
+ * } pcap_direction_t;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */

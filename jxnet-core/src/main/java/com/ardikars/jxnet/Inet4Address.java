@@ -22,6 +22,7 @@ import com.ardikars.jxnet.util.Validate;
 import java.util.Arrays;
 
 /**
+ * This class represents an Internet Protocol version 4 (IPv4) address.
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */

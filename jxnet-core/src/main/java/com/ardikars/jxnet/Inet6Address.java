@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * This class represents an Internet Protocol version 6 (IPv6) address.
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */

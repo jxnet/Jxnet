@@ -23,6 +23,7 @@ import com.ardikars.jxnet.util.Platforms;
 import com.ardikars.jxnet.util.Validate;
 
 /**
+ * This class storing pointer address of pcap handle and used for dereferencing the pointer.
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
