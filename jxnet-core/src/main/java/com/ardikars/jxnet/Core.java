@@ -83,7 +83,7 @@ abstract class Core {
 
     /**
      * Select network interface.
-     * @return PcapIf.
+     * @return returns selected PcapIf.
      * @since 1.1.5
      * @throws NativeException native exception.
      * @throws IOException IO exception.

@@ -31,7 +31,7 @@ public final class PcapStat implements Cloneable {
 
 	/**
 	 * Returns recieved packets.
-	 * @return number of packets received;
+	 * @return returns number of packets received;
 	 */
 	public long getPsRecv() {
 		return this.ps_recv;
@@ -40,7 +40,7 @@ public final class PcapStat implements Cloneable {
 	/**
 	 * Returns number of packets dropped because there was no room in the operating
 	 * system`s buffer when they arrived, because packets weren`t being read fast enough.
-	 * @return number of packets dropped because there was no room in the operating system's buffer.
+	 * @return returns number of packets dropped because there was no room in the operating system's buffer.
 	 */
 	public long getPsDrop() {
 		return this.ps_drop;
@@ -48,7 +48,7 @@ public final class PcapStat implements Cloneable {
 
 	/**
 	 * Returns dropped packets by interface.
-	 * @return number of packets dropped by the network interface or its driver.
+	 * @return returns number of packets dropped by the network interface or its driver.
 	 */
 	public long getPsIfdrop() {
 		return this.ps_ifdrop;

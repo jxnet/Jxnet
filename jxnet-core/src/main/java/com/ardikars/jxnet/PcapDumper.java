@@ -30,8 +30,8 @@ public final class PcapDumper implements Cloneable {
 	}
 
 	/**
-	 * Get pointer address
-	 * @return pointer address.
+	 * Getting pointer address
+	 * @return returns pointer address.
 	 */
 	public long getAddress() {
 		synchronized (this) {
@@ -40,8 +40,8 @@ public final class PcapDumper implements Cloneable {
 	}
 
 	/**
-	 * Return true if PcapDumper is closed.
-	 * @return true if PcapDumper is closed, false otherwise.
+	 * Returns true if PcapDumper is closed.
+	 * @return returns true if PcapDumper is closed, false otherwise.
 	 */
 	public boolean isClosed() {
 		if (this.getAddress() == 0) {

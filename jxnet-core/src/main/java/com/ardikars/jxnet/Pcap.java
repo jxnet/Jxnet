@@ -52,7 +52,7 @@ public final class Pcap implements PointerHandler {
 	/**
 	 * Create pcap instance and initialize it.
 	 * @param builder builder.
-	 * @return pcap handle.
+	 * @return returns pcap handle.
 	 */
 	public static Pcap live(Builder builder) {
 		return builder.buildLive();
@@ -71,8 +71,8 @@ public final class Pcap implements PointerHandler {
 	}
 
 	/**
-	 * Get pointer address.
-	 * @return pointer address.
+	 * Getting pointer address.
+	 * @return returns pointer address.
 	 */
 	@Override
 	public long getAddress() {
@@ -83,7 +83,7 @@ public final class Pcap implements PointerHandler {
 
 	/**
 	 * Check pcap handle.
-	 * @return true if closed.
+	 * @return returns true if closed, false otherwise.
 	 */
 	public boolean isClosed() {
 		if (this.getAddress() == 0) {
@@ -94,7 +94,7 @@ public final class Pcap implements PointerHandler {
 
 	/**
 	 * Identify handle is dead.
-	 * @return true if pcap handle opened by PcapOpenDead*.
+	 * @return returns true if pcap handle opened by PcapOpenDead*.
 	 */
 	public boolean isDead() {
 		return isDead;

@@ -79,7 +79,7 @@ public final class MacAddress implements Cloneable {
 	/**
 	 * Create MacAddress instance.
 	 * @param address string MAC Address.
-	 * @return MacAddress instance.
+	 * @return returns MacAddress instance.
 	 */
 	public static MacAddress valueOf(String address) {
 		address = Validate.nullPointer(address, "00:00:00:00:00:00");
@@ -96,7 +96,7 @@ public final class MacAddress implements Cloneable {
 	/**
 	 * Create MacAddress instance.
 	 * @param address bytes MAC Address.
-	 * @return MacAddress instance.
+	 * @return returns MacAddress instance.
 	 */
 	public static MacAddress valueOf(final byte[] address) {
 		return new MacAddress(address);
@@ -105,7 +105,7 @@ public final class MacAddress implements Cloneable {
 	/**
 	 * Create MacAddress instance.
 	 * @param address long MAC Address.
-	 * @return MacAddress instance.
+	 * @return returns MacAddress instance.
 	 */
 	public static MacAddress valueOf(final long address) {
 		final byte[] bytes = new byte[] {
@@ -121,37 +121,41 @@ public final class MacAddress implements Cloneable {
 	/**
 	 * Validate Mac Address.
 	 * @param address string address.
-	 * @return true is valid, false otherwise.
+	 * @return returns true is valid, false otherwise.
 	 */
 	public static boolean isValidAddress(final String address) {
 		Validate.nullPointer(address);
 		return Pattern.matches("^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$", address);
 	}
 
+	/**
+	 * Change value of MacAddress.
+	 * @param macAddress MacAddress.
+	 */
 	public void update(final MacAddress macAddress) {
 		Validate.nullPointer(macAddress);
 		this.address = macAddress.toBytes();
 	}
 
 	/**
-	 * Reuturning length of MAC Address.
-	 * @return MAC Address length.
+	 * Getting length of MAC Address.
+	 * @return returns MAC Address length.
 	 */
 	public int length() {
 		return this.address.length;
 	}
 
 	/**
-	 * Returning bytes MAC Address.
-	 * @return bytes MAC Address.
+	 * Getting MAC Address as bytes.
+	 * @return returns MAC Address.
 	 */
 	public byte[] toBytes() {
 		return Arrays.copyOf(this.address, this.address.length);
 	}
 
 	/**
-	 * Returning long MAC Address.
-	 * @return long MAC Address.
+	 * Getting MAC Address as long.
+	 * @return returns MAC Address.
 	 */
 	public long toLong() {
 		long addr = 0;
@@ -163,8 +167,8 @@ public final class MacAddress implements Cloneable {
 	}
 
 	/**
-	 * Return true if Broadcast MAC Address.
-	 * @return true if Broadcast MAC Address, false otherwise.
+	 * Returns true if broadcast MAC Address.
+	 * @return returns true if broadcast MAC Address, false otherwise.
 	 */
 	public boolean isBroadcast() {
 		for (final byte b : this.address) {
@@ -176,8 +180,8 @@ public final class MacAddress implements Cloneable {
 	}
 
 	/**
-	 * Return true if Multicast MAC Address.
-	 * @return true if Multicast MAC Address, false otherwise.
+	 * Returns true if multicast MAC Address.
+	 * @return returns true if multicast MAC Address, false otherwise.
 	 */
 	public boolean isMulticast() {
 		if (this.isBroadcast()) {

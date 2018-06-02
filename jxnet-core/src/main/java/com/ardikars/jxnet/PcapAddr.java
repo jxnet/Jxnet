@@ -38,8 +38,8 @@ public final class PcapAddr implements Cloneable {
 	}
 
 	/**
-	 * Returning interface address.
-	 * @return interface address.
+	 * Getting interface address.
+	 * @return returns interface address.
 	 */
 	public SockAddr getAddr() {
 		SockAddr sockAddr = null;
@@ -54,8 +54,8 @@ public final class PcapAddr implements Cloneable {
 	}
 
 	/**
-	 * Returning interface netmask.
-	 * @return interface netmask.
+	 * Getting interface netmask.
+	 * @return returns interface netmask.
 	 */
 	public SockAddr getNetmask() {
 		SockAddr sockAddr = null;
@@ -70,8 +70,8 @@ public final class PcapAddr implements Cloneable {
 	}
 
 	/**
-	 * Returning interface broadcast address.
-	 * @return interface broadcast address.
+	 * Getting interface broadcast address.
+	 * @return returns interface broadcast address.
 	 */
 	public SockAddr getBroadAddr() {
 		SockAddr sockAddr = null;
@@ -86,8 +86,8 @@ public final class PcapAddr implements Cloneable {
 	}
 
 	/**
-	 * Returning interface destination address.
-	 * @return interface destination address.
+	 * Getting interface destination address.
+	 * @return returns interface destination address.
 	 */
 	public SockAddr getDstAddr() {
 		SockAddr sockAddr = null;

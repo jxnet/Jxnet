@@ -1670,7 +1670,11 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCheckActivated
    		return (jint) -1;
    	}
 
-   	return (jint) pcap_check_activated(pcap);
+   	//return (jint) pcap_check_activated(pcap);
+	if (pcap->activated) {
+		return (-1);
+	}
+	return (0);
   }
 
 // libpcap 1.8.1

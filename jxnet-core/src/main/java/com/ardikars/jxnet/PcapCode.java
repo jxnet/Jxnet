@@ -32,7 +32,7 @@ public enum PcapCode {
 
 	/**
 	 * Get error code.
-	 * @return error code.
+	 * @return returns error code.
 	 */
 	public int getValue() {
 		return value;

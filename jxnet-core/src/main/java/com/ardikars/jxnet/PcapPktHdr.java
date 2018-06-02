@@ -60,39 +60,39 @@ public final class PcapPktHdr implements Cloneable {
 	 * @param len length.
 	 * @param tvSec tv_sec.
 	 * @param tvUsec tv_usec.
-	 * @return PcapPktHdr.
+	 * @return returns PcapPktHdr.
 	 */
 	public static PcapPktHdr newInstance(final int caplen, final int len, final int tvSec, final long tvUsec) {
 		return new PcapPktHdr(caplen, len, tvSec, tvUsec);
 	}
 
 	/**
-	 * Returning capture length.
-	 * @return capture length.
+	 * Getting capture length.
+	 * @return returns capture length.
 	 */
 	public int getCapLen() {
 		return this.caplen;
 	}
 
 	/**
-	 * Returning packet length.
-	 * @return packet length.
+	 * Getting packet length.
+	 * @return returns packet length.
 	 */
 	public int getLen() {
 		return this.len;
 	}
 
 	/**
-	 * Returning tv_sec.
-	 * @return tv_sec.
+	 * Getting tv_sec.
+	 * @return returns tv_sec.
 	 */
 	public int getTvSec() {
 		return this.tv_sec;
 	}
 
 	/**
-	 * Returning tv_usec.
-	 * @return tv_usec.
+	 * Getting tv_usec.
+	 * @return returns tv_usec.
 	 */
 	public long getTvUsec() {
 		return this.tv_usec;

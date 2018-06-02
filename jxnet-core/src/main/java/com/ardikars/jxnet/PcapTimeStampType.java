@@ -33,7 +33,7 @@ public enum  PcapTimeStampType {
 
 	/**
 	 * Get timestamp type value.
-	 * @return integer value.
+	 * @return returns integer value.
 	 */
 	public int getValue() {
 		return this.value;
