@@ -1,0 +1,55 @@
+
+version: 2
+
+jobs:
+
+  build:
+    working_directory: ~/tmp/Jxnet
+    docker:
+      - image: 'circleci/openjdk:8-jdk'
+    steps:
+      - checkout
+      - run: 'export TERM=xterm-color'
+      - run: 'sudo apt-get update && sudo apt-get install libpcap0.8 libpcap0.8-dev libpcap-dev -y'
+      - run: './gradlew clean build -x test --info --no-daemon'
+
+  test:
+    working_directory: ~/tmp/Jxnet
+    docker:
+      - image: 'circleci/openjdk:8-jdk'
+    steps:
+      - checkout
+      - run: 'export TERM=xterm-color'
+      - run: 'sudo ./gradlew clean codeCoverageReport --info --no-daemon'
+
+  deploy:
+    working_directory: ~/tmp/Jxnet
+    docker:
+      - image: 'circleci/openjdk:8-jdk'
+    steps:
+      - checkout
+      - run: 'export TERM=xterm-color'
+      - run: './gradlew clean build bintrayUpload -x test --info --no-daemon'
+
+
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - build
+      - test:
+          filters:
+            branches:
+              only:
+                - development
+          requires:
+            - build
+      - deploy:
+          filters:
+            tags:
+              only: /-RELEASE$/
+            branches:
+              only:
+                - master
+          requires:
+            - build

@@ -9,8 +9,8 @@ version: '{build}-{branch}'
 branches:
   only:
     - development
-  #except:
-    #- development
+  except:
+    - master
 
 # Do not build on tags
 skip_tags: true
@@ -18,10 +18,6 @@ skip_tags: true
 # Skipping commits with particular message or from specific user
 skip_commits:
   message: /Created.*\.(png|jpg|jpeg|bmp|gif)/      # Regex for matching commit message
-
-#---------------------------------#
-#    environment configuration    #
-#---------------------------------#
 
 # Operating system (build VM template)
 os: Windows Server 2012 R2
@@ -33,33 +29,21 @@ cache:
   - C:\Users\appveyor\.gradle\wrapper
   - C:\Users\appveyor\.gradle\native
   - C:\Users\appveyor\.gradle\daemon
-#  - C:\Users\appveyor\.gradle\caches
+  - C:\Users\appveyor\.gradle\caches
 
 # scripts that run after cloning repository
 install:
-  # Install WinPcap
-  #- cmd: choco install -y winpcap
+  - cmd: choco install -y mingw
   - ps: .\.scripts\InstallNpcap.ps1
 
 #---------------------------------#
 #       build configuration       #
 #---------------------------------#
 
-# build platform, i.e. x86, x64, Any CPU. This setting is optional.
-platform: Any CPU
-
 build_script:
-  - cmd: gradlew.bat clean build -x test
-
-#---------------------------------#
-#       tests configuration       #
-#---------------------------------#
-
-test_script:
-  - cmd: gradlew.bat clean codeCoverageReport -i
-
-after_test:
-  - cmd: gradlew.bat clean
+  - cmd: set PATH=C:\tools\mingw64\bin;C:\Program Files (x86)\NSIS;C:\Windows\System32\Npcap;%PATH%
+  - cmd: gcc --version
+  - cmd: gradlew.bat -p jxnet-native clean build -x test --info --no-daemon
 
 #---------------------------------#
 #         notifications           #
@@ -70,4 +54,3 @@ notifications:
     to: ardikars@gmail.com
     on_build_success: false
     on_build_failure: true
-    

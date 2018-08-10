@@ -11,6 +11,41 @@ ext {
 
 model {
 
+    toolChains {
+        gcc(Gcc) {
+            eachPlatform {
+                cCompiler.withArguments { args ->
+                    args.remove "-m32"
+                    args.remove "-m54"
+                }
+                linker.withArguments { args ->
+                    args.remove "-m32"
+                    args.remove "-m54"
+                }
+                staticLibArchiver.withArguments { args ->
+                    args.remove "-m32"
+                    args.remove "-m54"
+                }
+            }
+        }
+        clang(Clang) {
+            eachPlatform {
+                cCompiler.withArguments { args ->
+                    args.remove "-m32"
+                    args.remove "-m64"
+                }
+                linker.withArguments { args ->
+                    args.remove "-m32"
+                    args.remove "-m64"
+                }
+                staticLibArchiver.withArguments { args ->
+                    args.remove "-m32"
+                    args.remove "-m64"
+                }
+            }
+        }
+    }
+
     components {
 
         jxnet(NativeLibrarySpec) {
@@ -19,27 +54,29 @@ model {
                 if (os_arch.contains('64')) {
                     baseName = 'jxnet-windows-x64'
                 } else {
-                    baseName = 'jxnet-windows-x32'
+                    baseName = 'jxnet-windows-x86'
                 }
             } else if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
                 if (os_arch.contains('64')) {
                     baseName = 'jxnet-darwin-x64'
                 } else {
-                    baseName = 'jxnet-darwin-x32'
+                    baseName = 'jxnet-darwin-x86'
                 }
             } else if (org.gradle.internal.os.OperatingSystem.current().isLinux()) {
                 if (os_arch.contains('64')) {
                     baseName = 'jxnet-linux-x64'
                 } else {
-                    baseName = 'jxnet-linux-x32'
+                    baseName = 'jxnet-linux-x86'
                 }
             } else if (org.gradle.internal.os.OperatingSystem.current().isUnix()) {
                 if (os_arch.contains('64')) {
                     baseName = 'jxnet-unix-x64'
                 } else {
-                    baseName = 'jxnet-unix-x32'
+                    baseName = 'jxnet-unix-x86'
                 }
             }
+
+            println "${baseName}"
 
             sources.c {
                 source {
@@ -54,11 +91,11 @@ model {
             binaries.all {
                 if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
                     if (os_arch.contains('64')) {
-                        cCompiler.args "-I${rootDir}/include", "-I${rootDir}/include/jxnet"
-                        linker.args '-Wl,--export-all-symbols', '-Wl,--add-stdcall-alias', "-L${rootDir}/lib/x64", '-lwpcap', '-liphlpapi'
+                        cCompiler.args "-I${rootDir}/jxnet-native/include", "-I${rootDir}/jxnet-native/include/jxnet", '-m64'
+                        linker.args '-Wl,--export-all-symbols', '-Wl,--add-stdcall-alias', '-m64', "-L${rootDir}/jxnet-native/lib/x64", '-lwpcap', '-liphlpapi'
                     } else {
-                        cCompiler.args "-I${rootDir}/include", "-I${rootDir}/include/jxnet"
-                        linker.args '-Wl,--export-all-symbols', '-Wl,--add-stdcall-alias', "-L${rootDir}/lib", '-lwpcap', '-liphlpapi'
+                        cCompiler.args "-I${rootDir}/jxnet-native/include", "-I${rootDir}/jxnet-native/include/jxnet", '-m32'
+                        linker.args '-Wl,--export-all-symbols', '-Wl,--add-stdcall-alias', '-m32', "-L${rootDir}/jxnet-native/lib", '-lwpcap', '-liphlpapi'
                     }
                 } else if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
                     cCompiler.args '-fPIC'
@@ -87,6 +124,10 @@ model {
         }
     }
 
+}
+
+task test {
+    // do nothing
 }
 
 task installLibrary(type:Copy, dependsOn:[assemble]) {
