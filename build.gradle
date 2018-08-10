@@ -20,201 +20,201 @@ buildscript {
 
 }
 
-allprojects {
+subprojects {
 
-	apply plugin: 'java'
-	apply plugin: 'maven'
-	apply plugin: 'signing'
-	apply plugin: 'jacoco'
-	apply plugin: 'com.jfrog.bintray'
-	apply plugin: 'checkstyle'
-	apply plugin: 'findbugs'
-	apply plugin: 'pmd'
+	if (!project.name.equals("jxnet-native")) {
+		apply plugin: 'java'
+		apply plugin: 'maven'
+		apply plugin: 'signing'
+		apply plugin: 'jacoco'
+		apply plugin: 'com.jfrog.bintray'
+		apply plugin: 'checkstyle'
+		apply plugin: 'findbugs'
+		apply plugin: 'pmd'
 
-	group = "${GROUP}"
-	version = "${VERSION}"
+		group = "${GROUP}"
+		version = "${VERSION}"
 
-	sourceCompatibility = "${JAVA_VERSION}"
-	targetCompatibility = "${JAVA_VERSION}"
+		sourceCompatibility = "${JAVA_VERSION}"
+		targetCompatibility = "${JAVA_VERSION}"
 
-	[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+		[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-	repositories {
-		jcenter()
-	}
+		repositories {
+			jcenter()
+		}
 
-	configurations.archives.artifacts.with { archives ->
-		def jarArtifact
-		archives.each {
-			if (it.file =~ 'jar' && project.name == "${rootProject.name}") {
-				jarArtifact = it
+		configurations.archives.artifacts.with { archives ->
+			def jarArtifact
+			archives.each {
+				if (it.file =~ 'jar' && project.name == "${rootProject.name}") {
+					jarArtifact = it
+				}
+			}
+			remove(jarArtifact)
+		}
+
+		evaluationDependsOn(project.path)
+
+		javadoc {
+			def currentYear = Calendar.getInstance().get Calendar.YEAR
+			options.with {
+				locale 'en_US'
+				encoding 'UTF-8'
+				charSet 'UTF-8'
+				author true
+				windowTitle "${NAME} ${project.version}"
+				header "${NAME} ${project.version}"
+				docTitle "${NAME} ${project.version} API Documentation"
+				footer 'https://github.com/jxnet/Jxnet'
+				bottom "Copyright &copy; 2015 - ${currentYear} ardikars.com. All rights reserved."
+				showFromProtected()
+				addStringOption 'Xdoclint:all,-reference', '-quiet'
 			}
 		}
-		remove(jarArtifact)
-	}
 
-	javadoc {
-		def currentYear = Calendar.getInstance().get Calendar.YEAR
-		options.with {
-			locale 'en_US'
-			encoding 'UTF-8'
-			charSet 'UTF-8'
-			author true
-			windowTitle "${NAME} ${project.version}"
-			header "${NAME} ${project.version}"
-			docTitle "${NAME} ${project.version} API Documentation"
-			footer 'https://github.com/jxnet/Jxnet'
-			bottom "Copyright &copy; 2015 - ${currentYear} ardikars.com. All rights reserved."
-			showFromProtected()
-//			addStringOption 'Xdoclint:all,-reference', '-quiet'
+		checkstyle {
+			ignoreFailures = true
+
+			configFile = rootProject.file('gradle/resources/checkstyle/checkstyle.xml')
+			configProperties = [
+					"suppressionFile": rootProject.file('gradle/resources/checkstyle/suppression.xml'),
+					"headerFile"     : rootProject.file('gradle/resources/checkstyle/license.header')
+			]
+
+			checkstyleMain {
+				source = sourceSets.main.allSource
+			}
+			configurations {
+				checkstyle
+			}
+			checkstyleMain {
+				reports {
+					html {
+						destination "${project.buildDir}/reports/checkstyle.html"
+					}
+				}
+			}
+			toolVersion = '6.18'
 		}
-	}
 
-	checkstyle {
-		ignoreFailures = true
-
-		configFile = rootProject.file('gradle/resources/checkstyle/checkstyle.xml')
-		configProperties = [
-				"suppressionFile" : rootProject.file('gradle/resources/checkstyle/suppression.xml'),
-				"headerFile" : rootProject.file('gradle/resources/checkstyle/license.header')
-		]
-
-		checkstyleMain {
-			source = sourceSets.main.allSource
+		findbugs {
+			ignoreFailures = true
+			sourceSets = [sourceSets.main]
+			reportsDir = file("$project.buildDir/reports/findbugs")
+			effort = "max"
+			excludeFilter rootProject.file('gradle/resources/findbugs/findbugs-exclude.xml')
+			findbugsMain {
+				reports {
+					xml.enabled = false
+					html.enabled = true
+				}
+			}
+			toolVersion '3.0.1'
 		}
-		configurations {
-			checkstyle
+
+		pmd {
+			ignoreFailures = true
+			sourceSets = [sourceSets.main]
+			reportsDir = file("$project.buildDir/reports/pmd")
+			ruleSetFiles = rootProject.files("./gradle/resources/pmd/pmd.xml")
+			toolVersion '4.3'
 		}
-		checkstyleMain {
-			reports {
-				html {
-					destination "${project.buildDir}/reports/checkstyle.html"
+
+		test {
+			testLogging {
+				showStandardStreams = true
+			}
+		}
+
+		task javadocJar(type: Jar) {
+			classifier = 'javadoc'
+			from javadoc
+		}
+
+		task sourcesJar(type: Jar) {
+			classifier = 'sources'
+			from sourceSets.main.allSource
+		}
+
+		tasks.withType(JavaCompile) {
+			//options.compilerArgs << "-Xlint:unchecked" << "-Werror"
+		}
+
+		artifacts {
+			archives jar, sourcesJar, javadocJar
+		}
+
+		signing {
+			required { !version.endsWith('SNAPSHOT') && gradle.taskGraph.hasTask('uploadArchives') }
+			sign configurations.archives
+		}
+
+		install {
+			System.setProperty('maven.repo.local', "${MAVEN_LOCAL_REPOSITORY}")
+			repositories.mavenInstaller {
+				pom.project pom_project
+			}
+		}
+
+		uploadArchives {
+			repositories.mavenDeployer {
+				beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+				repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
+					authentication(userName: defaultBlank({ sonatypeUser }), password: defaultBlank({ sonatypePass }))
+				}
+				snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
+					authentication(userName: defaultBlank({ sonatypeUser }), password: defaultBlank({ sonatypePass }))
+				}
+				pom.project pom_project
+			}
+		}
+
+		bintray {
+			user = defaultBlank({ bintrayUser })
+			key = defaultBlank({ bintrayPass })
+			configurations = ['archives']
+			dryRun = false
+			publish = true
+			override = true
+			pkg {
+				repo = 'maven'
+				name = 'com.ardikars.jxnet'
+				desc = 'Jxnet is a java library for capturing and sending network paket.'
+				licenses = ['GNU Lesser General Public License, Version 3.0']
+				vcsUrl = 'https://github.com/jxnet/Jxnet.git'
+				version {
+					name = project.version
+					vcsTag = project.version
+					gpg {
+						sign = true
+						passphrase = defaultBlank({ signing.password })
+					}
+					mavenCentralSync {
+						sync = true
+						user = defaultBlank({ sonatypeUser })
+						password = defaultBlank({ sonatypePass })
+						close = '1'
+					}
 				}
 			}
 		}
-		toolVersion = '6.18'
-	}
 
-	findbugs {
-		ignoreFailures = true
-		sourceSets = [sourceSets.main]
-		reportsDir = file("$project.buildDir/reports/findbugs")
-		effort = "max"
-		excludeFilter rootProject.file('gradle/resources/findbugs/findbugs-exclude.xml')
-		findbugsMain {
-			reports {
-				xml.enabled = false
-				html.enabled = true
-			}
+		clean {
+			file("${rootDir}/${project.name}/obj").deleteDir()
+			file("${rootDir}/${project.name}/out").deleteDir()
 		}
-		toolVersion '3.0.1'
+
+	} else {
+		apply plugin: 'c'
 	}
 
-	pmd {
-		ignoreFailures = true
-		sourceSets = [sourceSets.main]
-		reportsDir = file("$project.buildDir/reports/pmd")
-		ruleSetFiles = rootProject.files("./gradle/resources/pmd/pmd.xml")
-		toolVersion '4.3'
-	}
-
-	task javadocJar(type: Jar) {
-		classifier = 'javadoc'
-		from javadoc
-	}
-
-	task sourcesJar(type: Jar) {
-		classifier = 'sources'
-		from sourceSets.main.allSource
-	}
-
-	tasks.withType(JavaCompile) {
-//		options.compilerArgs << "-Xlint:unchecked" << "-Werror"
-	}
-
-	artifacts {
-		archives jar, sourcesJar, javadocJar
-	}
-
-	signing {
-		required { !version.endsWith('SNAPSHOT') && gradle.taskGraph.hasTask('uploadArchives') }
-		sign configurations.archives
-	}
-
-	install {
-		System.setProperty('maven.repo.local', "${MAVEN_LOCAL_REPOSITORY}")
-		repositories.mavenInstaller {
-			pom.project pom_project
-		}
-	}
-
-	uploadArchives {	
-		repositories.mavenDeployer {
-			beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-			repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
-				authentication(userName: defaultBlank({ sonatypeUser }), password: defaultBlank({ sonatypePass }))
-			}
-			snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
-				authentication(userName: defaultBlank({ sonatypeUser }), password: defaultBlank({ sonatypePass }))
-			}
-			pom.project pom_project
-		}
-	}
-
-	bintray {
-		user = defaultBlank({ bintrayUser })
-		key = defaultBlank({ bintrayPass })
-		configurations = ['archives']
-		dryRun = false
-		publish = true
-		override = true
-		pkg {
-			repo = 'maven'
-			name = 'com.ardikars.jxnet'
-			desc = 'Jxnet is a java library for capturing and sending network paket.'
-			licenses = ['GNU Lesser General Public License, Version 3.0']
-			vcsUrl = 'https://github.com/jxnet/Jxnet.git'
-			version {
-				name = project.version
-				vcsTag = project.version
-				gpg {
-					sign = true
-					passphrase = defaultBlank({ signing.password })
-				}
-				mavenCentralSync {
-					sync = true
-					user = defaultBlank({ sonatypeUser })
-					password = defaultBlank({ sonatypePass })
-					close = '1'
-				}
-			}
-		}
-	}
-
-	clean {
-		file("${rootDir}/${project.name}/obj").deleteDir()
-		file("${rootDir}/${project.name}/out").deleteDir()
-	}
-
-}
-
-subprojects.each {
-	subproject -> evaluationDependsOn(subproject.path)
-}
-
-javadoc.dependsOn subprojects.tasks['javadoc']
-
-javadocJar {
-	subprojects.each { subproject ->
-		classifier = 'javadoc'
-		from subproject.javadoc
-	}
 }
 
 task codeCoverageReport(type: JacocoReport) {
 	executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
 	subprojects.each { subproject ->
-		if (subproject.name != "${rootProject.name}") {
+		if (!(subproject.name.equals("${rootProject.name}")) && !((subproject.name).equals("jxnet-native"))) {
 			sourceSets subproject.sourceSets.main
 		}
 	}
@@ -225,31 +225,8 @@ task codeCoverageReport(type: JacocoReport) {
 	}
 }
 
-test {
-	testLogging {
-		showStandardStreams = true
-	}
-}
-
 codeCoverageReport.dependsOn {
 	subprojects*.test
-}
-
-dependencies {
-	compile project(':jxnet-context')
-	compile project(':jxnet-core')
-}
-
-task dist(type: Zip, dependsOn: build) {
-
-	archiveName = "${NAME}-${VERSION}.zip"
-	
-	subprojects.each { subproject ->
-		from subproject.jar.outputs.files
-		from subproject.javadocJar.outputs.files
-		from subproject.sourcesJar.outputs.files
-	}
-
 }
 
 task ndkBuild(type: Exec) {
@@ -260,49 +237,6 @@ task ndkBuild(type: Exec) {
 			"NDK_LIBS_OUT=${JXNET_OUT}", "NDK_OUT=${JXNET_OBJ}"
 }
 
-clean {
-	dependsOn subprojects.tasks['clean']
-	file("${rootDir}/out").deleteDir()
-	file("${rootDir}/obj").deleteDir()
-	file("${rootDir}/jni/Makefile").delete()
-	file("${rootDir}/jni/src/Makefile").delete()
-	file("${rootDir}/jni/Makefile.in").delete()
-	file("${rootDir}/jni/src/Makefile.in").delete()
-	file("${rootDir}/jni/aclocal.m4").delete()
-	file("${rootDir}/jni/compile").delete()
-	file("${rootDir}/jni/config.guess").delete()
-	file("${rootDir}/jni/config.log").delete()
-	file("${rootDir}/jni/config.status").delete()
-	file("${rootDir}/jni/configure").delete()
-	file("${rootDir}/jni/depcomp").delete()
-	file("${rootDir}/jni/install-sh").delete()
-	file("${rootDir}/jni/libtool").delete()
-	file("${rootDir}/jni/ltmain.sh").delete()
-	file("${rootDir}/jni/missing").delete()
-	file("${rootDir}/jni/config.sub").delete()
-	file("${rootDir}/jni/autom4te.cache").deleteDir()
-	file("${rootDir}/jni/.autotools").delete()
-	file("${rootDir}/jni/jxnet-1.1.0.tar.gz").delete()
-	file("${rootDir}/jni/src/.deps").deleteDir()
-	file("${rootDir}/jni/src/.libs").deleteDir()
-	delete fileTree("${rootDir}/jni/src") { include '**/*.o'
-		include '**/*.lo'
-		include '**/*.la'
-	}
-	file("${rootDir}/tools/jni/progs/capsh").delete()
-	file("${rootDir}/tools/jni/progs/getcap").delete()
-	file("${rootDir}/tools/jni/progs/getpcaps").delete()
-	file("${rootDir}/tools/jni/progs/setcap").delete()
-	file("${rootDir}/tools/obj").deleteDir()
-	file("${rootDir}/tools/jni/libcap/libcap.pc").delete()
-	file("${rootDir}/tools/jni/libcap/libcap.so").delete()
-	file("${rootDir}/tools/jni/libcap/libcap.so.2").delete()
-	file("${rootDir}/tools/jni/libcap/libcap.so.2.25").delete()
-	file("${rootDir}/tools/jni/libcap/_makenames").delete()
-	file("${rootDir}/tools/build").deleteDir()
-}
-
 task wrapper(type: Wrapper) {
 	distributionUrl = "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-all.zip"
 }
-

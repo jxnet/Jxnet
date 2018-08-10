@@ -65,6 +65,7 @@ public interface Context {
 	 * Open a file to write packets.
 	 * @param fname fname specifies the name of the file to open. The file will have the same format
 	 *                 as those used by tcpdump(1) and tcpslice(1). The name "-" is a synonym for stdout.
+	 * @return pcap code.
 	 * @throws PcapCloseException pcap close exception.
 	 * @since 1.1.4
 	 */
