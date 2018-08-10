@@ -34,7 +34,7 @@ jobs:
       # run tests!
       # - run: sudo ./gradlew clean codeCoverageReport --info --no-daemon
 
-  build:
+  deploy:
     docker:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk
