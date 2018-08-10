@@ -8,9 +8,9 @@ version: '{build}-{branch}'
 
 branches:
   only:
-    - master
-  except:
     - development
+  #except:
+    #- development
 
 # Do not build on tags
 skip_tags: true
