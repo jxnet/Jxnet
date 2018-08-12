@@ -4,45 +4,66 @@
  */
 
 ext {
-	os_arch = System.properties['os.arch'].toLowerCase()
-	currentJvm = org.gradle.internal.jvm.Jvm.current()
-	javaHome = currentJvm.javaHome.absolutePath
+    os_arch = System.properties['os.arch'].toLowerCase()
+    currentJvm = org.gradle.internal.jvm.Jvm.current()
+    javaHome = currentJvm.javaHome.absolutePath
 }
 
 model {
 
     toolChains {
         gcc(Gcc) {
-            eachPlatform {
-                cCompiler.withArguments { args ->
-                    args.remove "-m32"
-                    args.remove "-m54"
+            if (!org.gradle.internal.os.OperatingSystem.current().isWindows()) {
+                eachPlatform {
+                    cCompiler.withArguments { args ->
+                        args << "-fPIC"
+                    }
+                    linker.withArguments { args ->
+                        args << "-lpcap"
+                    }
                 }
-                linker.withArguments { args ->
-                    args.remove "-m32"
-                    args.remove "-m54"
+            } else {
+                target("x64") {
+                    prinln "WINDOWS x64"
+                    cCompiler.args "-I${rootDir}/jxnet-native/include", "-I${rootDir}/jxnet-native/include/jxnet"
+                    linker.args '-Wl,--export-all-symbols', '-Wl,--add-stdcall-alias', "-L${rootDir}/jxnet-native/lib/x64", '-lwpcap', '-liphlpapi'
                 }
-                staticLibArchiver.withArguments { args ->
-                    args.remove "-m32"
-                    args.remove "-m54"
+                target("x84") {
+                    prinln "WINDOWS x86"
+                    cCompiler.args "-I${rootDir}/jxnet-native/include", "-I${rootDir}/jxnet-native/include/jxnet"
+                    linker.args '-Wl,--export-all-symbols', '-Wl,--add-stdcall-alias', "-L${rootDir}/jxnet-native/lib", '-lwpcap', '-liphlpapi'
                 }
             }
         }
         clang(Clang) {
-            eachPlatform {
-                cCompiler.withArguments { args ->
-                    args.remove "-m32"
-                    args.remove "-m64"
+            if (!org.gradle.internal.os.OperatingSystem.current().isWindows()) {
+                eachPlatform {
+                    cCompiler.withArguments { args ->
+                        args << "-fPIC"
+                    }
+                    linker.withArguments { args ->
+                        args << "-lpcap"
+                    }
                 }
-                linker.withArguments { args ->
-                    args.remove "-m32"
-                    args.remove "-m64"
+            } else {
+                target("x64") {
+                    cCompiler.args "-I${rootDir}/jxnet-native/include", "-I${rootDir}/jxnet-native/include/jxnet"
+                    linker.args '-Wl,--export-all-symbols', '-Wl,--add-stdcall-alias', "-L${rootDir}/jxnet-native/lib/x64", '-lwpcap', '-liphlpapi'
                 }
-                staticLibArchiver.withArguments { args ->
-                    args.remove "-m32"
-                    args.remove "-m64"
+                target("x84") {
+                    cCompiler.args "-I${rootDir}/jxnet-native/include", "-I${rootDir}/jxnet-native/include/jxnet"
+                    linker.args '-Wl,--export-all-symbols', '-Wl,--add-stdcall-alias', "-L${rootDir}/jxnet-native/lib", '-lwpcap', '-liphlpapi'
                 }
             }
+        }
+    }
+
+    platforms {
+        x86 {
+            architecture "x86"
+        }
+        x64 {
+            architecture "x86_64"
         }
     }
 
@@ -87,29 +108,6 @@ model {
             }
 
             binaries.withType(StaticLibraryBinarySpec) { buildable = false } // disable static libs generation
-
-            binaries.all {
-                if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
-                    if (os_arch.contains('64')) {
-                        cCompiler.args "-I${rootDir}/jxnet-native/include", "-I${rootDir}/jxnet-native/include/jxnet", '-m64'
-                        linker.args '-Wl,--export-all-symbols', '-Wl,--add-stdcall-alias', '-m64', "-L${rootDir}/jxnet-native/lib/x64", '-lwpcap', '-liphlpapi'
-                    } else {
-                        cCompiler.args "-I${rootDir}/jxnet-native/include", "-I${rootDir}/jxnet-native/include/jxnet", '-m32'
-                        linker.args '-Wl,--export-all-symbols', '-Wl,--add-stdcall-alias', '-m32', "-L${rootDir}/jxnet-native/lib", '-lwpcap', '-liphlpapi'
-                    }
-                } else if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
-                    cCompiler.args '-fPIC'
-                    linker.args '-lpcap'
-                } else if (org.gradle.internal.os.OperatingSystem.current().isLinux()) {
-                    cCompiler.args '-fPIC'
-                    linker.args '-lpcap'
-                } else if (org.gradle.internal.os.OperatingSystem.current().isUnix()) {
-                    cCompiler.args '-fPIC'
-                    linker.args '-lpcap'
-                } else {
-                    println "Unknown platform"
-                }
-            }
 
         }
 
