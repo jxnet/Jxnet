@@ -3,7 +3,6 @@ a.out
 *~
 *swp
 *.o
-*.a
 *.status
 *.deb
 *.rpm

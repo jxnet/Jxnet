@@ -7,6 +7,7 @@ $urlPath = "https://nmap.org/npcap/dist/npcap-0.96.exe"
 $checksum = "83667e1306fdcf7f9967c10277b36b87e50ee8812e1ee2bb9443bdd065dc04a1"
 
 # Download the file
+echo "Downloading... ($urlPath)"
 wget $urlPath -UseBasicParsing -OutFile $PSScriptRoot"\npcap.exe"
 
 # Now let's check its checksum
