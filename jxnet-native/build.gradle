@@ -68,6 +68,9 @@ model {
     }
 
     components {
+    
+    targetPlatform "x86"
+    targetPlatform "x64"
 
         jxnet(NativeLibrarySpec) {
 
