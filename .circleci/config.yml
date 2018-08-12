@@ -10,8 +10,8 @@ jobs:
     steps:
       - checkout
       - run: 'export TERM=xterm-color'
-      - run: 'sudo apt-get update && sudo apt-get install libpcap0.8 libpcap0.8-dev libpcap-dev -y'
-      - run: './gradlew clean build -x test --info --no-daemon'
+      - run: 'sudo apt-get update && sudo apt-get install gcc gcc-multilib libpcap0.8 libpcap0.8-dev libpcap-dev -y'
+      - run: './gradlew -p jxnet-native clean build -x test --info --no-daemon'
 
   test:
     working_directory: ~/tmp/Jxnet
@@ -20,7 +20,7 @@ jobs:
     steps:
       - checkout
       - run: 'export TERM=xterm-color'
-      - run: 'sudo ./gradlew clean codeCoverageReport --info --no-daemon'
+      - run: './gradlew clean codeCoverageReport --info --no-daemon'
 
   deploy:
     working_directory: ~/tmp/Jxnet

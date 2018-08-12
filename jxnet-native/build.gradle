@@ -24,14 +24,34 @@ model {
                 }
             } else {
                 target("x64") {
-                    prinln "WINDOWS x64"
-                    cCompiler.args "-I${rootDir}/jxnet-native/include", "-I${rootDir}/jxnet-native/include/jxnet"
-                    linker.args '-Wl,--export-all-symbols', '-Wl,--add-stdcall-alias', "-L${rootDir}/jxnet-native/lib/x64", '-lwpcap', '-liphlpapi'
+                    cCompiler.withArguments { args ->
+                        args << "-I${rootDir}/jxnet-native/include"
+                        args << "-I${rootDir}/jxnet-native/include/jxnet"
+                        args << "-m64"
+                    }
+                    linker.withArguments { args ->
+                        args << "-Wl,--export-all-symbols"
+                        args << "-Wl,--add-stdcall-alias"
+                        args << "-L${rootDir}/jxnet-native/lib/x64"
+                        args << "-lwpcap"
+                        args << "-liphlpapi"
+                        args << "-m64"
+                    }
                 }
-                target("x84") {
-                    prinln "WINDOWS x86"
-                    cCompiler.args "-I${rootDir}/jxnet-native/include", "-I${rootDir}/jxnet-native/include/jxnet"
-                    linker.args '-Wl,--export-all-symbols', '-Wl,--add-stdcall-alias', "-L${rootDir}/jxnet-native/lib", '-lwpcap', '-liphlpapi'
+                target("x86") {
+                    cCompiler.withArguments { args ->
+                        args << "-I${rootDir}/jxnet-native/include"
+                        args << "-I${rootDir}/jxnet-native/include/jxnet"
+                        args << "-m32"
+                    }
+                    linker.withArguments { args ->
+                        args << "-Wl,--export-all-symbols"
+                        args << "-Wl,--add-stdcall-alias"
+                        args << "-L${rootDir}/jxnet-native/lib"
+                        args << "-lwpcap"
+                        args << "-liphlpapi"
+                        args << "-m32"
+                    }
                 }
             }
         }
@@ -47,12 +67,34 @@ model {
                 }
             } else {
                 target("x64") {
-                    cCompiler.args "-I${rootDir}/jxnet-native/include", "-I${rootDir}/jxnet-native/include/jxnet"
-                    linker.args '-Wl,--export-all-symbols', '-Wl,--add-stdcall-alias', "-L${rootDir}/jxnet-native/lib/x64", '-lwpcap', '-liphlpapi'
+                    cCompiler.withArguments { args ->
+                        args << "-I${rootDir}/jxnet-native/include"
+                        args << "-I${rootDir}/jxnet-native/include/jxnet"
+                        args << "-m64"
+                    }
+                    linker.withArguments { args ->
+                        args << "-Wl,--export-all-symbols"
+                        args << "-Wl,--add-stdcall-alias"
+                        args << "-L${rootDir}/jxnet-native/lib/x64"
+                        args << "-lwpcap"
+                        args << "-liphlpapi"
+                        args << "-m64"
+                    }
                 }
-                target("x84") {
-                    cCompiler.args "-I${rootDir}/jxnet-native/include", "-I${rootDir}/jxnet-native/include/jxnet"
-                    linker.args '-Wl,--export-all-symbols', '-Wl,--add-stdcall-alias', "-L${rootDir}/jxnet-native/lib", '-lwpcap', '-liphlpapi'
+                target("x86") {
+                    cCompiler.withArguments { args ->
+                        args << "-I${rootDir}/jxnet-native/include"
+                        args << "-I${rootDir}/jxnet-native/include/jxnet"
+                        args << "-m32"
+                    }
+                    linker.withArguments { args ->
+                        args << "-Wl,--export-all-symbols"
+                        args << "-Wl,--add-stdcall-alias"
+                        args << "-L${rootDir}/jxnet-native/lib"
+                        args << "-lwpcap"
+                        args << "-liphlpapi"
+                        args << "-m32"
+                    }
                 }
             }
         }
@@ -71,9 +113,11 @@ model {
 
         jxnet(NativeLibrarySpec) {
 
+//            if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
+                targetPlatform "x86"
+                targetPlatform "x64"
+//            }
 
-targetPlatform "x86"
-    targetPlatform "x64"
             if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
                 if (os_arch.contains('64')) {
                     baseName = 'jxnet-windows-x64'
@@ -99,8 +143,6 @@ targetPlatform "x86"
                     baseName = 'jxnet-unix-x86'
                 }
             }
-
-            println "${baseName}"
 
             sources.c {
                 source {
@@ -133,7 +175,13 @@ task test {
 
 task installLibrary(type:Copy, dependsOn:[assemble]) {
     copy {
-        from "${buildDir}/libs/jxnet/shared"
+        if (!org.gradle.internal.os.OperatingSystem.current().isWindows()) {
+            from "${buildDir}/libs/jxnet/shared"
+        } else {
+            from("${buildDir}/libs/jxnet/shared") {
+                include "**/*.dll"
+            }
+        }
         into "${rootDir}/jxnet-core/src/main/resources/native"
     }
 }
