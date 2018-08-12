@@ -68,12 +68,12 @@ model {
     }
 
     components {
-    
-    targetPlatform "x86"
-    targetPlatform "x64"
 
         jxnet(NativeLibrarySpec) {
 
+
+targetPlatform "x86"
+    targetPlatform "x64"
             if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
                 if (os_arch.contains('64')) {
                     baseName = 'jxnet-windows-x64'
