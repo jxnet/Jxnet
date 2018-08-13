@@ -251,7 +251,8 @@ public final class Pcap implements PointerHandler {
 			}
 			if (enableRfMon) {
 				if (Jxnet.PcapCanSetRfMon(pcap) == 1) {
-					if (Jxnet.PcapSetRfMon(pcap, RadioFrequencyMonitorMode.RFMON.getValue()) != Jxnet.OK) {
+					int mode = RadioFrequencyMonitorMode.RFMON.getValue();
+					if (Jxnet.PcapSetRfMon(pcap, mode) != Jxnet.OK) {
 						throw new NativeException();
 					}
 				}

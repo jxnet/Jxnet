@@ -78,12 +78,10 @@ public final class Library {
         }
         final byte[] buffer = new byte[BUFFER_SIZE];
         int readBytes;
-        final InputStream is = Library.class.getResourceAsStream(path);
-        if (is == null) {
-            throw new IOException("Error: " + path + " not found in classpath.");
-        }
+        InputStream is = null;
         OutputStream os = null;
         try {
+            is = Library.class.getResourceAsStream(path);
             os = new FileOutputStream(temp);
             while ((readBytes = is.read(buffer)) != -1) {
                 try {

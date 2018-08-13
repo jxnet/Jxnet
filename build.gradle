@@ -16,6 +16,7 @@ buildscript {
 
 	dependencies {
 		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+		classpath 'gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:1.6.2'
 	}
 
 }
@@ -29,8 +30,8 @@ subprojects {
 		apply plugin: 'jacoco'
 		apply plugin: 'com.jfrog.bintray'
 		apply plugin: 'checkstyle'
-		apply plugin: 'findbugs'
 		apply plugin: 'pmd'
+		apply plugin: 'com.github.spotbugs'
 
 		group = "${GROUP}"
 		version = "${VERSION}"
@@ -74,13 +75,14 @@ subprojects {
 		}
 
 		checkstyle {
+
 			ignoreFailures = false
 			checkstyleTest.enabled = false
 
 			configFile = rootProject.file('gradle/resources/checkstyle/checkstyle.xml')
 			configProperties = [
-					"suppressionFile": rootProject.file('gradle/resources/checkstyle/suppression.xml'),
-					"headerFile"     : rootProject.file('gradle/resources/checkstyle/license.header')
+					"suppressionFile" : rootProject.file('gradle/resources/checkstyle/suppression.xml'),
+					"headerFile" : rootProject.file('gradle/resources/checkstyle/license.header')
 			]
 
 			checkstyleMain {
@@ -96,30 +98,30 @@ subprojects {
 					}
 				}
 			}
-			toolVersion = '6.18'
+			toolVersion = "${CHECKSTYLE_VERSION}"
 		}
 
-		findbugs {
-			ignoreFailures = false
+		spotbugs {
+			ignoreFailures = true
 			sourceSets = [sourceSets.main]
 			reportsDir = file("$project.buildDir/reports/findbugs")
 			effort = "max"
 			excludeFilter rootProject.file('gradle/resources/findbugs/findbugs-exclude.xml')
-			findbugsMain {
+			spotbugsMain {
 				reports {
 					xml.enabled = false
 					html.enabled = true
 				}
 			}
-			toolVersion '3.0.1'
+			toolVersion "${SPOTBUGS_VERSION}"
 		}
 
 		pmd {
-			ignoreFailures = false
+			ignoreFailures = true
 			sourceSets = [sourceSets.main]
 			reportsDir = file("$project.buildDir/reports/pmd")
 			ruleSetFiles = rootProject.files("./gradle/resources/pmd/pmd.xml")
-			toolVersion '4.3'
+			toolVersion "${PMD_VERION}"
 		}
 
 		test {
