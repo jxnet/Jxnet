@@ -20,7 +20,7 @@ jobs:
     steps:
       - checkout
       - run: 'export TERM=xterm-color'
-      - run: './gradlew clean codeCoverageReport --info --no-daemon'
+      - run: './gradlew clean build -x test --info --no-daemon'
 
   deploy:
     working_directory: ~/tmp/Jxnet

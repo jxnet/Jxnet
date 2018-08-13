@@ -74,7 +74,7 @@ subprojects {
 		}
 
 		checkstyle {
-			ignoreFailures = true
+			ignoreFailures = false
 			checkstyleTest.enabled = false
 
 			configFile = rootProject.file('gradle/resources/checkstyle/checkstyle.xml')
@@ -100,7 +100,7 @@ subprojects {
 		}
 
 		findbugs {
-			ignoreFailures = true
+			ignoreFailures = false
 			sourceSets = [sourceSets.main]
 			reportsDir = file("$project.buildDir/reports/findbugs")
 			effort = "max"
@@ -115,7 +115,7 @@ subprojects {
 		}
 
 		pmd {
-			ignoreFailures = true
+			ignoreFailures = false
 			sourceSets = [sourceSets.main]
 			reportsDir = file("$project.buildDir/reports/pmd")
 			ruleSetFiles = rootProject.files("./gradle/resources/pmd/pmd.xml")
