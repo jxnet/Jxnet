@@ -110,14 +110,7 @@ model {
             if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
                 targetPlatform "x86"
                 targetPlatform "x64"
-            }
-
-            if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
-                if (os_arch.contains('64')) {
-                    baseName = 'jxnet-windows-x64'
-                } else {
-                    baseName = 'jxnet-windows-x86'
-                }
+                baseName = 'jxnet-windows'
             } else if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
                 if (os_arch.contains('64')) {
                     baseName = 'jxnet-darwin-x64'
@@ -167,15 +160,14 @@ task test {
     // do nothing
 }
 
-task installLibrary(type:Copy, dependsOn:[assemble]) {
-    copy {
-        if (!org.gradle.internal.os.OperatingSystem.current().isWindows()) {
+task installLibrary(type: Copy, dependsOn:[assemble]) {
+    if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
+        file("${buildDir}/libs/jxnet/shared/x86/jxnet-windows.dll").renameTo(file("${rootDir}/jxnet-core/src/main/resources/native/jxnet-windows-x86.dll"))
+        file("${buildDir}/libs/jxnet/shared/x64/jxnet-windows.dll").renameTo(file("${rootDir}/jxnet-core/src/main/resources/native/jxnet-windows-x64.dll"))
+    } else {
+        copy {
             from "${buildDir}/libs/jxnet/shared"
-        } else {
-            from("${buildDir}/libs/jxnet/shared") {
-                include "**/*.dll"
-            }
+            into "${rootDir}/jxnet-core/src/main/resources/native"
         }
-        into "${rootDir}/jxnet-core/src/main/resources/native"
     }
 }
