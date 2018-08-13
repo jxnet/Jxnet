@@ -13,16 +13,7 @@ model {
 
     toolChains {
         gcc(Gcc) {
-            if (!org.gradle.internal.os.OperatingSystem.current().isWindows()) {
-                eachPlatform {
-                    cCompiler.withArguments { args ->
-                        args << "-fPIC"
-                    }
-                    linker.withArguments { args ->
-                        args << "-lpcap"
-                    }
-                }
-            } else {
+            if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
                 target("x64") {
                     cCompiler.withArguments { args ->
                         args << "-I${rootDir}/jxnet-native/include"
@@ -51,21 +42,23 @@ model {
                         args << "-lwpcap"
                         args << "-liphlpapi"
                         args << "-m32"
+                    }
+                }
+            } else {
+                eachPlatform {
+                    cCompiler.withArguments { args ->
+                        args << "-fPIC"
+                        args << "-I${rootDir}/jxnet-native/include"
+                        args << "-I${rootDir}/jxnet-native/include/jxnet"
+                    }
+                    linker.withArguments { args ->
+                        args << "-lpcap"
                     }
                 }
             }
         }
         clang(Clang) {
-            if (!org.gradle.internal.os.OperatingSystem.current().isWindows()) {
-                eachPlatform {
-                    cCompiler.withArguments { args ->
-                        args << "-fPIC"
-                    }
-                    linker.withArguments { args ->
-                        args << "-lpcap"
-                    }
-                }
-            } else {
+            if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
                 target("x64") {
                     cCompiler.withArguments { args ->
                         args << "-I${rootDir}/jxnet-native/include"
@@ -94,6 +87,17 @@ model {
                         args << "-lwpcap"
                         args << "-liphlpapi"
                         args << "-m32"
+                    }
+                }
+            } else {
+                eachPlatform {
+                    cCompiler.withArguments { args ->
+                        args << "-fPIC"
+                        args << "-I${rootDir}/jxnet-native/include"
+                        args << "-I${rootDir}/jxnet-native/include/jxnet"
+                    }
+                    linker.withArguments { args ->
+                        args << "-lpcap"
                     }
                 }
             }
@@ -113,10 +117,10 @@ model {
 
         jxnet(NativeLibrarySpec) {
 
-//            if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
+            if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
                 targetPlatform "x86"
                 targetPlatform "x64"
-//            }
+            }
 
             if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
                 if (os_arch.contains('64')) {
