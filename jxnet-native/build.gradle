@@ -46,11 +46,6 @@ model {
                 }
             } else {
                 eachPlatform {
-                    cCompiler.withArguments { args ->
-                        args << "-fPIC"
-                        args << "-I${rootDir}/jxnet-native/include"
-                        args << "-I${rootDir}/jxnet-native/include/jxnet"
-                    }
                     linker.withArguments { args ->
                         args << "-lpcap"
                     }
@@ -91,11 +86,6 @@ model {
                 }
             } else {
                 eachPlatform {
-                    cCompiler.withArguments { args ->
-                        args << "-fPIC"
-                        args << "-I${rootDir}/jxnet-native/include"
-                        args << "-I${rootDir}/jxnet-native/include/jxnet"
-                    }
                     linker.withArguments { args ->
                         args << "-lpcap"
                     }
