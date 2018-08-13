@@ -36,21 +36,11 @@ public final class Library {
     public static final String NPCAP_DLL = "C:\\Windows\\System32\\Npcap\\wpcap.dll";
     public static final String WPCAP_DLL = "C:\\Windows\\System32\\wpcap.dll";
 
-    public static final String DYNAMIC_LINUX_X64 = "/dynamic/linux/lib/x64/libjxnet.so";
-    public static final String DYNAMIC_LINUX_X86 = "/dynamic/linux/lib/x86/libjxnet.so";
-    public static final String DYNAMIC_LINUX_ARM32 = "/dynamic/linux/lib/arm32/libjxnet.so";
-    public static final String DYNAMIC_FREEBSD_X64 = "/dynamic/freebsd/lib/x64/libjxnet.so";
-    public static final String DYNAMIC_FREEBSD_X86 = "/dynamic/freebsd/lib/x86/libjxnet.so";
-    public static final String DYNAMIC_WINDOWS_X64 = "/dynamic/windows/lib/x64/jxnet.dll";
-    public static final String DYNAMIC_WINDOWS_X86 = "/dynamic/windows/lib/x86/jxnet.dll";
-    public static final String DYNAMIC_DARWIN_X64 = "/dynamic/darwin/lib/x64/libjxnet.dylib";
-
-    public static final String STATIC_LINUX_X64 = "/static/linux/lib/x64/libjxnet.so";
-    public static final String STATIC_LINUX_X86 = "/static/linux/lib/x86/libjxnet.so";
-    public static final String STATIC_LINUX_ARM32 = "/static/linux/lib/arm32/libjxnet.so";
-    public static final String STATIC_FREEBSD_X64 = "/static/freebsd/lib/x64/libjxnet.so";
-    public static final String STATIC_FREEBSD_X86 = "/static/freebsd/lib/x86/libjxnet.so";
-    public static final String STATIC_DARWIN_X64 = "/static/darwin/lib/x64/libjxnet.dylib";
+    public static final String DYNAMIC_LINUX_X64 = "/native/libjxnet-linux-x64.so";
+    public static final String DYNAMIC_LINUX_X86 = "/native/libjxnet-linux-x86.so";
+    public static final String DYNAMIC_WINDOWS_X64 = "/native/jxnet-windows-x64.dll";
+    public static final String DYNAMIC_WINDOWS_X86 = "/native/jxnet-windows-x86.dll";
+    public static final String DYNAMIC_DARWIN_X64 = "/native/libjxnet-darwin-x64.dylib";
 
     private static final int BUFFER_SIZE = 1024;
 
@@ -62,6 +52,12 @@ public final class Library {
         void load();
     }
 
+    /**
+     * Load native libarary from inner jar.
+     * @param path absulute library path start with '/'.
+     * @throws IllegalArgumentException illegal argument exception.
+     * @throws IOException IO exception.
+     */
     public static void loadLibrary(final String path) throws IllegalArgumentException, IOException {
         Validate.nullPointer(path, new NullPointerException("Path should be not null."));
         if (!(path.charAt(0) == '/')) {
@@ -73,7 +69,7 @@ public final class Library {
         } else {
             throw new IllegalArgumentException();
         }
-        File temp = null;
+        File temp;
         try {
             temp = File.createTempFile(parts[0], "." + parts[1]);
             temp.deleteOnExit();
@@ -82,12 +78,10 @@ public final class Library {
         }
         final byte[] buffer = new byte[BUFFER_SIZE];
         int readBytes;
-        final InputStream is = Library.class.getResourceAsStream(path);
-        if (is == null) {
-            throw new IOException("Error: " + path + " not found in classpath.");
-        }
+        InputStream is = null;
         OutputStream os = null;
         try {
+            is = Library.class.getResourceAsStream(path);
             os = new FileOutputStream(temp);
             while ((readBytes = is.read(buffer)) != -1) {
                 try {

@@ -1,0 +1,173 @@
+
+/**
+ * Copyright (C) 2017-2018  Ardika Rommy Sanjaya
+ */
+
+ext {
+    os_arch = System.properties['os.arch'].toLowerCase()
+    currentJvm = org.gradle.internal.jvm.Jvm.current()
+    javaHome = currentJvm.javaHome.absolutePath
+}
+
+model {
+
+    toolChains {
+        gcc(Gcc) {
+            if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
+                target("x64") {
+                    cCompiler.withArguments { args ->
+                        args << "-I${rootDir}/jxnet-native/include"
+                        args << "-I${rootDir}/jxnet-native/include/jxnet"
+                        args << "-m64"
+                    }
+                    linker.withArguments { args ->
+                        args << "-Wl,--export-all-symbols"
+                        args << "-Wl,--add-stdcall-alias"
+                        args << "-L${rootDir}/jxnet-native/lib/x64"
+                        args << "-lwpcap"
+                        args << "-liphlpapi"
+                        args << "-m64"
+                    }
+                }
+                target("x86") {
+                    cCompiler.withArguments { args ->
+                        args << "-I${rootDir}/jxnet-native/include"
+                        args << "-I${rootDir}/jxnet-native/include/jxnet"
+                        args << "-m32"
+                    }
+                    linker.withArguments { args ->
+                        args << "-Wl,--export-all-symbols"
+                        args << "-Wl,--add-stdcall-alias"
+                        args << "-L${rootDir}/jxnet-native/lib"
+                        args << "-lwpcap"
+                        args << "-liphlpapi"
+                        args << "-m32"
+                    }
+                }
+            } else {
+                eachPlatform {
+                    linker.withArguments { args ->
+                        args << "-lpcap"
+                    }
+                }
+            }
+        }
+        clang(Clang) {
+            if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
+                target("x64") {
+                    cCompiler.withArguments { args ->
+                        args << "-I${rootDir}/jxnet-native/include"
+                        args << "-I${rootDir}/jxnet-native/include/jxnet"
+                        args << "-m64"
+                    }
+                    linker.withArguments { args ->
+                        args << "-Wl,--export-all-symbols"
+                        args << "-Wl,--add-stdcall-alias"
+                        args << "-L${rootDir}/jxnet-native/lib/x64"
+                        args << "-lwpcap"
+                        args << "-liphlpapi"
+                        args << "-m64"
+                    }
+                }
+                target("x86") {
+                    cCompiler.withArguments { args ->
+                        args << "-I${rootDir}/jxnet-native/include"
+                        args << "-I${rootDir}/jxnet-native/include/jxnet"
+                        args << "-m32"
+                    }
+                    linker.withArguments { args ->
+                        args << "-Wl,--export-all-symbols"
+                        args << "-Wl,--add-stdcall-alias"
+                        args << "-L${rootDir}/jxnet-native/lib"
+                        args << "-lwpcap"
+                        args << "-liphlpapi"
+                        args << "-m32"
+                    }
+                }
+            } else {
+                eachPlatform {
+                    linker.withArguments { args ->
+                        args << "-lpcap"
+                    }
+                }
+            }
+        }
+    }
+
+    platforms {
+        x86 {
+            architecture "x86"
+        }
+        x64 {
+            architecture "x86_64"
+        }
+    }
+
+    components {
+
+        jxnet(NativeLibrarySpec) {
+
+            if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
+                targetPlatform "x86"
+                targetPlatform "x64"
+                baseName = 'jxnet-windows'
+            } else if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
+                if (os_arch.contains('64')) {
+                    baseName = 'jxnet-darwin-x64'
+                } else {
+                    baseName = 'jxnet-darwin-x86'
+                }
+            } else if (org.gradle.internal.os.OperatingSystem.current().isLinux()) {
+                if (os_arch.contains('64')) {
+                    baseName = 'jxnet-linux-x64'
+                } else {
+                    baseName = 'jxnet-linux-x86'
+                }
+            } else if (org.gradle.internal.os.OperatingSystem.current().isUnix()) {
+                if (os_arch.contains('64')) {
+                    baseName = 'jxnet-unix-x64'
+                } else {
+                    baseName = 'jxnet-unix-x86'
+                }
+            }
+
+            sources.c {
+                source {
+                    srcDir "${rootDir}/jxnet-native/src"
+                    include '*.c'
+                }
+                lib library: 'jdk', linkage: 'api'
+            }
+
+            binaries.withType(StaticLibraryBinarySpec) { buildable = false } // disable static libs generation
+
+        }
+
+
+    }
+
+    repositories {
+        libs(PrebuiltLibraries) {
+            jdk {
+                headers.srcDirs "${javaHome}/include", "${javaHome}/include/linux", "${javaHome}/include/win32", "${javaHome}/include/darwin"
+            }
+        }
+    }
+
+}
+
+task test {
+    // do nothing
+}
+
+task installLibrary(type: Copy, dependsOn:[assemble]) {
+    if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
+        file("${buildDir}/libs/jxnet/shared/x86/jxnet-windows.dll").renameTo(file("${rootDir}/jxnet-core/src/main/resources/native/jxnet-windows-x86.dll"))
+        file("${buildDir}/libs/jxnet/shared/x64/jxnet-windows.dll").renameTo(file("${rootDir}/jxnet-core/src/main/resources/native/jxnet-windows-x64.dll"))
+    } else {
+        copy {
+            from "${buildDir}/libs/jxnet/shared"
+            into "${rootDir}/jxnet-core/src/main/resources/native"
+        }
+    }
+}

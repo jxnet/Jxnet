@@ -1,0 +1,56 @@
+
+#---------------------------------#
+#      general configuration      #
+#---------------------------------#
+
+# version format
+version: '{build}-{branch}'
+
+branches:
+  only:
+    - development
+  except:
+    - master
+
+# Do not build on tags
+skip_tags: true
+
+# Skipping commits with particular message or from specific user
+skip_commits:
+  message: /Created.*\.(png|jpg|jpeg|bmp|gif)/      # Regex for matching commit message
+
+# Operating system (build VM template)
+os: Windows Server 2012 R2
+
+# fetch repository as zip archive
+shallow_clone: true
+
+cache:
+  - C:\Users\appveyor\.gradle\wrapper
+  - C:\Users\appveyor\.gradle\native
+  - C:\Users\appveyor\.gradle\daemon
+  - C:\Users\appveyor\.gradle\caches
+
+# scripts that run after cloning repository
+install:
+  - ps: .\.scripts\InstallMingw64.ps1
+  - ps: .\.scripts\InstallNpcap.ps1
+
+#---------------------------------#
+#       build configuration       #
+#---------------------------------#
+
+build_script:
+  - cmd: set PATH=C:\tools\mingw64\bin;C:\Program Files (x86)\NSIS\;%PATH%
+  - cmd: gradlew.bat -p jxnet-native clean build -x test --info --no-daemon
+  - cmd: dir jxnet-core\src\main\resources\native
+
+#---------------------------------#
+#         notifications           #
+#---------------------------------#
+
+notifications:
+  - provider: Email
+    to: ardikars@gmail.com
+    on_build_success: false
+    on_build_failure: true

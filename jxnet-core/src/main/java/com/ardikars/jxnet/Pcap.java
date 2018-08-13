@@ -217,6 +217,10 @@ public final class Pcap implements PointerHandler {
 			return this;
 		}
 
+		/**
+		 * Build a live pcap handle.
+		 * @return pcap handle.
+		 */
 		public Pcap buildLive() {
 			Validate.nullPointer(source, new NullPointerException("Device name should be not null."));
 			Validate.illegalArgument(snaplen > 0 && snaplen < 65536,
@@ -247,7 +251,8 @@ public final class Pcap implements PointerHandler {
 			}
 			if (enableRfMon) {
 				if (Jxnet.PcapCanSetRfMon(pcap) == 1) {
-					if (Jxnet.PcapSetRfMon(pcap, RadioFrequencyMonitorMode.RFMON.getValue()) != Jxnet.OK) {
+					int mode = RadioFrequencyMonitorMode.RFMON.getValue();
+					if (Jxnet.PcapSetRfMon(pcap, mode) != Jxnet.OK) {
 						throw new NativeException();
 					}
 				}
@@ -274,6 +279,10 @@ public final class Pcap implements PointerHandler {
 			return pcap;
 		}
 
+		/**
+		 * Build non live pcap handle.
+		 * @return pcap handle.
+		 */
 		public Pcap buildDead() {
 			Validate.nullPointer(dataLinkType, new NullPointerException("Datalink type should be not null."));
 			Pcap pcap;
@@ -288,6 +297,10 @@ public final class Pcap implements PointerHandler {
 			return pcap;
 		}
 
+		/**
+		 * Build a pcap handle for reading pcap file.
+		 * @return pcap handle.
+		 */
 		public Pcap buildOffline() {
 			Validate.nullPointer(fileName, new NullPointerException("File name should be not null."));
 			Validate.nullPointer(errbuf, new NullPointerException("Error buffer should be not null."));

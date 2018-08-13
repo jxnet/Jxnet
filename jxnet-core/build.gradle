@@ -14,16 +14,13 @@ sourceSets {
 
 dependencies {
 	testCompile project(":jxnet-context")
-	testCompile project(":jxnet-dynamic")
-	testCompile project(":jxnet-static")
-	testCompile project(":jxnet-android")
 	testCompile "junit:junit:${JUNIT_VERSION}"
 	testCompile "org.mockito:mockito-core:${MOCKITO_VERSION}"
 }
 
-task generateJNIHeaders(type: Exec, dependsOn: classes) {
+task generateJNIHeaders(type: Exec, dependsOn: assemble) {
 	def classpath = sourceSets.main.output.classesDir
-	commandLine 'javah', '-jni', '-d', "${rootDir}/jni/include/jxnet", '-classpath', classpath,
+	commandLine 'javah', '-jni', '-d', "${rootDir}/jxnet-native/include/jxnet", '-classpath', classpath,
 			'com.ardikars.jxnet.Jxnet',
 			'com.ardikars.jxnet.BpfProgram',
 			'com.ardikars.jxnet.MacAddress'

@@ -1,3 +1,20 @@
+/**
+ * Copyright (C) 2017-2018  Ardika Rommy Sanjaya <contact@ardikars.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.ardikars.jxnet;
 
 import com.ardikars.jxnet.exception.BpfProgramCloseException;
@@ -36,7 +53,7 @@ public interface Context {
 	 * buffer timeouts occur; instead, it attempts to read more packets.
 	 * @since 1.1.4
 	 */
-	<T> PcapCode PcapLoop(int cnt, PcapHandler<T> callback, T user) throws PcapCloseException;
+	<T> PcapCode pcapLoop(int cnt, PcapHandler<T> callback, T user) throws PcapCloseException;
 
 	/**
 	 * Collect a group of packets.
@@ -59,16 +76,17 @@ public interface Context {
 	 * rather than just checking for a return value less then 0.
 	 * @since 1.1.4
 	 */
-	<T> PcapCode PcapDispatch(int cnt, PcapHandler<T> callback, T user) throws PcapCloseException;
+	<T> PcapCode pcapDispatch(int cnt, PcapHandler<T> callback, T user) throws PcapCloseException;
 
 	/**
 	 * Open a file to write packets.
 	 * @param fname fname specifies the name of the file to open. The file will have the same format
 	 *                 as those used by tcpdump(1) and tcpslice(1). The name "-" is a synonym for stdout.
+	 * @return pcap code.
 	 * @throws PcapCloseException pcap close exception.
 	 * @since 1.1.4
 	 */
-	PcapCode PcapDumpOpen(String fname) throws PcapCloseException;
+	PcapCode pcapDumpOpen(String fname) throws PcapCloseException;
 
 	/**
 	 * Save a packet to disk.
@@ -77,7 +95,7 @@ public interface Context {
 	 * @throws PcapDumperCloseException pcap dumper close exception.
 	 * @since 1.1.4
 	 */
-	void PcapDump(PcapPktHdr h, ByteBuffer sp) throws PcapDumperCloseException;
+	void pcapDump(PcapPktHdr h, ByteBuffer sp) throws PcapDumperCloseException;
 
 	/**
 	 * Compile a packet filter, converting an high level filtering expression
@@ -90,7 +108,7 @@ public interface Context {
 	 * @throws PcapCloseException pcap close exception.
 	 * @since 1.1.4
 	 */
-	PcapCode PcapCompile(String str, int optimize, int netmask) throws PcapCloseException;
+	PcapCode pcapCompile(String str, int optimize, int netmask) throws PcapCloseException;
 
 	/**
 	 * Associate a filter to a capture.
@@ -98,7 +116,7 @@ public interface Context {
 	 * @throws PcapCloseException pcap close exception.
 	 * @since 1.1.4
 	 */
-	PcapCode PcapSetFilter() throws PcapCloseException;
+	PcapCode pcapSetFilter() throws PcapCloseException;
 
 	/**
 	 * Send a raw packet.
@@ -108,7 +126,7 @@ public interface Context {
 	 * @throws PcapCloseException pcap close exception.
 	 * @since 1.1.4
 	 */
-	PcapCode PcapSendPacket(ByteBuffer buf, int size) throws PcapCloseException;
+	PcapCode pcapSendPacket(ByteBuffer buf, int size) throws PcapCloseException;
 
 	/**
 	 * Return the next available packet.
@@ -117,7 +135,7 @@ public interface Context {
 	 * @throws PcapCloseException pcap close exception.
 	 * @since 1.1.4
 	 */
-	ByteBuffer PcapNext(PcapPktHdr h) throws PcapCloseException;
+	ByteBuffer pcapNext(PcapPktHdr h) throws PcapCloseException;
 
 	/**
 	 * Read a packet from an interface or from an offline capture.
@@ -131,14 +149,14 @@ public interface Context {
 	 * @throws PcapCloseException pcap close exception.
 	 * @since 1.1.4
 	 */
-	PcapCode PcapNextEx(PcapPktHdr pktHeader, ByteBuffer pktData) throws PcapCloseException;
+	PcapCode pcapNextEx(PcapPktHdr pktHeader, ByteBuffer pktData) throws PcapCloseException;
 
 	/**
 	 * Close the files associated with pcap and deallocates resources.
 	 * @throws PcapCloseException pcap close exception.
 	 * @since 1.1.4
 	 */
-	void PcapClose() throws PcapCloseException;
+	void pcapClose() throws PcapCloseException;
 
 	/**
 	 * Flushes the output buffer to the savefile, so that any packets written
@@ -148,7 +166,7 @@ public interface Context {
 	 * @throws PcapDumperCloseException pcap dumper close exception.
 	 * @since 1.1.4
 	 */
-	PcapCode PcapDumpFlush() throws PcapDumperCloseException;
+	PcapCode pcapDumpFlush() throws PcapDumperCloseException;
 
 	/**
 	 * Closes a savefile.
@@ -156,7 +174,7 @@ public interface Context {
 	 * @throws PcapDumperCloseException pcap dumper close exception.
 	 * @since 1.1.4
 	 */
-	void PcapDumpClose(PcapDumper pcapDumper) throws PcapDumperCloseException;
+	void pcapDumpClose(PcapDumper pcapDumper) throws PcapDumperCloseException;
 
 	/**
 	 * Return the link layer of an adapter on success.
@@ -166,7 +184,7 @@ public interface Context {
 	 * @throws PcapCloseException pcap close exception.
 	 * @since 1.1.4
 	 */
-	DataLinkType PcapDataLink() throws PcapCloseException;
+	DataLinkType pcapDataLink() throws PcapCloseException;
 
 	/**
 	 * Set the current data link type of the pcap descriptor to the type
@@ -176,14 +194,14 @@ public interface Context {
 	 * @throws PcapCloseException pcap close exception.
 	 * @since 1.1.4
 	 */
-	PcapCode PcapSetDataLink(DataLinkType dataLinkType) throws PcapCloseException;
+	PcapCode pcapSetDataLink(DataLinkType dataLinkType) throws PcapCloseException;
 
 	/**
 	 * Set a flag that will force PcapDispatch() or PcapLoop() to return rather than looping.
 	 * @throws PcapCloseException pcap close exception.
 	 * @since 1.1.4
 	 */
-	void PcapBreakLoop() throws PcapCloseException;
+	void pcapBreakLoop() throws PcapCloseException;
 
 	/**
 	 * Return the error text pertaining to the last pcap library error.
@@ -191,7 +209,7 @@ public interface Context {
 	 * @throws PcapCloseException pcap close exception.
 	 * @since 1.1.4
 	 */
-	String PcapGetErr() throws PcapCloseException;
+	String pcapGetErr() throws PcapCloseException;
 
 	/**
 	 * Returns true (1) if the current savefile uses a different byte order than the current system.
@@ -201,7 +219,7 @@ public interface Context {
 	 * @throws PcapCloseException pcap close exception.
 	 * @since 1.1.4
 	 */
-	PcapCode PcapIsSwapped() throws PcapCloseException;
+	PcapCode pcapIsSwapped() throws PcapCloseException;
 
 	/**
 	 * Return the dimension of the packet portion (in bytes) that is delivered to the application.
@@ -210,7 +228,7 @@ public interface Context {
 	 * @throws PcapCloseException pcap close exception.
 	 * @since 1.1.4
 	 */
-	int PcapSnapshot() throws PcapCloseException;
+	int pcapSnapshot() throws PcapCloseException;
 
 	/**
 	 * Return the major version number of the pcap library used to write the savefile.
@@ -218,7 +236,7 @@ public interface Context {
 	 * @throws PcapCloseException pcap close exception.
 	 * @since 1.1.4
 	 */
-	int PcapMajorVersion() throws PcapCloseException;
+	int pcapMajorVersion() throws PcapCloseException;
 
 	/**
 	 * Return the minor version number of the pcap library used to write the savefile.
@@ -226,7 +244,7 @@ public interface Context {
 	 * @throws PcapCloseException pcap close exception.
 	 * @since 1.1.4
 	 */
-	int PcapMinorVersion() throws PcapCloseException;
+	int pcapMinorVersion() throws PcapCloseException;
 
 	/**
 	 * Switch between blocking and nonblocking mode.
@@ -238,7 +256,7 @@ public interface Context {
 	 * @throws PcapCloseException pcap close exception.
 	 * @since 1.1.4
 	 */
-	PcapCode PcapSetNonBlock(boolean nonblock, StringBuilder errbuf) throws PcapCloseException;
+	PcapCode pcapSetNonBlock(boolean nonblock, StringBuilder errbuf) throws PcapCloseException;
 
 	/**
 	 * Get the "non-blocking" state of an interface.
@@ -248,7 +266,7 @@ public interface Context {
 	 * @throws PcapCloseException pcap close exception.
 	 * @since 1.1.4
 	 */
-	PcapCode PcapGetNonBlock(StringBuilder errbuf) throws PcapCloseException;
+	PcapCode pcapGetNonBlock(StringBuilder errbuf) throws PcapCloseException;
 
 	/**
 	 * Return the file position for a savefile.
@@ -256,14 +274,14 @@ public interface Context {
 	 * @throws PcapDumperCloseException pcap dumper close exception.
 	 * @since 1.1.4
 	 */
-	long PcapDumpFTell() throws PcapDumperCloseException;
+	long pcapDumpFTell() throws PcapDumperCloseException;
 
 	/**
 	 * Free a filter.
 	 * @throws BpfProgramCloseException bpf program close exception.
 	 * @since 1.1.4
 	 */
-	void PcapFreeCode() throws BpfProgramCloseException;
+	void pcapFreeCode() throws BpfProgramCloseException;
 
 	/**
 	 * Return statistics on current capture.
@@ -273,7 +291,7 @@ public interface Context {
 	 * @throws PcapCloseException pcap close exception.
 	 * @since 1.1.4
 	 */
-	PcapCode PcapStats(PcapStat pcapStat) throws PcapCloseException;
+	PcapCode pcapStats(PcapStat pcapStat) throws PcapCloseException;
 
 	/**
 	 * Compile a packet filter without the need of opening an adapter.
@@ -288,7 +306,7 @@ public interface Context {
 	 * @throws BpfProgramCloseException bpf program close exception.
 	 * @since 1.1.4
 	 */
-	PcapCode PcapCompileNoPcap(int snaplen, DataLinkType dataLinkType, String filter, boolean optimize, Inet4Address mask)
+	PcapCode pcapCompileNoPcap(int snaplen, DataLinkType dataLinkType, String filter, boolean optimize, Inet4Address mask)
 			throws BpfProgramCloseException;
 
 	/**
@@ -297,7 +315,7 @@ public interface Context {
 	 * @throws PcapCloseException pcap close exception.
 	 * @since 1.1.4
 	 */
-	void PcapPError(String prefix) throws PcapCloseException;
+	void pcapPError(String prefix) throws PcapCloseException;
 
 	/**
 	 * Checks whether monitor mode could be set on a capture handle when the handle is activated.
@@ -312,7 +330,7 @@ public interface Context {
 	 * @throws PcapCloseException pcap close exception.
 	 * @since 1.1.4
 	 */
-	PcapCode PcapCanSetRfMon() throws PcapCloseException;
+	PcapCode pcapCanSetRfMon() throws PcapCloseException;
 
 	/**
 	 * used to specify a direction that packets will be
@@ -333,7 +351,7 @@ public interface Context {
 	 * @throws PlatformNotSupportedException platform not supported exception.
 	 * @since 1.1.4
 	 */
-	PcapCode PcapSetDirection(PcapDirection direction) throws PcapCloseException, PlatformNotSupportedException;
+	PcapCode pcapSetDirection(PcapDirection direction) throws PcapCloseException, PlatformNotSupportedException;
 
 	/**
 	 * Get the time stamp precision returned in captures.
@@ -341,7 +359,7 @@ public interface Context {
 	 * @throws PcapCloseException pcap close exception.
 	 * @throws PlatformNotSupportedException platform not supported exception.
 	 */
-	int PcapGetTStampPrecision() throws PcapCloseException, PlatformNotSupportedException;
+	int pcapGetTStampPrecision() throws PcapCloseException, PlatformNotSupportedException;
 
 	/**
 	 * Get list of datalinks.
@@ -350,7 +368,7 @@ public interface Context {
 	 * @throws PcapCloseException pcap close exception.
 	 * @throws PlatformNotSupportedException platform not supported exception.
 	 */
-	PcapCode PcapListDataLinks(List<Integer> dtlBuffer) throws PcapCloseException, PlatformNotSupportedException;
+	PcapCode pcapListDataLinks(List<Integer> dtlBuffer) throws PcapCloseException, PlatformNotSupportedException;
 
 	/**
 	 * Get link of time stamp types.
@@ -359,7 +377,7 @@ public interface Context {
 	 * @throws PcapCloseException pcap close exception.
 	 * @throws PlatformNotSupportedException platform not supported exception.
 	 */
-	PcapCode PcapListTStampTypes(List<Integer> tstampTypesp) throws PcapCloseException, PlatformNotSupportedException;
+	PcapCode pcapListTStampTypes(List<Integer> tstampTypesp) throws PcapCloseException, PlatformNotSupportedException;
 
 	/**
 	 * Given a BPF program, a PcapPktHdr structure for a packet, and the raw
@@ -371,7 +389,7 @@ public interface Context {
 	 * @param pkt buffer.
 	 * @return 0 on success.
 	 */
-	PcapCode PcapOfflineFilter(BpfProgram fp, PcapPktHdr h, ByteBuffer pkt);
+	PcapCode pcapOfflineFilter(BpfProgram fp, PcapPktHdr h, ByteBuffer pkt);
 
 	/**
 	 * Sends a raw packet through the network interface; buf points to the data of the packet,
@@ -382,6 +400,6 @@ public interface Context {
 	 * @throws PcapCloseException pcap close exception.
 	 * @throws PlatformNotSupportedException platform not supported exception.
 	 */
-	PcapCode PcapInject(ByteBuffer buf, int size) throws PcapCloseException, PlatformNotSupportedException;
+	PcapCode pcapInject(ByteBuffer buf, int size) throws PcapCloseException, PlatformNotSupportedException;
 
 }

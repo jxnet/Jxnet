@@ -1,34 +1,56 @@
 
 version: 2
+
 jobs:
+
   build:
+    working_directory: ~/tmp/Jxnet
     docker:
-      # specify the version you desire here
-      - image: circleci/openjdk:8-jdk
-
-    working_directory: ~/repo
-
-    environment:
-      # Customize the JVM maximum heap limit
-      JVM_OPTS: -Xmx3200m
-      TERM: dumb
-
+      - image: 'circleci/openjdk:8-jdk'
     steps:
       - checkout
+      - run: 'export TERM=xterm-color'
+      - run: 'sudo apt-get update && sudo apt-get install gcc gcc-multilib libpcap0.8 libpcap0.8-dev libpcap-dev -y'
+      - run: './gradlew -p jxnet-native clean build -x test --info --no-daemon'
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "build.gradle" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+  test:
+    working_directory: ~/tmp/Jxnet
+    docker:
+      - image: 'circleci/openjdk:8-jdk'
+    steps:
+      - checkout
+      - run: 'export TERM=xterm-color'
+      - run: 'sudo apt-get update && sudo apt-get install gcc gcc-multilib libpcap0.8 libpcap0.8-dev libpcap-dev -y'
+      - run: './gradlew clean build -x test --info --no-daemon'
 
-      - run: sudo ./gradlew clean build -x test -info --no-daemon
+  deploy:
+    working_directory: ~/tmp/Jxnet
+    docker:
+      - image: 'circleci/openjdk:8-jdk'
+    steps:
+      - checkout
+      - run: 'export TERM=xterm-color'
+      - run: './gradlew clean build bintrayUpload -x test --info --no-daemon'
 
-      - save_cache:
-          paths:
-            - ~/.gradle
-          key: v1-dependencies-{{ checksum "build.gradle" }}
 
-      # run tests!
-      - run: sudo ./gradlew clean codeCoverageReport --info --no-daemon
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - build
+      - test:
+          filters:
+            branches:
+              only:
+                - development
+          requires:
+            - build
+      - deploy:
+          filters:
+            tags:
+              only: /-RELEASE$/
+            branches:
+              only:
+                - master
+          requires:
+            - build

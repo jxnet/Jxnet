@@ -3,4 +3,12 @@
         <Class name="*"/>
         <Bug pattern="UWF_UNWRITTEN_FIELD"/>
     </Match>
+    <Match>
+        <Class name="*"/>
+        <Bug pattern="DMI_HARDCODED_ABSOLUTE_FILENAME"/>
+    </Match>
+    <Match>
+        <Class name="*"/>
+        <Bug pattern="OBL_UNSATISFIED_OBLIGATION_EXCEPTION_EDGE"/>
+    </Match>
 </FindBugsFilter>

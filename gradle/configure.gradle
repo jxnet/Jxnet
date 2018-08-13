@@ -25,6 +25,10 @@ ext {
 	SLF4J_VERSION = '1.7.25'
 	LOGBACK_VERSION = '1.2.3'
 
+	CHECKSTYLE_VERSION = '8.10.1'
+	SPOTBUGS_VERSION = '3.1.5'
+	PMD_VERION = '6.5.0'
+
 	pom_project = {
 
 		name = "${NAME}"

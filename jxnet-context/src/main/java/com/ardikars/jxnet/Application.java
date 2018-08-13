@@ -81,6 +81,7 @@ public class Application {
      * @param applicationName application name.
      * @param applicationVersion application version.
      * @param initializerClass initializer class.
+     * @param applicationContext application context.
      * @throws UnsatisfiedLinkError UnsatisfiedLinkError.
      */
     public static void run(final String applicationName, final String applicationVersion,
