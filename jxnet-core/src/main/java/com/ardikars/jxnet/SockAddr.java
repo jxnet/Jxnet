@@ -74,9 +74,9 @@ public final class SockAddr implements Cloneable {
 
     private volatile short sa_family;
 
-    private volatile byte[] data;
+    private volatile byte[] data = new byte[0];
 
-    private SockAddr() {
+    protected SockAddr() {
         //
     }
 
@@ -104,6 +104,19 @@ public final class SockAddr implements Cloneable {
             data = new byte[this.data.length];
         } else {
             data = new byte[0];
+        }
+        if (data.length == 0) {
+            Family family = getSaFamily();
+            switch (family) {
+                case AF_INET:
+                    this.data = new byte[Inet4Address.IPV4_ADDRESS_LENGTH];
+                    break;
+                case AF_INET6:
+                    this.data = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
+                    break;
+                default:
+                    this.data = new byte[Inet4Address.IPV4_ADDRESS_LENGTH];
+            }
         }
         System.arraycopy(this.data, 0, data, 0, data.length);
         return data;

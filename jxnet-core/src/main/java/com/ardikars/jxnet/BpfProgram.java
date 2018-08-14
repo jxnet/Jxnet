@@ -17,8 +17,8 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.common.util.Validate;
 import com.ardikars.jxnet.exception.NativeException;
-import com.ardikars.jxnet.util.Validate;
 
 /**
  * The Berkeley Packet Filter (BPF) allows a user-space program to attach a filter onto any socket and
@@ -187,8 +187,8 @@ public final class BpfProgram implements PointerHandler {
 		 */
 		public BpfProgram buildBpf() {
 			Validate.nullPointer(pcap);
-			Validate.illegalArgument(!pcap.isClosed(), new IllegalArgumentException("Pcap handle is closed."));
-			Validate.illegalArgument(filter != null && !filter.equals(""));
+			Validate.notIllegalArgument(!pcap.isClosed(), new IllegalArgumentException("Pcap handle is closed."));
+			Validate.notIllegalArgument(filter != null && !filter.equals(""));
 
 			BpfProgram bpfProgram = new BpfProgram();
 			if (Jxnet.PcapCompile(pcap, bpfProgram, filter, bpfCompileMode.getValue(), netmask.toInt()) != Jxnet.OK) {

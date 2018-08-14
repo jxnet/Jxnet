@@ -17,7 +17,7 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.util.Validate;
+import com.ardikars.common.util.Validate;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -44,6 +44,7 @@ public final class Inet6Address extends InetAddress {
 	/**
 	 * IPv6 Loopback Address (::1).
 	 */
+	@SuppressWarnings("PMD.AvoidUsingHardCodedIP")
 	public static final Inet6Address LOCALHOST = valueOf("::1");
 
 	/**
@@ -62,7 +63,7 @@ public final class Inet6Address extends InetAddress {
 	private Inet6Address(final byte[] address) {
 		super();
 		Validate.nullPointer(address);
-		Validate.illegalArgument(address.length == IPV6_ADDRESS_LENGTH);
+		Validate.notIllegalArgument(address.length == IPV6_ADDRESS_LENGTH);
 		System.arraycopy(address, 0, this.address, 0, address.length);
 	}
 
@@ -88,8 +89,8 @@ public final class Inet6Address extends InetAddress {
 		final int ipv6MaxHexDigitsPerGroup = 4;
 
 		final boolean containsCompressedZeroes = inet6Address.contains("::");
-		Validate.illegalArgument(!(containsCompressedZeroes && (inet6Address.indexOf("::") != inet6Address.lastIndexOf("::"))));
-		Validate.illegalArgument(!(inet6Address.charAt(0) == ':' && !inet6Address.startsWith("::")
+		Validate.notIllegalArgument(!(containsCompressedZeroes && (inet6Address.indexOf("::") != inet6Address.lastIndexOf("::"))));
+		Validate.notIllegalArgument(!(inet6Address.charAt(0) == ':' && !inet6Address.startsWith("::")
 				|| (inet6Address.endsWith(":") && !inet6Address.endsWith("::"))));
 		String[] parts = inet6Address.split(":");
 		if (containsCompressedZeroes) {
@@ -101,14 +102,14 @@ public final class Inet6Address extends InetAddress {
 			}
 			parts = partsAsList.toArray(new String[partsAsList.size()]);
 		}
-		Validate.illegalArgument(!(parts.length > ipv6MaxHexGroups/*&& parts.length < 3*/));
+		Validate.notIllegalArgument(!(parts.length > ipv6MaxHexGroups/*&& parts.length < 3*/));
 		int validOctets = 0;
 		int emptyOctets = 0;
 		for (int index = 0; index < parts.length; index++) {
 			final String octet = parts[index];
 			if (octet.length() == 0) {
 				emptyOctets++;
-				Validate.illegalArgument(!(emptyOctets > 1));
+				Validate.notIllegalArgument(!(emptyOctets > 1));
 			} else {
 				emptyOctets = 0;
 				if (index == parts.length - 1 && octet.contains(".")) {
@@ -121,17 +122,17 @@ public final class Inet6Address extends InetAddress {
 					validOctets += 2;
 					continue;
 				}
-				Validate.illegalArgument(!(octet.length() > ipv6MaxHexDigitsPerGroup));
+				Validate.notIllegalArgument(!(octet.length() > ipv6MaxHexDigitsPerGroup));
 			}
 			validOctets++;
 		}
-		Validate.illegalArgument(!(validOctets > ipv6MaxHexGroups || (validOctets < ipv6MaxHexGroups && !containsCompressedZeroes)));
+		Validate.notIllegalArgument(!(validOctets > ipv6MaxHexGroups || (validOctets < ipv6MaxHexGroups && !containsCompressedZeroes)));
 		parts = inet6Address.split(":", 8 + 2);
-		Validate.illegalArgument(!(parts.length < 3 || parts.length > 8 + 1));
+		Validate.notIllegalArgument(!(parts.length < 3 || parts.length > 8 + 1));
 		int skipIndex = -1;
 		for (int i = 1; i < parts.length - 1; i++) {
 			if (parts[i].length() == 0) {
-				Validate.illegalArgument(!(skipIndex >= 0));
+				Validate.notIllegalArgument(!(skipIndex >= 0));
 				skipIndex = i;
 			}
 		}
@@ -140,14 +141,14 @@ public final class Inet6Address extends InetAddress {
 		if (skipIndex >= 0) {
 			partsHi = skipIndex;
 			partsLo = parts.length - skipIndex - 1;
-			Validate.illegalArgument(!(parts[0].length() == 0 && --partsHi != 0));
-			Validate.illegalArgument(!(parts[parts.length - 1].length() == 0 && --partsLo != 0));
+			Validate.notIllegalArgument(!(parts[0].length() == 0 && --partsHi != 0));
+			Validate.notIllegalArgument(!(parts[parts.length - 1].length() == 0 && --partsLo != 0));
 		} else {
 			partsHi = parts.length;
 			partsLo = 0;
 		}
 		final int partsSkipped = 8 - (partsHi + partsLo);
-		Validate.illegalArgument((skipIndex >= 0 ? partsSkipped >= 1 : partsSkipped == 0));
+		Validate.notIllegalArgument((skipIndex >= 0 ? partsSkipped >= 1 : partsSkipped == 0));
 		final ByteBuffer rawBytes = ByteBuffer.allocate(2 * 8);
 		try {
 			for (int i = 0; i < partsHi; i++) {

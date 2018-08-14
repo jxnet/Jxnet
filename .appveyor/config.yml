@@ -8,8 +8,6 @@ version: '{build}-{branch}'
 
 branches:
   only:
-    - development
-  except:
     - master
 
 # Do not build on tags

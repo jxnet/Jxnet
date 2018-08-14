@@ -17,11 +17,14 @@
 
 package com.ardikars.jxnet.util;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import com.ardikars.common.util.Validate;
+
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.IOException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
@@ -36,11 +39,11 @@ public final class Library {
     public static final String NPCAP_DLL = "C:\\Windows\\System32\\Npcap\\wpcap.dll";
     public static final String WPCAP_DLL = "C:\\Windows\\System32\\wpcap.dll";
 
-    public static final String DYNAMIC_LINUX_X64 = "/native/libjxnet-linux-x64.so";
-    public static final String DYNAMIC_LINUX_X86 = "/native/libjxnet-linux-x86.so";
-    public static final String DYNAMIC_WINDOWS_X64 = "/native/jxnet-windows-x64.dll";
-    public static final String DYNAMIC_WINDOWS_X86 = "/native/jxnet-windows-x86.dll";
-    public static final String DYNAMIC_DARWIN_X64 = "/native/libjxnet-darwin-x64.dylib";
+    public static final String LINUX_X64 = "/native/libjxnet-linux-x64.so";
+    public static final String LINUX_X86 = "/native/libjxnet-linux-x86.so";
+    public static final String WINDOWS_X64 = "/native/jxnet-windows-x64.dll";
+    public static final String WINDOWS_X86 = "/native/jxnet-windows-x86.dll";
+    public static final String DARWIN_X64 = "/native/libjxnet-darwin-x64.dylib";
 
     private static final int BUFFER_SIZE = 1024;
 
@@ -76,36 +79,47 @@ public final class Library {
         } catch (IOException e) {
             throw e;
         }
+        InputStream is = readLibrary(path);
+        if (is == null) {
+            throw new FileNotFoundException(path + " is not found.");
+        }
+        OutputStream os = openOutputStream(temp, parts[0], "." + parts[1]);
+        if (os == null) {
+            throw new IOException("Failed export file in classpath: " + path);
+        }
+        writeLibrary(is, os);
+        System.load(temp.getAbsolutePath());
+        LOGGER.info("Successfully loaded the jxnet native library.");
+    }
+
+    private static InputStream readLibrary(String path) {
+        InputStream inputStream;
+        inputStream = Library.class.getResourceAsStream(path);
+        return inputStream;
+    }
+
+    private static OutputStream openOutputStream(File temporary, String prefix, String suffix) {
+        OutputStream outputStream = null;
+        try {
+            outputStream = new FileOutputStream(temporary);
+        } catch (IOException e) {
+            return null;
+        }
+        return outputStream;
+    }
+
+    private static void writeLibrary(InputStream inputStream, OutputStream outputStream) throws IOException {
         final byte[] buffer = new byte[BUFFER_SIZE];
         int readBytes;
-        InputStream is = null;
-        OutputStream os = null;
-        try {
-            is = Library.class.getResourceAsStream(path);
-            os = new FileOutputStream(temp);
-            while ((readBytes = is.read(buffer)) != -1) {
-                try {
-                    os.write(buffer, 0, readBytes);
-                } catch (IOException e) {
-                    throw e;
-                }
-            }
-        } catch (IOException e) {
-            throw e;
-        } finally {
+        while ((readBytes = inputStream.read(buffer)) != -1) {
             try {
-                if (os != null) {
-                    os.close();
-                }
-                if (is != null) {
-                    is.close();
-                }
+                outputStream.write(buffer);
             } catch (IOException e) {
                 throw e;
             }
         }
-        System.load(temp.getAbsolutePath());
-        LOGGER.info("Successfully loaded the jxnet native library.");
+        inputStream.close();
+        outputStream.close();
     }
 
 }

@@ -19,7 +19,6 @@ package com.ardikars.jxnet;
 
 import com.ardikars.jxnet.exception.DeviceNotFoundException;
 import com.ardikars.jxnet.exception.NativeException;
-import com.ardikars.jxnet.util.Validate;
 
 import java.io.BufferedReader;
 import java.io.IOException;
