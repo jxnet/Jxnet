@@ -16,11 +16,23 @@ PLATFORM
 
   - Windows 7/8/10 (32/64 bit)
   - Linux (x86/x64)
-  - FreeBSD (x86/x64)
+  - MacOS
 
 
 HOW TO BUILD
 ============
+
+Windows
+
+Install Mingw64 (sjlj) for cross compilation on windows system. See ```.\.scripts\InstallMingw64.ps1```.
+
+Linux
+
+Install libpcap-dev
+
+MacOS
+
+Install libpcap-dev
 
 ```sh
 ./gradlew build -x test
@@ -44,7 +56,7 @@ dependencies {
 ...
 ```
 
-*) In Windows you need to install Npcap with WinPcap API-compatible Mode.
+*) In Windows you need to install Npcap with WinPcap API-compatible Mode. See ```.\.scripts\InstallNpcap.ps1```.
 
 
 License
