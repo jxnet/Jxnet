@@ -22,6 +22,8 @@ a.out
 *.zip
 *.rar
 /.gradle
+/.gradle.properties.swp
+/gradle.properties
 /.idea
 /.nb-gradle
 /out

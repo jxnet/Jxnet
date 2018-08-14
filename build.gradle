@@ -26,7 +26,6 @@ subprojects {
 	if (!project.name.equals("jxnet-native")) {
 		apply plugin: 'java'
 		apply plugin: 'maven'
-		apply plugin: 'signing'
 		apply plugin: 'jacoco'
 		apply plugin: 'com.jfrog.bintray'
 		apply plugin: 'checkstyle'
@@ -123,7 +122,7 @@ subprojects {
 			ignoreFailures = false
 			sourceSets = [sourceSets.main]
 			reportsDir = file("$project.buildDir/reports/pmd")
-//			ruleSetFiles = rootProject.files("./gradle/resources/pmd/pmd.xml")
+			//ruleSetFiles = rootProject.files("./gradle/resources/pmd/pmd.xml")
 			toolVersion "${PMD_VERION}"
 		}
 
@@ -151,11 +150,6 @@ subprojects {
 			archives jar, sourcesJar, javadocJar
 		}
 
-		signing {
-			required { !version.endsWith('SNAPSHOT') && gradle.taskGraph.hasTask('uploadArchives') }
-			sign configurations.archives
-		}
-
 		install {
 			System.setProperty('maven.repo.local', "${MAVEN_LOCAL_REPOSITORY}")
 			repositories.mavenInstaller {
@@ -165,7 +159,6 @@ subprojects {
 
 		uploadArchives {
 			repositories.mavenDeployer {
-				beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 				repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
 					authentication(userName: defaultBlank({ sonatypeUser }), password: defaultBlank({ sonatypePass }))
 				}
@@ -194,7 +187,7 @@ subprojects {
 					vcsTag = project.version
 					gpg {
 						sign = true
-						passphrase = defaultBlank({ signing.password })
+						passphrase = defaultBlank({ singing.password })
 					}
 					mavenCentralSync {
 						sync = true

@@ -7,7 +7,7 @@ ext {
 
 	NAME = 'Jxnet'
 	GROUP = 'com.ardikars.jxnet'
-	VERSION = '1.1.5.RC2'
+	VERSION = '1.1.5.RC4'
 
 	NDK_HOME = "${System.env.NDK_HOME}"
 	TOOLS_DIR = "${rootDir}/tools"
@@ -18,7 +18,7 @@ ext {
 //	MAVEN_LOCAL_REPOSITORY = "${rootDir}/build/repository"
 	MAVEN_LOCAL_REPOSITORY = "${System.env.HOME}/.m2/repository"
 
-	JAVA_VERSION = '1.7'
+	JAVA_VERSION = '1.8'
 	JUNIT_VERSION = '4.12'
 	MOCKITO_VERSION = '2.13.0'
 	GRADLE_VERSION = '3.5'

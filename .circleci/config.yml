@@ -10,17 +10,7 @@ jobs:
     steps:
       - checkout
       - run: 'export TERM=xterm-color'
-      - run: 'sudo apt-get update && sudo apt-get install gcc gcc-multilib libpcap0.8 libpcap0.8-dev libpcap-dev -y'
-      - run: './gradlew -p jxnet-native clean build -x test --info --no-daemon'
-
-  test:
-    working_directory: ~/tmp/Jxnet
-    docker:
-      - image: 'circleci/openjdk:8-jdk'
-    steps:
-      - checkout
-      - run: 'export TERM=xterm-color'
-      - run: 'sudo apt-get update && sudo apt-get install gcc gcc-multilib libpcap0.8 libpcap0.8-dev libpcap-dev -y'
+      - run: 'sudo apt-get update && sudo apt-get install gcc libpcap-dev -y'
       - run: './gradlew clean build -x test --info --no-daemon'
 
   deploy:
@@ -30,12 +20,20 @@ jobs:
     steps:
       - checkout
       - run: 'export TERM=xterm-color'
-      - run: './gradlew clean build bintrayUpload -x test --info --no-daemon'
-
+      - run: 'sudo apt-get update && sudo apt-get install gcc libpcap-dev -y'
+      - run: 'echo "bintrayUser=$BINTRAY_USER" >> gradle.properties'
+      - run: 'echo "bintrayPass=$BINTRAY_PASS" >> gradle.properties'
+      - run: 'echo "sonatypeUser=$SONATYPE_USER" >> gradle.properties'
+      - run: 'echo "sonatypePass=$SONATYPE_PASS" >> gradle.properties'
+      - run: 'echo "signing.password=$SIGNING_PASS" >> gradle.properties'
+      - run: './gradlew clean uploadArchives -x test --info --no-daemon'
+      - run: './gradlew clean bintrayUpload -x test --info --no-daemon'
 
 workflows:
   version: 2
-  build_and_test:
+  build_and_deploy:
     jobs:
       - build
-      - test
+      - deploy:
+          requires:
+            - build
