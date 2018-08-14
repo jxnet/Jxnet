@@ -45,6 +45,10 @@ subprojects {
 			jcenter()
 		}
 
+        dependencies {
+            compile 'com.ardikars.common:common-util:1.0.0.RC2'
+        }
+
 		configurations.archives.artifacts.with { archives ->
 			def jarArtifact
 			archives.each {
@@ -94,7 +98,6 @@ subprojects {
 			checkstyleMain {
 				reports {
 					html {
-						destination "${project.buildDir}/reports/checkstyle.html"
 					}
 				}
 			}
@@ -102,7 +105,7 @@ subprojects {
 		}
 
 		spotbugs {
-			ignoreFailures = true
+			ignoreFailures = false
 			sourceSets = [sourceSets.main]
 			reportsDir = file("$project.buildDir/reports/findbugs")
 			effort = "max"
@@ -117,10 +120,10 @@ subprojects {
 		}
 
 		pmd {
-			ignoreFailures = true
+			ignoreFailures = false
 			sourceSets = [sourceSets.main]
 			reportsDir = file("$project.buildDir/reports/pmd")
-			ruleSetFiles = rootProject.files("./gradle/resources/pmd/pmd.xml")
+//			ruleSetFiles = rootProject.files("./gradle/resources/pmd/pmd.xml")
 			toolVersion "${PMD_VERION}"
 		}
 

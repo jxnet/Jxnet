@@ -17,10 +17,10 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.common.util.Validate;
 import com.ardikars.jxnet.exception.NativeException;
 import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 import com.ardikars.jxnet.util.Platforms;
-import com.ardikars.jxnet.util.Validate;
 
 /**
  * This class storing pointer address of pcap handle and used for dereferencing the pointer.
@@ -223,9 +223,9 @@ public final class Pcap implements PointerHandler {
 		 */
 		public Pcap buildLive() {
 			Validate.nullPointer(source, new NullPointerException("Device name should be not null."));
-			Validate.illegalArgument(snaplen > 0 && snaplen < 65536,
+			Validate.notIllegalArgument(snaplen > 0 && snaplen < 65536,
 					new IllegalArgumentException("Snaplen should be greater then 0 and less then 65536."));
-			Validate.illegalArgument(timeout > 0, new IllegalArgumentException("Timeout should be greater then 0."));
+			Validate.notIllegalArgument(timeout > 0, new IllegalArgumentException("Timeout should be greater then 0."));
 			Validate.nullPointer(errbuf, new NullPointerException("Error buffer should be not null."));
 
 			Pcap pcap = Jxnet.PcapCreate(source, errbuf);

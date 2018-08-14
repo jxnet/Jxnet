@@ -17,12 +17,12 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.common.util.Validate;
 import com.ardikars.jxnet.exception.BpfProgramCloseException;
 import com.ardikars.jxnet.exception.PcapCloseException;
 import com.ardikars.jxnet.exception.PcapDumperCloseException;
 import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 import com.ardikars.jxnet.util.Library;
-import com.ardikars.jxnet.util.Validate;
 
 import java.nio.ByteBuffer;
 import java.util.List;

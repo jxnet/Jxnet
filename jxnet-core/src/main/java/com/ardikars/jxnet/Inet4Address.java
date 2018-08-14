@@ -17,7 +17,7 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.util.Validate;
+import com.ardikars.common.util.Validate;
 
 import java.util.Arrays;
 
@@ -36,16 +36,13 @@ public final class Inet4Address extends InetAddress {
 	/**
 	 * IPv4 Loopback address (127.0.0.1).
 	 */
+	@SuppressWarnings("PMD.AvoidUsingHardCodedIP")
 	public static final Inet4Address LOCALHOST = valueOf("127.0.0.1");
 
 	/**
 	 * IPv4 Address Length.
 	 */
 	public static final int IPV4_ADDRESS_LENGTH = 4;
-	
-	{
-		address = new byte[Inet4Address.IPV4_ADDRESS_LENGTH];
-	}
 
 	private Inet4Address() {
 		super();
@@ -54,7 +51,7 @@ public final class Inet4Address extends InetAddress {
 	private Inet4Address(final byte[] address) {
 		super();
 		Validate.nullPointer(address);
-		Validate.illegalArgument(address.length == IPV4_ADDRESS_LENGTH);
+		Validate.notIllegalArgument(address.length == IPV4_ADDRESS_LENGTH);
 		System.arraycopy(address, 0, this.address, 0, address.length);
 	}
 
@@ -63,16 +60,17 @@ public final class Inet4Address extends InetAddress {
 	 * @param inet4Address ipv4 string address.
 	 * @return returns Inet4Address instance.
 	 */
+	@SuppressWarnings("PMD.AvoidUsingHardCodedIP")
 	public static Inet4Address valueOf(String inet4Address) {
 		inet4Address = Validate.nullPointer(inet4Address, "0.0.0.0");
 		final String[] parts = inet4Address.split("\\.");
 		final byte[] result = new byte[parts.length];
-		Validate.illegalArgument(result.length == IPV4_ADDRESS_LENGTH);
+		Validate.notIllegalArgument(result.length == IPV4_ADDRESS_LENGTH);
 		for (int i = 0; i < result.length; i++) {
-			Validate.illegalArgument(parts[i] != null || parts[i].length() != 0);
-			Validate.illegalArgument(!(parts[i].length() > 1 && parts[i].startsWith("0")));
+			Validate.notIllegalArgument(parts[i] != null || parts[i].length() != 0);
+			Validate.notIllegalArgument(!(parts[i].length() > 1 && parts[i].startsWith("0")));
 			result[i] = Integer.valueOf(parts[i]).byteValue();
-			Validate.illegalArgument((result[i] & 0xff) <= 0xff);
+			Validate.notIllegalArgument((result[i] & 0xff) <= 0xff);
 		}
 		return Inet4Address.valueOf(result);
 	}

@@ -43,9 +43,9 @@ public final class PcapIf implements Cloneable {
 	 */
 	private static final int PCAP_IF_RUNNING = 0x00000004;
 
-	private volatile String name;
+	private volatile String name = "";
 	
-	private volatile String description;
+	private volatile String description = "";
 	
 	private volatile List<PcapAddr> addresses = new ArrayList<PcapAddr>();
 	

@@ -17,8 +17,8 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.common.util.Validate;
 import com.ardikars.jxnet.exception.DeviceNotFoundException;
-import com.ardikars.jxnet.util.Validate;
 
 import java.util.Arrays;
 import java.util.regex.Pattern;
@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
-public final class MacAddress implements Cloneable {
+public final class MacAddress {
 
 	/**
 	 * MAC Address Length.
@@ -56,17 +56,55 @@ public final class MacAddress implements Cloneable {
 	public static final MacAddress IPV4_MULTICAST = valueOf("01:00:5e:00:00:00");
 
 	public static final MacAddress IPV4_MULTICAST_MASK = valueOf("ff:ff:ff:80:00:00");
-	
+
 	private byte[] address = new byte[MAC_ADDRESS_LENGTH];
 
-	private MacAddress() {
-
-	}
-	
-	private MacAddress(final byte[] address) {
+	private MacAddress(byte[] address) {
 		Validate.nullPointer(address);
-		Validate.illegalArgument(address.length == MAC_ADDRESS_LENGTH);
-		System.arraycopy(address, 0, this.address, 0, address.length);
+		Validate.notIllegalArgument(address.length == MAC_ADDRESS_LENGTH);
+		this.address = Arrays.copyOf(address, MacAddress.MAC_ADDRESS_LENGTH);
+	}
+
+	/**
+	 * Determines the MacAddress address.
+	 * @param stringAddress MAC string address.
+	 * @return an Mac address object.
+	 */
+	public static MacAddress valueOf(String stringAddress) {
+		stringAddress = Validate.nullPointer(stringAddress, "00:00:00:00:00:00");
+		final String[] elements = stringAddress.split(":|-");
+		Validate.notIllegalArgument(elements.length == MAC_ADDRESS_LENGTH);
+		final byte[] b = new byte[MAC_ADDRESS_LENGTH];
+		for (int i = 0; i < MAC_ADDRESS_LENGTH; i++) {
+			final String element = elements[i];
+			b[i] = (byte) Integer.parseInt(element, 16);
+		}
+		return new MacAddress(b);
+	}
+
+	/**
+	 * Determines the MacAddress address.
+	 * @param bytesAddress MAC bytes address.
+	 * @return an Mac address object.
+	 */
+	public static MacAddress valueOf(final byte[] bytesAddress) {
+		return new MacAddress(bytesAddress);
+	}
+
+	/**
+	 * Determines the MacAddress address.
+	 * @param longAddress MAC long address.
+	 * @return an Mac address object.
+	 */
+	public static MacAddress valueOf(final long longAddress) {
+		final byte[] bytes = new byte[] {
+				(byte) (longAddress >> 40 & 0xff),
+				(byte) (longAddress >> 32 & 0xff),
+				(byte) (longAddress >> 24 & 0xff),
+				(byte) (longAddress >> 16 & 0xff),
+				(byte) (longAddress >> 8 & 0xff),
+				(byte) (longAddress >> 0 & 0xff)};
+		return new MacAddress(bytes);
 	}
 
 	/**
@@ -78,98 +116,47 @@ public final class MacAddress implements Cloneable {
 	public static native MacAddress fromNicName(final String nicName) throws DeviceNotFoundException;
 
 	/**
-	 * Create MacAddress instance.
-	 * @param address string MAC Address.
-	 * @return returns MacAddress instance.
+	 * Validate given mac string address.
+	 * @param stringAddress mac string address.
+	 * @return a {@code boolean} indicating if the stringAddress is a valid mac address; or false otherwise.
 	 */
-	public static MacAddress valueOf(String address) {
-		address = Validate.nullPointer(address, "00:00:00:00:00:00");
-		final String[] elements = address.split(":|-");
-		Validate.illegalArgument(elements.length == MAC_ADDRESS_LENGTH);
-		final byte[] b = new byte[MAC_ADDRESS_LENGTH];
-		for (int i = 0; i < MAC_ADDRESS_LENGTH; i++) {
-			final String element = elements[i];
-			b[i] = (byte) Integer.parseInt(element, 16);
-		}
-		return new MacAddress(b);
+	public static boolean isValidAddress(final String stringAddress) {
+		Validate.nullPointer(stringAddress);
+		return Pattern.matches("^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$", stringAddress);
 	}
 
 	/**
-	 * Create MacAddress instance.
-	 * @param address bytes MAC Address.
-	 * @return returns MacAddress instance.
-	 */
-	public static MacAddress valueOf(final byte[] address) {
-		return new MacAddress(address);
-	}
-
-	/**
-	 * Create MacAddress instance.
-	 * @param address long MAC Address.
-	 * @return returns MacAddress instance.
-	 */
-	public static MacAddress valueOf(final long address) {
-		final byte[] bytes = new byte[] {
-				(byte) (address >> 40 & 0xff),
-				(byte) (address >> 32 & 0xff),
-				(byte) (address >> 24 & 0xff),
-				(byte) (address >> 16 & 0xff),
-				(byte) (address >> 8 & 0xff),
-				(byte) (address >> 0 & 0xff)};
-		return new MacAddress(bytes);
-	}
-
-	/**
-	 * Validate Mac Address.
-	 * @param address string address.
-	 * @return returns true is valid, false otherwise.
-	 */
-	public static boolean isValidAddress(final String address) {
-		Validate.nullPointer(address);
-		return Pattern.matches("^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$", address);
-	}
-
-	/**
-	 * Change value of MacAddress.
-	 * @param macAddress MacAddress.
-	 */
-	public void update(final MacAddress macAddress) {
-		Validate.nullPointer(macAddress);
-		this.address = macAddress.toBytes();
-	}
-
-	/**
-	 * Getting length of MAC Address.
-	 * @return returns MAC Address length.
+	 * Returns length of MAC Address.
+	 * @return MAC Address length.
 	 */
 	public int length() {
 		return this.address.length;
 	}
 
 	/**
-	 * Getting MAC Address as bytes.
-	 * @return returns MAC Address.
+	 * Returns bytes MAC Address.
+	 * @return bytes MAC Address.
 	 */
 	public byte[] toBytes() {
 		return Arrays.copyOf(this.address, this.address.length);
 	}
 
 	/**
-	 * Getting MAC Address as long.
-	 * @return returns MAC Address.
+	 * Returning long MAC Address.
+	 * @return long MAC Address.
 	 */
 	public long toLong() {
 		long addr = 0;
 		for (int i = 0; i < MAC_ADDRESS_LENGTH; i++) {
-			final long tmp = (this.address[i] & 0xffL) << (5 - i) * 8;
+			long tmp = (this.address[i] & 0xffL) << (5 - i) * 8;
 			addr |= tmp;
 		}
 		return addr;
 	}
 
 	/**
-	 * Returns true if broadcast MAC Address.
-	 * @return returns true if broadcast MAC Address, false otherwise.
+	 * Return true if Broadcast MAC Address.
+	 * @return true if Broadcast MAC Address, false otherwise.
 	 */
 	public boolean isBroadcast() {
 		for (final byte b : this.address) {
@@ -181,8 +168,8 @@ public final class MacAddress implements Cloneable {
 	}
 
 	/**
-	 * Returns true if multicast MAC Address.
-	 * @return returns true if multicast MAC Address, false otherwise.
+	 * Return true if Multicast MAC Address.
+	 * @return true if Multicast MAC Address, false otherwise.
 	 */
 	public boolean isMulticast() {
 		if (this.isBroadcast()) {
@@ -191,8 +178,26 @@ public final class MacAddress implements Cloneable {
 		return (this.address[0] & 0x01) != 0;
 	}
 
+	/**
+	 *
+	 * @return returns true if the MAC address represented by this object is
+	 *         a globally unique address; otherwise false.
+	 */
+	public boolean isGloballyUnique() {
+		return (address[0] & 2) == 0;
+	}
+
+	/**
+	 *
+	 * @return true if the MAC address represented by this object is
+	 *         a unicast address; otherwise false.
+	 */
+	public boolean isUnicast() {
+		return (address[0] & 1) == 0;
+	}
+
 	@Override
-	public boolean equals(final Object o) {
+	public boolean equals(Object o) {
 		if (this == o) {
 			return true;
 		}
@@ -200,20 +205,14 @@ public final class MacAddress implements Cloneable {
 			return false;
 		}
 
-		final MacAddress that = (MacAddress) o;
+		MacAddress that = (MacAddress) o;
 
-		return Arrays.equals(this.address, that.address);
+		return Arrays.equals(address, that.address);
 	}
 
 	@Override
 	public int hashCode() {
-		return Arrays.hashCode(this.address);
-	}
-
-	@Override
-	protected Object clone() throws CloneNotSupportedException {
-		MacAddress macAddress = (MacAddress) super.clone();
-		return macAddress;
+		return Arrays.hashCode(address);
 	}
 
 	@Override
@@ -221,20 +220,12 @@ public final class MacAddress implements Cloneable {
 		final StringBuilder sb = new StringBuilder();
 		for (final byte b : this.address) {
 			if (sb.length() > 0) {
-				sb.append(':');
+				sb.append(":");
 			}
-			final String hex = Integer.toHexString(b & 0xff);
+			String hex = Integer.toHexString(b & 0xff);
 			sb.append(hex.length() == 1 ? "0" + hex : hex);
 		}
 		return sb.toString();
-	}
-
-	static {
-		try {
-			Class.forName("com.ardikars.jxnet.Jxnet");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
 	}
 
 }

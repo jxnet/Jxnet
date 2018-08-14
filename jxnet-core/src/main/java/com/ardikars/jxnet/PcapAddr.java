@@ -24,13 +24,13 @@ package com.ardikars.jxnet;
  */
 public final class PcapAddr implements Cloneable {
 	
-	private volatile SockAddr addr;
+	private volatile SockAddr addr = new SockAddr();
 	
-	private volatile SockAddr netmask;
+	private volatile SockAddr netmask = new SockAddr();
 	
-	private volatile SockAddr broadaddr;
+	private volatile SockAddr broadaddr = new SockAddr();
 	
-	private volatile SockAddr dstaddr;
+	private volatile SockAddr dstaddr = new SockAddr();
 
 	private PcapAddr() {
 		//

@@ -36,7 +36,7 @@ public class DefaultLibraryLoader implements Library.Loader {
             case LINUX:
                 if (Platforms.is64Bit()) {
                     try {
-                        Library.loadLibrary(Library.DYNAMIC_LINUX_X64);
+                        Library.loadLibrary(Library.LINUX_X64);
                     } catch (IllegalArgumentException e) {
                         logger.warning(e.getMessage());
                     } catch (IOException e) {
@@ -44,7 +44,7 @@ public class DefaultLibraryLoader implements Library.Loader {
                     }
                 } else {
                     try {
-                        Library.loadLibrary(Library.DYNAMIC_LINUX_X86);
+                        Library.loadLibrary(Library.LINUX_X86);
                     } catch (IllegalArgumentException e) {
                         logger.warning(e.getMessage());
                     } catch (IOException e) {
@@ -53,20 +53,24 @@ public class DefaultLibraryLoader implements Library.Loader {
                 }
                 break;
             case WINDOWS:
-                if (new File(Library.NPCAP_DLL).exists())  {
+                File npcapFile = new File(Library.NPCAP_DLL);
+                if (npcapFile.exists())  {
                     System.load(Library.NPCAP_DLL);
                     loadDynamicWindowsLibrary();
-                } else if (new File(Library.WPCAP_DLL).exists()) {
-                    System.load(Library.WPCAP_DLL);
-                    loadDynamicWindowsLibrary();
                 } else {
-                    throw new UnsatisfiedLinkError("Npcap or Winpcap is not installed yet.");
+                    File winpcapFile = new File(Library.WPCAP_DLL);
+                    if (winpcapFile.exists()) {
+                        System.load(Library.WPCAP_DLL);
+                        loadDynamicWindowsLibrary();
+                    } else {
+                        throw new UnsatisfiedLinkError("Npcap or Winpcap is not installed yet.");
+                    }
                 }
                 break;
             case DARWIN:
                 if (Platforms.is64Bit()) {
                     try {
-                        Library.loadLibrary(Library.DYNAMIC_DARWIN_X64);
+                        Library.loadLibrary(Library.DARWIN_X64);
                     } catch (IllegalArgumentException e) {
                         logger.warning(e.getMessage());
                     } catch (IOException e) {
@@ -82,7 +86,7 @@ public class DefaultLibraryLoader implements Library.Loader {
     private void loadDynamicWindowsLibrary() {
         if (Platforms.is64Bit()) {
             try {
-                Library.loadLibrary(Library.DYNAMIC_WINDOWS_X64);
+                Library.loadLibrary(Library.WINDOWS_X64);
             } catch (IllegalArgumentException e) {
                 logger.warning(e.getMessage());
             } catch (IOException e) {
@@ -90,7 +94,7 @@ public class DefaultLibraryLoader implements Library.Loader {
             }
         } else {
             try {
-                Library.loadLibrary(Library.DYNAMIC_WINDOWS_X86);
+                Library.loadLibrary(Library.WINDOWS_X86);
             } catch (IllegalArgumentException e) {
                 logger.warning(e.getMessage());
             } catch (IOException e) {
