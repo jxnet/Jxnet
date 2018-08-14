@@ -42,15 +42,12 @@ workflows:
           filters:
             branches:
               only:
-                - development
+                - master
           requires:
             - build
       - deploy:
           filters:
             tags:
               only: /-RELEASE$/
-            branches:
-              only:
-                - master
           requires:
             - build
