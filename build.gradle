@@ -190,7 +190,7 @@ subprojects {
 						passphrase = defaultBlank({ singing.password })
 					}
 					mavenCentralSync {
-						sync = true
+						sync = false
 						user = defaultBlank({ sonatypeUser })
 						password = defaultBlank({ sonatypePass })
 						close = '1'
