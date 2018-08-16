@@ -20,13 +20,16 @@ jobs:
     steps:
       - checkout
       - run: 'export TERM=xterm-color'
-      - run: 'sudo apt-get update && sudo apt-get install gcc libpcap-dev -y'
+      - run: 'sudo apt-get update && sudo apt-get install gcc libpcap-dev gnupg -y'
       - run: 'echo "bintrayUser=$BINTRAY_USER" >> gradle.properties'
       - run: 'echo "bintrayPass=$BINTRAY_PASS" >> gradle.properties'
       - run: 'echo "sonatypeUser=$SONATYPE_USER" >> gradle.properties'
       - run: 'echo "sonatypePass=$SONATYPE_PASS" >> gradle.properties'
+      - run: 'echo "signing.keyId=$SIGNING_KEY_ID" >> gradle.properties'
       - run: 'echo "signing.password=$SIGNING_PASS" >> gradle.properties'
-      - run: './gradlew clean uploadArchives -x test --info --no-daemon'
+      - run: 'echo "signing.secretKeyRingFile=/tmp/secring.gpg" >> gradle.properties'
+      - run: 'gpg --batch --yes --passphrase=$SIGN_KEY --output /tmp/secring.gpg --decrypt --cipher-algo AES256 ./gradle/resources/gpg/secring.gpg.enc'
+      #- run: './gradlew clean uploadArchives -x test --info --no-daemon'
       - run: './gradlew clean bintrayUpload -x test --info --no-daemon'
 
 workflows:

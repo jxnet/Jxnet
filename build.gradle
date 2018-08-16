@@ -25,9 +25,10 @@ subprojects {
 
 	if (!project.name.equals("jxnet-native")) {
 		apply plugin: 'java'
+		apply plugin: 'signing'
 		apply plugin: 'maven'
-		apply plugin: 'jacoco'
 		apply plugin: 'com.jfrog.bintray'
+		apply plugin: 'jacoco'
 		apply plugin: 'checkstyle'
 		apply plugin: 'pmd'
 		apply plugin: 'com.github.spotbugs'
@@ -157,8 +158,14 @@ subprojects {
 			}
 		}
 
+		signing {
+			required { gradle.taskGraph.hasTask('uploadArchives') || gradle.taskGraph.hasTask('bintrayUpload') }
+			sign configurations.archives
+		}
+
 		uploadArchives {
 			repositories.mavenDeployer {
+				beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 				repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
 					authentication(userName: defaultBlank({ sonatypeUser }), password: defaultBlank({ sonatypePass }))
 				}
@@ -187,10 +194,10 @@ subprojects {
 					vcsTag = project.version
 					gpg {
 						sign = true
-						passphrase = defaultBlank({ singing.password })
+						passphrase = defaultBlank({ signing.password })
 					}
 					mavenCentralSync {
-						sync = false
+						sync = true
 						user = defaultBlank({ sonatypeUser })
 						password = defaultBlank({ sonatypePass })
 						close = '1'
