@@ -17,6 +17,8 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.common.net.Inet4Address;
+import com.ardikars.common.net.Inet6Address;
 import com.ardikars.jxnet.util.Strings;
 
 import java.util.Arrays;

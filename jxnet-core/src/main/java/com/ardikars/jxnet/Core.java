@@ -17,6 +17,7 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.common.net.Inet4Address;
 import com.ardikars.jxnet.exception.DeviceNotFoundException;
 import com.ardikars.jxnet.exception.NativeException;
 

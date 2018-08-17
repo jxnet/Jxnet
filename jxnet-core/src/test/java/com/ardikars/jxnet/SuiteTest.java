@@ -25,7 +25,6 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
         JxnetTest.class,
         CoreTest.class,
-        MacAddress.class,
         FreakTest.class
 })
 public class SuiteTest {

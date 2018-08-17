@@ -77,6 +77,7 @@ import static com.ardikars.jxnet.Jxnet.PcapTStampTypeNameToVal;
 import static com.ardikars.jxnet.Jxnet.PcapTStampTypeValToDescription;
 import static com.ardikars.jxnet.Jxnet.PcapTStampTypeValToName;
 
+import com.ardikars.common.net.Inet4Address;
 import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 import com.ardikars.jxnet.util.Platforms;
 

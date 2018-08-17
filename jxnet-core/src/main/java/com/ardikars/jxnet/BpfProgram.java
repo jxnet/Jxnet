@@ -17,6 +17,7 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.common.net.Inet4Address;
 import com.ardikars.common.util.Validate;
 import com.ardikars.jxnet.exception.NativeException;
 
