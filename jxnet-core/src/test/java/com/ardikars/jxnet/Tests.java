@@ -17,44 +17,22 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.common.net.NetworkInterface;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.net.SocketException;
 import java.nio.ByteBuffer;
 
 @RunWith(JUnit4.class)
 public class Tests {
 
 	@Test
-	public void ex() {
-		Application.run("Tests", "0.0.1", LoaderTest.Initializer.class, new ApplicationContext());
-		StringBuilder errbuf = new StringBuilder();
-		Pcap pcap = Pcap.dead(
-				Pcap.builder()
-				.source("wlp2s0")
-				.errbuf(errbuf)
-				.dataLinkType(DataLinkType.EN10MB)
-		);
-
-
-		Jxnet.PcapActivate(pcap);
-//		System.out.println(pcap.isDead() + " << dead");
-//		Jxnet.PcapLoop(pcap, 5, new PcapHandler<Object>() {
-//			@Override
-//			public void nextPacket(Object user, PcapPktHdr h, ByteBuffer bytes) {
-//				System.out.println(bytes);
-//			}
-//		}, null);
-//		BpfProgram bpfProgram = BpfProgram.bpf(
-//				BpfProgram.builder()
-//				.filter("icmp")
-//				.pcap(pcap)
-//		);
-//		System.out.println(bpfProgram);
-//		Jxnet.PcapFreeCode(bpfProgram);
-		Jxnet.PcapClose(pcap);
-
+	public void ex() throws SocketException {
+		for (NetworkInterface networkInterface : NetworkInterface.getNetworkInterfaces()) {
+			System.out.println(networkInterface);
+		}
 	}
 
 }

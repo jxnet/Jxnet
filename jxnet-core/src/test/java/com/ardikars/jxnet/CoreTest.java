@@ -31,7 +31,6 @@ import static com.ardikars.jxnet.Jxnet.PcapDumpOpen;
 import static com.ardikars.jxnet.Jxnet.PcapFindAllDevs;
 import static com.ardikars.jxnet.Jxnet.PcapFreeCode;
 import static com.ardikars.jxnet.Jxnet.PcapGetTStampPrecision;
-import static com.ardikars.jxnet.Jxnet.PcapLookupNet;
 import static com.ardikars.jxnet.Jxnet.PcapLoop;
 import static com.ardikars.jxnet.Jxnet.PcapOpenDead;
 import static com.ardikars.jxnet.Jxnet.PcapOpenLive;
@@ -186,10 +185,6 @@ public class CoreTest {
             logger.warning("create:PcapDumpOpen() ");
             return;
         }
-        if ((resultCode = PcapLookupNet(source.getName(), netp, maskp, errbuf)) != OK) {
-            logger.warning("create:PcapLookupNet(): " + errbuf.toString());
-            return;
-        }
     }
 
     @Test
@@ -244,10 +239,14 @@ public class CoreTest {
         }
         DataLinkType dataLinkType = DataLinkType.valueOf((short) PcapDataLink(pcap));
         System.out.println("Data Link Type (Before): " + dataLinkType);
-        if ((resultCode = PcapSetDataLink(pcap, DataLinkType.LINUX_SLL.getValue())) != OK) {
-            logger.warning("PcapSetDataLinkPcapDataLinkPcapOpenDeadAndPcapClose:PcapSetDataLink(): " + PcapStrError(resultCode));
-            PcapClose(pcap);
-            return;
+        try {
+            if ((resultCode = PcapSetDataLink(pcap, DataLinkType.LINUX_SLL.getValue())) != OK) {
+                logger.warning("PcapSetDataLinkPcapDataLinkPcapOpenDeadAndPcapClose:PcapSetDataLink(): " + PcapStrError(resultCode));
+                PcapClose(pcap);
+                return;
+            }
+        } catch (NativeException e) {
+            logger.warning(e.getMessage());
         }
         dataLinkType = DataLinkType.valueOf((short) PcapDataLink(pcap));
         System.out.println("Data Link Type (After): " + dataLinkType);

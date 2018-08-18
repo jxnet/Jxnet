@@ -28,6 +28,7 @@ import static com.ardikars.jxnet.Jxnet.PcapSetRfMon;
 import static com.ardikars.jxnet.Jxnet.PcapSnapshot;
 import static com.ardikars.jxnet.Jxnet.PcapStrError;
 
+import com.ardikars.jxnet.exception.NativeException;
 import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 
 import java.util.logging.Logger;
@@ -80,9 +81,13 @@ public class FreakTest {
     @Test
     public void Test04_PcapSetDirection() {
         try {
-            if ((resultCode = PcapSetDirection(pcap, PcapDirection.PCAP_D_IN)) != OK) {
-                logger.warning("PcapSetDirection:PcapSetDirection() " + PcapStrError(resultCode));
-                return;
+            try {
+                if ((resultCode = PcapSetDirection(pcap, PcapDirection.PCAP_D_IN)) != OK) {
+                    logger.warning("PcapSetDirection:PcapSetDirection() " + PcapStrError(resultCode));
+                    return;
+                }
+            } catch (NativeException e) {
+                logger.warning(e.getMessage());
             }
         } catch (PlatformNotSupportedException e) {
             logger.warning(e.getMessage());
@@ -91,11 +96,15 @@ public class FreakTest {
 
     @Test
     public void Test25_PcapCanSetRfMonAndPcapSetRfMon() {
-        if (PcapCanSetRfMon(pcap) == 1) {
-            if ((resultCode = PcapSetRfMon(pcap, 1)) != OK) {
-                logger.warning("PcapCanSetRfMonAndPcapSetRfMon:PcapCanSetRfMon(): " + PcapStrError(resultCode));
-                return;
+        try {
+            if (PcapCanSetRfMon(pcap) == 1) {
+                if ((resultCode = PcapSetRfMon(pcap, 1)) != OK) {
+                    logger.warning("PcapCanSetRfMonAndPcapSetRfMon:PcapCanSetRfMon(): " + PcapStrError(resultCode));
+                    return;
+                }
             }
+        } catch (NativeException e) {
+            logger.warning(e.getMessage());
         }
     }
 

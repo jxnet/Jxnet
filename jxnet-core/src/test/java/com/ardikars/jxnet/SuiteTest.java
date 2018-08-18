@@ -31,6 +31,7 @@ public class SuiteTest {
 
     @Test
     public void LibraryTest() {
+        assert true;
     }
 
 }

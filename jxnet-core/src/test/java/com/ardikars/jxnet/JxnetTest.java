@@ -45,7 +45,6 @@ import static com.ardikars.jxnet.Jxnet.PcapIsSwapped;
 import static com.ardikars.jxnet.Jxnet.PcapLibVersion;
 import static com.ardikars.jxnet.Jxnet.PcapListDataLinks;
 import static com.ardikars.jxnet.Jxnet.PcapListTStampTypes;
-import static com.ardikars.jxnet.Jxnet.PcapLookupNet;
 import static com.ardikars.jxnet.Jxnet.PcapLoop;
 import static com.ardikars.jxnet.Jxnet.PcapMajorVersion;
 import static com.ardikars.jxnet.Jxnet.PcapMinorVersion;
@@ -78,6 +77,7 @@ import static com.ardikars.jxnet.Jxnet.PcapTStampTypeValToDescription;
 import static com.ardikars.jxnet.Jxnet.PcapTStampTypeValToName;
 
 import com.ardikars.common.net.Inet4Address;
+import com.ardikars.jxnet.exception.NativeException;
 import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 import com.ardikars.jxnet.util.Platforms;
 
@@ -120,7 +120,7 @@ public class JxnetTest {
     private final int immediate = 1;
     private final int optimize = 1;
     private final int bufferSize = 1500;
-    private final String filter = "icmp";
+    private final String filter = "tcp";
     private final int precision = 0;
 
     private final int maxPkt = 5;
@@ -212,10 +212,6 @@ public class JxnetTest {
         dumper = PcapDumpOpen(pcap, file.getAbsolutePath());
         if (dumper == null) {
             logger.warning("create:PcapDumpOpen() ");
-            return;
-        }
-        if ((resultCode = PcapLookupNet(source, netp, maskp, errbuf)) != OK) {
-            logger.warning("create:PcapLookupNet(): " + errbuf.toString());
             return;
         }
     }
@@ -395,10 +391,14 @@ public class JxnetTest {
             return;
         }
         System.out.println("Data Link Type (Before): " + PcapDataLink(pcap));
-        if ((resultCode = PcapSetDataLink(pcap, DataLinkType.LINUX_SLL.getValue())) != OK) {
-            logger.warning("PcapSetDataLinkPcapDataLinkPcapOpenDeadAndPcapClose:PcapSetDataLink(): " + PcapStrError(resultCode));
-            PcapClose(pcap);
-            return;
+        try {
+            if ((resultCode = PcapSetDataLink(pcap, DataLinkType.LINUX_SLL.getValue())) != OK) {
+                logger.warning("PcapSetDataLinkPcapDataLinkPcapOpenDeadAndPcapClose:PcapSetDataLink(): " + PcapStrError(resultCode));
+                PcapClose(pcap);
+                return;
+            }
+        } catch (NativeException e) {
+            logger.warning(e.getMessage());
         }
         System.out.println("Data Link Type (After): " + PcapDataLink(pcap));
         PcapClose(pcap);
@@ -482,18 +482,6 @@ public class JxnetTest {
         }
         System.out.println("Blocking          : " + PcapGetNonBlock(pcap, errbuf));
         System.out.println("Error Buffer      : " + errbuf.toString());
-    }
-
-    @Test
-    public void Test22_PcapLookupNet() {
-        Inet4Address netp = Inet4Address.valueOf(0);
-        Inet4Address maskp = Inet4Address.valueOf(0);
-        if ((resultCode = PcapLookupNet(source, netp, maskp, errbuf)) != OK) {
-            logger.warning("PcapLookupNet:PcapLookupNet(): " + errbuf.toString());
-            return;
-        }
-        System.out.println("Network Address : " + netp);
-        System.out.println("Network Mask    : " + maskp);
     }
 
     @Test
