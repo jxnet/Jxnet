@@ -171,3 +171,5 @@ task installLibrary(type: Copy, dependsOn:[assemble]) {
         }
     }
 }
+
+build.finalizedBy installLibrary
