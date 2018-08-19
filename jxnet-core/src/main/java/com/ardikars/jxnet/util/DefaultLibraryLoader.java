@@ -58,15 +58,18 @@ public class DefaultLibraryLoader implements Loader<Void> {
                 File npcapFile = new File(NPCAP_DLL);
                 if (npcapFile.exists())  {
                     System.load(NPCAP_DLL);
-                    nativeLibrary.register(WINDOWS_X64);
                 } else {
                     File winpcapFile = new File(WPCAP_DLL);
                     if (winpcapFile.exists()) {
                         System.load(WPCAP_DLL);
-                        nativeLibrary.register(WINDOWS_X86);
                     } else {
                         callback.onFailure(new UnsatisfiedLinkError("Npcap or Winpcap is not installed yet."));
                     }
+                }
+                if (Platforms.is64Bit()) {
+                    nativeLibrary.register(WINDOWS_X64);
+                } else {
+                    nativeLibrary.register(WINDOWS_X86);
                 }
                 break;
             case DARWIN:
