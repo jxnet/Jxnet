@@ -18,7 +18,7 @@ jobs:
       - checkout
       - run: 'export TERM=xterm-color'
       - run: 'sudo apt-get update && sudo apt-get install gcc libpcap-dev -y'
-      - run: 'ping -c 10000 google.com &'
+      #- run: 'ping -c 10000 google.com &'
       - run: 'sudo ./gradlew clean build -x test --info --no-daemon'
 
   deploy:
