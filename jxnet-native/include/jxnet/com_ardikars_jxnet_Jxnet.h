@@ -293,14 +293,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapStats
 
 /*
  * Class:     com_ardikars_jxnet_Jxnet
- * Method:    PcapLookupNet
- * Signature: (Ljava/lang/String;Lcom/ardikars/jxnet/Inet4Address;Lcom/ardikars/jxnet/Inet4Address;Ljava/lang/StringBuilder;)I
- */
-JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapLookupNet
-  (JNIEnv *, jclass, jstring, jobject, jobject, jobject);
-
-/*
- * Class:     com_ardikars_jxnet_Jxnet
  * Method:    PcapCompileNoPcap
  * Signature: (IILcom/ardikars/jxnet/BpfProgram;Ljava/lang/String;II)I
  */

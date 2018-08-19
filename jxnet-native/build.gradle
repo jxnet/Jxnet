@@ -166,6 +166,7 @@ task installLibrary(type: Copy, dependsOn:[assemble]) {
         file("${buildDir}/libs/jxnet/shared/x64/jxnet-windows.dll").renameTo(file("${rootDir}/jxnet-core/src/main/resources/native/jxnet-windows-x64.dll"))
     } else {
         copy {
+            exclude "${rootDir}/jxnet-core/src/main/resources/native/*"
             from "${buildDir}/libs/jxnet/shared"
             into "${rootDir}/jxnet-core/src/main/resources/native"
         }

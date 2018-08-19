@@ -986,49 +986,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapStats
 
 /*
  * Class:     com_ardikars_jxnet_Jxnet
- * Method:    PcapLookupNet
- * Signature: (Ljava/lang/String;Lcom/ardikars/jxnet/Inet4Address;Lcom/ardikars/jxnet/Inet4Address;Ljava/lang/StringBuilder;)I
- */
-JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapLookupNet
-		(JNIEnv *env, jclass jclass, jstring jdevice, jobject jnetp, jobject jmaskp, jobject jerrbuf) {
-
-	if (CheckNotNull(env, jdevice, NULL) == NULL) return -1;
-	if (CheckNotNull(env, jnetp, NULL) == NULL) return -1;
-	if (CheckNotNull(env, jmaskp, NULL) == NULL) return -1;
-	if (CheckNotNull(env, jerrbuf, NULL) == NULL) return -1;
-
-	char errbuf[PCAP_ERRBUF_SIZE];
-	errbuf[0] = '\0';
-
-	bpf_u_int32 netp; //= (bpf_u_int32)(*env)->CallIntMethod(env, jnetp, Inet4AddressToIntMID);
-	bpf_u_int32 maskp; //= (bpf_u_int32)(*env)->CallIntMethod(env, jmaskp, Inet4AddressToIntMID);
-
-	const char *device = (*env)->GetStringUTFChars(env, jdevice, 0);
-
-	int r = pcap_lookupnet(device, &netp, &maskp, errbuf);
-
-	(*env)->ReleaseStringUTFChars(env, jdevice, device);
-
-	// Including SetStringBuilderIDs().
-	SetStringBuilder(env, jerrbuf, errbuf);
-
-	SetInet4AddressIDs(env);
-
-	jbyteArray netp_jarr = (jbyteArray) (*env)->GetObjectField(env, jnetp, Inet4AddressAddressFID);
-	(*env)->SetByteArrayRegion(env, netp_jarr, 0, 4, (void *) &netp);
-	//jbyte *netp_arr = (*env)->GetByteArrayElements(env, netp_jarr, 0);
-	//(*env)->ReleaseByteArrayElements(env, netp_jarr, netp_arr, 0);
-
-	jbyteArray maskp_jarr = (jbyteArray) (*env)->GetObjectField(env, jmaskp, Inet4AddressAddressFID);
-	(*env)->SetByteArrayRegion(env, maskp_jarr, 0, 4, (void *) &maskp);
-	//jbyte *maskp_arr = (*env)->GetByteArrayElements(env, maskp_jarr, 0);
-	//(*env)->ReleaseByteArrayElements(env, maskp_jarr, maskp_arr, 0);
-
-	return r;
-}
-
-/*
- * Class:     com_ardikars_jxnet_Jxnet
  * Method:    PcapCompileNoPcap
  * Signature: (IILcom/ardikars/jxnet/BpfProgram;Ljava/lang/String;II)I
  */

@@ -19,9 +19,9 @@ dependencies {
 }
 
 task generateJNIHeaders(type: Exec, dependsOn: assemble) {
-	def classpath = sourceSets.main.output.classesDirs
+	def classpath = "${rootDir}/jxnet-core/build/classes/java/main"
+	println "${classpath}"
 	commandLine 'javah', '-jni', '-d', "${rootDir}/jxnet-native/include/jxnet", '-classpath', classpath,
 			'com.ardikars.jxnet.Jxnet',
-			'com.ardikars.jxnet.BpfProgram',
-			'com.ardikars.jxnet.MacAddress'
+			'com.ardikars.jxnet.BpfProgram'
 }

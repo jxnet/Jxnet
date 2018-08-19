@@ -17,7 +17,6 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.common.net.Inet4Address;
 import com.ardikars.common.util.Validate;
 import com.ardikars.jxnet.exception.NativeException;
 
@@ -139,7 +138,7 @@ public final class BpfProgram implements PointerHandler {
 
 		private Pcap pcap;
 		private String filter;
-		private Inet4Address netmask = Pcap.PCAP_NETMASK_UNKNOWN;
+		private int netmask = 0xffffff00;
 		private BpfCompileMode bpfCompileMode = BpfCompileMode.OPTIMIZE;
 
 		/**
@@ -167,7 +166,7 @@ public final class BpfProgram implements PointerHandler {
 		 * @param netmask netmask.
 		 * @return returns BpfProgram Builder.
 		 */
-		public Builder netmask(final Inet4Address netmask) {
+		public Builder netmask(final int netmask) {
 			this.netmask = netmask;
 			return this;
 		}
@@ -192,7 +191,7 @@ public final class BpfProgram implements PointerHandler {
 			Validate.notIllegalArgument(filter != null && !filter.equals(""));
 
 			BpfProgram bpfProgram = new BpfProgram();
-			if (Jxnet.PcapCompile(pcap, bpfProgram, filter, bpfCompileMode.getValue(), netmask.toInt()) != Jxnet.OK) {
+			if (Jxnet.PcapCompile(pcap, bpfProgram, filter, bpfCompileMode.getValue(), netmask) != Jxnet.OK) {
 				throw new NativeException();
 			}
 			if (Jxnet.PcapSetFilter(pcap, bpfProgram) != Jxnet.OK) {
