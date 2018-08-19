@@ -18,11 +18,11 @@
 package com.ardikars.jxnet;
 
 import com.ardikars.common.net.Inet4Address;
+import com.ardikars.common.util.Loader;
 import com.ardikars.jxnet.exception.BpfProgramCloseException;
 import com.ardikars.jxnet.exception.PcapCloseException;
 import com.ardikars.jxnet.exception.PcapDumperCloseException;
 import com.ardikars.jxnet.exception.PlatformNotSupportedException;
-import com.ardikars.jxnet.util.Library;
 
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -33,7 +33,7 @@ public interface Context {
 
 	String getApplicationVersion();
 
-	void addLibrary(Library.Loader libraryLoader);
+	void addLibrary(Loader libraryLoader);
 
 	/**
 	 * Native function mapping

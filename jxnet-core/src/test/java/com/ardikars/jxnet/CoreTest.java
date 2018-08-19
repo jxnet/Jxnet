@@ -44,9 +44,9 @@ import static com.ardikars.jxnet.Jxnet.PcapSetTimeout;
 import static com.ardikars.jxnet.Jxnet.PcapStrError;
 
 import com.ardikars.common.net.Inet4Address;
+import com.ardikars.common.util.Platforms;
 import com.ardikars.jxnet.exception.DeviceNotFoundException;
 import com.ardikars.jxnet.exception.NativeException;
-import com.ardikars.jxnet.util.Platforms;
 
 import java.io.File;
 import java.nio.ByteBuffer;

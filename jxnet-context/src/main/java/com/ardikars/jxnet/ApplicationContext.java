@@ -18,12 +18,12 @@
 package com.ardikars.jxnet;
 
 import com.ardikars.common.net.Inet4Address;
+import com.ardikars.common.util.Loader;
 import com.ardikars.common.util.Validate;
 import com.ardikars.jxnet.exception.BpfProgramCloseException;
 import com.ardikars.jxnet.exception.PcapCloseException;
 import com.ardikars.jxnet.exception.PcapDumperCloseException;
 import com.ardikars.jxnet.exception.PlatformNotSupportedException;
-import com.ardikars.jxnet.util.Library;
 
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -52,7 +52,7 @@ public class ApplicationContext implements Context {
     }
 
 	@Override
-    public void addLibrary(final Library.Loader libraryLoader) {
+    public void addLibrary(final Loader libraryLoader) {
     	Validate.nullPointer(libraryLoader);
         Application.getInstance().addLibrary(libraryLoader);
     }

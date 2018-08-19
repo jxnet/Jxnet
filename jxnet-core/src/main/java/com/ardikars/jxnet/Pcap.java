@@ -18,10 +18,10 @@
 package com.ardikars.jxnet;
 
 import com.ardikars.common.net.Inet4Address;
+import com.ardikars.common.util.Platforms;
 import com.ardikars.common.util.Validate;
 import com.ardikars.jxnet.exception.NativeException;
 import com.ardikars.jxnet.exception.PlatformNotSupportedException;
-import com.ardikars.jxnet.util.Platforms;
 
 /**
  * This class storing pointer address of pcap handle and used for dereferencing the pointer.

@@ -19,7 +19,6 @@ package com.ardikars.jxnet;
 
 import com.ardikars.common.net.Inet4Address;
 import com.ardikars.common.net.Inet6Address;
-import com.ardikars.jxnet.util.Strings;
 
 import java.util.Arrays;
 
@@ -163,7 +162,7 @@ public final class SockAddr implements Cloneable {
             case AF_INET6:
                 return Inet6Address.valueOf(this.getData()).toString();
             default:
-                return Strings.EMPTY;
+                return "";
         }
     }
 

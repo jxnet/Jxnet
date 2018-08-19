@@ -17,7 +17,8 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.jxnet.util.Library;
+import com.ardikars.common.util.Callback;
+import com.ardikars.common.util.Loader;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -41,7 +42,7 @@ public class Application {
     private String applicationVersion;
     private Context context;
 
-    private final Set<Library.Loader> libraryLoaders = Collections.checkedSet(new HashSet<Library.Loader>(), Library.Loader.class);
+    private final Set<Loader> libraryLoaders = Collections.checkedSet(new HashSet<Loader>(), Loader.class);
 
     protected boolean isLoaded() {
         return this.loaded;
@@ -72,7 +73,7 @@ public class Application {
      * Add library will be used (static/dynamic).
      * @param libraryLoader library loader.
      */
-    protected void addLibrary(final Library.Loader libraryLoader) {
+    protected void addLibrary(final Loader libraryLoader) {
         this.libraryLoaders.add(libraryLoader);
     }
 
@@ -112,14 +113,21 @@ public class Application {
             }
         } else {
             if (!getInstance().loaded && getInstance().libraryLoaders != null && !getInstance().libraryLoaders.isEmpty()) {
-                for (final Library.Loader loader : getInstance().libraryLoaders) {
-                    try {
-                        loader.load();
-                        getInstance().loaded = true;
+                for (final Loader loader : getInstance().libraryLoaders) {
+                    if (getInstance().loaded) {
                         break;
-                    } catch (UnsatisfiedLinkError e) {
-                        continue;
                     }
+                    loader.load(new Callback() {
+                        @Override
+                        public void onSuccess(Object value) {
+                            getInstance().loaded = true;
+                        }
+
+                        @Override
+                        public void onFailure(Throwable throwable) {
+                            //
+                        }
+                    });
                 }
             }
         }
