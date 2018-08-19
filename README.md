@@ -38,8 +38,8 @@ Getting Started
 >>>
 >>> ```
 >>> dependencies { 
->>>     compile 'com.ardikars.jxnet:jxnet-core:1.1.5.RC8'
->>>     compile 'com.ardikars.jxnet:jxnet-context:1.1.5.RC8'
+>>>     compile 'com.ardikars.jxnet:jxnet-core:1.1.4'
+>>>     compile 'com.ardikars.jxnet:jxnet-context:1.1.4'
 >>> }
 >>>```
   - ##### Maven project
@@ -50,12 +50,12 @@ Getting Started
 >>>     <dependency>
 >>>         <groupId>com.ardikars.jxnet</groupId>
 >>>         <artifactId>jxnet-core</artifactId>
->>>         <version>1.1.5.RC8</version>
+>>>         <version>1.1.4</version>
 >>>     </dependency>
 >>>     <dependency>
 >>>         <groupId>com.ardikars.jxnet</groupId>
 >>>         <artifactId>jxnet-context</artifactId>
->>>         <version>1.1.5.RC8</version>
+>>>         <version>1.1.4</version>
 >>>     </dependency>
 >>> </dependencies>
 >>>```
