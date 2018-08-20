@@ -73,12 +73,21 @@ Build Jxnet from Source
   - ##### Mac OS
     - Install Gcc/Clang/XCode
 
-### Build Process
+### Build
    - ```./gradlew clean build```
    
 ### Skip Unit Test
    - ```./gradlew clean build -x test```
 
+
+
+### Build Only Native Shared Library
+  - CMake
+    - Install Gcc & CMake & Make & Libpcap-Dev
+    - ```mkdir jxnet-native/build && cd jxnet-native/build && cmake ../ && make```
+  - Autotools
+    - Install Autoconf & Automake & Make & Libtool & Libpcap-Dev
+    - ```cd jxnet-native/ && ./bootstrap.sh && ./configure && make```
 
 License
 =======
