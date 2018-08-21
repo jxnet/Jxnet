@@ -56,6 +56,12 @@ public class ApplicationContext implements Context {
         Application.getInstance().addLibrary(libraryLoader);
     }
 
+	/**
+	 * Create application context.
+	 * @param pcap pcap.
+	 * @param bpfProgram bpf program.
+	 * @return application context.
+	 */
 	public static ApplicationContext newApplicationContext(Pcap pcap, BpfProgram bpfProgram) {
 		Validate.nullPointer(pcap);
 		Validate.nullPointer(bpfProgram);

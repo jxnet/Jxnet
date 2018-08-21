@@ -143,7 +143,12 @@ public final class Pcap implements PointerHandler {
 		private int timeout = 2000;
 		private boolean enableRfMon;
 		private boolean enableNonBlock;
-		private StringBuilder errbuf; // can grow considerably, and so may become a source of memory leaks if held within objects with long lifetimes.
+
+		/**
+		 * can grow considerably, and so may become a source of memory leaks
+		 * if held within objects with long lifetimes.
+		 */
+		private StringBuilder errbuf;
 
 		private DataLinkType dataLinkType;
 

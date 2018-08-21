@@ -17,104 +17,62 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.common.util.NamedNumber;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * List of linktype available at @link https://www.tcpdump.org/linktypes.html.
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
-public enum DataLinkType {
+public class DataLinkType extends NamedNumber<Short, DataLinkType> {
 
     /**
      * Ethernet (10Mb, 100Mb, 1000Mb, and up): 1
      */
-    EN10MB((short) 1, "Ethernet"),
+    public static final DataLinkType EN10MB = new DataLinkType((short) 1, "Ethernet");
 
     /**
      * DOCSIS MAC frames: 143
      */
-    DOCSIS((short) 143, "DOCSIS"),
-
-    /**
-     * FDDI: 10
-     */
-    FDDI((short) 10, "FDDI"),
-
-    /**
-     * 802.5 Token Ring: 6
-     */
-    IEEE802((short) 6, "802.5 Token Ring"),
-
-    /**
-     * IEEE 802.11 wireless: 105
-     */
-    IEEE802_11((short) 105, "IEEE 802.11 Wireless"),
+    public static final DataLinkType DOCSIS = new DataLinkType((short) 143, "DOCSIS");
 
     /**
      * Linux cooked-mode capture (SLL): 113
      */
-    LINUX_SLL((short) 113, "LINUX_SSL"),
+    public static final DataLinkType LINUX_SLL = new DataLinkType((short) 113, "Linux SLL");
 
-    /**
-     * Point-to-point Protocol: 9
-     */
-    PPP((short) 9, "PPP"),
+    private static final Map<DataLinkType, Short> registry =
+            new HashMap<>();
 
-    /**
-     * PPP over serial with HDLC encapsulation: 50
-     */
-    PPP_SERIAL((short) 50, "PPP_SERIAL"),
-
-    /**
-     * Null (BSD loopback encapsulation): 0
-     */
-    NULL((short) 0, "NULL"),
-
-    /**
-     *
-     */
-    IEEE802_11_RADIO((short) 127, "IEEE 802.11 Radiotap: 127"),
-
-    /**
-     * Unknown
-     */
-    UNKNOWN((short) -1, "Unknown");
-
-    private short value;
-    private String description;
-
-    DataLinkType(final Short value, final String description) {
-        this.value = value;
-        this.description = description;
+    public DataLinkType(Short value, String name) {
+        super(value, name);
     }
 
     /**
-     * Get datalink value.
-     * @return returns datalink value.
-     */
-    public short getValue() {
-        return this.value;
-    }
-
-    /**
-     * Get dalink description
-     * @return returns datalink description.
-     */
-    public String getDescription() {
-        return this.description;
-    }
-
-    /**
-     * Get datalink from value.
-     * @param dataLinkType datalink value.
+     * Get datalink type from value.
+     * @param value value.
      * @return returns datalink type.
      */
-    public static DataLinkType valueOf(final short dataLinkType) {
-        for (final DataLinkType linkType : values()) {
-            if (linkType.getValue() == dataLinkType) {
-                return linkType;
+    public static DataLinkType valueOf(short value) {
+        for (Map.Entry<DataLinkType, Short> entry : registry.entrySet()) {
+            if (entry.getValue() == value) {
+                return entry.getKey();
             }
         }
-        return null;
+        return new DataLinkType((short) -1, "Unknown");
+    }
+
+    public static DataLinkType register(DataLinkType dataLinkType) {
+        registry.put(dataLinkType, dataLinkType.getValue());
+        return dataLinkType;
+    }
+
+    static {
+        registry.put(EN10MB, EN10MB.getValue());
+        registry.put(DOCSIS, DOCSIS.getValue());
     }
 
 }
