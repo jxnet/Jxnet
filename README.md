@@ -9,7 +9,7 @@ Jxnet wraps a native packet capture library (libpcap/npcap) via JNI (Java Native
 [![CircleCI](https://circleci.com/gh/jxnet/Jxnet/tree/master.svg?style=svg)](https://circleci.com/gh/jxnet/Jxnet/tree/master)
 [![Build status](https://ci.appveyor.com/api/projects/status/ev4t6t1ssacwj18j?svg=true)](https://ci.appveyor.com/project/jxnet/jxnet)
 
-[ ![Download](https://api.bintray.com/packages/ardikars/maven/com.ardikars.jxnet/images/download.svg?version=1.2.0.Final) ](https://bintray.com/ardikars/maven/com.ardikars.jxnet/1.2.0.Final/link)
+[ ![Download](https://api.bintray.com/packages/ardikars/maven/com.ardikars.jxnet/images/download.svg?version=1.3.0.Final) ](https://bintray.com/ardikars/maven/com.ardikars.jxnet/1.3.0.Final/link)
 
 
 Getting Started
@@ -39,8 +39,8 @@ Getting Started
 >>>
 >>> ```
 >>> dependencies { 
->>>     compile 'com.ardikars.jxnet:jxnet-core:1.2.0.Final'
->>>     compile 'com.ardikars.jxnet:jxnet-context:1.2.0.Final'
+>>>     compile 'com.ardikars.jxnet:jxnet-core:1.3.0.Final'
+>>>     compile 'com.ardikars.jxnet:jxnet-context:1.3.0.Final'
 >>> }
 >>>```
   - ##### Maven project
@@ -51,16 +51,57 @@ Getting Started
 >>>     <dependency>
 >>>         <groupId>com.ardikars.jxnet</groupId>
 >>>         <artifactId>jxnet-core</artifactId>
->>>         <version>1.2.0.Final</version>
+>>>         <version>1.3.0.Final</version>
 >>>     </dependency>
 >>>     <dependency>
 >>>         <groupId>com.ardikars.jxnet</groupId>
 >>>         <artifactId>jxnet-context</artifactId>
->>>         <version>1.2.0.Final</version>
+>>>         <version>1.3.0.Final</version>
 >>>     </dependency>
 >>> </dependencies>
 >>>```
+  - ##### Example Application
+  
+```java
+public class ExampleApplication {
 
+    public static class Initializer implements ApplicationInitializer {
+
+        public void initialize(Context context) {
+            context.addLibrary(new DefaultLibraryLoader());
+        }
+
+    }
+
+    public static void main(String[] args) throws IOException {
+        int maxPacket = 10;
+        StringBuilder errbuf = new StringBuilder();
+        Application.run("Example", "1.0.0", Initializer.class, new ApplicationContext());
+        String device = Jxnet.PcapLookupDev(errbuf);
+        Pcap pcap = Pcap.live(
+                new Pcap.Builder()
+                        .source(device)
+                        .immediateMode(ImmediateMode.IMMEDIATE)
+                        .errbuf(errbuf)
+        );
+        BpfProgram bpfProgram = BpfProgram.bpf(
+                new BpfProgram.Builder()
+                        .pcap(pcap)
+                        .bpfCompileMode(BpfProgram.BpfCompileMode.OPTIMIZE)
+                        .filter("tcp")
+                        .netmask(Inet4Address.valueOf("255.255.255.0").toInt())
+        );
+        Context context = ApplicationContext.newApplicationContext(pcap, bpfProgram);
+        context.pcapLoop(maxPacket, (user, h, bytes) -> {
+            byte[] buffer = new byte[bytes.capacity()];
+            bytes.get(buffer, 0, buffer.length);
+            System.out.println(Hexs.toPrettyHexDump(buffer));
+        }, null);
+        context.pcapClose();
+    }
+
+}
+```
 
 Build Jxnet from Source
 =============================
@@ -77,7 +118,7 @@ Build Jxnet from Source
 ### Build
    - ```./gradlew clean build```
    
-### Skip Unit Test
+### Skip Test
    - ```./gradlew clean build -x test```
 
 
@@ -89,6 +130,12 @@ Build Jxnet from Source
   - Autotools
     - Install Autoconf & Automake & Make & Libtool & Libpcap-Dev
     - ```cd jxnet-native/ && ./bootstrap.sh && ./configure && make```
+
+
+Jxnet dependencies
+==================
+  - com.ardikars.common:common-util
+  - com.ardikars.common:common-net
 
 License
 =======
