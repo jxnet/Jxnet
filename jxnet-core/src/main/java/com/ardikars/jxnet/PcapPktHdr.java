@@ -35,10 +35,7 @@ public final class PcapPktHdr implements Cloneable {
 	 * Create PcapPktHdr instance.
 	 */
 	public PcapPktHdr() {
-		this.caplen = 0;
-		this.len = 0;
-		this.tv_sec = 0;
-		this.tv_usec = 0;
+		//
 	}
 
 	/**
@@ -132,20 +129,19 @@ public final class PcapPktHdr implements Cloneable {
 	}
 
 	@Override
-	protected Object clone() throws CloneNotSupportedException {
-		PcapPktHdr pcapPktHdr = (PcapPktHdr) super.clone();
-		return pcapPktHdr;
+	public PcapPktHdr clone() throws CloneNotSupportedException {
+		return  (PcapPktHdr) super.clone();
 	}
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder(94);
-		sb.append("PcapPktHdr{caplen=").append(this.caplen);
-		sb.append(", len=").append(this.len);
-		sb.append(", tv_sec=").append(this.tv_sec);
-		sb.append(", tv_usec=").append(this.tv_usec);
-		sb.append('}');
-		return sb.toString();
+		return new StringBuilder(94)
+				.append("PcapPktHdr{caplen=").append(this.caplen)
+				.append(", len=").append(this.len)
+				.append(", tv_sec=").append(this.tv_sec)
+				.append(", tv_usec=").append(this.tv_usec)
+				.append('}')
+				.toString();
 	}
 
 }

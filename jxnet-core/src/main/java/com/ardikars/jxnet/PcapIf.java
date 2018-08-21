@@ -84,8 +84,7 @@ public final class PcapIf implements Cloneable {
 	 * @return returns interface addresses.
 	 */
 	public List<PcapAddr> getAddresses() {
-		List<PcapAddr> addrs = Collections.unmodifiableList(this.addresses);
-		return addrs;
+		return Collections.unmodifiableList(this.addresses);
 	}
 
 	/**
@@ -145,20 +144,19 @@ public final class PcapIf implements Cloneable {
 	}
 
 	@Override
-	protected Object clone() throws CloneNotSupportedException {
-		PcapIf pcapIf = (PcapIf) super.clone();
-		return pcapIf;
+	public PcapIf clone() throws CloneNotSupportedException {
+		return  (PcapIf) super.clone();
 	}
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder(500);
-		sb.append("PcapIf{name='").append(this.name);
-		sb.append(", description='").append(this.description);
-		sb.append(", addresses=").append(this.addresses);
-		sb.append(", flags=").append(this.flags);
-		sb.append('}');
-		return sb.toString();
+		return new StringBuilder(500)
+				.append("PcapIf{name='").append(this.name)
+				.append(", description='").append(this.description)
+				.append(", addresses=").append(this.addresses)
+				.append(", flags=").append(this.flags)
+				.append('}')
+				.toString();
 	}
 
 }

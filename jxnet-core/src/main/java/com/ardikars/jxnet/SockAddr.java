@@ -108,15 +108,10 @@ public final class SockAddr implements Cloneable {
         }
         if (data.length == 0) {
             Family family = getSaFamily();
-            switch (family) {
-                case AF_INET:
-                    this.data = new byte[Inet4Address.IPV4_ADDRESS_LENGTH];
-                    break;
-                case AF_INET6:
-                    this.data = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
-                    break;
-                default:
-                    this.data = new byte[Inet4Address.IPV4_ADDRESS_LENGTH];
+            if (family == Family.AF_INET6) {
+                this.data = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
+            } else {
+                this.data = new byte[Inet4Address.IPV4_ADDRESS_LENGTH];
             }
         }
         System.arraycopy(this.data, 0, data, 0, data.length);
@@ -148,9 +143,8 @@ public final class SockAddr implements Cloneable {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
-        SockAddr sockAddr = (SockAddr) super.clone();
-        return sockAddr;
+    public SockAddr clone() throws CloneNotSupportedException {
+        return (SockAddr) super.clone();
     }
 
     @Override

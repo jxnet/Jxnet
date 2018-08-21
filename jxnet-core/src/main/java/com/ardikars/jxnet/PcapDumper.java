@@ -45,10 +45,7 @@ public final class PcapDumper implements Cloneable {
 	 * @return returns true if PcapDumper is closed, false otherwise.
 	 */
 	public boolean isClosed() {
-		if (this.getAddress() == 0) {
-			return true;
-		}
-		return false;
+		return this.getAddress() == 0;
 	}
 
 	@Override
@@ -71,17 +68,16 @@ public final class PcapDumper implements Cloneable {
 	}
 
 	@Override
-	protected Object clone() throws CloneNotSupportedException {
-		PcapDumper pcapDumper = (PcapDumper) super.clone();
-		return pcapDumper;
+	public PcapDumper clone() throws CloneNotSupportedException {
+		return (PcapDumper) super.clone();
 	}
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder("PcapDumper{");
-		sb.append("address=").append(this.getAddress());
-		sb.append('}');
-		return sb.toString();
+		return new StringBuilder("PcapDumper{")
+				.append("address=").append(this.getAddress())
+				.append('}')
+				.toString();
 	}
 
 }

@@ -27,7 +27,6 @@ import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 
 import java.nio.ByteBuffer;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * @author Ardika Rommy Sanjaya
@@ -35,11 +34,11 @@ import java.util.logging.Logger;
  */
 public class ApplicationContext implements Context {
 
-	private final Logger logger = Logger.getLogger(ApplicationContext.class.getName());
+	private Pcap pcap;
 
-	public ApplicationContext() {
+	private BpfProgram bpfProgram;
 
-	}
+	private PcapDumper pcapDumper;
 
     @Override
     public String getApplicationName() {
@@ -57,37 +56,31 @@ public class ApplicationContext implements Context {
         Application.getInstance().addLibrary(libraryLoader);
     }
 
-    private Pcap pcap;
-
-	private BpfProgram bpfProgram;
-
-	private PcapDumper pcapDumper;
-
-	/*public static ApplicationContext newApplicationContext(Pcap pcap, BpfProgram bpfProgram) {
+	public static ApplicationContext newApplicationContext(Pcap pcap, BpfProgram bpfProgram) {
 		Validate.nullPointer(pcap);
 		Validate.nullPointer(bpfProgram);
 		ApplicationContext applicationContext = new ApplicationContext();
 		applicationContext.pcap = pcap;
 		applicationContext.bpfProgram = bpfProgram;
 		return applicationContext;
-	}*/
+	}
 
 	@Override
 	public <T> PcapCode pcapLoop(int cnt, PcapHandler<T> callback, T user) throws PcapCloseException {
 		int result = Jxnet.PcapLoop(pcap, cnt, callback, user);
-		switch (result) {
-			case 0: return PcapCode.PCAP_OK;
-			default: return PcapCode.PCAP_ERROR;
+		if (result == 0) {
+			return PcapCode.PCAP_OK;
 		}
+		return PcapCode.PCAP_ERROR;
 	}
 
 	@Override
 	public <T> PcapCode pcapDispatch(int cnt, PcapHandler<T> callback, T user) throws PcapCloseException {
 		int result = Jxnet.PcapDispatch(pcap, cnt, callback, user);
-		switch (result) {
-			case 0: return PcapCode.PCAP_OK;
-			default: return PcapCode.PCAP_ERROR;
+		if (result == 0) {
+			return PcapCode.PCAP_OK;
 		}
+		return PcapCode.PCAP_ERROR;
 	}
 
 	@Override
@@ -110,28 +103,28 @@ public class ApplicationContext implements Context {
 	@Override
 	public PcapCode pcapCompile(String str, int optimize, int netmask) throws PcapCloseException {
 		int result = Jxnet.PcapCompile(pcap, bpfProgram, str, optimize, netmask);
-		switch (result) {
-			case 0: return PcapCode.PCAP_OK;
-			default: return PcapCode.PCAP_ERROR;
+		if (result == 0) {
+			return PcapCode.PCAP_OK;
 		}
+		return PcapCode.PCAP_ERROR;
 	}
 
 	@Override
 	public PcapCode pcapSetFilter() throws PcapCloseException {
 		int result = Jxnet.PcapSetFilter(pcap, bpfProgram);
-		switch (result) {
-			case 0: return PcapCode.PCAP_OK;
-			default: return PcapCode.PCAP_ERROR;
+		if (result == 0) {
+			return PcapCode.PCAP_OK;
 		}
+		return PcapCode.PCAP_ERROR;
 	}
 
 	@Override
 	public PcapCode pcapSendPacket(ByteBuffer buf, int size) throws PcapCloseException {
 		int result = Jxnet.PcapSendPacket(pcap, buf, size);
-		switch (result) {
-			case 0: return PcapCode.PCAP_OK;
-			default: return PcapCode.PCAP_ERROR;
+		if (result == 0) {
+			return PcapCode.PCAP_OK;
 		}
+		return PcapCode.PCAP_ERROR;
 	}
 
 	@Override
@@ -142,10 +135,10 @@ public class ApplicationContext implements Context {
 	@Override
 	public PcapCode pcapNextEx(PcapPktHdr pktHeader, ByteBuffer pktData) throws PcapCloseException {
 		int result = Jxnet.PcapNextEx(pcap, pktHeader, pktData);
-		switch (result) {
-			case 0: return PcapCode.PCAP_OK;
-			default: return PcapCode.PCAP_ERROR;
+		if (result == 0) {
+			return PcapCode.PCAP_OK;
 		}
+		return PcapCode.PCAP_ERROR;
 	}
 
 	@Override
@@ -159,10 +152,10 @@ public class ApplicationContext implements Context {
 			throw new PcapDumperCloseException();
 		}
 		int result = Jxnet.PcapDumpFlush(pcapDumper);
-		switch (result) {
-			case 0: return PcapCode.PCAP_OK;
-			default: return PcapCode.PCAP_ERROR;
+		if (result == 0) {
+			return PcapCode.PCAP_OK;
 		}
+		return PcapCode.PCAP_ERROR;
 	}
 
 	@Override
@@ -181,10 +174,10 @@ public class ApplicationContext implements Context {
 	public PcapCode pcapSetDataLink(DataLinkType dataLinkType) throws PcapCloseException {
 		Validate.nullPointer(dataLinkType);
 		int result = Jxnet.PcapSetDataLink(pcap, dataLinkType.getValue());
-		switch (result) {
-			case 0: return PcapCode.PCAP_OK;
-			default: return PcapCode.PCAP_ERROR;
+		if (result == 0) {
+			return PcapCode.PCAP_OK;
 		}
+		return PcapCode.PCAP_ERROR;
 	}
 
 	@Override
@@ -219,11 +212,11 @@ public class ApplicationContext implements Context {
 
 	@Override
 	public PcapCode pcapSetNonBlock(boolean nonblock, StringBuilder errbuf) throws PcapCloseException {
-		int result = Jxnet.PcapSetNonBlock(pcap, (nonblock) ? 1 : 0, errbuf);
-		switch (result) {
-			case 0: return PcapCode.PCAP_OK;
-			default: return PcapCode.PCAP_ERROR;
+		int result = Jxnet.PcapSetNonBlock(pcap, nonblock ? 1 : 0, errbuf);
+		if (result == 0) {
+			return PcapCode.PCAP_OK;
 		}
+		return PcapCode.PCAP_ERROR;
 	}
 
 	@Override
@@ -247,20 +240,20 @@ public class ApplicationContext implements Context {
 	@Override
 	public PcapCode pcapStats(PcapStat pcapStat) throws PcapCloseException {
 		int result = Jxnet.PcapStats(pcap, pcapStat);
-		switch (result) {
-			case 0: return PcapCode.PCAP_OK;
-			default: return PcapCode.PCAP_ERROR;
+		if (result == 0) {
+			return PcapCode.PCAP_OK;
 		}
+		return PcapCode.PCAP_ERROR;
 	}
 
 	@Override
 	public PcapCode pcapCompileNoPcap(int snaplen, DataLinkType dataLinkType, String filter, boolean optimize, Inet4Address mask)
 			throws BpfProgramCloseException {
 		int result = Jxnet.PcapCompileNoPcap(snaplen, dataLinkType.getValue(), bpfProgram, filter, optimize ? 1 : 0, mask.toInt());
-		switch (result) {
-			case 0: return PcapCode.PCAP_OK;
-			default: return PcapCode.PCAP_ERROR;
+		if (result == 0) {
+			return PcapCode.PCAP_OK;
 		}
+		return PcapCode.PCAP_ERROR;
 	}
 
 	@Override
@@ -285,10 +278,10 @@ public class ApplicationContext implements Context {
 	public PcapCode pcapSetDirection(PcapDirection direction) throws PcapCloseException, PlatformNotSupportedException {
 		Validate.nullPointer(direction);
 		int result = Jxnet.PcapSetDirection(pcap, direction);
-		switch (result) {
-			case 0: return PcapCode.PCAP_OK;
-			default: return PcapCode.PCAP_ERROR;
+		if (result == 0) {
+			return PcapCode.PCAP_OK;
 		}
+		return PcapCode.PCAP_ERROR;
 	}
 
 	@Override
@@ -299,37 +292,37 @@ public class ApplicationContext implements Context {
 	@Override
 	public PcapCode pcapListDataLinks(List<Integer> dtlBuffer) throws PcapCloseException, PlatformNotSupportedException {
 		int result = Jxnet.PcapListDataLinks(pcap, dtlBuffer);
-		switch (result) {
-			case 0: return PcapCode.PCAP_OK;
-			default: return PcapCode.PCAP_ERROR;
+		if (result == 0) {
+			return PcapCode.PCAP_OK;
 		}
+		return PcapCode.PCAP_ERROR;
 	}
 
 	@Override
 	public PcapCode pcapListTStampTypes(List<Integer> tstampTypesp) throws PcapCloseException, PlatformNotSupportedException {
 		int result = Jxnet.PcapListTStampTypes(pcap, tstampTypesp);
-		switch (result) {
-			case 0: return PcapCode.PCAP_OK;
-			default: return PcapCode.PCAP_ERROR;
+		if (result == 0) {
+			return PcapCode.PCAP_OK;
 		}
+		return PcapCode.PCAP_ERROR;
 	}
 
 	@Override
 	public PcapCode pcapOfflineFilter(BpfProgram fp, PcapPktHdr h, ByteBuffer pkt) {
 		int result = Jxnet.PcapOfflineFilter(bpfProgram, h, pkt);
-		switch (result) {
-			case 0: return PcapCode.PCAP_OK;
-			default: return PcapCode.PCAP_ERROR;
+		if (result == 0) {
+			return PcapCode.PCAP_OK;
 		}
+		return PcapCode.PCAP_ERROR;
 	}
 
 	@Override
 	public PcapCode pcapInject(ByteBuffer buf, int size) throws PcapCloseException, PlatformNotSupportedException {
 		int result = Jxnet.PcapInject(pcap, buf, size);
-		switch (result) {
-			case 0: return PcapCode.PCAP_OK;
-			default: return PcapCode.PCAP_ERROR;
+		if (result == 0) {
+			return PcapCode.PCAP_OK;
 		}
+		return PcapCode.PCAP_ERROR;
 	}
 
 }

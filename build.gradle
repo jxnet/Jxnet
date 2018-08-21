@@ -81,6 +81,7 @@ subprojects {
 
 		checkstyle {
 			ignoreFailures = false
+			checkstyleTest.enabled = false
 
 			configFile = rootProject.file('gradle/resources/checkstyle/checkstyle.xml')
 			configProperties = [

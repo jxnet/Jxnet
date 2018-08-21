@@ -24,11 +24,8 @@ import com.ardikars.common.util.Platforms;
 import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 
 import java.io.File;
-import java.util.logging.Logger;
 
 public class DefaultLibraryLoader implements Loader<Void> {
-
-    private final Logger logger = Logger.getLogger(DefaultLibraryLoader.class.getName());
 
     public static final String NPCAP_DLL = "C:\\Windows\\System32\\Npcap\\wpcap.dll";
     public static final String WPCAP_DLL = "C:\\Windows\\System32\\wpcap.dll";
@@ -39,7 +36,7 @@ public class DefaultLibraryLoader implements Loader<Void> {
     public static final String WINDOWS_X86 = "/native/jxnet-windows-x86.dll";
     public static final String DARWIN_X64 = "/native/libjxnet-darwin-x64.dylib";
 
-    private InternalNativeLibrary nativeLibrary = new InternalNativeLibrary();
+    private final InternalNativeLibrary nativeLibrary = new InternalNativeLibrary();
 
     /**
      * Perform load native library.

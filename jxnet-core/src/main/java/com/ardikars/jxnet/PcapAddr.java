@@ -134,20 +134,19 @@ public final class PcapAddr implements Cloneable {
 	}
 
 	@Override
-	protected Object clone() throws CloneNotSupportedException {
-		PcapAddr pcapAddr = (PcapAddr) super.clone();
-		return pcapAddr;
+	public PcapAddr clone() throws CloneNotSupportedException {
+		return  (PcapAddr) super.clone();
 	}
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder(63);
-		sb.append("PcapAddr{addr=").append(this.addr);
-		sb.append(", netmask=").append(this.netmask);
-		sb.append(", broadaddr=").append(this.broadaddr);
-		sb.append(", dstaddr=").append(this.dstaddr);
-		sb.append('}');
-		return sb.toString();
+		return new StringBuilder(63)
+				.append("PcapAddr{addr=").append(this.addr)
+				.append(", netmask=").append(this.netmask)
+				.append(", broadaddr=").append(this.broadaddr)
+				.append(", dstaddr=").append(this.dstaddr)
+				.append('}')
+				.toString();
 	}
 
 }

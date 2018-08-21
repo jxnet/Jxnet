@@ -84,19 +84,18 @@ public final class PcapStat implements Cloneable {
 	}
 
 	@Override
-	protected Object clone() throws CloneNotSupportedException {
-		PcapStat pcapStat = (PcapStat) super.clone();
-		return pcapStat;
+	public PcapStat clone() throws CloneNotSupportedException {
+		return (PcapStat) super.clone();
 	}
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder(100);
-		sb.append("PcapStat{ps_recv=").append(this.ps_recv);
-		sb.append(", ps_drop=").append(this.ps_drop);
-		sb.append(", ps_ifdrop=").append(this.ps_ifdrop);
-		sb.append('}');
-		return sb.toString();
+		return new StringBuilder(100)
+				.append("PcapStat{ps_recv=").append(this.ps_recv)
+				.append(", ps_drop=").append(this.ps_drop)
+				.append(", ps_ifdrop=").append(this.ps_ifdrop)
+				.append('}')
+				.toString();
 	}
 
 }

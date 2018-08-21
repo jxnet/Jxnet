@@ -27,13 +27,16 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Utility methods for Jxnet API.
  * @author Ardika Rommy Sanjaya
  * @since 1.1.4
  */
-abstract class Core {
+class Core {
+
+    private static final Logger LOGGER = Logger.getLogger(Core.class.getSimpleName());
 
     protected Core() {
 
@@ -47,12 +50,12 @@ abstract class Core {
      * @throws DeviceNotFoundException device with network connection not found.
      */
     public static PcapIf LookupNetworkInterface() throws NativeException, DeviceNotFoundException {
-        final StringBuilder errbuf = new StringBuilder();
+        final StringBuilder errbuf = new StringBuilder(256);
         final List<PcapIf> pcapIfs = new ArrayList<>();
-        PcapIf result = null;
         if (Jxnet.PcapFindAllDevs(pcapIfs, errbuf) != Jxnet.OK) {
             throw new NativeException(errbuf.toString());
         }
+        PcapIf result = null;
         for (final PcapIf pcapIf : pcapIfs) {
             for (final PcapAddr pcapAddr : pcapIf.getAddresses()) {
                 if (pcapAddr.getAddr().getSaFamily() == SockAddr.Family.AF_INET) {
@@ -104,12 +107,12 @@ abstract class Core {
                 sb.append("\t\tADDRESS: ").append(pcapAddr.getAddr().toString()).append('\n');
             }
         }
-        System.out.println(sb.toString());
+        LOGGER.info(sb.toString() + "\n");
         final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, Charset.forName("UTF-8")));
         PcapIf pcapIf = null;
         index = 0;
         while (index == 0) {
-            System.out.print("Select a device number, or enter 'q' to quit -> ");
+            LOGGER.info("Select a device number, or enter 'q' to quit -> ");
             try {
                 final String input = reader.readLine();
                 index = Integer.parseInt(input);
@@ -128,7 +131,6 @@ abstract class Core {
                     reader.close();
                 } catch (IOException e1) {
                     errbuf.append(e1.getMessage());
-                    throw new IOException(errbuf.toString());
                 }
             }
         }

@@ -83,15 +83,17 @@ public final class Pcap implements PointerHandler {
 		}
 	}
 
+	@Override
+	public Pcap clone() throws CloneNotSupportedException {
+		return (Pcap) super.clone();
+	}
+
 	/**
 	 * Check pcap handle.
 	 * @return returns true if closed, false otherwise.
 	 */
 	public boolean isClosed() {
-		if (this.getAddress() == 0) {
-			return true;
-		}
-		return false;
+		return this.getAddress() == 0;
 	}
 
 	/**
@@ -122,17 +124,11 @@ public final class Pcap implements PointerHandler {
 	}
 
 	@Override
-	protected Object clone() throws CloneNotSupportedException {
-		Pcap pcap = (Pcap) super.clone();
-		return pcap;
-	}
-
-	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder("Pcap{");
-		sb.append("address=").append(this.getAddress());
-		sb.append('}');
-		return sb.toString();
+		return new StringBuilder("Pcap{")
+				.append("address=").append(this.getAddress())
+				.append('}')
+				.toString();
 	}
 
 	public static final class Builder {
@@ -147,7 +143,7 @@ public final class Pcap implements PointerHandler {
 		private int timeout = 2000;
 		private boolean enableRfMon;
 		private boolean enableNonBlock;
-		private StringBuilder errbuf;
+		private StringBuilder errbuf; // can grow considerably, and so may become a source of memory leaks if held within objects with long lifetimes.
 
 		private DataLinkType dataLinkType;
 

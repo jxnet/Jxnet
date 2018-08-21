@@ -29,6 +29,8 @@ import com.ardikars.jxnet.exception.NativeException;
  */
 public final class BpfProgram implements PointerHandler {
 
+	private long address;
+
 	/**
 	 * Bpf compile mode.
 	 */
@@ -49,8 +51,6 @@ public final class BpfProgram implements PointerHandler {
 	}
 	
 	private native void initBpfProgram();
-
-	private long address;
 
 	/**
 	 * Create instance of BpfProgram and initialize it.
@@ -87,15 +87,17 @@ public final class BpfProgram implements PointerHandler {
 		}
 	}
 
+	@Override
+	public BpfProgram clone() throws CloneNotSupportedException {
+		return (BpfProgram) super.clone();
+	}
+
 	/**
 	 * Check bpf handle.
 	 * @return returns true if closed, false otherwise.
 	 */
 	public boolean isClosed() {
-		if (this.getAddress() == 0) {
-			return true;
-		}
-		return false;
+		return this.getAddress() == 0;
 	}
 
 	@Override
@@ -118,17 +120,11 @@ public final class BpfProgram implements PointerHandler {
 	}
 
 	@Override
-	protected Object clone() throws CloneNotSupportedException {
-		BpfProgram bpfProgram = (BpfProgram) super.clone();
-		return bpfProgram;
-	}
-
-	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder("BpfProgram{");
-		sb.append("address=").append(this.getAddress());
-		sb.append('}');
-		return sb.toString();
+		return new StringBuilder("BpfProgram{")
+				.append("address=").append(this.getAddress())
+				.append('}')
+				.toString();
 	}
 
 	/**
@@ -206,7 +202,7 @@ public final class BpfProgram implements PointerHandler {
 		try {
 			Class.forName("com.ardikars.jxnet.Jxnet");
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			//
 		}
 	}
 

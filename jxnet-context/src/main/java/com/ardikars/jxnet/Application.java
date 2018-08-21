@@ -55,7 +55,7 @@ public class Application {
         this.developmentMode = true;
     }
 
-    private Application() {
+    protected Application() {
 
     }
 
@@ -85,6 +85,7 @@ public class Application {
      * @param applicationContext application context.
      * @throws UnsatisfiedLinkError UnsatisfiedLinkError.
      */
+    @SuppressWarnings("PMD.AvoidUsingNativeCode")
     public static void run(final String applicationName, final String applicationVersion,
                            Class initializerClass, Context applicationContext) {
 
@@ -162,11 +163,7 @@ public class Application {
      * @return application context.
      */
     public static Context getApplicationContext() {
-        final Context context = getInstance().getContext();
-        if (context == null) {
-            throw new NullPointerException("No application context found.");
-        }
-        return context;
+        return getInstance().getContext();
     }
 
 }
