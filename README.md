@@ -9,7 +9,7 @@ Jxnet wraps a native packet capture library (libpcap/npcap) via JNI (Java Native
 [![CircleCI](https://circleci.com/gh/jxnet/Jxnet/tree/master.svg?style=svg)](https://circleci.com/gh/jxnet/Jxnet/tree/master)
 [![Build status](https://ci.appveyor.com/api/projects/status/ev4t6t1ssacwj18j?svg=true)](https://ci.appveyor.com/project/jxnet/jxnet)
 
-[ ![Download](https://api.bintray.com/packages/ardikars/maven/com.ardikars.jxnet/images/download.svg?version=1.2.0.RC2) ](https://bintray.com/ardikars/maven/com.ardikars.jxnet/1.2.0.RC2/link)
+[ ![Download](https://api.bintray.com/packages/ardikars/maven/com.ardikars.jxnet/images/download.svg?version=1.2.0.Final) ](https://bintray.com/ardikars/maven/com.ardikars.jxnet/1.2.0.Final/link)
 
 
 Getting Started
@@ -39,8 +39,8 @@ Getting Started
 >>>
 >>> ```
 >>> dependencies { 
->>>     compile 'com.ardikars.jxnet:jxnet-core:1.2.0.RC2'
->>>     compile 'com.ardikars.jxnet:jxnet-context:1.2.0.RC2'
+>>>     compile 'com.ardikars.jxnet:jxnet-core:1.2.0.Final'
+>>>     compile 'com.ardikars.jxnet:jxnet-context:1.2.0.Final'
 >>> }
 >>>```
   - ##### Maven project
@@ -51,12 +51,12 @@ Getting Started
 >>>     <dependency>
 >>>         <groupId>com.ardikars.jxnet</groupId>
 >>>         <artifactId>jxnet-core</artifactId>
->>>         <version>1.2.0.RC2</version>
+>>>         <version>1.2.0.Final</version>
 >>>     </dependency>
 >>>     <dependency>
 >>>         <groupId>com.ardikars.jxnet</groupId>
 >>>         <artifactId>jxnet-context</artifactId>
->>>         <version>1.2.0.RC2</version>
+>>>         <version>1.2.0.Final</version>
 >>>     </dependency>
 >>> </dependencies>
 >>>```
