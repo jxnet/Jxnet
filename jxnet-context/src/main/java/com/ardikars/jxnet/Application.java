@@ -20,9 +20,6 @@ package com.ardikars.jxnet;
 import com.ardikars.common.util.Callback;
 import com.ardikars.common.util.Loader;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.logging.Logger;
 
 /**
@@ -38,11 +35,7 @@ public class Application {
 
     private static final Application instance = new Application();
 
-    private String applicationName;
-    private String applicationVersion;
     private Context context;
-
-    private final Set<Loader> libraryLoaders = Collections.checkedSet(new HashSet<Loader>(), Loader.class);
 
     protected boolean isLoaded() {
         return this.loaded;
@@ -55,26 +48,8 @@ public class Application {
         this.developmentMode = true;
     }
 
-    protected Application() {
+    private Application() {
 
-    }
-
-    /**
-     * Get instance of Application.
-     * @return single instance of Application.
-     */
-    protected static Application getInstance() {
-        synchronized (Application.class) {
-            return instance;
-        }
-    }
-
-    /**
-     * Add library will be used (static/dynamic).
-     * @param libraryLoader library loader.
-     */
-    protected void addLibrary(final Loader libraryLoader) {
-        this.libraryLoaders.add(libraryLoader);
     }
 
     /**
@@ -82,21 +57,18 @@ public class Application {
      * @param applicationName application name.
      * @param applicationVersion application version.
      * @param initializerClass initializer class.
-     * @param applicationContext application context.
      * @throws UnsatisfiedLinkError UnsatisfiedLinkError.
      */
     @SuppressWarnings("PMD.AvoidUsingNativeCode")
-    public static void run(final String applicationName, final String applicationVersion,
-                           Class initializerClass, Context applicationContext) {
-
-        getInstance().applicationName = applicationName;
-        getInstance().applicationVersion = applicationVersion;
-        getInstance().context = applicationContext;
+    public static <T> void run(final String applicationName, final String applicationVersion, Class initializerClass,
+                               final Pcap.Builder pcapBuilder, final BpfProgram.Builder bpfBuilder,
+                               final T argements) {
 
         ApplicationInitializer initializer;
+        Loader<Void> libraryLoaders;
         try {
             initializer = (ApplicationInitializer) initializerClass.newInstance();
-            initializer.initialize(getInstance().context);
+            libraryLoaders = initializer.initialize(argements);
         } catch (InstantiationException e) {
             LOGGER.warning(e.getMessage());
             return;
@@ -105,57 +77,31 @@ public class Application {
             return;
         }
 
-        if (getInstance().developmentMode && !getInstance().loaded) {
+        if (instance.developmentMode && !instance.loaded) {
             try {
                 System.loadLibrary("jxnet");
-                getInstance().loaded = true;
+                instance.loaded = true;
             } catch (Exception e) {
-                getInstance().loaded = false;
+                instance.loaded = false;
             }
         } else {
-            if (!getInstance().loaded && getInstance().libraryLoaders != null && !getInstance().libraryLoaders.isEmpty()) {
-                for (final Loader loader : getInstance().libraryLoaders) {
-                    if (getInstance().loaded) {
-                        break;
+            if (!instance.loaded && libraryLoaders != null) {
+                libraryLoaders.load(new Callback() {
+                    @Override
+                    public void onSuccess(Object value) {
+                        instance.loaded = true;
+                        Pcap pcap = pcapBuilder.build();
+                        BpfProgram bpfProgram = bpfBuilder.pcap(pcap).build();
+                        instance.context = ApplicationContext.newApplicationContext(applicationName, applicationVersion, argements, pcap, bpfProgram);
                     }
-                    loader.load(new Callback() {
-                        @Override
-                        public void onSuccess(Object value) {
-                            getInstance().loaded = true;
-                        }
 
-                        @Override
-                        public void onFailure(Throwable throwable) {
-                            //
-                        }
-                    });
-                }
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                        LOGGER.warning(throwable.getMessage());
+                    }
+                });
             }
         }
-    }
-
-    /**
-     * Get application name.
-     * @return application name.
-     */
-    protected String getApplicationName() {
-        return this.applicationName;
-    }
-
-    /**
-     * Get application version.
-     * @return application version.
-     */
-    protected String getApplicationVersion() {
-        return this.applicationVersion;
-    }
-
-    /**
-     * Get application context.
-     * @return application context.
-     */
-    protected Context getContext() {
-        return this.context;
     }
 
     /**
@@ -163,7 +109,7 @@ public class Application {
      * @return application context.
      */
     public static Context getApplicationContext() {
-        return getInstance().getContext();
+        return instance.context;
     }
 
 }

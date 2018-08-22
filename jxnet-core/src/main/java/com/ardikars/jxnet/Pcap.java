@@ -18,6 +18,7 @@
 package com.ardikars.jxnet;
 
 import com.ardikars.common.net.Inet4Address;
+import com.ardikars.common.util.Builder;
 import com.ardikars.common.util.Platforms;
 import com.ardikars.common.util.Validate;
 import com.ardikars.jxnet.exception.NativeException;
@@ -131,7 +132,13 @@ public final class Pcap implements PointerHandler {
 				.toString();
 	}
 
-	public static final class Builder {
+	/**
+	 */
+	public enum PcapType {
+		LIVE, DEAD, OFFLINE
+	}
+
+	public static final class Builder implements com.ardikars.common.util.Builder<Pcap, Void> {
 
 		private String source;
 		private int snaplen = 65535;
@@ -143,6 +150,7 @@ public final class Pcap implements PointerHandler {
 		private int timeout = 2000;
 		private boolean enableRfMon;
 		private boolean enableNonBlock;
+		private PcapType pcapType;
 
 		/**
 		 * can grow considerably, and so may become a source of memory leaks
@@ -219,11 +227,16 @@ public final class Pcap implements PointerHandler {
 			return this;
 		}
 
+		public Builder pcapType(PcapType pcapType) {
+			this.pcapType = pcapType;
+			return this;
+		}
+
 		/**
 		 * Build a live pcap handle.
 		 * @return pcap handle.
 		 */
-		public Pcap buildLive() {
+		private Pcap buildLive() {
 			Validate.nullPointer(source, new NullPointerException("Device name should be not null."));
 			Validate.notIllegalArgument(snaplen > 0 && snaplen < 65536,
 					new IllegalArgumentException("Snaplen should be greater then 0 and less then 65536."));
@@ -285,7 +298,7 @@ public final class Pcap implements PointerHandler {
 		 * Build non live pcap handle.
 		 * @return pcap handle.
 		 */
-		public Pcap buildDead() {
+		private Pcap buildDead() {
 			Validate.nullPointer(dataLinkType, new NullPointerException("Datalink type should be not null."));
 			Pcap pcap;
 			if (Platforms.isWindows()) {
@@ -303,7 +316,7 @@ public final class Pcap implements PointerHandler {
 		 * Build a pcap handle for reading pcap file.
 		 * @return pcap handle.
 		 */
-		public Pcap buildOffline() {
+		private Pcap buildOffline() {
 			Validate.nullPointer(fileName, new NullPointerException("File name should be not null."));
 			Validate.nullPointer(errbuf, new NullPointerException("Error buffer should be not null."));
 			Pcap pcap;
@@ -316,6 +329,26 @@ public final class Pcap implements PointerHandler {
 				throw new NativeException();
 			}
 			return pcap;
+		}
+
+		@Override
+		public Pcap build() {
+			if (pcapType == null) {
+				throw new IllegalStateException("Pcap type must be not null.");
+			}
+			switch (pcapType) {
+				case OFFLINE:
+					return buildOffline();
+				case LIVE:
+					return buildLive();
+				default:
+					return buildDead();
+			}
+		}
+
+		@Override
+		public Pcap build(Void value) {
+			throw new UnsupportedOperationException();
 		}
 
 	}

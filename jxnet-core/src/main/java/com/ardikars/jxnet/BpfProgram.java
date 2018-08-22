@@ -130,7 +130,7 @@ public final class BpfProgram implements PointerHandler {
 	/**
 	 * Builder class for BpfProgram.
 	 */
-	public static final class Builder {
+	public static final class Builder implements com.ardikars.common.util.Builder<BpfProgram, Void> {
 
 		private Pcap pcap;
 		private String filter;
@@ -181,7 +181,7 @@ public final class BpfProgram implements PointerHandler {
 		 * Create instance of BpfProgram.
 		 * @return returns BpfProgram.
 		 */
-		public BpfProgram buildBpf() {
+		private BpfProgram buildBpf() {
 			Validate.nullPointer(pcap);
 			Validate.notIllegalArgument(!pcap.isClosed(), new IllegalArgumentException("Pcap handle is closed."));
 			Validate.notIllegalArgument(filter != null && !filter.equals(""));
@@ -194,6 +194,16 @@ public final class BpfProgram implements PointerHandler {
 				throw new NativeException();
 			}
 			return bpfProgram;
+		}
+
+		@Override
+		public BpfProgram build() {
+			return buildBpf();
+		}
+
+		@Override
+		public BpfProgram build(Void value) {
+			throw new UnsupportedOperationException();
 		}
 
 	}

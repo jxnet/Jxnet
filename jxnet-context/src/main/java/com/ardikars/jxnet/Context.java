@@ -33,7 +33,7 @@ public interface Context {
 
 	String getApplicationVersion();
 
-	void addLibrary(Loader libraryLoader);
+	Object getAdditionalInformation();
 
 	/**
 	 * Native function mapping
