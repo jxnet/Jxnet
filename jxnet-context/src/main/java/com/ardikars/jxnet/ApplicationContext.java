@@ -32,7 +32,7 @@ import java.util.logging.Logger;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.5
  */
-public class ApplicationContext implements Context {
+public final class ApplicationContext implements Context {
 
 	private static final Logger LOGGER = Logger.getLogger(ApplicationContext.class.getSimpleName());
 
@@ -52,19 +52,17 @@ public class ApplicationContext implements Context {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
-				synchronized (this) {
-					if (pcap != null && !pcap.isClosed()) {
-						pcapBreakLoop(); // Force the loop in "pcap_read()" or "pcap_read_offline()" to terminate.
-						Jxnet.PcapClose(pcap);
-					}
-					if (bpfProgram != null && !bpfProgram.isClosed()) {
-						Jxnet.PcapFreeCode(bpfProgram);
-					}
-					if (pcapDumper != null && !pcapDumper.isClosed()) {
-						Jxnet.PcapDumpClose(pcapDumper);
-					}
-					LOGGER.info("Application closed gracefully.");
+				if (pcap != null && !pcap.isClosed()) {
+					pcapBreakLoop(); // Force the loop in "pcap_read()" or "pcap_read_offline()" to terminate.
+					Jxnet.PcapClose(pcap);
 				}
+				if (bpfProgram != null && !bpfProgram.isClosed()) {
+					Jxnet.PcapFreeCode(bpfProgram);
+				}
+				if (pcapDumper != null && !pcapDumper.isClosed()) {
+					Jxnet.PcapDumpClose(pcapDumper);
+				}
+				LOGGER.info("Application closed gracefully.");
 			}
 		});
 	}
@@ -117,11 +115,13 @@ public class ApplicationContext implements Context {
 	 * Create application context.
 	 * @param applicationName application name.
 	 * @param applicationVersion application version.
+	 * @param additionalInformation additional information.
 	 * @param pcap pcap.
 	 * @param bpfProgram bpf program.
 	 * @return application context.
 	 */
-	public static ApplicationContext newApplicationContext(String applicationName, String applicationVersion, Object additionalInformation, Pcap pcap, BpfProgram bpfProgram) {
+	public static ApplicationContext newApplicationContext(String applicationName, String applicationVersion, Object additionalInformation,
+														   Pcap pcap, BpfProgram bpfProgram) {
 		Validate.nullPointer(pcap);
 		Validate.nullPointer(bpfProgram);
 		ApplicationContext applicationContext = new ApplicationContext();

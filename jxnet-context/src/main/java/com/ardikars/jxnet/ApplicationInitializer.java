@@ -19,8 +19,6 @@ package com.ardikars.jxnet;
 
 import com.ardikars.common.util.Loader;
 
-import java.util.Set;
-
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.5

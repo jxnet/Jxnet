@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.5
  */
-public class Application {
+public final class Application {
 
     private static final Logger LOGGER = Logger.getLogger(Application.class.getName());
 
@@ -37,7 +37,7 @@ public class Application {
 
     private Context context;
 
-    protected boolean isLoaded() {
+    public boolean isLoaded() {
         return this.loaded;
     }
 
@@ -57,12 +57,15 @@ public class Application {
      * @param applicationName application name.
      * @param applicationVersion application version.
      * @param initializerClass initializer class.
+     * @param pcapBuilder pcap builder.
+     * @param bpfBuilder bpf builder.
+     * @param argements additional information.
      * @throws UnsatisfiedLinkError UnsatisfiedLinkError.
      */
     @SuppressWarnings("PMD.AvoidUsingNativeCode")
-    public static <T> void run(final String applicationName, final String applicationVersion, Class initializerClass,
+    public static void run(final String applicationName, final String applicationVersion, Class initializerClass,
                                final Pcap.Builder pcapBuilder, final BpfProgram.Builder bpfBuilder,
-                               final T argements) {
+                               final Object argements) {
 
         ApplicationInitializer initializer;
         Loader<Void> libraryLoaders;
