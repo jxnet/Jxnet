@@ -112,9 +112,11 @@ public final class Application {
                         Pcap pcap = pcapBuilder.build();
                         if (bpfBuilder != null) {
                             BpfProgram bpfProgram = bpfBuilder.pcap(pcap).build();
-                            instance.context = ApplicationContext.newApplicationContext(applicationName, applicationVersion, argements, pcap, bpfProgram);
+                            instance.context = ApplicationContext
+                                    .newApplicationContext(applicationName, applicationVersion, argements, pcap, bpfProgram);
                         } else {
-                            instance.context = ApplicationContext.newApplicationContext(applicationName, applicationVersion, argements, pcap, null);
+                            instance.context = ApplicationContext
+                                    .newApplicationContext(applicationName, applicationVersion, argements, pcap, null);
                         }
                     }
 
