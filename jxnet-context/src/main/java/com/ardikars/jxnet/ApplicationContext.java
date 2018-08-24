@@ -97,18 +97,24 @@ public final class ApplicationContext implements Context {
 	 * @param applicationName application name.
 	 * @param applicationVersion application version.
 	 * @param pcap pcap.
+	 * @return application context.
+	 */
+	public static ApplicationContext newApplicationContext(String applicationName, String applicationVersion, Pcap pcap) {
+		Validate.nullPointer(pcap);
+		return newApplicationContext(applicationName, applicationVersion, pcap, null);
+	}
+
+	/**
+	 * Create application context.
+	 * @param applicationName application name.
+	 * @param applicationVersion application version.
+	 * @param pcap pcap.
 	 * @param bpfProgram bpf program.
 	 * @return application context.
 	 */
 	public static ApplicationContext newApplicationContext(String applicationName, String applicationVersion, Pcap pcap, BpfProgram bpfProgram) {
 		Validate.nullPointer(pcap);
-		Validate.nullPointer(bpfProgram);
-		ApplicationContext applicationContext = new ApplicationContext();
-		applicationContext.applicationName = applicationName;
-		applicationContext.applicationVersion = applicationVersion;
-		applicationContext.pcap = pcap;
-		applicationContext.bpfProgram = bpfProgram;
-		return applicationContext;
+		return newApplicationContext(applicationName, applicationVersion, null, pcap, bpfProgram);
 	}
 
 	/**
@@ -123,7 +129,6 @@ public final class ApplicationContext implements Context {
 	public static ApplicationContext newApplicationContext(String applicationName, String applicationVersion, Object additionalInformation,
 														   Pcap pcap, BpfProgram bpfProgram) {
 		Validate.nullPointer(pcap);
-		Validate.nullPointer(bpfProgram);
 		ApplicationContext applicationContext = new ApplicationContext();
 		applicationContext.applicationName = applicationName;
 		applicationContext.applicationVersion = applicationVersion;

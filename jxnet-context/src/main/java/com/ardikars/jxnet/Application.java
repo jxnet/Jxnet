@@ -58,6 +58,22 @@ public final class Application {
      * @param applicationVersion application version.
      * @param initializerClass initializer class.
      * @param pcapBuilder pcap builder.
+     * @param argements additional information.
+     * @throws UnsatisfiedLinkError UnsatisfiedLinkError.
+     */
+    @SuppressWarnings("PMD.AvoidUsingNativeCode")
+    public static void run(final String applicationName, final String applicationVersion, Class initializerClass,
+                           final Pcap.Builder pcapBuilder,
+                           final Object argements) {
+        run(applicationName, applicationVersion, initializerClass, pcapBuilder, null, argements);
+    }
+
+    /**
+     * Used for bootstraping Jxnet.
+     * @param applicationName application name.
+     * @param applicationVersion application version.
+     * @param initializerClass initializer class.
+     * @param pcapBuilder pcap builder.
      * @param bpfBuilder bpf builder.
      * @param argements additional information.
      * @throws UnsatisfiedLinkError UnsatisfiedLinkError.
@@ -94,8 +110,12 @@ public final class Application {
                     public void onSuccess(Object value) {
                         instance.loaded = true;
                         Pcap pcap = pcapBuilder.build();
-                        BpfProgram bpfProgram = bpfBuilder.pcap(pcap).build();
-                        instance.context = ApplicationContext.newApplicationContext(applicationName, applicationVersion, argements, pcap, bpfProgram);
+                        if (bpfBuilder != null) {
+                            BpfProgram bpfProgram = bpfBuilder.pcap(pcap).build();
+                            instance.context = ApplicationContext.newApplicationContext(applicationName, applicationVersion, argements, pcap, bpfProgram);
+                        } else {
+                            instance.context = ApplicationContext.newApplicationContext(applicationName, applicationVersion, argements, pcap, null);
+                        }
                     }
 
                     @Override

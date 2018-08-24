@@ -149,6 +149,7 @@ public class JxnetTest {
         Pcap.Builder pcapBuilder = Pcap.builder()
                 .source(LoaderTest.getDevice())
                 .immediateMode(ImmediateMode.IMMEDIATE)
+                .pcapType(Pcap.PcapType.LIVE)
                 .errbuf(errbuf);
         BpfProgram.Builder bpfProgramBuilder = BpfProgram.builder()
                 .bpfCompileMode(BpfProgram.BpfCompileMode.OPTIMIZE)
