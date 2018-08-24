@@ -87,7 +87,7 @@ public class CoreTest {
     private final RadioFrequencyMonitorMode rfMon = RadioFrequencyMonitorMode.RFMON;
     private final BpfProgram.BpfCompileMode optimize = BpfProgram.BpfCompileMode.OPTIMIZE;
     private final int bufferSize = 1500;
-    private final String filter = "icmp";
+    private final String filter = "tcp";
 
     private final PcapDirection direction = PcapDirection.PCAP_D_IN;
 
@@ -114,7 +114,16 @@ public class CoreTest {
      */
     @Before
     public void create() throws Exception {
-        Application.run("CoreTest", "0.0.1", LoaderTest.Initializer.class, new ApplicationContext());
+        StringBuilder errbuf = new StringBuilder();
+        Pcap.Builder pcapBuilder = Pcap.builder()
+                .source(LoaderTest.getDevice())
+                .immediateMode(ImmediateMode.IMMEDIATE)
+                .errbuf(errbuf);
+        BpfProgram.Builder bpfProgramBuilder = BpfProgram.builder()
+                .bpfCompileMode(BpfProgram.BpfCompileMode.OPTIMIZE)
+                .filter("tcp")
+                .netmask(Inet4Address.valueOf("255.255.255.0").toInt());
+        Application.run("CoreTest", "0.0.1", LoaderTest.Initializer.class, pcapBuilder, bpfProgramBuilder, "");
         if ((resultCode = PcapFindAllDevs(alldevsp, errbuf)) != OK) {
             logger.warning("create:PcapFindAllDevs(): " + errbuf.toString());
         }

@@ -146,7 +146,16 @@ public class JxnetTest {
      */
     @Before
     public void create() throws Exception {
-        Application.run("JxnetTest", "0.0.1", LoaderTest.Initializer.class, new ApplicationContext());
+        Pcap.Builder pcapBuilder = Pcap.builder()
+                .source(LoaderTest.getDevice())
+                .immediateMode(ImmediateMode.IMMEDIATE)
+                .pcapType(Pcap.PcapType.LIVE)
+                .errbuf(errbuf);
+        BpfProgram.Builder bpfProgramBuilder = BpfProgram.builder()
+                .bpfCompileMode(BpfProgram.BpfCompileMode.OPTIMIZE)
+                .filter("tcp")
+                .netmask(Inet4Address.valueOf("255.255.255.0").toInt());
+        Application.run("JxnetTest", "0.0.1", LoaderTest.Initializer.class, pcapBuilder, bpfProgramBuilder, "");
         if ((resultCode = PcapFindAllDevs(alldevsp, errbuf)) != OK) {
             logger.warning("create:PcapFindAllDevs(): " + errbuf.toString());
         }

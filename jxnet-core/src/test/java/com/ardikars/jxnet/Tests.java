@@ -17,6 +17,7 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.common.net.Inet4Address;
 import com.ardikars.common.net.NetworkInterface;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,14 +26,29 @@ import org.junit.runners.JUnit4;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 
+import static com.ardikars.jxnet.Jxnet.OK;
+import static com.ardikars.jxnet.Jxnet.PcapFindAllDevs;
+
 @RunWith(JUnit4.class)
 public class Tests {
 
 	@Test
 	public void ex() throws SocketException {
-		for (NetworkInterface networkInterface : NetworkInterface.getNetworkInterfaces()) {
-			System.out.println(networkInterface);
-		}
+		StringBuilder errbuf = new StringBuilder();
+		Pcap.Builder pcapBuilder = Pcap.builder()
+				.source(LoaderTest.getDevice())
+				.immediateMode(ImmediateMode.IMMEDIATE)
+                .pcapType(Pcap.PcapType.LIVE)
+				.errbuf(errbuf);
+		Application.run("JxnetTest", "0.0.1", LoaderTest.Initializer.class, pcapBuilder, "");
+		Context context = Application.getApplicationContext();
+		context.pcapLoop(10, new PcapHandler<String>() {
+			@Override
+			public void nextPacket(String user, PcapPktHdr h, ByteBuffer bytes) {
+				System.out.println(h);
+			}
+		}, null);
+		context.pcapClose();
 	}
 
 }

@@ -18,7 +18,6 @@
 package com.ardikars.jxnet;
 
 import com.ardikars.common.net.Inet4Address;
-import com.ardikars.common.util.Loader;
 import com.ardikars.jxnet.exception.BpfProgramCloseException;
 import com.ardikars.jxnet.exception.PcapCloseException;
 import com.ardikars.jxnet.exception.PcapDumperCloseException;
@@ -33,7 +32,7 @@ public interface Context {
 
 	String getApplicationVersion();
 
-	void addLibrary(Loader libraryLoader);
+	Object getAdditionalInformation();
 
 	/**
 	 * Native function mapping

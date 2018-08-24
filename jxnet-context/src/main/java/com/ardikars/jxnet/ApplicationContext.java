@@ -18,7 +18,6 @@
 package com.ardikars.jxnet;
 
 import com.ardikars.common.net.Inet4Address;
-import com.ardikars.common.util.Loader;
 import com.ardikars.common.util.Validate;
 import com.ardikars.jxnet.exception.BpfProgramCloseException;
 import com.ardikars.jxnet.exception.PcapCloseException;
@@ -27,12 +26,21 @@ import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 
 import java.nio.ByteBuffer;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.5
  */
-public class ApplicationContext implements Context {
+public final class ApplicationContext implements Context {
+
+	private static final Logger LOGGER = Logger.getLogger(ApplicationContext.class.getSimpleName());
+
+	private String applicationName;
+
+	private String applicationVersion;
+
+	private Object additionalInformation;
 
 	private Pcap pcap;
 
@@ -40,21 +48,39 @@ public class ApplicationContext implements Context {
 
 	private PcapDumper pcapDumper;
 
+	private ApplicationContext() {
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				if (pcap != null && !pcap.isClosed()) {
+					pcapBreakLoop(); // Force the loop in "pcap_read()" or "pcap_read_offline()" to terminate.
+					Jxnet.PcapClose(pcap);
+				}
+				if (bpfProgram != null && !bpfProgram.isClosed()) {
+					Jxnet.PcapFreeCode(bpfProgram);
+				}
+				if (pcapDumper != null && !pcapDumper.isClosed()) {
+					Jxnet.PcapDumpClose(pcapDumper);
+				}
+				LOGGER.info("Application closed gracefully.");
+			}
+		});
+	}
+
     @Override
     public String getApplicationName() {
-        return Application.getInstance().getApplicationName();
+        return applicationName;
     }
 
     @Override
     public String getApplicationVersion() {
-        return Application.getInstance().getApplicationVersion();
+        return applicationVersion;
     }
 
 	@Override
-    public void addLibrary(final Loader libraryLoader) {
-    	Validate.nullPointer(libraryLoader);
-        Application.getInstance().addLibrary(libraryLoader);
-    }
+	public Object getAdditionalInformation() {
+		return additionalInformation;
+	}
 
 	/**
 	 * Create application context.
@@ -63,9 +89,50 @@ public class ApplicationContext implements Context {
 	 * @return application context.
 	 */
 	public static ApplicationContext newApplicationContext(Pcap pcap, BpfProgram bpfProgram) {
+		return newApplicationContext(null, null, pcap, bpfProgram);
+	}
+
+	/**
+	 * Create application context.
+	 * @param applicationName application name.
+	 * @param applicationVersion application version.
+	 * @param pcap pcap.
+	 * @return application context.
+	 */
+	public static ApplicationContext newApplicationContext(String applicationName, String applicationVersion, Pcap pcap) {
 		Validate.nullPointer(pcap);
-		Validate.nullPointer(bpfProgram);
+		return newApplicationContext(applicationName, applicationVersion, pcap, null);
+	}
+
+	/**
+	 * Create application context.
+	 * @param applicationName application name.
+	 * @param applicationVersion application version.
+	 * @param pcap pcap.
+	 * @param bpfProgram bpf program.
+	 * @return application context.
+	 */
+	public static ApplicationContext newApplicationContext(String applicationName, String applicationVersion, Pcap pcap, BpfProgram bpfProgram) {
+		Validate.nullPointer(pcap);
+		return newApplicationContext(applicationName, applicationVersion, null, pcap, bpfProgram);
+	}
+
+	/**
+	 * Create application context.
+	 * @param applicationName application name.
+	 * @param applicationVersion application version.
+	 * @param additionalInformation additional information.
+	 * @param pcap pcap.
+	 * @param bpfProgram bpf program.
+	 * @return application context.
+	 */
+	public static ApplicationContext newApplicationContext(String applicationName, String applicationVersion, Object additionalInformation,
+														   Pcap pcap, BpfProgram bpfProgram) {
+		Validate.nullPointer(pcap);
 		ApplicationContext applicationContext = new ApplicationContext();
+		applicationContext.applicationName = applicationName;
+		applicationContext.applicationVersion = applicationVersion;
+		applicationContext.additionalInformation = additionalInformation;
 		applicationContext.pcap = pcap;
 		applicationContext.bpfProgram = bpfProgram;
 		return applicationContext;
