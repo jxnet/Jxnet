@@ -7,7 +7,7 @@ ext {
 
 	NAME = 'Jxnet'
 	GROUP = 'com.ardikars.jxnet'
-	VERSION = '1.4.0.Final'
+	VERSION = '1.4.0.RC1'
 
 	NDK_HOME = "${System.env.NDK_HOME}"
 	TOOLS_DIR = "${rootDir}/tools"
