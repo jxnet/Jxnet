@@ -104,7 +104,7 @@ public class JxnetTest {
 
     private int resultCode;
 
-    private final String resourceDumpFile = "/tmp/dump.pcap";
+    private final String resourceDumpFile = "../gradle/resources/pcap/icmp.pcap";
 
     private StringBuilder errbuf = new StringBuilder();
     private Pcap pcap;

@@ -128,9 +128,27 @@ subprojects {
 			toolVersion "${PMD_VERION}"
 		}
 
+		jacoco {
+			toolVersion = "${JACOCO_VERSION}"
+		}
+
+		jacocoTestReport {
+			reports {
+				xml.enabled true
+				csv.enabled false
+				html.destination file("${buildDir}/jacocoHtml")
+			}
+		}
+
+
 		test {
 			testLogging {
 				showStandardStreams = true
+			}
+			jacoco {
+				append = false
+				destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
+				classDumpDir = file("$buildDir/jacoco/classpathdumps")
 			}
 		}
 
@@ -216,24 +234,6 @@ subprojects {
 		apply plugin: 'c'
 	}
 
-}
-
-task codeCoverageReport(type: JacocoReport) {
-	executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
-	subprojects.each { subproject ->
-		if (!(subproject.name.equals("${rootProject.name}")) && !((subproject.name).equals("jxnet-native"))) {
-			sourceSets subproject.sourceSets.main
-		}
-	}
-	reports {
-		xml.enabled false
-		html.enabled true
-		csv.enabled false
-	}
-}
-
-codeCoverageReport.dependsOn {
-	subprojects*.test
 }
 
 task ndkBuild(type: Exec) {

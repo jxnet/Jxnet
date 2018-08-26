@@ -263,7 +263,7 @@ public final class Pcap implements PointerHandler {
 			if (Jxnet.PcapSetDirection(pcap, direction) != Jxnet.OK) {
 				throw new PlatformNotSupportedException();
 			}
-			setImmediateModeAndTimeStamp(pcap);
+			setEnableNonBlock(pcap);
 			return pcap;
 		}
 

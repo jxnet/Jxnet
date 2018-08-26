@@ -34,21 +34,7 @@ public class Tests {
 
 	@Test
 	public void ex() throws SocketException {
-		StringBuilder errbuf = new StringBuilder();
-		Pcap.Builder pcapBuilder = Pcap.builder()
-				.source(LoaderTest.getDevice())
-				.immediateMode(ImmediateMode.IMMEDIATE)
-                .pcapType(Pcap.PcapType.LIVE)
-				.errbuf(errbuf);
-		Application.run("JxnetTest", "0.0.1", LoaderTest.Initializer.class, pcapBuilder, "");
-		Context context = Application.getApplicationContext();
-		context.pcapLoop(10, new PcapHandler<String>() {
-			@Override
-			public void nextPacket(String user, PcapPktHdr h, ByteBuffer bytes) {
-				System.out.println(h);
-			}
-		}, null);
-		context.pcapClose();
+
 	}
 
 }

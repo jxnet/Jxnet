@@ -28,6 +28,7 @@ ext {
 	CHECKSTYLE_VERSION = '8.10.1'
 	SPOTBUGS_VERSION = '3.1.5'
 	PMD_VERION = '6.5.0'
+	JACOCO_VERSION = '0.8.2'
 
 	pom_project = {
 
