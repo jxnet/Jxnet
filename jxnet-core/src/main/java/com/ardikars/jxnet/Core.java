@@ -49,7 +49,7 @@ class Core {
      * @throws NativeException native exception.
      * @throws DeviceNotFoundException device with network connection not found.
      */
-    public static PcapIf LookupNetworkInterface() throws NativeException, DeviceNotFoundException {
+    public static PcapIf lookupNetworkInterface() throws NativeException, DeviceNotFoundException {
         final StringBuilder errbuf = new StringBuilder(256);
         final List<PcapIf> pcapIfs = new ArrayList<>();
         if (Jxnet.PcapFindAllDevs(pcapIfs, errbuf) != Jxnet.OK) {
@@ -92,7 +92,7 @@ class Core {
      * @throws NativeException native exception.
      * @throws IOException IO exception.
      */
-    public static PcapIf SelectNetowrkInterface() throws NativeException, IOException {
+    public static PcapIf selectNetowrkInterface() throws NativeException {
         final StringBuilder errbuf = new StringBuilder();
         final List<PcapIf> pcapIfs = new ArrayList<PcapIf>();
         if (Jxnet.PcapFindAllDevs(pcapIfs, errbuf) != Jxnet.OK) {

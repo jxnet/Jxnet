@@ -42,6 +42,6 @@ public class App {
                 System.out.println(user);
             }
         }, "***********************");
-        context.pcapClose();;
+        context.pcapClose();
     }
 }
