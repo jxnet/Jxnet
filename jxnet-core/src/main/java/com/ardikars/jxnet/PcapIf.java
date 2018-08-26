@@ -59,7 +59,7 @@ public final class PcapIf implements Cloneable {
 
 	/**
 	 * This method will throws {@code OperationNotSupportedException}.
-	 * @see {@code Jxnet.PcapFinaAllDevs}.
+	 * See {@code Jxnet.PcapFinaAllDevs}.
 	 * @return nothing.
 	 */
 	public static PcapIf newInstance() {
