@@ -1,6 +1,8 @@
 package com.ardikars.jxnet;
 
 import com.ardikars.common.net.Inet4Address;
+import com.ardikars.common.net.InetAddress;
+import com.ardikars.common.net.MacAddress;
 import com.ardikars.common.net.NetworkInterface;
 import com.ardikars.common.util.Loader;
 import com.ardikars.jxnet.util.DefaultLibraryLoader;
@@ -49,8 +51,18 @@ public class LoaderTest {
 			return null;
 		}
 		for (NetworkInterface networkInterface : networkInterfaces) {
-			if (networkInterface.getMtu() == 1500 && networkInterface.getHardwareAddress() != null && networkInterface.getAddresses().size() > 0) {
-				return networkInterface.getName();
+			if (networkInterface.getHardwareAddress() != null && networkInterface.getHardwareAddress() instanceof MacAddress) {
+				MacAddress macAddress = (MacAddress) networkInterface.getHardwareAddress();
+				if (!macAddress.equals(MacAddress.ZERO)) {
+					for (NetworkInterface.Address inetAddress : networkInterface.getAddresses()) {
+						if (inetAddress.getInetAddress() instanceof Inet4Address) {
+							Inet4Address inet4Address = (Inet4Address) inetAddress.getInetAddress();
+							if (!inet4Address.equals(Inet4Address.LOCALHOST) && !inet4Address.equals(Inet4Address.ZERO)) {
+								return networkInterface.getName();
+							}
+						}
+					}
+				}
 			}
 		}
 		return null;

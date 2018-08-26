@@ -257,8 +257,8 @@ public final class Pcap implements PointerHandler {
 			}
 			setImmediateModeAndTimeStamp(pcap);
 			setEnableRfMon(pcap);
-			if (Jxnet.PcapActivate(pcap) != Jxnet.OK) {
-				throw new NativeException();
+			if (Jxnet.PcapActivate(pcap) < 0) {
+				throw new NativeException(Jxnet.PcapGetErr(pcap));
 			}
 			if (Jxnet.PcapSetDirection(pcap, direction) != Jxnet.OK) {
 				throw new PlatformNotSupportedException();

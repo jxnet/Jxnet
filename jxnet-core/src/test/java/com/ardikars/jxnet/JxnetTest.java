@@ -83,6 +83,9 @@ import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -384,7 +387,9 @@ public class JxnetTest {
             if (pktHdr != null && pkt != null) {
                 System.out.println("PacketHeader: " + pktHdr);
                 System.out.println("PacketBuffer: " + pkt);
+                pkt.clear();
             }
+
         }
     }
 
@@ -700,9 +705,36 @@ public class JxnetTest {
      */
     @After
     public void destroy() {
-        PcapClose(pcap);
-        PcapFreeCode(bpfProgram);
-        PcapDumpClose(dumper);
+        if (pcap != null && !pcap.isClosed()) {
+            PcapClose(pcap);
+        }
+        if (bpfProgram != null && !bpfProgram.isClosed()) {
+            PcapFreeCode(bpfProgram);
+        }
+        if (dumper != null && !dumper.isClosed()) {
+            PcapDumpClose(dumper);
+        }
+    }
+
+    public static void destroyBuffer(Buffer buffer) {
+        if(buffer.isDirect()) {
+            try {
+                if(!buffer.getClass().getName().equals("java.nio.DirectByteBuffer")) {
+                    Field attField = buffer.getClass().getDeclaredField("att");
+                    attField.setAccessible(true);
+                    buffer = (Buffer) attField.get(buffer);
+                }
+
+                Method cleanerMethod = buffer.getClass().getMethod("cleaner");
+                cleanerMethod.setAccessible(true);
+                Object cleaner = cleanerMethod.invoke(buffer);
+                Method cleanMethod = cleaner.getClass().getMethod("clean");
+                cleanMethod.setAccessible(true);
+                cleanMethod.invoke(cleaner);
+            } catch(Exception e) {
+                throw new IllegalStateException("Could not destroy direct buffer " + buffer, e);
+            }
+        }
     }
 
 }
