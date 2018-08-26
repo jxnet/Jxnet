@@ -216,7 +216,9 @@ public final class ApplicationContext implements Context {
 
 	@Override
 	public void pcapClose() throws PcapCloseException {
-		Jxnet.PcapClose(pcap);
+		if (pcap != null && !pcap.isClosed()) {
+			Jxnet.PcapClose(pcap);
+		}
 	}
 
 	@Override
@@ -307,7 +309,9 @@ public final class ApplicationContext implements Context {
 
 	@Override
 	public void pcapFreeCode() throws BpfProgramCloseException {
-		Jxnet.PcapFreeCode(bpfProgram);
+		if (bpfProgram != null && !bpfProgram.isClosed()) {
+			Jxnet.PcapFreeCode(bpfProgram);
+		}
 	}
 
 	@Override
