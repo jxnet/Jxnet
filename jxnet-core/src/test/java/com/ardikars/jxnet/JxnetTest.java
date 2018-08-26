@@ -156,6 +156,7 @@ public class JxnetTest {
                 .filter("tcp")
                 .netmask(Inet4Address.valueOf("255.255.255.0").toInt());
         Application.run("JxnetTest", "0.0.1", LoaderTest.Initializer.class, pcapBuilder, bpfProgramBuilder, "");
+        Application.getApplicationContext().pcapClose();
         if ((resultCode = PcapFindAllDevs(alldevsp, errbuf)) != OK) {
             logger.warning("create:PcapFindAllDevs(): " + errbuf.toString());
         }

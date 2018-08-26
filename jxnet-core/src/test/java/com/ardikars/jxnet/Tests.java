@@ -34,7 +34,7 @@ public class Tests {
 
 	@Test
 	public void ex() throws SocketException {
-
+		assert true;
 	}
 
 }

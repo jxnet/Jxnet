@@ -30,12 +30,14 @@ public class LoaderTest {
 		Pcap.Builder pcapBuilder = Pcap.builder()
 				.source(getDevice())
 				.immediateMode(ImmediateMode.IMMEDIATE)
-				.errbuf(errbuf);
+				.errbuf(errbuf)
+				.pcapType(Pcap.PcapType.LIVE);
 		BpfProgram.Builder bpfProgramBuilder = BpfProgram.builder()
 				.bpfCompileMode(BpfProgram.BpfCompileMode.OPTIMIZE)
 				.filter("tcp")
 				.netmask(Inet4Address.valueOf("255.255.255.0").toInt());
 		Application.run("TestApp", "0.0.1", Initializer.class, pcapBuilder, bpfProgramBuilder, "");
+		Application.getApplicationContext().pcapClose();
 		assert true;
 	}
 
