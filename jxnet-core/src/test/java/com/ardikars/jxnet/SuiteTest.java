@@ -24,7 +24,6 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         JxnetTest.class,
-        CoreTest.class,
         FreakTest.class
 })
 public class SuiteTest {
