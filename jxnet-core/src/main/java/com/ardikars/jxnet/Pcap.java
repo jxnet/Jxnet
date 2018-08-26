@@ -18,7 +18,6 @@
 package com.ardikars.jxnet;
 
 import com.ardikars.common.net.Inet4Address;
-import com.ardikars.common.util.Builder;
 import com.ardikars.common.util.Platforms;
 import com.ardikars.common.util.Validate;
 import com.ardikars.jxnet.exception.NativeException;
@@ -237,11 +236,11 @@ public final class Pcap implements PointerHandler {
 		 * @return pcap handle.
 		 */
 		private Pcap buildLive() {
-			Validate.nullPointer(source, new NullPointerException("Device name should be not null."));
+			Validate.notIllegalArgument(source != null, new IllegalArgumentException("Device name should be not null."));
 			Validate.notIllegalArgument(snaplen > 0 && snaplen < 65536,
 					new IllegalArgumentException("Snaplen should be greater then 0 and less then 65536."));
 			Validate.notIllegalArgument(timeout > 0, new IllegalArgumentException("Timeout should be greater then 0."));
-			Validate.nullPointer(errbuf, new NullPointerException("Error buffer should be not null."));
+			Validate.notIllegalArgument(errbuf != null, new IllegalArgumentException("Error buffer should be not null."));
 
 			Pcap pcap = Jxnet.PcapCreate(source, errbuf);
 			if (Jxnet.PcapSetSnaplen(pcap, snaplen) != Jxnet.OK) {
@@ -299,7 +298,7 @@ public final class Pcap implements PointerHandler {
 		 * @return pcap handle.
 		 */
 		private Pcap buildDead() {
-			Validate.nullPointer(dataLinkType, new NullPointerException("Datalink type should be not null."));
+			Validate.notIllegalArgument(dataLinkType != null, new IllegalArgumentException("Datalink type should be not null."));
 			Pcap pcap;
 			if (Platforms.isWindows()) {
 				pcap = Jxnet.PcapOpenDead(dataLinkType.getValue(), snaplen);
@@ -317,8 +316,8 @@ public final class Pcap implements PointerHandler {
 		 * @return pcap handle.
 		 */
 		private Pcap buildOffline() {
-			Validate.nullPointer(fileName, new NullPointerException("File name should be not null."));
-			Validate.nullPointer(errbuf, new NullPointerException("Error buffer should be not null."));
+			Validate.notIllegalArgument(fileName != null && !fileName.equals(""), new IllegalArgumentException("File name should be not null or empty."));
+			Validate.notIllegalArgument(errbuf != null, new IllegalArgumentException("Error buffer should be not null."));
 			Pcap pcap;
 			if (Platforms.isWindows()) {
 				pcap = Jxnet.PcapOpenOffline(fileName, errbuf);
@@ -333,9 +332,7 @@ public final class Pcap implements PointerHandler {
 
 		@Override
 		public Pcap build() {
-			if (pcapType == null) {
-				throw new IllegalStateException("Pcap type must be not null.");
-			}
+			Validate.notIllegalArgument(pcapType != null, new IllegalArgumentException("Pcap type should be not null."));
 			switch (pcapType) {
 				case OFFLINE:
 					return buildOffline();
