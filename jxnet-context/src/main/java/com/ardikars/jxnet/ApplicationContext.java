@@ -24,8 +24,11 @@ import com.ardikars.jxnet.exception.PcapCloseException;
 import com.ardikars.jxnet.exception.PcapDumperCloseException;
 import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 /**
@@ -65,6 +68,18 @@ public final class ApplicationContext implements Context {
 				LOGGER.info("Application closed gracefully.");
 			}
 		});
+		final Properties properties = new Properties();
+		try (InputStream stream = ClassLoader.class.getResourceAsStream("application.properties")) {
+			if (stream != null) {
+				properties.load(stream);
+			}
+			applicationName = properties.getProperty("jxnet.application.name", "");
+			applicationVersion = properties.getProperty("jxnet.application.version", "");
+		} catch (IOException e) {
+			applicationName = "";
+			applicationVersion = "";
+			LOGGER.warning(e.getMessage());
+		}
 	}
 
     @Override
@@ -85,56 +100,35 @@ public final class ApplicationContext implements Context {
 	/**
 	 * Create application context.
 	 * @param pcap pcap.
-	 * @param bpfProgram bpf program.
 	 * @return application context.
 	 */
-	public static ApplicationContext newApplicationContext(Pcap pcap, BpfProgram bpfProgram) {
-		return newApplicationContext(null, null, pcap, bpfProgram);
+	public static ApplicationContext newApplicationContext(Pcap pcap) {
+		return newApplicationContext(pcap, null, null);
 	}
 
 	/**
 	 * Create application context.
-	 * @param applicationName application name.
-	 * @param applicationVersion application version.
 	 * @param pcap pcap.
-	 * @return application context.
-	 */
-	public static ApplicationContext newApplicationContext(String applicationName, String applicationVersion, Pcap pcap) {
-		Validate.nullPointer(pcap);
-		return newApplicationContext(applicationName, applicationVersion, pcap, null);
-	}
-
-	/**
-	 * Create application context.
-	 * @param applicationName application name.
-	 * @param applicationVersion application version.
-	 * @param pcap pcap.
-	 * @param bpfProgram bpf program.
-	 * @return application context.
-	 */
-	public static ApplicationContext newApplicationContext(String applicationName, String applicationVersion, Pcap pcap, BpfProgram bpfProgram) {
-		Validate.nullPointer(pcap);
-		return newApplicationContext(applicationName, applicationVersion, null, pcap, bpfProgram);
-	}
-
-	/**
-	 * Create application context.
-	 * @param applicationName application name.
-	 * @param applicationVersion application version.
 	 * @param additionalInformation additional information.
-	 * @param pcap pcap.
-	 * @param bpfProgram bpf program.
 	 * @return application context.
 	 */
-	public static ApplicationContext newApplicationContext(String applicationName, String applicationVersion, Object additionalInformation,
-														   Pcap pcap, BpfProgram bpfProgram) {
-		Validate.nullPointer(pcap);
+	public static ApplicationContext newApplicationContext(Pcap pcap, Object additionalInformation) {
+		return newApplicationContext(pcap, null, additionalInformation);
+	}
+
+	/**
+	 * Create application context.
+	 * @param pcap pcap.
+	 * @param bpfProgram bpf program.
+	 * @param additionalInformation additional information.
+	 * @return application context.
+	 */
+	public static ApplicationContext newApplicationContext(Pcap pcap, BpfProgram bpfProgram, Object additionalInformation) {
+		Validate.notIllegalArgument(pcap != null);
 		ApplicationContext applicationContext = new ApplicationContext();
-		applicationContext.applicationName = applicationName;
-		applicationContext.applicationVersion = applicationVersion;
-		applicationContext.additionalInformation = additionalInformation;
 		applicationContext.pcap = pcap;
 		applicationContext.bpfProgram = bpfProgram;
+		applicationContext.additionalInformation = additionalInformation;
 		return applicationContext;
 	}
 
@@ -247,7 +241,7 @@ public final class ApplicationContext implements Context {
 
 	@Override
 	public PcapCode pcapSetDataLink(DataLinkType dataLinkType) throws PcapCloseException {
-		Validate.nullPointer(dataLinkType);
+		Validate.notIllegalArgument(dataLinkType != null);
 		int result = Jxnet.PcapSetDataLink(pcap, dataLinkType.getValue());
 		if (result == 0) {
 			return PcapCode.PCAP_OK;
@@ -353,7 +347,7 @@ public final class ApplicationContext implements Context {
 
 	@Override
 	public PcapCode pcapSetDirection(PcapDirection direction) throws PcapCloseException, PlatformNotSupportedException {
-		Validate.nullPointer(direction);
+		Validate.notIllegalArgument(direction != null);
 		int result = Jxnet.PcapSetDirection(pcap, direction);
 		if (result == 0) {
 			return PcapCode.PCAP_OK;

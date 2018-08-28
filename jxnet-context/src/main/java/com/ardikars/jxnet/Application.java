@@ -54,24 +54,32 @@ public final class Application {
 
     /**
      * Used for bootstraping Jxnet.
-     * @param applicationName application name.
-     * @param applicationVersion application version.
+     * @param initializerClass initializer class.
+     * @param argements additional information.
+     * @throws UnsatisfiedLinkError UnsatisfiedLinkError.
+     */
+    @SuppressWarnings("PMD.AvoidUsingNativeCode")
+    public static void run(Class initializerClass,
+                           final Object argements) {
+        run(initializerClass, null, null, argements);
+    }
+
+    /**
+     * Used for bootstraping Jxnet.
      * @param initializerClass initializer class.
      * @param pcapBuilder pcap builder.
      * @param argements additional information.
      * @throws UnsatisfiedLinkError UnsatisfiedLinkError.
      */
     @SuppressWarnings("PMD.AvoidUsingNativeCode")
-    public static void run(final String applicationName, final String applicationVersion, Class initializerClass,
+    public static void run(Class initializerClass,
                            final Pcap.Builder pcapBuilder,
                            final Object argements) {
-        run(applicationName, applicationVersion, initializerClass, pcapBuilder, null, argements);
+        run(initializerClass, pcapBuilder, null, argements);
     }
 
     /**
      * Used for bootstraping Jxnet.
-     * @param applicationName application name.
-     * @param applicationVersion application version.
      * @param initializerClass initializer class.
      * @param pcapBuilder pcap builder.
      * @param bpfBuilder bpf builder.
@@ -79,7 +87,7 @@ public final class Application {
      * @throws UnsatisfiedLinkError UnsatisfiedLinkError.
      */
     @SuppressWarnings("PMD.AvoidUsingNativeCode")
-    public static void run(final String applicationName, final String applicationVersion, Class initializerClass,
+    public static void run(Class initializerClass,
                                final Pcap.Builder pcapBuilder, final BpfProgram.Builder bpfBuilder,
                                final Object argements) {
 
@@ -106,6 +114,7 @@ public final class Application {
         } else {
             if (!instance.loaded && libraryLoaders != null) {
                 libraryLoaders.load(new Callback() {
+
                     @Override
                     public void onSuccess(Object value) {
                         instance.loaded = true;
@@ -113,10 +122,10 @@ public final class Application {
                         if (bpfBuilder != null) {
                             BpfProgram bpfProgram = bpfBuilder.pcap(pcap).build();
                             instance.context = ApplicationContext
-                                    .newApplicationContext(applicationName, applicationVersion, argements, pcap, bpfProgram);
+                                    .newApplicationContext(pcap, bpfProgram, argements);
                         } else {
                             instance.context = ApplicationContext
-                                    .newApplicationContext(applicationName, applicationVersion, argements, pcap, null);
+                                    .newApplicationContext(pcap, null, argements);
                         }
                     }
 
@@ -124,6 +133,7 @@ public final class Application {
                     public void onFailure(Throwable throwable) {
                         LOGGER.warning(throwable.getMessage());
                     }
+
                 });
             }
         }

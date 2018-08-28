@@ -17,17 +17,11 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.common.net.Inet4Address;
-import com.ardikars.common.net.NetworkInterface;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.net.SocketException;
-import java.nio.ByteBuffer;
-
-import static com.ardikars.jxnet.Jxnet.OK;
-import static com.ardikars.jxnet.Jxnet.PcapFindAllDevs;
 
 @RunWith(JUnit4.class)
 public class Tests {

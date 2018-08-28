@@ -62,11 +62,7 @@ public class FreakTest {
                 .immediateMode(ImmediateMode.IMMEDIATE)
                 .pcapType(Pcap.PcapType.LIVE)
                 .errbuf(errbuf);
-        BpfProgram.Builder bpfProgramBuilder = BpfProgram.builder()
-                .bpfCompileMode(BpfProgram.BpfCompileMode.OPTIMIZE)
-                .filter("tcp")
-                .netmask(Inet4Address.valueOf("255.255.255.0").toInt());
-        Application.run("FreadTest", "0.0.1", LoaderTest.Initializer.class, pcapBuilder, bpfProgramBuilder, "");
+        Application.run(LoaderTest.Initializer.class, pcapBuilder, "");
         Application.getApplicationContext().pcapClose();
         pcap = PcapOpenDead(linkType.getValue(), snaplen);
         if (pcap == null) {

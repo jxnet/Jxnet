@@ -1,7 +1,6 @@
 package com.ardikars.jxnet;
 
 import com.ardikars.common.net.Inet4Address;
-import com.ardikars.common.net.InetAddress;
 import com.ardikars.common.net.MacAddress;
 import com.ardikars.common.net.NetworkInterface;
 import com.ardikars.common.util.Loader;
@@ -12,34 +11,40 @@ import org.junit.runners.JUnit4;
 
 import java.net.SocketException;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 @RunWith(JUnit4.class)
 public class LoaderTest {
 
-	public static class Initializer implements ApplicationInitializer<String> {
+	public static final String KEY = "jxnet";
+	public static final String VALUE = "ROCK!!!...";
+
+	public static class Initializer implements ApplicationInitializer<Map<String, Object>> {
 
 		@Override
-		public Loader<Void> initialize(String additionalInformation) {
+		public Loader<Void> initialize(Map<String, Object> additionalInformation) {
+			additionalInformation.put(KEY, VALUE);
 			return new DefaultLibraryLoader();
 		}
 
 	}
 
 	@Test
-	public void test01LoadLibrary() throws SocketException {
-
+	public void test01LoadLibrary() {
+		Map<String, Object> parameter = new HashMap<>();
 		StringBuilder errbuf = new StringBuilder();
 		Pcap.Builder pcapBuilder = Pcap.builder()
 				.source(getDevice())
 				.immediateMode(ImmediateMode.IMMEDIATE)
 				.errbuf(errbuf)
 				.pcapType(Pcap.PcapType.LIVE);
-		BpfProgram.Builder bpfProgramBuilder = BpfProgram.builder()
-				.bpfCompileMode(BpfProgram.BpfCompileMode.OPTIMIZE)
-				.filter("tcp")
-				.netmask(Inet4Address.valueOf("255.255.255.0").toInt());
-		Application.run("TestApp", "0.0.1", Initializer.class, pcapBuilder, bpfProgramBuilder, "");
-		Application.getApplicationContext().pcapClose();
+		Application.run(Initializer.class, pcapBuilder, parameter);
+		Context context = Application.getApplicationContext();
+		if (context.getAdditionalInformation() instanceof Map) {
+			Map additionalInformation = (Map) context.getAdditionalInformation();
+			assert additionalInformation.get(KEY).equals(VALUE);
+		}
 		assert true;
 	}
 
