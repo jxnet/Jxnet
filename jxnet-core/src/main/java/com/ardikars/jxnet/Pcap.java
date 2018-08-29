@@ -246,21 +246,21 @@ public final class Pcap implements PointerHandler {
 					new IllegalArgumentException("Error buffer should be not null."));
 
 			Pcap pcap = Jxnet.PcapCreate(source, errbuf);
-			if (Jxnet.PcapSetSnaplen(pcap, snaplen) != Jxnet.OK) {
-				throw new NativeException();
+			if (Jxnet.PcapSetSnaplen(pcap, snaplen) < Jxnet.OK) {
+				throw new NativeException(Jxnet.PcapGetErr(pcap));
 			}
-			if (Jxnet.PcapSetPromisc(pcap, promiscuousMode.getValue()) != Jxnet.OK) {
-				throw new NativeException();
+			if (Jxnet.PcapSetPromisc(pcap, promiscuousMode.getValue()) < Jxnet.OK) {
+				throw new NativeException(Jxnet.PcapGetErr(pcap));
 			}
-			if (Jxnet.PcapSetTimeout(pcap, timeout) != Jxnet.OK) {
-				throw new NativeException();
+			if (Jxnet.PcapSetTimeout(pcap, timeout) < Jxnet.OK) {
+				throw new NativeException(Jxnet.PcapGetErr(pcap));
 			}
 			setImmediateModeAndTimeStamp(pcap);
 			setEnableRfMon(pcap);
-			if (Jxnet.PcapActivate(pcap) < 0) {
+			if (Jxnet.PcapActivate(pcap) < Jxnet.OK) {
 				throw new NativeException(Jxnet.PcapGetErr(pcap));
 			}
-			if (Jxnet.PcapSetDirection(pcap, direction) != Jxnet.OK) {
+			if (Jxnet.PcapSetDirection(pcap, direction) < Jxnet.OK) {
 				throw new PlatformNotSupportedException();
 			}
 			setEnableNonBlock(pcap);
@@ -328,14 +328,14 @@ public final class Pcap implements PointerHandler {
 
 		private void setImmediateModeAndTimeStamp(Pcap pcap) throws NativeException {
 			if (!Platforms.isWindows()) {
-				if (Jxnet.PcapSetImmediateMode(pcap, immediateMode.getValue()) != Jxnet.OK) {
-					throw new NativeException();
+				if (Jxnet.PcapSetImmediateMode(pcap, immediateMode.getValue()) < Jxnet.OK) {
+					throw new NativeException(Jxnet.PcapGetErr(pcap));
 				}
-				if (Jxnet.PcapSetTStampType(pcap, timeStampType.getValue()) != Jxnet.OK) {
-					throw new NativeException();
+				if (Jxnet.PcapSetTStampType(pcap, timeStampType.getValue()) < Jxnet.OK) {
+					throw new NativeException(Jxnet.PcapGetErr(pcap));
 				}
-				if (Jxnet.PcapSetTStampPrecision(pcap, timeStampPrecision.getValue()) != Jxnet.OK) {
-					throw new NativeException();
+				if (Jxnet.PcapSetTStampPrecision(pcap, timeStampPrecision.getValue()) < Jxnet.OK) {
+					throw new NativeException(Jxnet.PcapGetErr(pcap));
 				}
 			}
 		}
@@ -344,25 +344,25 @@ public final class Pcap implements PointerHandler {
 			if (enableRfMon) {
 				if (Jxnet.PcapCanSetRfMon(pcap) == 1) {
 					int mode = RadioFrequencyMonitorMode.RFMON.getValue();
-					if (Jxnet.PcapSetRfMon(pcap, mode) != Jxnet.OK) {
-						throw new NativeException();
+					if (Jxnet.PcapSetRfMon(pcap, mode) < Jxnet.OK) {
+						throw new NativeException(Jxnet.PcapGetErr(pcap));
 					}
 				}
 			} else {
-				if (Jxnet.PcapSetRfMon(pcap, RadioFrequencyMonitorMode.NON_RFMON.getValue()) != Jxnet.OK) {
-					throw new NativeException();
+				if (Jxnet.PcapSetRfMon(pcap, RadioFrequencyMonitorMode.NON_RFMON.getValue()) < Jxnet.OK) {
+					throw new NativeException(Jxnet.PcapGetErr(pcap));
 				}
 			}
 		}
 
 		private void setEnableNonBlock(Pcap pcap) throws NativeException {
 			if (enableNonBlock) {
-				if (Jxnet.PcapSetNonBlock(pcap, 1, errbuf) != Jxnet.OK) {
-					throw new NativeException();
+				if (Jxnet.PcapSetNonBlock(pcap, 1, errbuf) < Jxnet.OK) {
+					throw new NativeException(Jxnet.PcapGetErr(pcap));
 				}
 			} else {
-				if (Jxnet.PcapSetNonBlock(pcap, 0, errbuf) != Jxnet.OK) {
-					throw new NativeException();
+				if (Jxnet.PcapSetNonBlock(pcap, 0, errbuf) < Jxnet.OK) {
+					throw new NativeException(Jxnet.PcapGetErr(pcap));
 				}
 			}
 		}

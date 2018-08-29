@@ -17,6 +17,7 @@ buildscript {
 	dependencies {
 		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
 		classpath 'gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:1.6.2'
+		classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
 	}
 
 }
@@ -32,6 +33,7 @@ subprojects {
 		apply plugin: 'checkstyle'
 		apply plugin: 'pmd'
 		apply plugin: 'com.github.spotbugs'
+		apply plugin: 'com.github.kt3k.coveralls'
 
 		group = "${GROUP}"
 		version = "${VERSION}"
@@ -61,6 +63,13 @@ subprojects {
 		}
 
 		evaluationDependsOn(project.path)
+
+		jar {
+			manifest {
+				attributes 'Implementation-Title': 'Jxnet',
+						'Implementation-Version': version
+			}
+		}
 
 		javadoc {
 			def currentYear = Calendar.getInstance().get Calendar.YEAR
@@ -228,6 +237,13 @@ subprojects {
 		clean {
 			file("${rootDir}/${project.name}/obj").deleteDir()
 			file("${rootDir}/${project.name}/out").deleteDir()
+		}
+
+		/**
+		 * Upload converage report
+		 */
+		tasks.coveralls {
+			dependsOn 'check'
 		}
 
 	} else {

@@ -135,11 +135,12 @@ public final class ApplicationContext implements Context {
 	}
 
 	@Override
-	public PcapCode pcapCompile(String str, boolean optimize, int netmask) throws PcapCloseException, BpfProgramCloseException {
+	public PcapCode pcapCompile(String str, BpfProgram.BpfCompileMode optimize, int netmask) throws PcapCloseException, BpfProgramCloseException {
 		if (bpfProgram == null) {
 			bpfProgram = new BpfProgram();
 		}
-		int result = Jxnet.PcapCompile(pcap, bpfProgram, str, optimize ? 1 : 0, netmask);
+		Validate.notIllegalArgument(optimize != null, new IllegalArgumentException("Bpf compile mode should be not null."));
+		int result = Jxnet.PcapCompile(pcap, bpfProgram, str, optimize.getValue(), netmask);
 		if (result == 0) {
 			return PcapCode.PCAP_OK;
 		}
@@ -291,12 +292,14 @@ public final class ApplicationContext implements Context {
 	}
 
 	@Override
-	public PcapCode pcapCompileNoPcap(int snaplen, DataLinkType dataLinkType, String filter, boolean optimize, Inet4Address mask)
+	public PcapCode pcapCompileNoPcap(int snaplen, DataLinkType dataLinkType, String filter,
+									  BpfProgram.BpfCompileMode optimize, Inet4Address mask)
 			throws BpfProgramCloseException {
 		if (bpfProgram == null) {
 			bpfProgram = new BpfProgram();
 		}
-		int result = Jxnet.PcapCompileNoPcap(snaplen, dataLinkType.getValue(), bpfProgram, filter, optimize ? 1 : 0, mask.toInt());
+		Validate.notIllegalArgument(optimize != null, new IllegalArgumentException("Bpf compile mode should be not null."));
+		int result = Jxnet.PcapCompileNoPcap(snaplen, dataLinkType.getValue(), bpfProgram, filter, optimize.getValue(), mask.toInt());
 		if (result == 0) {
 			return PcapCode.PCAP_OK;
 		}

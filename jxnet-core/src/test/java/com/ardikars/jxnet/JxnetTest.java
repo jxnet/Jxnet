@@ -150,13 +150,6 @@ public class JxnetTest {
      */
     @Before
     public void create() throws Exception {
-        Pcap.Builder pcapBuilder = Pcap.builder()
-                .source(LoaderTest.getDevice())
-                .immediateMode(ImmediateMode.IMMEDIATE)
-                .pcapType(Pcap.PcapType.LIVE)
-                .errbuf(errbuf);
-        Application.run(LoaderTest.Initializer.class, pcapBuilder, new HashMap<>());
-        Application.getApplicationContext().pcapClose();
         if ((resultCode = PcapFindAllDevs(alldevsp, errbuf)) != OK) {
             logger.warning("create:PcapFindAllDevs(): " + errbuf.toString());
         }
@@ -625,7 +618,9 @@ public class JxnetTest {
         }
         System.out.println("Time stamp name       : " + tsName);
         try {
-            System.out.println("Time stamp value      : " + PcapTStampTypeNameToVal(tsName));
+            if (tsName != null) {
+                System.out.println("Time stamp value      : " + PcapTStampTypeNameToVal(tsName));
+            }
         } catch (PlatformNotSupportedException e) {
             logger.warning(e.getMessage());
         }

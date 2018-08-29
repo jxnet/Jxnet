@@ -190,11 +190,11 @@ public final class BpfProgram implements PointerHandler {
 					new IllegalArgumentException("Filter expression should be not null or empty."));
 
 			BpfProgram bpfProgram = new BpfProgram();
-			if (Jxnet.PcapCompile(pcap, bpfProgram, filter, bpfCompileMode.getValue(), netmask) != Jxnet.OK) {
-				throw new NativeException();
+			if (Jxnet.PcapCompile(pcap, bpfProgram, filter, bpfCompileMode.getValue(), netmask) < Jxnet.OK) {
+				throw new NativeException(Jxnet.PcapGetErr(pcap));
 			}
-			if (Jxnet.PcapSetFilter(pcap, bpfProgram) != Jxnet.OK) {
-				throw new NativeException();
+			if (Jxnet.PcapSetFilter(pcap, bpfProgram) < Jxnet.OK) {
+				throw new NativeException(Jxnet.PcapGetErr(pcap));
 			}
 			return bpfProgram;
 		}

@@ -57,14 +57,6 @@ public class FreakTest {
      */
     @Before
     public void create() {
-        StringBuilder errbuf = new StringBuilder();
-        Pcap.Builder pcapBuilder = Pcap.builder()
-                .source(LoaderTest.getDevice())
-                .immediateMode(ImmediateMode.IMMEDIATE)
-                .pcapType(Pcap.PcapType.LIVE)
-                .errbuf(errbuf);
-        Application.run(LoaderTest.Initializer.class, pcapBuilder, new HashMap<>());
-        Application.getApplicationContext().pcapClose();
         pcap = PcapOpenDead(linkType.getValue(), snaplen);
         if (pcap == null) {
             logger.warning("create:PcapOpenDead(): ");

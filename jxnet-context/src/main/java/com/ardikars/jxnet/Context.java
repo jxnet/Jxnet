@@ -109,7 +109,7 @@ public interface Context extends Factory<Context, Builder<Pcap, Void>> {
 	 * @throws BpfProgramCloseException bpf program close exception.
 	 * @since 1.1.4
 	 */
-	PcapCode pcapCompile(String str, boolean optimize, int netmask) throws PcapCloseException, BpfProgramCloseException;
+	PcapCode pcapCompile(String str, BpfProgram.BpfCompileMode optimize, int netmask) throws PcapCloseException, BpfProgramCloseException;
 
 	/**
 	 * Associate a filter to a capture.
@@ -308,7 +308,7 @@ public interface Context extends Factory<Context, Builder<Pcap, Void>> {
 	 * @throws BpfProgramCloseException bpf program close exception.
 	 * @since 1.1.4
 	 */
-	PcapCode pcapCompileNoPcap(int snaplen, DataLinkType dataLinkType, String filter, boolean optimize, Inet4Address mask)
+	PcapCode pcapCompileNoPcap(int snaplen, DataLinkType dataLinkType, String filter, BpfProgram.BpfCompileMode optimize, Inet4Address mask)
 			throws BpfProgramCloseException;
 
 	/**

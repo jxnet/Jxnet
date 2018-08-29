@@ -23,7 +23,7 @@ package com.ardikars.jxnet.exception;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.5
  */
-public final class NativeException extends RuntimeException {
+public class NativeException extends RuntimeException {
 
 	public NativeException() {
 		super();

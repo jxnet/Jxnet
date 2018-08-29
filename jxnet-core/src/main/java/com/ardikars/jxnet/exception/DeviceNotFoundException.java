@@ -23,7 +23,7 @@ package com.ardikars.jxnet.exception;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.5
  */
-public final class DeviceNotFoundException extends RuntimeException {
+public class DeviceNotFoundException extends RuntimeException {
 
 	public DeviceNotFoundException() {
 		super();
