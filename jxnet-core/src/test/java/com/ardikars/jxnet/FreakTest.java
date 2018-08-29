@@ -32,6 +32,7 @@ import com.ardikars.common.net.Inet4Address;
 import com.ardikars.jxnet.exception.NativeException;
 import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 import org.junit.After;
@@ -62,7 +63,7 @@ public class FreakTest {
                 .immediateMode(ImmediateMode.IMMEDIATE)
                 .pcapType(Pcap.PcapType.LIVE)
                 .errbuf(errbuf);
-        Application.run(LoaderTest.Initializer.class, pcapBuilder, "");
+        Application.run(LoaderTest.Initializer.class, pcapBuilder, new HashMap<>());
         Application.getApplicationContext().pcapClose();
         pcap = PcapOpenDead(linkType.getValue(), snaplen);
         if (pcap == null) {

@@ -88,6 +88,7 @@ import java.lang.reflect.Method;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -123,7 +124,7 @@ public class JxnetTest {
     private final int immediate = 1;
     private final int optimize = 1;
     private final int bufferSize = 1500;
-    private final String filter = "tcp";
+    private final String filter = "";
     private final int precision = 0;
 
     private final int maxPkt = 5;
@@ -154,7 +155,7 @@ public class JxnetTest {
                 .immediateMode(ImmediateMode.IMMEDIATE)
                 .pcapType(Pcap.PcapType.LIVE)
                 .errbuf(errbuf);
-        Application.run(LoaderTest.Initializer.class, pcapBuilder, "");
+        Application.run(LoaderTest.Initializer.class, pcapBuilder, new HashMap<>());
         Application.getApplicationContext().pcapClose();
         if ((resultCode = PcapFindAllDevs(alldevsp, errbuf)) != OK) {
             logger.warning("create:PcapFindAllDevs(): " + errbuf.toString());
@@ -374,7 +375,7 @@ public class JxnetTest {
         }
     }
 
-    @Test
+    //@Test
     public void Test11_PcapNextEx() {
         pkt = ByteBuffer.allocateDirect(bufferSize);
         for (int i = 0; i < maxPkt; i++) {

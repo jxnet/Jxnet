@@ -41,11 +41,16 @@ public class LoaderTest {
 				.pcapType(Pcap.PcapType.LIVE);
 		Application.run(Initializer.class, pcapBuilder, parameter);
 		Context context = Application.getApplicationContext();
-		if (context.getAdditionalInformation() instanceof Map) {
-			Map additionalInformation = (Map) context.getAdditionalInformation();
+		if (Application.getAdditionalInformation() instanceof Map) {
+			Map additionalInformation = (Map) Application.getAdditionalInformation();
 			assert additionalInformation.get(KEY).equals(VALUE);
 		}
 		assert true;
+	}
+
+	@Test
+	public void getDeviceTest() {
+		System.out.println("DEVICE" + getDevice());
 	}
 
 	public static String getDevice() {

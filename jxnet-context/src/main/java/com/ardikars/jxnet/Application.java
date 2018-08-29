@@ -36,6 +36,7 @@ public final class Application {
     private static final Application instance = new Application();
 
     private Context context;
+    private Object additionalInformation;
 
     public boolean isLoaded() {
         return this.loaded;
@@ -55,47 +56,19 @@ public final class Application {
     /**
      * Used for bootstraping Jxnet.
      * @param initializerClass initializer class.
-     * @param argements additional information.
-     * @throws UnsatisfiedLinkError UnsatisfiedLinkError.
-     */
-    @SuppressWarnings("PMD.AvoidUsingNativeCode")
-    public static void run(Class initializerClass,
-                           final Object argements) {
-        run(initializerClass, null, null, argements);
-    }
-
-    /**
-     * Used for bootstraping Jxnet.
-     * @param initializerClass initializer class.
      * @param pcapBuilder pcap builder.
      * @param argements additional information.
      * @throws UnsatisfiedLinkError UnsatisfiedLinkError.
      */
     @SuppressWarnings("PMD.AvoidUsingNativeCode")
-    public static void run(Class initializerClass,
-                           final Pcap.Builder pcapBuilder,
-                           final Object argements) {
-        run(initializerClass, pcapBuilder, null, argements);
-    }
-
-    /**
-     * Used for bootstraping Jxnet.
-     * @param initializerClass initializer class.
-     * @param pcapBuilder pcap builder.
-     * @param bpfBuilder bpf builder.
-     * @param argements additional information.
-     * @throws UnsatisfiedLinkError UnsatisfiedLinkError.
-     */
-    @SuppressWarnings("PMD.AvoidUsingNativeCode")
-    public static void run(Class initializerClass,
-                               final Pcap.Builder pcapBuilder, final BpfProgram.Builder bpfBuilder,
-                               final Object argements) {
+    public static void run(Class initializerClass, final Pcap.Builder pcapBuilder, final Object argements) {
 
         ApplicationInitializer initializer;
         Loader<Void> libraryLoaders;
         try {
             initializer = (ApplicationInitializer) initializerClass.newInstance();
-            libraryLoaders = initializer.initialize(argements);
+            instance.additionalInformation = argements;
+            libraryLoaders = initializer.initialize(instance.additionalInformation);
         } catch (InstantiationException e) {
             LOGGER.warning(e.getMessage());
             return;
@@ -118,16 +91,8 @@ public final class Application {
                     @Override
                     public void onSuccess(Object value) {
                         instance.loaded = true;
-                        Pcap pcap = pcapBuilder.build();
-                        if (bpfBuilder != null) {
-                            BpfProgram bpfProgram = bpfBuilder.pcap(pcap).build();
-                            instance.context = ApplicationContext
-                                    .newApplicationContext(pcap, bpfProgram, argements);
-                        } else {
-                            instance.context = ApplicationContext
-                                    .newApplicationContext(pcap, null, argements);
-                        }
-                    }
+                        instance.context = new ApplicationContext(pcapBuilder);
+                }
 
                     @Override
                     public void onFailure(Throwable throwable) {
@@ -145,6 +110,14 @@ public final class Application {
      */
     public static Context getApplicationContext() {
         return instance.context;
+    }
+
+    /**
+     * Get additional information.
+     * @return additional information.
+     */
+    public static Object getAdditionalInformation() {
+        return instance.additionalInformation;
     }
 
 }

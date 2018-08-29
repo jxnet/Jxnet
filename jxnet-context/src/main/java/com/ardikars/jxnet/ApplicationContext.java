@@ -18,6 +18,7 @@
 package com.ardikars.jxnet;
 
 import com.ardikars.common.net.Inet4Address;
+import com.ardikars.common.util.Builder;
 import com.ardikars.common.util.Validate;
 import com.ardikars.jxnet.exception.BpfProgramCloseException;
 import com.ardikars.jxnet.exception.PcapCloseException;
@@ -27,6 +28,7 @@ import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -43,15 +45,13 @@ public final class ApplicationContext implements Context {
 
 	private String applicationVersion;
 
-	private Object additionalInformation;
-
-	private Pcap pcap;
+	private final Pcap pcap;
 
 	private BpfProgram bpfProgram;
 
 	private PcapDumper pcapDumper;
 
-	private ApplicationContext() {
+	protected ApplicationContext(Builder<Pcap, Void> builder) {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
@@ -73,13 +73,15 @@ public final class ApplicationContext implements Context {
 			if (stream != null) {
 				properties.load(stream);
 			}
-			applicationName = properties.getProperty("jxnet.application.name", "");
-			applicationVersion = properties.getProperty("jxnet.application.version", "");
+			this.applicationName = properties.getProperty("jxnet.application.name", "");
+			this.applicationVersion = properties.getProperty("jxnet.application.version", "");
 		} catch (IOException e) {
-			applicationName = "";
-			applicationVersion = "";
+			this.applicationName = "";
+			this.applicationVersion = "";
 			LOGGER.warning(e.getMessage());
 		}
+		Validate.notIllegalArgument(builder != null, new IllegalArgumentException("Pcap builder should be not null."));
+		this.pcap = builder.build();
 	}
 
     @Override
@@ -93,43 +95,8 @@ public final class ApplicationContext implements Context {
     }
 
 	@Override
-	public Object getAdditionalInformation() {
-		return additionalInformation;
-	}
-
-	/**
-	 * Create application context.
-	 * @param pcap pcap.
-	 * @return application context.
-	 */
-	public static ApplicationContext newApplicationContext(Pcap pcap) {
-		return newApplicationContext(pcap, null, null);
-	}
-
-	/**
-	 * Create application context.
-	 * @param pcap pcap.
-	 * @param additionalInformation additional information.
-	 * @return application context.
-	 */
-	public static ApplicationContext newApplicationContext(Pcap pcap, Object additionalInformation) {
-		return newApplicationContext(pcap, null, additionalInformation);
-	}
-
-	/**
-	 * Create application context.
-	 * @param pcap pcap.
-	 * @param bpfProgram bpf program.
-	 * @param additionalInformation additional information.
-	 * @return application context.
-	 */
-	public static ApplicationContext newApplicationContext(Pcap pcap, BpfProgram bpfProgram, Object additionalInformation) {
-		Validate.notIllegalArgument(pcap != null);
-		ApplicationContext applicationContext = new ApplicationContext();
-		applicationContext.pcap = pcap;
-		applicationContext.bpfProgram = bpfProgram;
-		applicationContext.additionalInformation = additionalInformation;
-		return applicationContext;
+	public Context newInstance(Builder<Pcap, Void> builder) {
+		return new ApplicationContext(builder);
 	}
 
 	@Override
@@ -168,8 +135,11 @@ public final class ApplicationContext implements Context {
 	}
 
 	@Override
-	public PcapCode pcapCompile(String str, int optimize, int netmask) throws PcapCloseException {
-		int result = Jxnet.PcapCompile(pcap, bpfProgram, str, optimize, netmask);
+	public PcapCode pcapCompile(String str, boolean optimize, int netmask) throws PcapCloseException, BpfProgramCloseException {
+		if (bpfProgram == null) {
+			bpfProgram = new BpfProgram();
+		}
+		int result = Jxnet.PcapCompile(pcap, bpfProgram, str, optimize ? 1 : 0, netmask);
 		if (result == 0) {
 			return PcapCode.PCAP_OK;
 		}
@@ -177,7 +147,10 @@ public final class ApplicationContext implements Context {
 	}
 
 	@Override
-	public PcapCode pcapSetFilter() throws PcapCloseException {
+	public PcapCode pcapSetFilter() throws PcapCloseException, BpfProgramCloseException {
+		if (bpfProgram == null) {
+			bpfProgram = new BpfProgram();
+		}
 		int result = Jxnet.PcapSetFilter(pcap, bpfProgram);
 		if (result == 0) {
 			return PcapCode.PCAP_OK;
@@ -320,6 +293,9 @@ public final class ApplicationContext implements Context {
 	@Override
 	public PcapCode pcapCompileNoPcap(int snaplen, DataLinkType dataLinkType, String filter, boolean optimize, Inet4Address mask)
 			throws BpfProgramCloseException {
+		if (bpfProgram == null) {
+			bpfProgram = new BpfProgram();
+		}
 		int result = Jxnet.PcapCompileNoPcap(snaplen, dataLinkType.getValue(), bpfProgram, filter, optimize ? 1 : 0, mask.toInt());
 		if (result == 0) {
 			return PcapCode.PCAP_OK;
@@ -356,23 +332,54 @@ public final class ApplicationContext implements Context {
 	}
 
 	@Override
-	public int pcapGetTStampPrecision() throws PcapCloseException, PlatformNotSupportedException {
-		return Jxnet.PcapGetTStampPrecision(pcap);
+	public PcapTimeStampPrecision pcapGetTStampPrecision() throws PcapCloseException, PlatformNotSupportedException {
+		if (Jxnet.PcapGetTStampPrecision(pcap) == 0) {
+			return PcapTimeStampPrecision.MICRO;
+		}
+		return PcapTimeStampPrecision.NANO;
 	}
 
 	@Override
-	public PcapCode pcapListDataLinks(List<Integer> dtlBuffer) throws PcapCloseException, PlatformNotSupportedException {
-		int result = Jxnet.PcapListDataLinks(pcap, dtlBuffer);
+	public PcapCode pcapListDataLinks(List<DataLinkType> dtlBuffer) throws PcapCloseException, PlatformNotSupportedException {
+		List<Integer> buffers = new ArrayList<>();
+		int result = Jxnet.PcapListDataLinks(pcap, buffers);
 		if (result == 0) {
+			dtlBuffer.clear(); // clear buffer.
+			for (Integer datalink : buffers) {
+				dtlBuffer.add(DataLinkType.valueOf(datalink.shortValue()));
+			}
 			return PcapCode.PCAP_OK;
 		}
 		return PcapCode.PCAP_ERROR;
 	}
 
 	@Override
-	public PcapCode pcapListTStampTypes(List<Integer> tstampTypesp) throws PcapCloseException, PlatformNotSupportedException {
-		int result = Jxnet.PcapListTStampTypes(pcap, tstampTypesp);
+	public PcapCode pcapListTStampTypes(List<PcapTimeStampType> tstampTypesp) throws PcapCloseException, PlatformNotSupportedException {
+		List<Integer> buffers = new ArrayList<>();
+		int result = Jxnet.PcapListTStampTypes(pcap, buffers);
 		if (result == 0) {
+			tstampTypesp.clear(); // clear buffer.
+			for (Integer tstampType : buffers) {
+				switch (tstampType) {
+					case 0:
+						tstampTypesp.add(PcapTimeStampType.HOST);
+						break;
+					case 1:
+						tstampTypesp.add(PcapTimeStampType.HOST_LOWPREC);
+						break;
+					case 2:
+						tstampTypesp.add(PcapTimeStampType.HOST_HIPREC);
+						break;
+					case 3:
+						tstampTypesp.add(PcapTimeStampType.ADAPTER);
+						break;
+					case 4:
+						tstampTypesp.add(PcapTimeStampType.ADAPTER_UNSYNCED);
+						break;
+					default:
+						// do nothing
+				}
+			}
 			return PcapCode.PCAP_OK;
 		}
 		return PcapCode.PCAP_ERROR;
@@ -380,7 +387,8 @@ public final class ApplicationContext implements Context {
 
 	@Override
 	public PcapCode pcapOfflineFilter(BpfProgram fp, PcapPktHdr h, ByteBuffer pkt) {
-		int result = Jxnet.PcapOfflineFilter(bpfProgram, h, pkt);
+		Validate.notIllegalArgument(fp != null && !fp.isClosed(), new IllegalArgumentException("Bpf should be not null or closed."));
+		int result = Jxnet.PcapOfflineFilter(fp, h, pkt);
 		if (result == 0) {
 			return PcapCode.PCAP_OK;
 		}

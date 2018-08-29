@@ -28,6 +28,10 @@ public class Tests {
 
 	@Test
 	public void ex() throws SocketException {
+		Context context = null;
+		Pcap.Builder pcapBuilder = null;
+		BpfProgram.Builder builder = null;
+		context.newInstance(pcapBuilder);
 		assert true;
 	}
 

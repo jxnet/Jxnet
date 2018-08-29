@@ -18,6 +18,8 @@
 package com.ardikars.jxnet;
 
 import com.ardikars.common.net.Inet4Address;
+import com.ardikars.common.util.Builder;
+import com.ardikars.common.util.Factory;
 import com.ardikars.jxnet.exception.BpfProgramCloseException;
 import com.ardikars.jxnet.exception.PcapCloseException;
 import com.ardikars.jxnet.exception.PcapDumperCloseException;
@@ -26,13 +28,11 @@ import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 import java.nio.ByteBuffer;
 import java.util.List;
 
-public interface Context {
+public interface Context extends Factory<Context, Builder<Pcap, Void>> {
 
 	String getApplicationName();
 
 	String getApplicationVersion();
-
-	Object getAdditionalInformation();
 
 	/**
 	 * Native function mapping
@@ -106,17 +106,19 @@ public interface Context {
 	 * @param netmask netmask.
 	 * @return -1 on error, 0 otherwise.
 	 * @throws PcapCloseException pcap close exception.
+	 * @throws BpfProgramCloseException bpf program close exception.
 	 * @since 1.1.4
 	 */
-	PcapCode pcapCompile(String str, int optimize, int netmask) throws PcapCloseException;
+	PcapCode pcapCompile(String str, boolean optimize, int netmask) throws PcapCloseException, BpfProgramCloseException;
 
 	/**
 	 * Associate a filter to a capture.
 	 * @return -1 on error, 0 otherwise.
 	 * @throws PcapCloseException pcap close exception.
+	 * @throws BpfProgramCloseException bpf program close exception.
 	 * @since 1.1.4
 	 */
-	PcapCode pcapSetFilter() throws PcapCloseException;
+	PcapCode pcapSetFilter() throws PcapCloseException, BpfProgramCloseException;
 
 	/**
 	 * Send a raw packet.
@@ -354,12 +356,12 @@ public interface Context {
 	PcapCode pcapSetDirection(PcapDirection direction) throws PcapCloseException, PlatformNotSupportedException;
 
 	/**
-	 * Get the time stamp precision returned in captures.
-	 * @return the precision of the time stamp returned in packet captures on the pcap descriptor.
+	 * Get the timestamp precision returned in captures.
+	 * @return the precision of the timestamp returned in packet captures on the pcap descriptor.
 	 * @throws PcapCloseException pcap close exception.
 	 * @throws PlatformNotSupportedException platform not supported exception.
 	 */
-	int pcapGetTStampPrecision() throws PcapCloseException, PlatformNotSupportedException;
+	PcapTimeStampPrecision pcapGetTStampPrecision() throws PcapCloseException, PlatformNotSupportedException;
 
 	/**
 	 * Get list of datalinks.
@@ -368,16 +370,16 @@ public interface Context {
 	 * @throws PcapCloseException pcap close exception.
 	 * @throws PlatformNotSupportedException platform not supported exception.
 	 */
-	PcapCode pcapListDataLinks(List<Integer> dtlBuffer) throws PcapCloseException, PlatformNotSupportedException;
+	PcapCode pcapListDataLinks(List<DataLinkType> dtlBuffer) throws PcapCloseException, PlatformNotSupportedException;
 
 	/**
 	 * Get link of time stamp types.
-	 * @param tstampTypesp time stamp types.
+	 * @param tstampTypesp timestamp types.
 	 * @return time stamp types.
 	 * @throws PcapCloseException pcap close exception.
 	 * @throws PlatformNotSupportedException platform not supported exception.
 	 */
-	PcapCode pcapListTStampTypes(List<Integer> tstampTypesp) throws PcapCloseException, PlatformNotSupportedException;
+	PcapCode pcapListTStampTypes(List<PcapTimeStampType> tstampTypesp) throws PcapCloseException, PlatformNotSupportedException;
 
 	/**
 	 * Given a BPF program, a PcapPktHdr structure for a packet, and the raw
