@@ -182,16 +182,19 @@ public final class BpfProgram implements PointerHandler {
 		 * @return returns BpfProgram.
 		 */
 		private BpfProgram buildBpf() {
-			Validate.nullPointer(pcap);
-			Validate.notIllegalArgument(!pcap.isClosed(), new IllegalArgumentException("Pcap handle is closed."));
-			Validate.notIllegalArgument(filter != null && !filter.equals(""));
+			Validate.notIllegalArgument(pcap != null,
+					new IllegalArgumentException("Pcap handle should be not null."));
+			Validate.notIllegalArgument(!pcap.isClosed(),
+					new IllegalArgumentException("Pcap handle is closed."));
+			Validate.notIllegalArgument(filter != null && !filter.equals(""),
+					new IllegalArgumentException("Filter expression should be not null or empty."));
 
 			BpfProgram bpfProgram = new BpfProgram();
-			if (Jxnet.PcapCompile(pcap, bpfProgram, filter, bpfCompileMode.getValue(), netmask) != Jxnet.OK) {
-				throw new NativeException();
+			if (Jxnet.PcapCompile(pcap, bpfProgram, filter, bpfCompileMode.getValue(), netmask) < Jxnet.OK) {
+				throw new NativeException(Jxnet.PcapGetErr(pcap));
 			}
-			if (Jxnet.PcapSetFilter(pcap, bpfProgram) != Jxnet.OK) {
-				throw new NativeException();
+			if (Jxnet.PcapSetFilter(pcap, bpfProgram) < Jxnet.OK) {
+				throw new NativeException(Jxnet.PcapGetErr(pcap));
 			}
 			return bpfProgram;
 		}

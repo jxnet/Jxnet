@@ -23,7 +23,7 @@ package com.ardikars.jxnet.exception;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
-public final class FileCloseException extends RuntimeException {
+public class FileCloseException extends RuntimeException {
 
     public FileCloseException() {
         super();

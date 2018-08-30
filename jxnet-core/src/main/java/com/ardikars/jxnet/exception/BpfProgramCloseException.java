@@ -23,7 +23,7 @@ package com.ardikars.jxnet.exception;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
-public final class BpfProgramCloseException extends RuntimeException {
+public class BpfProgramCloseException extends RuntimeException {
 
 	public BpfProgramCloseException() {
 		super();

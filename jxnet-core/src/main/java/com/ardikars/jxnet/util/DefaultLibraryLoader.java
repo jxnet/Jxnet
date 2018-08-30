@@ -80,7 +80,7 @@ public class DefaultLibraryLoader implements Loader<Void> {
         nativeLibrary.load(new Callback<Void>() {
             @Override
             public void onSuccess(Void value) {
-                callback.onSuccess(value);
+                callback.onSuccess(null);
             }
 
             @Override

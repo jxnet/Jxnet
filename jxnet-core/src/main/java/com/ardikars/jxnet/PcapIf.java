@@ -17,6 +17,8 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.jxnet.exception.OperationNotSupportedException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -53,6 +55,15 @@ public final class PcapIf implements Cloneable {
 
 	private PcapIf() {
 		//
+	}
+
+	/**
+	 * This method will throws {@code OperationNotSupportedException}.
+	 * See {@code Jxnet.PcapFinaAllDevs}.
+	 * @return nothing.
+	 */
+	public static PcapIf newInstance() {
+		throw new OperationNotSupportedException("Cannot instantiated directly, please use Jxnet.PcapFindAllDev().");
 	}
 
 	/**

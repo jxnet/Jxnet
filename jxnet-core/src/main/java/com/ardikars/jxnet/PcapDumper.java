@@ -17,6 +17,8 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.common.util.Validate;
+
 /**
  * Savefile descriptor.
  * @author Ardika Rommy Sanjaya
@@ -78,6 +80,47 @@ public final class PcapDumper implements Cloneable {
 				.append("address=").append(this.getAddress())
 				.append('}')
 				.toString();
+	}
+
+	public static final class Builder implements com.ardikars.common.util.Builder<PcapDumper, Void> {
+
+		private Pcap pcap;
+		private String fileName;
+
+		/**
+		 * Pcap handle.
+		 * @param pcap pcap handle.
+		 * @return resturns PcapDumper builder.
+		 */
+		public Builder pcap(Pcap pcap) {
+			this.pcap = pcap;
+			return this;
+		}
+
+		/**
+		 * File name.
+		 * @param fileName file name.
+		 * @return resturns PcapDumper builder.
+		 */
+		public Builder fileName(String fileName) {
+			this.fileName = fileName;
+			return this;
+		}
+
+		@Override
+		public PcapDumper build() {
+			Validate.notIllegalArgument(pcap != null,
+					new IllegalArgumentException("Pcap should be not null."));
+			Validate.notIllegalArgument(fileName != null && fileName.equals(""),
+					new IllegalArgumentException("File name should be not null or empty."));
+			return Jxnet.PcapDumpOpen(pcap, fileName);
+		}
+
+		@Override
+		public PcapDumper build(Void value) {
+			throw new UnsupportedOperationException();
+		}
+
 	}
 
 }

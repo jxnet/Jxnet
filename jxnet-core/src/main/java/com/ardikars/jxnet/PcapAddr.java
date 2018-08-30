@@ -17,6 +17,8 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.jxnet.exception.OperationNotSupportedException;
+
 /**
  * Representation of an interface address, used by Jxnet.PcapFindAllDevs().
  * @author Ardika Rommy Sanjaya
@@ -34,6 +36,15 @@ public final class PcapAddr implements Cloneable {
 
 	private PcapAddr() {
 		//
+	}
+
+	/**
+	 * This method will throws {@code OperationNotSupportedException}.
+	 * See {@code Jxnet.PcapFinaAllDevs}.
+	 * @return nothing.
+	 */
+	public static PcapAddr newInstance() {
+		throw new OperationNotSupportedException("Cannot instantiated directly, please use Jxnet.PcapFindAllDev().");
 	}
 
 	/**

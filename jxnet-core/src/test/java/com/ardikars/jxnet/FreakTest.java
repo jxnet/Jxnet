@@ -32,6 +32,7 @@ import com.ardikars.common.net.Inet4Address;
 import com.ardikars.jxnet.exception.NativeException;
 import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 import org.junit.After;
@@ -56,16 +57,6 @@ public class FreakTest {
      */
     @Before
     public void create() {
-        StringBuilder errbuf = new StringBuilder();
-        Pcap.Builder pcapBuilder = Pcap.builder()
-                .source(LoaderTest.getDevice())
-                .immediateMode(ImmediateMode.IMMEDIATE)
-                .errbuf(errbuf);
-        BpfProgram.Builder bpfProgramBuilder = BpfProgram.builder()
-                .bpfCompileMode(BpfProgram.BpfCompileMode.OPTIMIZE)
-                .filter("tcp")
-                .netmask(Inet4Address.valueOf("255.255.255.0").toInt());
-        Application.run("FreadTest", "0.0.1", LoaderTest.Initializer.class, pcapBuilder, bpfProgramBuilder, "");
         pcap = PcapOpenDead(linkType.getValue(), snaplen);
         if (pcap == null) {
             logger.warning("create:PcapOpenDead(): ");

@@ -1,0 +1,12 @@
+
+/**
+ * Copyright (C) 2017-2018  Ardika Rommy Sanjaya
+ */
+
+dependencies {
+    compile project(":jxnet-core")
+    compile project(":jxnet-context")
+    compile('org.slf4j:slf4j-api:1.7.25')
+    compile('org.springframework.boot:spring-boot-configuration-processor:2.0.4.RELEASE')
+    compile('org.springframework.boot:spring-boot-autoconfigure:2.0.4.RELEASE')
+}

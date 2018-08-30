@@ -17,6 +17,7 @@ buildscript {
 	dependencies {
 		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
 		classpath 'gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:1.6.2'
+		classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
 	}
 
 }
@@ -32,6 +33,7 @@ subprojects {
 		apply plugin: 'checkstyle'
 		apply plugin: 'pmd'
 		apply plugin: 'com.github.spotbugs'
+		apply plugin: 'com.github.kt3k.coveralls'
 
 		group = "${GROUP}"
 		version = "${VERSION}"
@@ -46,8 +48,8 @@ subprojects {
 		}
 
         dependencies {
-			compile('com.ardikars.common:common-net:1.2.0.RC1')
-            compile 'com.ardikars.common:common-util:1.2.0.RC1'
+			compile('com.ardikars.common:common-net:1.2.0.RC2')
+            compile 'com.ardikars.common:common-util:1.2.0.RC2'
         }
 
 		configurations.archives.artifacts.with { archives ->
@@ -61,6 +63,13 @@ subprojects {
 		}
 
 		evaluationDependsOn(project.path)
+
+		jar {
+			manifest {
+				attributes 'Implementation-Title': 'Jxnet',
+						'Implementation-Version': version
+			}
+		}
 
 		javadoc {
 			def currentYear = Calendar.getInstance().get Calendar.YEAR
@@ -128,9 +137,27 @@ subprojects {
 			toolVersion "${PMD_VERION}"
 		}
 
+		jacoco {
+			toolVersion = "${JACOCO_VERSION}"
+		}
+
+		jacocoTestReport {
+			reports {
+				xml.enabled true
+				csv.enabled false
+				html.destination file("${buildDir}/jacocoHtml")
+			}
+		}
+
+
 		test {
 			testLogging {
 				showStandardStreams = true
+			}
+			jacoco {
+				append = false
+				destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
+				classDumpDir = file("$buildDir/jacoco/classpathdumps")
 			}
 		}
 
@@ -212,28 +239,17 @@ subprojects {
 			file("${rootDir}/${project.name}/out").deleteDir()
 		}
 
+		/**
+		 * Upload converage report
+		 */
+		tasks.coveralls {
+			dependsOn 'check'
+		}
+
 	} else {
 		apply plugin: 'c'
 	}
 
-}
-
-task codeCoverageReport(type: JacocoReport) {
-	executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
-	subprojects.each { subproject ->
-		if (!(subproject.name.equals("${rootProject.name}")) && !((subproject.name).equals("jxnet-native"))) {
-			sourceSets subproject.sourceSets.main
-		}
-	}
-	reports {
-		xml.enabled false
-		html.enabled true
-		csv.enabled false
-	}
-}
-
-codeCoverageReport.dependsOn {
-	subprojects*.test
 }
 
 task ndkBuild(type: Exec) {

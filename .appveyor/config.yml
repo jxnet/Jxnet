@@ -41,7 +41,7 @@ install:
 
 build_script:
   - cmd: set PATH=C:\tools\mingw64\bin;C:\Program Files (x86)\NSIS\;%PATH%
-  - cmd: gradlew.bat clean build -x test --info --no-daemon
+  - cmd: gradlew.bat clean build jacocoTestReport coveralls --info --no-daemon
 
 #---------------------------------#
 #         notifications           #
