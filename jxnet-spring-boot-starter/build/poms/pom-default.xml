@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.ardikars.jxnet</groupId>
+  <artifactId>jxnet-spring-boot-starter</artifactId>
+  <version>1.4.0.RC1</version>
+  <name>Jxnet</name>
+  <description>Jxnet is a java library for capturing and sending network paket.</description>
+  <url>https://github.com/jxnet/Jxnet</url>
+  <organization>
+    <name>ardikars</name>
+    <url>http://ardikars.com</url>
+  </organization>
+  <licenses>
+    <license>
+      <name>GNU Lesser General Public License, Version 3.0</name>
+      <url>http://www.gnu.org/licenses</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>ardikars</id>
+      <name>Ardika Rommy Sanjaya</name>
+      <email>contact@ardikars.com</email>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git:https://github.com/jxnet/Jxnet.git</connection>
+    <developerConnection>scm:git:git@github.com/jxnet/Jxnet.git</developerConnection>
+    <url>https://github.com/jxnet/Jxnet.git</url>
+  </scm>
+  <dependencies>
+    <dependency>
+      <groupId>com.ardikars.common</groupId>
+      <artifactId>common-net</artifactId>
+      <version>1.2.0.RC2</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.ardikars.common</groupId>
+      <artifactId>common-util</artifactId>
+      <version>1.2.0.RC2</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.ardikars.jxnet</groupId>
+      <artifactId>jxnet-spring-boot-autoconfigure</artifactId>
+      <version>1.4.0.RC1</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+</project>

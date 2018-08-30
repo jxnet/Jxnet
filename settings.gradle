@@ -3,3 +3,6 @@ rootProject.name = 'jxnet'
 include 'jxnet-native'
 include 'jxnet-context'
 include 'jxnet-core'
+include 'jxnet-spring-boot-autoconfigure'
+include 'jxnet-spring-boot-starter'
+

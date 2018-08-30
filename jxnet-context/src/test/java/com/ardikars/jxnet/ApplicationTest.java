@@ -1,24 +1,13 @@
 package com.ardikars.jxnet;
 
-import com.ardikars.common.net.Inet4Address;
-import com.ardikars.common.util.Hexs;
-import com.ardikars.common.util.Loader;
-import com.ardikars.jxnet.util.DefaultLibraryLoader;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.nio.ByteBuffer;
-
 @RunWith(JUnit4.class)
 public class ApplicationTest {
 
-    static class Initializer implements ApplicationInitializer<String> {
-        @Override
-        public Loader<Void> initialize(String arguments) {
-            return new DefaultLibraryLoader();
-        }
-    }
+
 
     @Test
     public void test() {

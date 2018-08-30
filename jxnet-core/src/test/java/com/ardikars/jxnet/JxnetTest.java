@@ -88,7 +88,6 @@ import java.lang.reflect.Method;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -609,7 +608,7 @@ public class JxnetTest {
 
     @Test
     public void Test31_PcapTStampTypeNameToValPcapTStampTypeValToNameAndPcapTStampTypeValToDescription() {
-        int tsVal = TimeStampType.PCAP_TSTAMP_HOST.getType();
+        int tsVal = PcapTimestampType.HOST.getValue();
         String tsName = null;
         try {
             tsName = PcapTStampTypeValToName(tsVal);

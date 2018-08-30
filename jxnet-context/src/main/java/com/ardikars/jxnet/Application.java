@@ -17,10 +17,8 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.common.util.Callback;
-import com.ardikars.common.util.Loader;
-
-import java.util.logging.Logger;
+import com.ardikars.common.util.Builder;
+import com.ardikars.common.util.Validate;
 
 /**
  * @author Ardika Rommy Sanjaya
@@ -28,80 +26,22 @@ import java.util.logging.Logger;
  */
 public final class Application {
 
-    private static final Logger LOGGER = Logger.getLogger(Application.class.getName());
-
-    private boolean loaded;
-    private boolean developmentMode;
-
     private static final Application instance = new Application();
 
     private Context context;
-    private Object additionalInformation;
-
-    public boolean isLoaded() {
-        return this.loaded;
-    }
-
-    /**
-     * Enable development mode will be force to use default installed library on the system.
-     */
-    public void enableDevelopmentMode() {
-        this.developmentMode = true;
-    }
 
     private Application() {
 
     }
 
     /**
-     * Used for bootstraping Jxnet.
-     * @param initializerClass initializer class.
-     * @param pcapBuilder pcap builder.
-     * @param argements additional information.
-     * @throws UnsatisfiedLinkError UnsatisfiedLinkError.
+     * Bootstraping application.
+     * @param builder pcap builder.
      */
-    @SuppressWarnings("PMD.AvoidUsingNativeCode")
-    public static void run(Class initializerClass, final Pcap.Builder pcapBuilder, final Object argements) {
-
-        ApplicationInitializer initializer;
-        Loader<Void> libraryLoaders;
-        try {
-            initializer = (ApplicationInitializer) initializerClass.newInstance();
-            instance.additionalInformation = argements;
-            libraryLoaders = initializer.initialize(instance.additionalInformation);
-        } catch (InstantiationException e) {
-            LOGGER.warning(e.getMessage());
-            return;
-        } catch (IllegalAccessException e) {
-            LOGGER.warning(e.getMessage());
-            return;
-        }
-
-        if (instance.developmentMode && !instance.loaded) {
-            try {
-                System.loadLibrary("jxnet");
-                instance.loaded = true;
-            } catch (Exception e) {
-                instance.loaded = false;
-            }
-        } else {
-            if (!instance.loaded && libraryLoaders != null) {
-                libraryLoaders.load(new Callback() {
-
-                    @Override
-                    public void onSuccess(Object value) {
-                        instance.loaded = true;
-                        instance.context = new ApplicationContext(pcapBuilder);
-                }
-
-                    @Override
-                    public void onFailure(Throwable throwable) {
-                        LOGGER.warning(throwable.getMessage());
-                    }
-
-                });
-            }
-        }
+    public static void run(Builder<Pcap, Void> builder) {
+        Validate.notIllegalArgument(builder != null,
+                new IllegalArgumentException("Pcap builder should be not null."));
+        instance.context = new ApplicationContext(builder);
     }
 
     /**
@@ -110,14 +50,6 @@ public final class Application {
      */
     public static Context getApplicationContext() {
         return instance.context;
-    }
-
-    /**
-     * Get additional information.
-     * @return additional information.
-     */
-    public static Object getAdditionalInformation() {
-        return instance.additionalInformation;
     }
 
 }

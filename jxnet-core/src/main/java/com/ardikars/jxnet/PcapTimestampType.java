@@ -17,14 +17,26 @@
 
 package com.ardikars.jxnet;
 
-import com.ardikars.common.util.Loader;
-
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.5
  */
-public interface ApplicationInitializer<T> {
+public enum PcapTimestampType {
 
-    Loader<Void> initialize(T additionalInformation);
+	HOST(0), HOST_LOWPREC(1), HOST_HIPREC(2), ADAPTER(3), ADAPTER_UNSYNCED(4);
+
+	private final int value;
+
+	PcapTimestampType(final int value) {
+		this.value = value;
+	}
+
+	/**
+	 * Get timestamp type value.
+	 * @return returns integer value.
+	 */
+	public int getValue() {
+		return this.value;
+	}
 
 }

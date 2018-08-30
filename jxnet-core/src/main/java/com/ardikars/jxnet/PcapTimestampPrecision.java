@@ -19,38 +19,24 @@ package com.ardikars.jxnet;
 
 /**
  * @author Ardika Rommy Sanjaya
- * @since 1.1.4
+ * @since 1.1.5
  */
-public enum TimeStampPrecision {
+public enum PcapTimestampPrecision {
 
-    TIMESTAMP_MICRO(0), TIMESTAMP_NANO(1);
+	MICRO(0), NANO(1);
 
-    private final int value;
+	private final int value;
 
-    TimeStampPrecision(final int value) {
-        this.value = value;
-    }
+	PcapTimestampPrecision(final int value) {
+		this.value = value;
+	}
 
-    /**
-     * Get timestamp precision value;
-     * @return returns timestamp precision value;
-     */
-    public int getValue() {
-        return this.value;
-    }
-
-    /**
-     * Get timestamp precision.
-     * @param value value.
-     * @return returns timestamp precision.
-     */
-    public static TimeStampPrecision valueOf(final int value) {
-        for (final TimeStampPrecision timeStampPrecision : values()) {
-            if (timeStampPrecision.getValue() == value) {
-                return timeStampPrecision;
-            }
-        }
-        return null;
-    }
+	/**
+	 * Get timestamp precision value.
+	 * @return returns integer value.
+	 */
+	public int getValue() {
+		return this.value;
+	}
 
 }

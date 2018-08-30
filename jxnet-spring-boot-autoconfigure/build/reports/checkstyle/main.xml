@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.10.1">
+<file name="/Users/ardikars/IdeaProjects/CodeLab/Jxnet/jxnet-spring-boot-autoconfigure/src/main/java/com/ardikars/jxnet/spring/boot/autoconfigure/JxnetAutoConfiguration.java">
+</file>
+<file name="/Users/ardikars/IdeaProjects/CodeLab/Jxnet/jxnet-spring-boot-autoconfigure/src/main/java/com/ardikars/jxnet/spring/boot/autoconfigure/JxnetConfigurationProperties.java">
+</file>
+</checkstyle>

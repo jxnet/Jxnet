@@ -1,0 +1,72 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.ardikars.jxnet.spring.boot.autoconfigure.JxnetConfigurationProperties",
+      "name": "jxnet",
+      "type": "com.ardikars.jxnet.spring.boot.autoconfigure.JxnetConfigurationProperties"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.ardikars.jxnet.spring.boot.autoconfigure.JxnetConfigurationProperties",
+      "name": "jxnet.blocking",
+      "type": "java.lang.Boolean"
+    },
+    {
+      "sourceType": "com.ardikars.jxnet.spring.boot.autoconfigure.JxnetConfigurationProperties",
+      "name": "jxnet.direction",
+      "type": "com.ardikars.jxnet.PcapDirection"
+    },
+    {
+      "sourceType": "com.ardikars.jxnet.spring.boot.autoconfigure.JxnetConfigurationProperties",
+      "name": "jxnet.file",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.ardikars.jxnet.spring.boot.autoconfigure.JxnetConfigurationProperties",
+      "name": "jxnet.immediate",
+      "type": "com.ardikars.jxnet.ImmediateMode"
+    },
+    {
+      "sourceType": "com.ardikars.jxnet.spring.boot.autoconfigure.JxnetConfigurationProperties",
+      "name": "jxnet.pcap-type",
+      "type": "com.ardikars.jxnet.Pcap$PcapType"
+    },
+    {
+      "sourceType": "com.ardikars.jxnet.spring.boot.autoconfigure.JxnetConfigurationProperties",
+      "name": "jxnet.promiscuous",
+      "type": "com.ardikars.jxnet.PromiscuousMode"
+    },
+    {
+      "sourceType": "com.ardikars.jxnet.spring.boot.autoconfigure.JxnetConfigurationProperties",
+      "name": "jxnet.rfmon",
+      "type": "com.ardikars.jxnet.RadioFrequencyMonitorMode"
+    },
+    {
+      "sourceType": "com.ardikars.jxnet.spring.boot.autoconfigure.JxnetConfigurationProperties",
+      "name": "jxnet.snapshot",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "com.ardikars.jxnet.spring.boot.autoconfigure.JxnetConfigurationProperties",
+      "name": "jxnet.source",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.ardikars.jxnet.spring.boot.autoconfigure.JxnetConfigurationProperties",
+      "name": "jxnet.timeout",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "com.ardikars.jxnet.spring.boot.autoconfigure.JxnetConfigurationProperties",
+      "name": "jxnet.timestamp-precision",
+      "type": "com.ardikars.jxnet.PcapTimestampPrecision"
+    },
+    {
+      "sourceType": "com.ardikars.jxnet.spring.boot.autoconfigure.JxnetConfigurationProperties",
+      "name": "jxnet.timestamp-type",
+      "type": "com.ardikars.jxnet.PcapTimestampType"
+    }
+  ]
+}

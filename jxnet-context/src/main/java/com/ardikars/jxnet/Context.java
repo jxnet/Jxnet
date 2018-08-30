@@ -361,7 +361,7 @@ public interface Context extends Factory<Context, Builder<Pcap, Void>> {
 	 * @throws PcapCloseException pcap close exception.
 	 * @throws PlatformNotSupportedException platform not supported exception.
 	 */
-	PcapTimeStampPrecision pcapGetTStampPrecision() throws PcapCloseException, PlatformNotSupportedException;
+	PcapTimestampPrecision pcapGetTStampPrecision() throws PcapCloseException, PlatformNotSupportedException;
 
 	/**
 	 * Get list of datalinks.
@@ -379,7 +379,7 @@ public interface Context extends Factory<Context, Builder<Pcap, Void>> {
 	 * @throws PcapCloseException pcap close exception.
 	 * @throws PlatformNotSupportedException platform not supported exception.
 	 */
-	PcapCode pcapListTStampTypes(List<PcapTimeStampType> tstampTypesp) throws PcapCloseException, PlatformNotSupportedException;
+	PcapCode pcapListTStampTypes(List<PcapTimestampType> tstampTypesp) throws PcapCloseException, PlatformNotSupportedException;
 
 	/**
 	 * Given a BPF program, a PcapPktHdr structure for a packet, and the raw

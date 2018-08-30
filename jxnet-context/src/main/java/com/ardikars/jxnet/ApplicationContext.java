@@ -335,11 +335,11 @@ public final class ApplicationContext implements Context {
 	}
 
 	@Override
-	public PcapTimeStampPrecision pcapGetTStampPrecision() throws PcapCloseException, PlatformNotSupportedException {
+	public PcapTimestampPrecision pcapGetTStampPrecision() throws PcapCloseException, PlatformNotSupportedException {
 		if (Jxnet.PcapGetTStampPrecision(pcap) == 0) {
-			return PcapTimeStampPrecision.MICRO;
+			return PcapTimestampPrecision.MICRO;
 		}
-		return PcapTimeStampPrecision.NANO;
+		return PcapTimestampPrecision.NANO;
 	}
 
 	@Override
@@ -357,7 +357,7 @@ public final class ApplicationContext implements Context {
 	}
 
 	@Override
-	public PcapCode pcapListTStampTypes(List<PcapTimeStampType> tstampTypesp) throws PcapCloseException, PlatformNotSupportedException {
+	public PcapCode pcapListTStampTypes(List<PcapTimestampType> tstampTypesp) throws PcapCloseException, PlatformNotSupportedException {
 		List<Integer> buffers = new ArrayList<>();
 		int result = Jxnet.PcapListTStampTypes(pcap, buffers);
 		if (result == 0) {
@@ -365,19 +365,19 @@ public final class ApplicationContext implements Context {
 			for (Integer tstampType : buffers) {
 				switch (tstampType) {
 					case 0:
-						tstampTypesp.add(PcapTimeStampType.HOST);
+						tstampTypesp.add(PcapTimestampType.HOST);
 						break;
 					case 1:
-						tstampTypesp.add(PcapTimeStampType.HOST_LOWPREC);
+						tstampTypesp.add(PcapTimestampType.HOST_LOWPREC);
 						break;
 					case 2:
-						tstampTypesp.add(PcapTimeStampType.HOST_HIPREC);
+						tstampTypesp.add(PcapTimestampType.HOST_HIPREC);
 						break;
 					case 3:
-						tstampTypesp.add(PcapTimeStampType.ADAPTER);
+						tstampTypesp.add(PcapTimestampType.ADAPTER);
 						break;
 					case 4:
-						tstampTypesp.add(PcapTimeStampType.ADAPTER_UNSYNCED);
+						tstampTypesp.add(PcapTimestampType.ADAPTER_UNSYNCED);
 						break;
 					default:
 						// do nothing

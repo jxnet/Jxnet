@@ -144,17 +144,13 @@ public final class Pcap implements PointerHandler {
 		private PromiscuousMode promiscuousMode = PromiscuousMode.PRIMISCUOUS;
 		private ImmediateMode immediateMode = ImmediateMode.IMMEDIATE;
 		private PcapDirection direction = PcapDirection.PCAP_D_INOUT;
-		private PcapTimeStampType timeStampType = PcapTimeStampType.HOST;
-		private PcapTimeStampPrecision timeStampPrecision = PcapTimeStampPrecision.MICRO;
+		private PcapTimestampType timestampType = PcapTimestampType.HOST;
+		private PcapTimestampPrecision timestampPrecision = PcapTimestampPrecision.MICRO;
 		private int timeout = 2000;
 		private boolean enableRfMon;
 		private boolean enableNonBlock;
 		private PcapType pcapType;
 
-		/**
-		 * can grow considerably, and so may become a source of memory leaks
-		 * if held within objects with long lifetimes.
-		 */
 		private StringBuilder errbuf;
 
 		private DataLinkType dataLinkType;
@@ -186,13 +182,13 @@ public final class Pcap implements PointerHandler {
 			return this;
 		}
 
-		public Builder timeStampType(final PcapTimeStampType timeStampType) {
-			this.timeStampType = timeStampType;
+		public Builder timestampType(final PcapTimestampType timeStampType) {
+			this.timestampType = timeStampType;
 			return this;
 		}
 
-		public Builder timeStampPrecision(final PcapTimeStampPrecision timeStampPrecision) {
-			this.timeStampPrecision = timeStampPrecision;
+		public Builder timestampPrecision(final PcapTimestampPrecision timeStampPrecision) {
+			this.timestampPrecision = timeStampPrecision;
 			return this;
 		}
 
@@ -201,8 +197,8 @@ public final class Pcap implements PointerHandler {
 			return this;
 		}
 
-		public Builder enableRfMon(final boolean enableRfMon) {
-			this.enableRfMon = enableRfMon;
+		public Builder rfmon(final RadioFrequencyMonitorMode radioFrequencyMonitorMode) {
+			this.enableRfMon = radioFrequencyMonitorMode.getValue() == 1 ? true : false;
 			return this;
 		}
 
@@ -278,7 +274,7 @@ public final class Pcap implements PointerHandler {
 			if (Platforms.isWindows()) {
 				pcap = Jxnet.PcapOpenDead(dataLinkType.getValue(), snaplen);
 			} else {
-				pcap = Jxnet.PcapOpenDeadWithTStampPrecision(dataLinkType.getValue(), snaplen, timeStampPrecision.getValue());
+				pcap = Jxnet.PcapOpenDeadWithTStampPrecision(dataLinkType.getValue(), snaplen, timestampPrecision.getValue());
 			}
 			if (pcap == null) {
 				throw new NativeException();
@@ -299,7 +295,7 @@ public final class Pcap implements PointerHandler {
 			if (Platforms.isWindows()) {
 				pcap = Jxnet.PcapOpenOffline(fileName, errbuf);
 			} else {
-				pcap = Jxnet.PcapOpenOfflineWithTStampPrecision(fileName, timeStampPrecision.getValue(), errbuf);
+				pcap = Jxnet.PcapOpenOfflineWithTStampPrecision(fileName, timestampPrecision.getValue(), errbuf);
 			}
 			if (pcap == null) {
 				throw new NativeException();
@@ -331,10 +327,10 @@ public final class Pcap implements PointerHandler {
 				if (Jxnet.PcapSetImmediateMode(pcap, immediateMode.getValue()) < Jxnet.OK) {
 					throw new NativeException(Jxnet.PcapGetErr(pcap));
 				}
-				if (Jxnet.PcapSetTStampType(pcap, timeStampType.getValue()) < Jxnet.OK) {
+				if (Jxnet.PcapSetTStampType(pcap, timestampType.getValue()) < Jxnet.OK) {
 					throw new NativeException(Jxnet.PcapGetErr(pcap));
 				}
-				if (Jxnet.PcapSetTStampPrecision(pcap, timeStampPrecision.getValue()) < Jxnet.OK) {
+				if (Jxnet.PcapSetTStampPrecision(pcap, timestampPrecision.getValue()) < Jxnet.OK) {
 					throw new NativeException(Jxnet.PcapGetErr(pcap));
 				}
 			}
@@ -365,6 +361,26 @@ public final class Pcap implements PointerHandler {
 					throw new NativeException(Jxnet.PcapGetErr(pcap));
 				}
 			}
+		}
+
+		@Override
+		public String toString() {
+			return new StringBuilder("Builder{")
+					.append("source='").append(source).append('\'')
+					.append(", snaplen=").append(snaplen)
+					.append(", promiscuousMode=").append(promiscuousMode)
+					.append(", immediateMode=").append(immediateMode)
+					.append(", direction=").append(direction)
+					.append(", timestampType=").append(timestampType)
+					.append(", timestampPrecision=").append(timestampPrecision)
+					.append(", timeout=").append(timeout)
+					.append(", enableRfMon=").append(enableRfMon)
+					.append(", enableNonBlock=").append(enableNonBlock)
+					.append(", pcapType=").append(pcapType)
+					.append(", errbuf=").append(errbuf)
+					.append(", dataLinkType=").append(dataLinkType)
+					.append(", fileName='").append(fileName).append('\'')
+					.append('}').toString();
 		}
 
 	}
