@@ -47,7 +47,7 @@ public class Application implements CommandLineRunner  {
     @Override
     public void run(String... args) throws Exception {
         ExecutorService pool = Executors.newCachedThreadPool();
-        context.pcapLoop(10, new PcapHandler<String>() {
+        context.pcapLoop(MAX_PACKET, new PcapHandler<String>() {
             @Override
             public void nextPacket(String user, PcapPktHdr pktHdr, ByteBuffer buffer) {
                 byte[] bytes = new byte[buffer.capacity()];
