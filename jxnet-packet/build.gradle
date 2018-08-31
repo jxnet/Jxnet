@@ -1,0 +1,11 @@
+
+/**
+ * Copyright (C) 2017  Ardika Rommy Sanjaya
+ */
+
+description = "Packet abstraction"
+
+dependencies {
+    compile('com.ardikars.common:common-util:1.2.0.RC2')
+    compile('io.netty:netty-buffer:4.1.29.Final')
+}

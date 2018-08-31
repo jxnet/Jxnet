@@ -44,6 +44,10 @@ a.out
 /jxnet-core/build
 /jxnet-core/target
 /jxnet-core/out
+/jxnet-packet/.gradle
+/jxnet-packet/build
+/jxnet-packet/target
+/jxnet-packet/out
 /jxnet-spring-boot-autoconfigure/.gradle
 /jxnet-spring-boot-autoconfigure/build/
 /jxnet-spring-boot-autoconfigure/target
