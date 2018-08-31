@@ -25,13 +25,10 @@ import com.ardikars.jxnet.exception.PcapCloseException;
 import com.ardikars.jxnet.exception.PcapDumperCloseException;
 import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
-import java.util.logging.Logger;
+import java.util.concurrent.Executor;
 
 /**
  * @author Ardika Rommy Sanjaya
@@ -39,11 +36,11 @@ import java.util.logging.Logger;
  */
 public final class ApplicationContext implements Context {
 
-	private static final Logger LOGGER = Logger.getLogger(ApplicationContext.class.getSimpleName());
+	private final String applicationName;
 
-	private String applicationName;
+	private final String applicationDisplayName;
 
-	private String applicationVersion;
+	private final String applicationVersion;
 
 	private final Pcap pcap;
 
@@ -51,7 +48,7 @@ public final class ApplicationContext implements Context {
 
 	private PcapDumper pcapDumper;
 
-	protected ApplicationContext(Builder<Pcap, Void> builder) {
+	protected ApplicationContext(String applicationName, String applicationDisplayName, String applicationVersion, Builder<Pcap, Void> builder) {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
@@ -65,21 +62,11 @@ public final class ApplicationContext implements Context {
 				if (pcapDumper != null && !pcapDumper.isClosed()) {
 					Jxnet.PcapDumpClose(pcapDumper);
 				}
-				LOGGER.info("Application closed gracefully.");
 			}
 		});
-		final Properties properties = new Properties();
-		try (InputStream stream = ClassLoader.class.getResourceAsStream("application.properties")) {
-			if (stream != null) {
-				properties.load(stream);
-			}
-			this.applicationName = properties.getProperty("jxnet.application.name", "");
-			this.applicationVersion = properties.getProperty("jxnet.application.version", "");
-		} catch (IOException e) {
-			this.applicationName = "";
-			this.applicationVersion = "";
-			LOGGER.warning(e.getMessage());
-		}
+		this.applicationName = applicationName;
+		this.applicationDisplayName = applicationDisplayName;
+		this.applicationVersion = applicationVersion;
 		Validate.notIllegalArgument(builder != null, new IllegalArgumentException("Pcap builder should be not null."));
 		this.pcap = builder.build();
 	}
@@ -89,14 +76,19 @@ public final class ApplicationContext implements Context {
         return applicationName;
     }
 
-    @Override
+	@Override
+	public String getApplicationDisplayName() {
+		return applicationDisplayName;
+	}
+
+	@Override
     public String getApplicationVersion() {
         return applicationVersion;
     }
 
 	@Override
 	public Context newInstance(Builder<Pcap, Void> builder) {
-		return new ApplicationContext(builder);
+		return new ApplicationContext(this.applicationName, this.applicationDisplayName, this.applicationVersion, builder);
 	}
 
 	@Override
@@ -109,8 +101,51 @@ public final class ApplicationContext implements Context {
 	}
 
 	@Override
+	public <T> PcapCode pcapLoop(final int cnt, final PcapHandler<T> callback, final T user, final Executor executor) throws PcapCloseException {
+		Validate.notIllegalArgument(executor != null,
+				new IllegalArgumentException("Executor should be not null."));
+		int result = Jxnet.PcapLoop(pcap, cnt, new PcapHandler<T>() {
+			@Override
+			public void nextPacket(final T user, final PcapPktHdr h, final ByteBuffer bytes) {
+				executor.execute(new Runnable() {
+					@Override
+					public void run() {
+						callback.nextPacket(user, h, bytes);
+					}
+				});
+			}
+		}, user);
+		if (result == 0) {
+			return PcapCode.PCAP_OK;
+		}
+		return PcapCode.PCAP_ERROR;
+	}
+
+	@Override
 	public <T> PcapCode pcapDispatch(int cnt, PcapHandler<T> callback, T user) throws PcapCloseException {
 		int result = Jxnet.PcapDispatch(pcap, cnt, callback, user);
+		if (result == 0) {
+			return PcapCode.PCAP_OK;
+		}
+		return PcapCode.PCAP_ERROR;
+	}
+
+	@Override
+	public <T> PcapCode pcapDispatch(final int cnt, final PcapHandler<T> callback, final T user, final Executor executor)
+			throws PcapCloseException {
+		Validate.notIllegalArgument(executor != null,
+				new IllegalArgumentException("Executor should be not null."));
+		int result = Jxnet.PcapDispatch(pcap, cnt, new PcapHandler<T>() {
+			@Override
+			public void nextPacket(final T user, final PcapPktHdr h, final ByteBuffer bytes) {
+				executor.execute(new Runnable() {
+					@Override
+					public void run() {
+						callback.nextPacket(user, h, bytes);
+					}
+				});
+			}
+		}, user);
 		if (result == 0) {
 			return PcapCode.PCAP_OK;
 		}
