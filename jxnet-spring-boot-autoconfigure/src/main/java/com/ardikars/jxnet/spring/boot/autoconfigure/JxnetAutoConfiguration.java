@@ -38,6 +38,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -50,10 +51,12 @@ public class JxnetAutoConfiguration {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JxnetAutoConfiguration.class.getName());
 
+    private final ApplicationContext context;
     private final JxnetConfigurationProperties properties;
 
     @Autowired
-    public JxnetAutoConfiguration(JxnetConfigurationProperties properties) {
+    public JxnetAutoConfiguration(ApplicationContext context, JxnetConfigurationProperties properties) {
+        this.context = context;
         this.properties = properties;
     }
 
@@ -88,13 +91,19 @@ public class JxnetAutoConfiguration {
                 builder.pcapType(Pcap.PcapType.DEAD);
                 break;
             case OFFLINE:
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("Opening pcap offline hadler : {}", builder);
+                }
                 builder.pcapType(Pcap.PcapType.OFFLINE);
                 break;
             default:
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("Opening pcap live hadler : {}", builder);
+                }
                 builder.pcapType(Pcap.PcapType.LIVE);
                 break;
         }
-        Application.run(builder);
+        Application.run(context.getApplicationName(), context.getDisplayName(), "", builder);
         return Application.getApplicationContext();
     }
 
@@ -129,7 +138,7 @@ public class JxnetAutoConfiguration {
                 }
             }
         }
-        throw new DeviceNotFoundException("");
+        throw new DeviceNotFoundException("No device connected to the network.");
     }
 
     @Bean("com.ardikars.jxnet.errbuf")

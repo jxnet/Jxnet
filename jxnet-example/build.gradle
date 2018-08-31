@@ -1,0 +1,14 @@
+
+dependencies {
+    compile project(':jxnet-context')
+}
+
+jar {
+    manifest {
+        attributes "Main-Class": "com.ardikars.jxnet.example.Application"
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}

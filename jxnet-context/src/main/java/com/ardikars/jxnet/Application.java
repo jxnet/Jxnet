@@ -36,12 +36,15 @@ public final class Application {
 
     /**
      * Bootstraping application.
+     * @param aplicationName application name.
+     * @param applicationDisplayName application display name.
+     * @param applicationVersion application version.
      * @param builder pcap builder.
      */
-    public static void run(Builder<Pcap, Void> builder) {
+    public static void run(String aplicationName, String applicationDisplayName, String applicationVersion, Builder<Pcap, Void> builder) {
         Validate.notIllegalArgument(builder != null,
                 new IllegalArgumentException("Pcap builder should be not null."));
-        instance.context = new ApplicationContext(builder);
+        instance.context = new ApplicationContext(aplicationName, applicationDisplayName, applicationVersion, builder);
     }
 
     /**
