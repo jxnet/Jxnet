@@ -41,6 +41,10 @@ jobs:
       - run: 'echo "signing.secretKeyRingFile=/tmp/secring.gpg" >> gradle.properties'
       - run: 'gpg --batch --yes --passphrase=$SIGN_KEY --output /tmp/secring.gpg --decrypt --cipher-algo AES256 ./gradle/resources/gpg/secring.gpg.enc'
       - run: './gradlew clean build bintrayUpload -x test --info --no-daemon'
+      - save_cache:
+          key: gradle
+          paths:
+            - "~/.gradle"
 
 workflows:
   version: 2
