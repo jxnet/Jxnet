@@ -16,7 +16,6 @@ buildscript {
     }
 }
 
-apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
@@ -29,4 +28,10 @@ dependencies {
 
 dependencyManagement {
     imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}") }
+}
+
+bootJar {
+    manifest {
+        attributes 'Start-Class': 'com.ardikars.jxnet.spring.boot.starter.example.Application'
+    }
 }
