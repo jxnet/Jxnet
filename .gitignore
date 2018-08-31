@@ -52,6 +52,10 @@ a.out
 /jxnet-spring-boot-starter/build/
 /jxnet-spring-boot-starter/target
 /jxnet-spring-boot-starter/out
+/jxnet-spring-boot-starter-example/.gradle
+/jxnet-spring-boot-starter-example/build/
+/jxnet-spring-boot-starter-example/target
+/jxnet-spring-boot-starter-example/out
 /jxnet-android/.gradle
 /jxnet-android/build/
 /jxnet-android/target
