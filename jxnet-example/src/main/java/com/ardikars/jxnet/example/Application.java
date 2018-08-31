@@ -64,7 +64,7 @@ public class Application {
 
     public static final Pcap.PcapType PCAP_TYPE = Pcap.PcapType.LIVE;
 
-    public static final int MAX_PACKET = 20;
+    public static final int MAX_PACKET = -1;
 
     public static final int WAIT_TIME_FOR_THREAD_TERMINATION = 10000;
 
@@ -93,7 +93,12 @@ public class Application {
                     .pcapType(PCAP_TYPE);
             com.ardikars.jxnet.Application.run("application", "Application", "", builder);
             Context context = com.ardikars.jxnet.Application.getApplicationContext();
-            ExecutorService pool = Executors.newCachedThreadPool();
+            final ExecutorService pool = Executors.newCachedThreadPool();
+            Runtime.getRuntime().addShutdownHook(new Thread() {
+                public void run() {
+                    pool.shutdownNow();
+                }
+            });
             context.pcapLoop(MAX_PACKET, new PcapHandler<String>() {
                 @Override
                 public void nextPacket(String user, PcapPktHdr pktHdr, ByteBuffer buffer) {

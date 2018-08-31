@@ -35,7 +35,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class Application implements CommandLineRunner  {
 
-    public static final int MAX_PACKET = 20;
+    public static final int MAX_PACKET = -1;
 
     public static final int WAIT_TIME_FOR_THREAD_TERMINATION = 10000;
 
@@ -46,7 +46,12 @@ public class Application implements CommandLineRunner  {
 
     @Override
     public void run(String... args) throws Exception {
-        ExecutorService pool = Executors.newCachedThreadPool();
+        final ExecutorService pool = Executors.newCachedThreadPool();
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                pool.shutdownNow();
+            }
+        });
         context.pcapLoop(MAX_PACKET, new PcapHandler<String>() {
             @Override
             public void nextPacket(String user, PcapPktHdr pktHdr, ByteBuffer buffer) {

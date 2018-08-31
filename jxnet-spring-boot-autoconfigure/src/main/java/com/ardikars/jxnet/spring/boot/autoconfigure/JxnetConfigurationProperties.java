@@ -58,7 +58,7 @@ public class JxnetConfigurationProperties {
     private Pcap.PcapType pcapType;
 
     /**
-     * Initialze field.
+     * Initialize field.
      */
     @PostConstruct
     public void initialize() {

@@ -18,6 +18,7 @@ buildscript {
 		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
 		classpath 'gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:1.6.2'
 		classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
+		classpath 'gradle.plugin.co.riiid:gradle-github-plugin:0.4.2'
 	}
 
 }
@@ -248,6 +249,41 @@ subprojects {
 
 	} else {
 		apply plugin: 'c'
+	}
+
+}
+
+apply plugin: 'java'
+apply plugin: 'co.riiid.gradle'
+
+github {
+	owner = 'jxnet'
+	repo = 'Jxnet'
+	token = defaultBlank({'github.token'})
+	tagName = "${VERSION}"
+	targetCommitish = 'v1'
+	name = "${NAME}-${VERSION}"
+	body = """# Jxnet
+Release ${NAME}-${VERSION}.
+"""
+	assets = [
+			"build/distributions/${NAME}-${VERSION}.zip",
+			"LICENSE"
+	]
+}
+
+task dist(type: Zip) {
+
+	rootProject.allprojects.collect { it.tasks }.flatten()
+
+	archiveName = "${NAME}-${VERSION}.zip"
+
+	subprojects.each { subproject ->
+		if (!subproject.name.equals("jxnet-native")) {
+			from subproject.jar.outputs.files
+			from subproject.javadocJar.outputs.files
+			from subproject.sourcesJar.outputs.files
+		}
 	}
 
 }
