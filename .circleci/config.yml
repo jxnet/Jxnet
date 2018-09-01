@@ -14,7 +14,7 @@ jobs:
       - checkout
       - run: 'export TERM=xterm-color'
       - run: 'sudo apt-get update && sudo apt-get install gcc libpcap-dev gnupg -y'
-      - run: 'echo "github.token=$GITHUB_TOKEN" >> gradle.properties'
+      - run: 'echo "githubToken=$GITHUB_TOKEN" >> gradle.properties'
       - run: 'echo "bintrayUser=$BINTRAY_USER" >> gradle.properties'
       - run: 'echo "bintrayPass=$BINTRAY_PASS" >> gradle.properties'
       - run: 'echo "sonatypeUser=$SONATYPE_USER" >> gradle.properties'

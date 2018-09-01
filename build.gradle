@@ -259,7 +259,7 @@ apply plugin: 'co.riiid.gradle'
 github {
 	owner = 'jxnet'
 	repo = 'Jxnet'
-	token = defaultBlank({'github.token'})
+	token = defaultBlank({githubToken})
 	tagName = "${VERSION}"
 	targetCommitish = 'v1'
 	name = "${NAME}-${VERSION}"
