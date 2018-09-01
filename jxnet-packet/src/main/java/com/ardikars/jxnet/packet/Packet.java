@@ -34,7 +34,7 @@ public interface Packet extends Iterable<Packet>, Serializable {
 
     /**
      * Returns the {@link Header} object representing this packet's header.
-     * @return returns null if {@link Header} object doesn't exist, {@link Header} object otherwise.
+     * @return returns null if header doesn't exist, {@link Header} object otherwise.
      */
     Packet.Header getHeader();
 
