@@ -25,6 +25,7 @@ import java.nio.ByteBuffer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,8 +64,8 @@ public class Application implements CommandLineRunner  {
                 LOGGER.info("Packet buffer : \n" + hexDump);
             }
         }, "Jxnet!", pool);
-        pool.shutdown();
-        pool.awaitTermination(WAIT_TIME_FOR_THREAD_TERMINATION, TimeUnit.MICROSECONDS);
+		pool.shutdown();
+		pool.awaitTermination(WAIT_TIME_FOR_THREAD_TERMINATION, TimeUnit.MICROSECONDS);
     }
 
     public static void main(String[] args) {
