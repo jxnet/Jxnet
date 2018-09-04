@@ -254,22 +254,10 @@ subprojects {
 }
 
 apply plugin: 'java'
-apply plugin: 'co.riiid.gradle'
 
-github {
-	owner = 'jxnet'
-	repo = 'Jxnet'
-	token = defaultBlank({githubToken})
-	tagName = "${VERSION}"
-	targetCommitish = 'v1'
-	name = "${NAME}-${VERSION}"
-	body = """# Jxnet
-Release ${NAME}-${VERSION}.
-"""
-	assets = [
-			"build/distributions/${NAME}-${VERSION}.zip",
-			"LICENSE"
-	]
+if (gradle.startParameter.taskNames.contains('github') ||
+		gradle.startParameter.taskNames.contains('githubRelease')) {
+	apply from: 'gradle/githubRelease.gradle'
 }
 
 task dist(type: Zip) {
