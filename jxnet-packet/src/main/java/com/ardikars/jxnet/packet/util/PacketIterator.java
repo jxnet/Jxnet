@@ -15,42 +15,42 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet.packet;
+package com.ardikars.jxnet.packet.util;
 
-import com.ardikars.jxnet.packet.util.PacketIterator;
+import com.ardikars.jxnet.packet.Packet;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
- * Abstraction for protocol codec.
- * @author Ardika Rommy Sanjaya
- * @since 1.5.0
+ * A {@link Packet} iterator implementation.
  */
-public abstract class AbstractPacket implements Packet {
+public class PacketIterator implements Iterator<Packet> {
 
-    @Override
-    public <T extends Packet> boolean contains(Class<T> clazz) {
-        return !get(clazz).isEmpty();
+    private Packet next;
+
+    public PacketIterator(final Packet packet) {
+        this.next = packet;
     }
 
     @Override
-    public <T extends Packet> List<T> get(Class<T> clazz) {
-        List<Packet> packets = new ArrayList<>();
-        Iterator<Packet> iterator = this.iterator();
-        while (iterator.hasNext()) {
-            Packet packet = iterator.next();
-            if (clazz.isInstance(packet)) {
-                packets.add(packet);
-            }
+    public boolean hasNext() {
+        return next != null;
+    }
+
+    @Override
+    public Packet next() {
+        if (!hasNext()) {
+            throw new NoSuchElementException();
         }
-        return (List<T>) packets;
+        Packet previous = next;
+        next = next.getPayload();
+        return previous;
     }
 
     @Override
-    public Iterator<Packet> iterator() {
-        return new PacketIterator(this);
+    public void remove() {
+        throw new UnsupportedOperationException();
     }
 
 }
