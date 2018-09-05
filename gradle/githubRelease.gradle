@@ -8,6 +8,11 @@ github {
     tagName = "${VERSION}"
     targetCommitish = 'v1'
     name = "${NAME}-${VERSION}"
+    if (!"${VERSION}".endsWith("Final")) {
+        prerelease = true
+    } else {
+        prerelease = false
+    }
     body = """# Jxnet
 Release ${NAME}-${VERSION}.
 """
