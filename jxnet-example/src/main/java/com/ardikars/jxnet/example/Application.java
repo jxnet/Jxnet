@@ -66,7 +66,7 @@ public class Application {
 
     public static final int MAX_PACKET = -1;
 
-    public static final int WAIT_TIME_FOR_THREAD_TERMINATION = 10000;
+	public static final int WAIT_TIME_FOR_THREAD_TERMINATION = 10000;
 
     /**
      * Main method.
@@ -110,8 +110,8 @@ public class Application {
                     LOGGER.info("Packet buffer : \n" + hexDump);
                 }
             }, "Jxnet!", pool);
-            pool.shutdown();
-            pool.awaitTermination(WAIT_TIME_FOR_THREAD_TERMINATION, TimeUnit.MICROSECONDS);
+			pool.shutdown();
+			pool.awaitTermination(WAIT_TIME_FOR_THREAD_TERMINATION, TimeUnit.MICROSECONDS);
         } catch (DeviceNotFoundException e) {
             LOGGER.warning(e.getMessage());
         }
