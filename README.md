@@ -39,8 +39,7 @@ Getting Started
 >>>
 >>> ```
 >>> dependencies { 
->>>     compile 'com.ardikars.jxnet:jxnet-core:1.3.0.Final'
->>>     compile 'com.ardikars.jxnet:jxnet-context:1.3.0.Final'
+>>>     compile 'com.ardikars.jxnet:jxnet-spring-boot-starter:1.4.0.Final'
 >>> }
 >>>```
   - ##### Maven project
@@ -50,54 +49,51 @@ Getting Started
 >>> <dependencies>
 >>>     <dependency>
 >>>         <groupId>com.ardikars.jxnet</groupId>
->>>         <artifactId>jxnet-core</artifactId>
->>>         <version>1.3.0.Final</version>
->>>     </dependency>
->>>     <dependency>
->>>         <groupId>com.ardikars.jxnet</groupId>
->>>         <artifactId>jxnet-context</artifactId>
->>>         <version>1.3.0.Final</version>
+>>>         <artifactId>jxnet-spring-boot-starter</artifactId>
+>>>         <version>1.4.0.Final</version>
 >>>     </dependency>
 >>> </dependencies>
 >>>```
   - ##### Example Application
   
 ```java
-public class ExampleApplication {
+@SpringBootApplication
+public class Application implements CommandLineRunner  {
 
-    public static class Initializer implements ApplicationInitializer {
+    public static final int MAX_PACKET = 10;
 
-        public void initialize(Context context) {
-            context.addLibrary(new DefaultLibraryLoader());
-        }
+    public static final int WAIT_TIME_FOR_THREAD_TERMINATION = 10000;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(Application.class.getName());
+
+    @Autowired
+    private Context context;
+
+    @Override
+    public void run(String... args) throws Exception {
+        final ExecutorService pool = Executors.newCachedThreadPool();
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                pool.shutdownNow();
+            }
+        });
+        context.pcapLoop(MAX_PACKET, new PcapHandler<String>() {
+            @Override
+            public void nextPacket(String user, PcapPktHdr pktHdr, ByteBuffer buffer) {
+                byte[] bytes = new byte[buffer.capacity()];
+                buffer.get(bytes, 0, bytes.length);
+                String hexDump = Hexs.toPrettyHexDump(bytes);
+                LOGGER.info("User argument : " + user);
+                LOGGER.info("Packet header : " + pktHdr);
+                LOGGER.info("Packet buffer : \n" + hexDump);
+            }
+        }, "Jxnet!", pool);
+		pool.shutdown();
+		pool.awaitTermination(WAIT_TIME_FOR_THREAD_TERMINATION, TimeUnit.MICROSECONDS);
     }
 
-    public static void main(String[] args) throws IOException {
-        int maxPacket = 10;
-        StringBuilder errbuf = new StringBuilder();
-        Application.run("Example", "1.0.0", Initializer.class, new ApplicationContext());
-        String device = Jxnet.PcapLookupDev(errbuf);
-        Pcap pcap = Pcap.live(
-                new Pcap.Builder()
-                        .source(device)
-                        .immediateMode(ImmediateMode.IMMEDIATE)
-                        .errbuf(errbuf)
-        );
-        BpfProgram bpfProgram = BpfProgram.bpf(
-                new BpfProgram.Builder()
-                        .pcap(pcap)
-                        .bpfCompileMode(BpfProgram.BpfCompileMode.OPTIMIZE)
-                        .filter("tcp")
-                        .netmask(Inet4Address.valueOf("255.255.255.0").toInt())
-        );
-        Context context = ApplicationContext.newApplicationContext(pcap, bpfProgram);
-        context.pcapLoop(maxPacket, (user, h, bytes) -> {
-            byte[] buffer = new byte[bytes.capacity()];
-            bytes.get(buffer, 0, buffer.length);
-            System.out.println(Hexs.toPrettyHexDump(buffer));
-        }, null);
-        context.pcapClose();
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
     }
 
 }
