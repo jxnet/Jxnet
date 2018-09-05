@@ -61,8 +61,8 @@ public final class TransportLayer extends NamedNumber<Byte, TransportLayer> impl
     }
 
     @Override
-    public Packet newInstance(ByteBuf value) {
-        return builder.get(this.getValue()).build(value);
+    public Packet newInstance(ByteBuf buffer) {
+        return builder.get(this.getValue()).build(buffer);
     }
 
     /**

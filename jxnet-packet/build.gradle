@@ -8,4 +8,5 @@ description = "Packet abstraction"
 dependencies {
     compile('com.ardikars.common:common-util:1.2.0.RC2')
     compile('io.netty:netty-buffer:4.1.29.Final')
+    testCompile "junit:junit:${JUNIT_VERSION}"
 }

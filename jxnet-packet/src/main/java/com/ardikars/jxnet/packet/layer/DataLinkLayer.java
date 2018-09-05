@@ -53,7 +53,7 @@ public final class DataLinkLayer extends NamedNumber<Short, DataLinkLayer> imple
 
     @Override
     public Packet newInstance(ByteBuf buffer) {
-        return builder.get(this.getValue()).build();
+        return builder.get(this.getValue()).build(buffer);
     }
 
     /**
