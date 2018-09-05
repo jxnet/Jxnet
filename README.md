@@ -98,6 +98,43 @@ public class Application implements CommandLineRunner  {
 
 }
 ```
+  - ##### Pcap Configuration (Optional)
+  
+```java
+@Configuration
+public class Config {
+    
+    @Bean
+    @Primary
+    public static PcapIf pcapIf(StringBuilder errbuf) throws DeviceNotFoundException {
+        String source = null;
+        List<PcapIf> alldevsp = new ArrayList<>();
+        if (PcapFindAllDevs(alldevsp, errbuf) != OK && LOGGER.isLoggable(Level.WARNING)) {
+            LOGGER.warning("Error: {}" + errbuf.toString());
+        }
+        if (source == null || source.isEmpty()) {
+            for (PcapIf dev : alldevsp) {
+                for (PcapAddr addr : dev.getAddresses()) {
+                    if (addr.getAddr().getSaFamily() == SockAddr.Family.AF_INET && addr.getAddr().getData() != null) {
+                        Inet4Address d = Inet4Address.valueOf(addr.getAddr().getData());
+                        if (!d.equals(Inet4Address.LOCALHOST) && !d.equals(Inet4Address.ZERO)) {
+                            return dev;
+                        }
+                    }
+                }
+            }
+        } else {
+            for (PcapIf dev : alldevsp) {
+                if (dev.getName().equals(source)) {
+                    return dev;
+                }
+            }
+        }
+        throw new DeviceNotFoundException("No device connected to the network.");
+    }
+    
+}
+```
 
 Build Jxnet from Source
 =============================
