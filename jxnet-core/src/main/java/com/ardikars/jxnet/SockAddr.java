@@ -31,54 +31,6 @@ import java.util.Map;
  */
 public final class SockAddr implements Cloneable {
 
-    /**
-     * This class represents an Socket Address Family.
-     */
-    public static final class Family extends NamedNumber<Short, Family> {
-
-        private static final Map<Short, Family> registry = new HashMap<>();
-
-        public static final Family AF_INET = new Family((short) 2, "Internet IP Protocol");
-
-        public static final Family AF_INET6 = new Family((short) 10, "IP version 6");
-
-        public static final Family UNKNOWN = new Family((short) -1, "Unknown");
-
-        private short value;
-        private String description;
-
-        public Family(Short value, String name) {
-            super(value, name);
-        }
-
-        /**
-         * Get {@link Family} object from given sock addr family.
-         * @param family sock addr family.
-         * @return returns {@link Family} object.
-         */
-        public static Family valueOf(Short family) {
-            Family result = registry.get(family);
-            if (result == null) {
-                return new Family(family, "Unknown");
-            }
-            return result;
-        }
-
-        /**
-         * Add new sock addr family into registry.
-         * @param family {@link Family} object.
-         */
-        public static void register(Family family) {
-            registry.put(family.getValue(), family);
-        }
-
-        static {
-            registry.put(AF_INET.getValue(), AF_INET);
-            registry.put(AF_INET6.getValue(), AF_INET6);
-        }
-
-    }
-
     private volatile short sa_family;
 
     private volatile byte[] data = new byte[0];
@@ -92,8 +44,7 @@ public final class SockAddr implements Cloneable {
      * @return returns family type.
      */
     public Family getSaFamily() {
-        Family family = Family.valueOf(this.sa_family);
-        return family;
+        return Family.valueOf(this.sa_family);
     }
 
     /**
@@ -153,11 +104,67 @@ public final class SockAddr implements Cloneable {
         final Family family = this.getSaFamily();
         if (family.equals(Family.AF_INET)) {
             return Inet4Address.valueOf(this.getData()).toString();
-        } else if (family.equals(Family.AF_INET6)){
+        } else if (family.equals(Family.AF_INET6)) {
             return Inet6Address.valueOf(this.getData()).toString();
         } else {
             return "";
         }
+    }
+
+    /**
+     * This class represents an Socket Address Family.
+     */
+    public static final class Family extends NamedNumber<Short, Family> {
+
+        private static final Map<Short, Family> registry = new HashMap<>();
+
+        public static final Family AF_INET = new Family((short) 2, "Internet IP Protocol");
+
+        public static final Family AF_INET6 = new Family((short) 10, "IP version 6");
+
+        public static final Family UNKNOWN = new Family((short) -1, "Unknown");
+
+        private short value;
+        private String description;
+
+        public Family(Short value, String name) {
+            super(value, name);
+        }
+
+        /**
+         * Get {@link Family} object from given sock addr family.
+         * @param family sock addr family.
+         * @return returns {@link Family} object.
+         */
+        public static Family valueOf(Short family) {
+            Family result = registry.get(family);
+            if (result == null) {
+                return new Family(family, "Unknown");
+            }
+            return result;
+        }
+
+        /**
+         * Add new sock addr family into registry.
+         * @param family {@link Family} object.
+         */
+        public static void register(Family family) {
+            registry.put(family.getValue(), family);
+        }
+
+        @Override
+        public String toString() {
+            return new StringBuilder("Family{")
+                    .append("value=").append(value)
+                    .append(", description='").append(description).append('\'')
+                    .append('}').toString();
+        }
+
+        static {
+            registry.put(AF_INET.getValue(), AF_INET);
+            registry.put(AF_INET6.getValue(), AF_INET6);
+        }
+
     }
 
 }

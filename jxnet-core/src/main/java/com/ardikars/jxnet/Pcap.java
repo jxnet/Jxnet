@@ -256,7 +256,7 @@ public final class Pcap implements PointerHandler {
 			if (Jxnet.PcapActivate(pcap) < Jxnet.OK) {
 				throw new NativeException(Jxnet.PcapGetErr(pcap));
 			}
-			if (Jxnet.PcapSetDirection(pcap, direction) < Jxnet.OK) {
+			if (!Platforms.isWindows() && Jxnet.PcapSetDirection(pcap, direction) < Jxnet.OK) {
 				throw new PlatformNotSupportedException();
 			}
 			setEnableNonBlock(pcap);
