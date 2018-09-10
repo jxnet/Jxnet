@@ -2,10 +2,19 @@
 <suppressions>
 
     <suppress checks="MemberName"
-              files="SockAddr.java|PcapPktHdr.java|PcapStat.java" />
+              files="SockAddr.java|PcapPktHdr.java|PcapStat.java|NativeMappings.java" />
 
     <suppress checks="MethodName"
-              files="Jxnet.java|Core.java" />
+              files="Jxnet.java|Core.java|NativeMappings.java" />
+
+    <suppress checks="ParameterName"
+              files="NativeMappings.java" />
+
+    <suppress checks="TypeName"
+              files="NativeMappings.java" />
+
+    <suppress checks="AbbreviationAsWordInName"
+              files="NativeMappings.java" />
 
     <suppress checks="MethodName"
               files="Test*.java" />
