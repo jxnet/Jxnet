@@ -9,7 +9,7 @@ Jxnet wraps a native packet capture library (libpcap/npcap) via JNI (Java Native
 [![Coverage Status](https://coveralls.io/repos/github/jxnet/Jxnet/badge.svg?branch=)](https://coveralls.io/github/jxnet/Jxnet?branch=)
 [![Build status](https://ci.appveyor.com/api/projects/status/ev4t6t1ssacwj18j?svg=true)](https://ci.appveyor.com/project/jxnet/jxnet)
 
-[ ![Download](https://api.bintray.com/packages/ardikars/maven/com.ardikars.jxnet/images/download.svg?version=1.3.0.Final) ](https://bintray.com/ardikars/maven/com.ardikars.jxnet/1.3.0.Final/link)
+[ ![Download](https://api.bintray.com/packages/ardikars/maven/com.ardikars.jxnet/images/download.svg?version=1.4.1.Final) ](https://bintray.com/ardikars/maven/com.ardikars.jxnet/1.4.1.Final/link)
 
 
 Getting Started
@@ -39,7 +39,7 @@ Getting Started
 >>>
 >>> ```
 >>> dependencies { 
->>>     compile 'com.ardikars.jxnet:jxnet-spring-boot-starter:1.4.0.Final'
+>>>     compile 'com.ardikars.jxnet:jxnet-spring-boot-starter:1.4.1.Final'
 >>> }
 >>>```
   - ##### Maven project
@@ -50,7 +50,7 @@ Getting Started
 >>>     <dependency>
 >>>         <groupId>com.ardikars.jxnet</groupId>
 >>>         <artifactId>jxnet-spring-boot-starter</artifactId>
->>>         <version>1.4.0.Final</version>
+>>>         <version>1.4.1.Final</version>
 >>>     </dependency>
 >>> </dependencies>
 >>>```
@@ -96,6 +96,43 @@ public class Application implements CommandLineRunner  {
         SpringApplication.run(Application.class, args);
     }
 
+}
+```
+  - ##### Pcap Configuration (Optional)
+  
+```java
+@Configuration
+public class Config {
+    
+    @Bean
+    @Primary
+    public static PcapIf pcapIf(StringBuilder errbuf) throws DeviceNotFoundException {
+        String source = null;
+        List<PcapIf> alldevsp = new ArrayList<>();
+        if (PcapFindAllDevs(alldevsp, errbuf) != OK && LOGGER.isLoggable(Level.WARNING)) {
+            LOGGER.warning("Error: {}" + errbuf.toString());
+        }
+        if (source == null || source.isEmpty()) {
+            for (PcapIf dev : alldevsp) {
+                for (PcapAddr addr : dev.getAddresses()) {
+                    if (addr.getAddr().getSaFamily() == SockAddr.Family.AF_INET && addr.getAddr().getData() != null) {
+                        Inet4Address d = Inet4Address.valueOf(addr.getAddr().getData());
+                        if (!d.equals(Inet4Address.LOCALHOST) && !d.equals(Inet4Address.ZERO)) {
+                            return dev;
+                        }
+                    }
+                }
+            }
+        } else {
+            for (PcapIf dev : alldevsp) {
+                if (dev.getName().equals(source)) {
+                    return dev;
+                }
+            }
+        }
+        throw new DeviceNotFoundException("No device connected to the network.");
+    }
+    
 }
 ```
 

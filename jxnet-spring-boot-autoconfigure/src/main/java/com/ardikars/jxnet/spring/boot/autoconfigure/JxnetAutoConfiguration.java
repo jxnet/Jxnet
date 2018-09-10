@@ -77,6 +77,7 @@ public class JxnetAutoConfiguration {
                 .timeout(properties.getTimeout())
                 .immediateMode(properties.getImmediate())
                 .timestampType(properties.getTimestampType())
+                .direction(properties.getDirection())
                 .timestampPrecision(properties.getTimestampPrecision())
                 .rfmon(properties.getRfmon())
                 .enableNonBlock(!properties.getBlocking())

@@ -19,59 +19,17 @@ package com.ardikars.jxnet;
 
 import com.ardikars.common.net.Inet4Address;
 import com.ardikars.common.net.Inet6Address;
+import com.ardikars.common.util.NamedNumber;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
 public final class SockAddr implements Cloneable {
-
-    public enum Family {
-
-        AF_INET((short) 2, "AF_INET"),
-        AF_INET6((short) 10, "AF_INET6"),
-        UNKNOWN((short) -1, "UNKNOWN");
-
-        private short value;
-        private String description;
-
-        Family(final Short value, final String description) {
-            this.value = value;
-            this.description = description;
-        }
-
-        /**
-         * Returns short address value of SockAddr.
-         * @return returns short address value.
-         */
-        public short getValue() {
-            return this.value;
-        }
-
-        /**
-         * Returns SockAddr description.
-         * @return returns SockAddr description.
-         */
-        public String getDescription() {
-            return this.description;
-        }
-
-        /**
-         * Getting value type.
-         * @param family address value type.
-         * @return returns value type.
-         */
-        public static Family valueOf(final short family) {
-            for (final Family f : values()) {
-                if (f.getValue() == family) {
-                    return f;
-                }
-            }
-            return Family.UNKNOWN;
-        }
-    }
 
     private volatile short sa_family;
 
@@ -86,13 +44,7 @@ public final class SockAddr implements Cloneable {
      * @return returns family type.
      */
     public Family getSaFamily() {
-        Family result = Family.UNKNOWN;
-        if (this.sa_family == 2) {
-            result = Family.AF_INET;
-        } else if (this.sa_family == 10) {
-            result = Family.AF_INET6;
-        }
-        return result;
+        return Family.valueOf(this.sa_family);
     }
 
     /**
@@ -150,14 +102,69 @@ public final class SockAddr implements Cloneable {
     @Override
     public String toString() {
         final Family family = this.getSaFamily();
-        switch (family) {
-            case AF_INET:
-                return Inet4Address.valueOf(this.getData()).toString();
-            case AF_INET6:
-                return Inet6Address.valueOf(this.getData()).toString();
-            default:
-                return "";
+        if (family.equals(Family.AF_INET)) {
+            return Inet4Address.valueOf(this.getData()).toString();
+        } else if (family.equals(Family.AF_INET6)) {
+            return Inet6Address.valueOf(this.getData()).toString();
+        } else {
+            return "";
         }
+    }
+
+    /**
+     * This class represents an Socket Address Family.
+     */
+    public static final class Family extends NamedNumber<Short, Family> {
+
+        private static final Map<Short, Family> registry = new HashMap<>();
+
+        public static final Family AF_INET = new Family((short) 2, "Internet IP Protocol");
+
+        public static final Family AF_INET6 = new Family((short) 10, "IP version 6");
+
+        public static final Family UNKNOWN = new Family((short) -1, "Unknown");
+
+        private short value;
+        private String description;
+
+        public Family(Short value, String name) {
+            super(value, name);
+        }
+
+        /**
+         * Get {@link Family} object from given sock addr family.
+         * @param family sock addr family.
+         * @return returns {@link Family} object.
+         */
+        public static Family valueOf(Short family) {
+            Family result = registry.get(family);
+            if (result == null) {
+                return new Family(family, "Unknown");
+            }
+            return result;
+        }
+
+        /**
+         * Add new sock addr family into registry.
+         * @param family {@link Family} object.
+         */
+        public static void register(Family family) {
+            registry.put(family.getValue(), family);
+        }
+
+        @Override
+        public String toString() {
+            return new StringBuilder("Family{")
+                    .append("value=").append(value)
+                    .append(", description='").append(description).append('\'')
+                    .append('}').toString();
+        }
+
+        static {
+            registry.put(AF_INET.getValue(), AF_INET);
+            registry.put(AF_INET6.getValue(), AF_INET6);
+        }
+
     }
 
 }

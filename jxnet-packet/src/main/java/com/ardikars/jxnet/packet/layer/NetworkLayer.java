@@ -115,7 +115,11 @@ public final class NetworkLayer extends NamedNumber<Short, NetworkLayer> impleme
 
     @Override
     public Packet newInstance(ByteBuf buffer) {
-        return builder.get(this.getValue()).build(buffer);
+        Packet.Builder packetBuilder = builder.get(this.getValue());
+        if (packetBuilder == null) {
+            return null;
+        }
+        return packetBuilder.build(buffer);
     }
 
     /**
