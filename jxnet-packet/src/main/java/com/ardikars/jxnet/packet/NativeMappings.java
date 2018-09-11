@@ -74,11 +74,92 @@ public interface NativeMappings {
      * @param bpf_program bpf program.
      * @return returns true on success, false otherwise.
      */
-    boolean PacketSetBpf(Pointer AdapterObject, Structures.bpf_program bpf_program);
+    //boolean PacketSetBpf(Pointer AdapterObject, Structures.bpf_program fp);
 
     /**
-     *
+     * BOOLEAN PacketSetLoopbackBehavior(LPADAPTER  AdapterObject, UINT LoopbackBehavior);
+     * @param AdapterObject pointer to LPADAPTER.
+     * @param LoopbackBehavior loopback behavior.
+     * @return returns true on succes, false otherwise.
      */
+    boolean PacketSetLoopbackBehavior(Pointer  AdapterObject, long LoopbackBehavior);
+
+    /**
+     * INT PacketSetSnapLen(LPADAPTER AdapterObject, int snaplen);
+     * @param AdapterObject pointer to LPADAPTER.
+     * @param snaplen snapshot length.
+     * @return returns snapshot length.
+     */
+    int PacketSetSnapLen(Pointer AdapterObject, int snaplen);
+
+    /**
+     * BOOLEAN PacketGetStats(LPADAPTER AdapterObject, struct bpf_stat* s);
+     * @param AdapterObject pointer to LPADAPTER.
+     * @param s bpf status.
+     * @return returns true on success, false otherwise.
+     */
+    boolean PacketGetStats(Pointer AdapterObject, Structures.bpf_stat s);
+
+    /**
+     * BOOLEAN PacketGetStatsEx(LPADAPTER AdapterObject, struct bpf_stat* s);
+     * @param AdapterObject pointer to LPADAPTER.
+     * @param s bpf status.
+     * @return returns true on success, false otherwise.
+     */
+    boolean PacketGetStatsEx(Pointer AdapterObject, Structures.bpf_stat s);
+
+    /**
+     * BOOLEAN PacketSetBuff(LPADAPTER AdapterObject, int dim);
+     * @param AdapterObject pointer to LPADAPTER.
+     * @param dim dim.
+     * @return returns true on success, false otherwise.
+     */
+    boolean PacketSetBuff(Pointer AdapterObject, int dim);
+
+    /**
+     * BOOLEAN PacketGetNetType(LPADAPTER AdapterObject, NetType* type);
+     * @param AdapterObject pointer to LPADAPTER.
+     * @param type type.
+     * @return returns true on success, false otherwise.
+     */
+    boolean PacketGetNetType(Pointer AdapterObject, Structures.NetType type);
+
+    /**
+     * BOOLEAN PacketGetNetType2(PCHAR AdapterName, NetType *type);
+     * @param AdapterName adapter name.
+     * @param type type.
+     * @return returns true on success, false otherwise.
+     */
+    //boolean PacketGetNetType2(String AdapterName, Structures.NetType type);
+
+    /**
+     * BOOLEAN PacketIsLoopbackAdapter(LPADAPTER AdapterObject);
+     * @param AdapterObject pointer to APADAPTER.
+     * @return returns true on success, false otherwise.
+     */
+    boolean PacketIsLoopbackAdapter(Pointer AdapterObject);
+
+    /**
+     * int PacketIsMonitorModeSupported(PCHAR AdapterName);
+     * @param AdapterName adapter name.
+     * @return returns 1 if adapter is supported for monitor mode, 0 otherwise.
+     */
+    int PacketIsMonitorModeSupported(String AdapterName);
+
+    /**
+     * int PacketSetMonitorMode(PCHAR AdapterName, int mode);
+     * @param AdapterName adapter name.
+     * @param mode 1 to enable monitor mode; 0 to disable monitor mode.
+     * @return returns 0 on success, 1 otherwise.
+     */
+    int PacketSetMonitorMode(String AdapterName, int mode);
+
+    /**
+     * int PacketGetMonitorMode(PCHAR AdapterName);
+     * @param AdapterName adapter name.
+     * @return returns 0 on success, 1 otherswise.
+     */
+    int PacketGetMonitorMode(String AdapterName);
 
     /**
      * LPADAPTER PacketOpenAdapter(PCHAR AdapterName);
@@ -118,27 +199,26 @@ public interface NativeMappings {
 
         }
 
-        public static class bpf_insn extends Struct {
+        public static class bpf_stat extends Struct {
 
-            public final Unsigned16 code = new Unsigned16();
-            public final Unsigned8 jt = new Unsigned8();
-            public final Unsigned8 jf = new Unsigned8();
-            public final Signed32 k = new Signed32();
+            public final Unsigned32 bs_recv = new Unsigned32();
+            public final Unsigned32 bs_drop = new Unsigned32();
+            public final Unsigned32 ps_ifdrop = new Unsigned32();
+            public final Unsigned32 bs_capt = new Unsigned32();
 
-            public bpf_insn(Runtime runtime) {
+            public bpf_stat(Runtime runtime) {
                 super(runtime);
             }
 
         }
 
-        public static class bpf_program extends Struct {
+        public static class NetType extends Struct {
 
-            public final Unsigned32 bf_len = new Unsigned32();
-            public final bpf_insn bpf_insn;
+            public final Unsigned32 LinkType = new Unsigned32();
+            public final UnsignedLong LinkSpeed = new UnsignedLong();
 
-            public bpf_program(Runtime runtime) {
+            public NetType(Runtime runtime) {
                 super(runtime);
-                this.bpf_insn = new bpf_insn(runtime);
             }
 
         }

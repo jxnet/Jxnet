@@ -1,15 +1,11 @@
 package com.ardikars.jxnet.packet;
 
 import com.ardikars.common.net.MacAddress;
-import jnr.ffi.LibraryLoader;
-import jnr.ffi.Pointer;
+import jnr.ffi.*;
 import jnr.ffi.Runtime;
-import jnr.ffi.Struct;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.util.logging.Logger;
 
 @RunWith(JUnit4.class)
 public class PacketTest {
@@ -48,9 +44,8 @@ public class PacketTest {
         System.out.println(mappings.PacketGetDriverVersion());
     }
 
+    @Test
     public void g9() {
-        NativeMappings.Structures.bpf_insn bpf_insn = new NativeMappings.Structures.bpf_insn(runtime);
-        NativeMappings.Structures.bpf_program bpf_program = new NativeMappings.Structures.bpf_program(runtime);
-
+        assert true;
     }
 }
