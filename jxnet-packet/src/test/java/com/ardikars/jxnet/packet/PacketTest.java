@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 public class PacketTest {
 
     NativeMappings mappings = LibraryLoader.create(NativeMappings.class).load("Packet");
+    Runtime runtime = Runtime.getRuntime(mappings);
 
     public static void printMacAddress(Struct.Unsigned8[] mac) {
         StringBuilder sb = new StringBuilder();
@@ -26,7 +27,6 @@ public class PacketTest {
 
     @Test
     public void myTest() {
-        Runtime runtime = Runtime.getRuntime(mappings);
         String source = "\\Device\\NPF_{53152A2F-39F7-458E-BD58-24D17099256A}";
         Pointer lpAdapter = mappings.PacketOpenAdapter(source);
         NativeMappings.Structures.PPACKET_OID_DATA oid_data = new NativeMappings.Structures.PPACKET_OID_DATA(runtime, 6);
@@ -48,4 +48,9 @@ public class PacketTest {
         System.out.println(mappings.PacketGetDriverVersion());
     }
 
+    public void g9() {
+        NativeMappings.Structures.bpf_insn bpf_insn = new NativeMappings.Structures.bpf_insn(runtime);
+        NativeMappings.Structures.bpf_program bpf_program = new NativeMappings.Structures.bpf_program(runtime);
+
+    }
 }

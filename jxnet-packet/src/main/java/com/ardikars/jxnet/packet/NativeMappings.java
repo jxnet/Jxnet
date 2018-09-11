@@ -69,6 +69,14 @@ public interface NativeMappings {
     boolean PacketSetReadTimeout(Pointer AdapterObject, int timeout);
 
     /**
+     * BOOLEAN PacketSetBpf(LPADAPTER AdapterObject, struct bpf_program* fp);
+     * @param AdapterObject pointer to LPADAPTER.
+     * @param bpf_program bpf program.
+     * @return returns true on success, false otherwise.
+     */
+    boolean PacketSetBpf(Pointer AdapterObject, Structures.bpf_program bpf_program);
+
+    /**
      *
      */
 
@@ -102,9 +110,35 @@ public interface NativeMappings {
             public final UnsignedLong Length = new UnsignedLong();
             public final Unsigned8[] Data;
 
-            public PPACKET_OID_DATA(Runtime runtime, int bufferSize) {
+            public PPACKET_OID_DATA(Runtime runtime, int length) {
                 super(runtime);
-                this.Data = array(new Unsigned8[bufferSize]);
+                this.Length.set(length);
+                this.Data = array(new Unsigned8[length]);
+            }
+
+        }
+
+        public static class bpf_insn extends Struct {
+
+            public final Unsigned16 code = new Unsigned16();
+            public final Unsigned8 jt = new Unsigned8();
+            public final Unsigned8 jf = new Unsigned8();
+            public final Signed32 k = new Signed32();
+
+            public bpf_insn(Runtime runtime) {
+                super(runtime);
+            }
+
+        }
+
+        public static class bpf_program extends Struct {
+
+            public final Unsigned32 bf_len = new Unsigned32();
+            public final bpf_insn bpf_insn;
+
+            public bpf_program(Runtime runtime) {
+                super(runtime);
+                this.bpf_insn = new bpf_insn(runtime);
             }
 
         }
