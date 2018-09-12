@@ -17,6 +17,7 @@
 
 package com.ardikars.jxnet.packet;
 
+import java.nio.Buffer;
 import jnr.ffi.Pointer;
 import jnr.ffi.Runtime;
 import jnr.ffi.Struct;
@@ -169,6 +170,78 @@ public interface NativeMappings {
     Pointer PacketOpenAdapter(@Encoding("ASCII") String AdapterName);
 
     /**
+     * BOOLEAN PacketSendPacket(LPADAPTER AdapterObject, LPPACKET pPacket, BOOLEAN Sync);
+     * @param AdapterObject pointer to LPADAPTER.
+     * @param pPacket pointer to LPPACKET.
+     * @param Sync sync.
+     * @return returns true on success, false otherwise.
+     */
+    boolean PacketSendPacket(Pointer AdapterObject, Pointer pPacket, boolean Sync);
+
+    /**
+     * INT PacketSendPackets(LPADAPTER AdapterObject, PVOID PacketBuff, ULONG Size, BOOLEAN Sync);
+     * @param AdapterObject pointer to LPADAPTER.
+     * @param PacketBuff packet buffer.
+     * @param Size size.
+     * @param Sync sync.
+     * @return returns 1 on success, 0 otherwise.
+     */
+    int PacketSendPackets(Pointer AdapterObject, Buffer PacketBuff, long Size, boolean Sync);
+
+    /**
+     * LPPACKET PacketAllocatePacket(void);
+     * @return returns pointer to LPPACKET.
+     */
+    Pointer PacketAllocatePacket();
+
+    /**
+     * VOID PacketInitPacket(LPPACKET lpPacket, PVOID  Buffer, UINT  Length);
+     * @param lpPacket pointer to LPPACKET.
+     * @param Buffer buffer.
+     * @param Length length.
+     */
+    void PacketInitPacket(Pointer lpPacket, Buffer  Buffer, long Length);
+
+    /**
+     * VOID PacketFreePacket(LPPACKET lpPacket);
+     * @param lpPacket pointer to LPPACKET.
+     */
+    void PacketFreePacket(Pointer lpPacket);
+
+    /**
+     * BOOLEAN PacketReceivePacket(LPADAPTER AdapterObject, LPPACKET lpPacket, BOOLEAN Sync);
+     * @param AdapterObject pointer to LPADAPTER.
+     * @param lpPacket pointer to LPPACKET.
+     * @param Sync sync.
+     * @return returns true on success, false otherwise.
+     */
+    boolean PacketReceivePacket(Pointer AdapterObject, Pointer lpPacket, boolean Sync);
+
+    /**
+     * BOOLEAN PacketSetHwFilter(LPADAPTER AdapterObject, ULONG Filter);
+     * @param AdapterObject pointer to LPADAPTER.
+     * @param Filter filter.
+     * @return returns true on success, false otherwise.
+     */
+    boolean PacketSetHwFilter(Pointer AdapterObject, long Filter);
+
+    /**
+     * BOOLEAN PacketGetAdapterNames(PCHAR pStr, PULONG  BufferSize);
+     * @param pStr adapter name.
+     * @param BufferSize buffer size.
+     * @return returns true on success, false otherwise.
+     */
+    boolean PacketGetAdapterNames(String pStr, long BufferSize);
+
+    /**
+     *
+     * @param AdapterName
+     * @param NEntries
+     * @return
+     */
+    //BOOLEAN PacketGetNetInfoEx(PCHAR AdapterName, npf_if_addr* buffer, PLONG NEntries);
+
+    /**
      * BOOLEAN PacketRequest(LPADAPTER AdapterObject,BOOLEAN Set,PPACKET_OID_DATA OidData);
      * @param AdapterObject pointer to LPADAPTER.
      * @param Set set.
@@ -178,10 +251,79 @@ public interface NativeMappings {
     boolean PacketRequest(Pointer AdapterObject, boolean Set, Structures.PPACKET_OID_DATA OidData);
 
     /**
+     * HANDLE PacketGetReadEvent(LPADAPTER AdapterObject);
+     * @param AdapterObject pointer to LPADAPTER.
+     * @return returns handle.
+     */
+    //HANDLE PacketGetReadEvent(LPADAPTER AdapterObject);
+
+    /**
+     * BOOLEAN PacketSetDumpName(LPADAPTER AdapterObject, void* name, int len);
+     * @param AdapterObject pointer to LPADAPTER.
+     * @param name name.
+     * @param len length.
+     * @return returns true on success, false otherwise.
+     */
+    boolean PacketSetDumpName(Pointer AdapterObject, String name, int len);
+
+    /**
+     * BOOLEAN PacketSetDumpLimits(LPADAPTER AdapterObject, UINT maxfilesize, UINT maxnpacks);
+     * @param AdapterObject pointer to LPADAPTER.
+     * @param maxfilesize max file size.
+     * @param maxnpacks max n packet.
+     * @return returns true on success, false otherwise.
+     */
+    boolean PacketSetDumpLimits(Pointer AdapterObject, long maxfilesize, long maxnpacks);
+
+    /**
+     * BOOLEAN PacketIsDumpEnded(LPADAPTER AdapterObject, BOOLEAN sync);
+     * @param AdapterObject pointer to LPADAPTER.
+     * @param sync sync.
+     * @return returns true on success, false otherwise.
+     */
+    boolean PacketIsDumpEnded(Pointer AdapterObject, boolean sync);
+
+    /**
+     * BOOL PacketStopDriver();
+     * @return returns true on success, false otherwise.
+     */
+    boolean PacketStopDriver();
+
+    /**
+     * BOOL PacketStopDriver60();
+     * @return returns true on success, false otherwise.
+     */
+    boolean PacketStopDriver60();
+
+    /**
      * VOID PacketCloseAdapter(LPADAPTER lpAdapter);
      * @param lpAdapter pointer to LPADAPTER.
      */
     void PacketCloseAdapter(Pointer lpAdapter);
+
+    /**
+     * BOOLEAN PacketStartOem(PCHAR errorString, UINT errorStringLength);
+     * @param errorString error string.
+     * @param errorStringLength error string length.
+     * @return returns true on success, false otherwise.
+     */
+    boolean PacketStartOem(String errorString, long errorStringLength);
+
+    /**
+     * BOOLEAN PacketStartOemEx(PCHAR errorString, UINT errorStringLength, ULONG flags);
+     * @param errorString error string.
+     * @param errorStringLength error string length.
+     * @param flags flags.
+     * @return returns true on success, false otherwise.
+     */
+    boolean PacketStartOemEx(String errorString, long errorStringLength, long flags);
+
+    /**
+     * PAirpcapHandle PacketGetAirPcapHandle(LPADAPTER AdapterObject);
+     * @param AdapterObject pointer to LPADAPTER.
+     * @return return pointer to PAirpcapHandle.
+     */
+    Pointer PacketGetAirPcapHandle(Pointer AdapterObject);
 
     final class Structures {
 
