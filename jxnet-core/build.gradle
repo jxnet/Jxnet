@@ -1,3 +1,4 @@
+import java.util.stream.Collectors
 
 /**
  * Copyright (C) 2017  Ardika Rommy Sanjaya
@@ -13,14 +14,22 @@ sourceSets {
 }
 
 dependencies {
-//	testCompile project(":jxnet-context")
 	testCompile "junit:junit:${JUNIT_VERSION}"
 	testCompile "org.mockito:mockito-core:${MOCKITO_VERSION}"
 }
 
 task generateJNIHeaders(type: Exec, dependsOn: assemble) {
-	def classpath = "${rootDir}/jxnet-core/build/classes/java/main"
-	println "${classpath}"
+	def classpaths = []
+	classpaths.add("${rootDir}/jxnet-core/build/classes/java/main")
+	configurations.compile.collect {
+		classpaths.add(it.getAbsolutePath())
+	}
+	def classpath = ""
+	if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
+		classpath = classpaths.stream().collect(Collectors.joining(";"))
+	} else {
+		classpath = classpaths.stream().collect(Collectors.joining(":"))
+	}
 	commandLine 'javah', '-jni', '-d', "${rootDir}/jxnet-native/include/jxnet", '-classpath', classpath,
 			'com.ardikars.jxnet.Jxnet',
 			'com.ardikars.jxnet.BpfProgram'
