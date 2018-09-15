@@ -22,15 +22,22 @@ import static com.ardikars.jxnet.Jxnet.PCAP_ERRBUF_SIZE;
 import static com.ardikars.jxnet.Jxnet.PcapFindAllDevs;
 
 import com.ardikars.common.net.Inet4Address;
+import com.ardikars.common.net.MacAddress;
+import com.ardikars.common.util.Platforms;
 import com.ardikars.jxnet.Application;
 import com.ardikars.jxnet.Context;
+import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
 import com.ardikars.jxnet.PcapAddr;
 import com.ardikars.jxnet.PcapIf;
 import com.ardikars.jxnet.SockAddr;
 import com.ardikars.jxnet.exception.DeviceNotFoundException;
+import com.ardikars.jxnet.exception.PlatformNotSupportedException;
+
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -142,6 +149,32 @@ public class JxnetAutoConfiguration {
         throw new DeviceNotFoundException("No device connected to the network.");
     }
 
+    /**
+     * Default mac address specified by pcapIf.
+     * @param pcapIf pcapIf.
+     * @return returns mac address.
+     * @throws PlatformNotSupportedException platform not supported exception.
+     * @throws DeviceNotFoundException device not found exception.
+     * @throws SocketException socket exception.
+     */
+    @Bean
+    public MacAddress macAddress(PcapIf pcapIf) throws PlatformNotSupportedException, DeviceNotFoundException, SocketException {
+        if (Platforms.isWindows()) {
+            byte[] hardwareAddress = Jxnet.FindHardwareAddress(pcapIf.getName());
+            if (hardwareAddress != null && hardwareAddress.length == MacAddress.MAC_ADDRESS_LENGTH) {
+                return MacAddress.valueOf(hardwareAddress);
+            } else {
+                throw new DeviceNotFoundException();
+            }
+        } else {
+            return MacAddress.fromNicName(pcapIf.getName());
+        }
+    }
+
+    /**
+     * Error buffer.
+     * @return error buffer.
+     */
     @Bean("com.ardikars.jxnet.errbuf")
     public StringBuilder errbuf() {
         return new StringBuilder(PCAP_ERRBUF_SIZE);
