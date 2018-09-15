@@ -77,7 +77,9 @@ import static com.ardikars.jxnet.Jxnet.PcapTStampTypeValToDescription;
 import static com.ardikars.jxnet.Jxnet.PcapTStampTypeValToName;
 
 import com.ardikars.common.net.Inet4Address;
+import com.ardikars.common.net.MacAddress;
 import com.ardikars.common.util.Platforms;
+import com.ardikars.jxnet.exception.DeviceNotFoundException;
 import com.ardikars.jxnet.exception.NativeException;
 import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 
@@ -691,6 +693,17 @@ public class JxnetTest {
         // Do nothing
     }
 
+    @Test
+    public void Test36_FindHardwareAddress() {
+        try {
+            byte[] address = Jxnet.FindHardwareAddress(source);
+            if (address.length == 6) {
+                System.out.println(MacAddress.valueOf(address));
+            }
+        } catch (DeviceNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
     /**
      * Destroy.
      */
