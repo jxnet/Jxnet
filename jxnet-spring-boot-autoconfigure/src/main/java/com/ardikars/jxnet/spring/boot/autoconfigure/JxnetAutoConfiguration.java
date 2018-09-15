@@ -159,6 +159,9 @@ public class JxnetAutoConfiguration {
      */
     @Bean
     public MacAddress macAddress(PcapIf pcapIf) throws PlatformNotSupportedException, DeviceNotFoundException, SocketException {
+        if (pcapIf.isLoopback()) {
+            return MacAddress.ZERO;
+        }
         if (Platforms.isWindows()) {
             byte[] hardwareAddress = Jxnet.FindHardwareAddress(pcapIf.getName());
             if (hardwareAddress != null && hardwareAddress.length == MacAddress.MAC_ADDRESS_LENGTH) {

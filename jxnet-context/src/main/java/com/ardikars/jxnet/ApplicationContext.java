@@ -36,6 +36,8 @@ import java.util.concurrent.Executor;
  */
 public final class ApplicationContext implements Context {
 
+	private static final Object LOCK = new Object();
+
 	private final String applicationName;
 
 	private final String applicationDisplayName;
@@ -52,15 +54,17 @@ public final class ApplicationContext implements Context {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
-				if (pcap != null && !pcap.isClosed()) {
-					pcapBreakLoop(); // Force the loop in "pcap_read()" or "pcap_read_offline()" to terminate.
-					Jxnet.PcapClose(pcap);
-				}
-				if (bpfProgram != null && !bpfProgram.isClosed()) {
-					Jxnet.PcapFreeCode(bpfProgram);
-				}
-				if (pcapDumper != null && !pcapDumper.isClosed()) {
-					Jxnet.PcapDumpClose(pcapDumper);
+				synchronized (LOCK) {
+					if (pcap != null && !pcap.isClosed()) {
+						pcapBreakLoop(); // Force the loop in "pcap_read()" or "pcap_read_offline()" to terminate.
+						Jxnet.PcapClose(pcap);
+					}
+					if (bpfProgram != null && !bpfProgram.isClosed()) {
+						Jxnet.PcapFreeCode(bpfProgram);
+					}
+					if (pcapDumper != null && !pcapDumper.isClosed()) {
+						Jxnet.PcapDumpClose(pcapDumper);
+					}
 				}
 			}
 		});

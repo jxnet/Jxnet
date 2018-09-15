@@ -66,7 +66,6 @@ public class Application implements CommandLineRunner  {
             if (addr.getAddr().getSaFamily() == SockAddr.Family.AF_INET) {
                 LOGGER.info("\tAddress       : " + Inet4Address.valueOf(addr.getAddr().getData()));
                 LOGGER.info("\tNetwork       : " + Inet4Address.valueOf(addr.getNetmask().getData()));
-                LOGGER.info("\tBroadcast     : " + Inet4Address.valueOf(addr.getBroadAddr().getData()));
             }
         }
         LOGGER.info("\tMAC Address   : " + macAddress);
