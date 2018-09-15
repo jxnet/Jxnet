@@ -111,8 +111,8 @@
     <!--<rule ref="rulesets/ecmascript/basic.xml/EqualComparison"/>-->
     <rule ref="rulesets/java/design.xml/EqualsNull"/>
     <!--<rule ref="rulesets/java/strictexception.xml/ExceptionAsFlowControl"/>-->
-    <rule ref="rulesets/java/codesize.xml/ExcessiveClassLength"/>
-    <rule ref="rulesets/java/coupling.xml/ExcessiveImports"/>
+    <!--<rule ref="rulesets/java/codesize.xml/ExcessiveClassLength"/>-->
+    <!--<rule ref="rulesets/java/coupling.xml/ExcessiveImports"/>-->
     <!--<rule ref="rulesets/plsql/codesize.xml/ExcessiveMethodLength"/>-->
     <rule ref="rulesets/java/codesize.xml/ExcessiveMethodLength"/>
     <!--<rule ref="rulesets/plsql/codesize.xml/ExcessiveObjectLength"/>-->

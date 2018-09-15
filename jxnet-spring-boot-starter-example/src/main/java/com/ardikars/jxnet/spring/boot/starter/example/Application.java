@@ -17,10 +17,21 @@
 
 package com.ardikars.jxnet.spring.boot.starter.example;
 
+import com.ardikars.common.net.Inet4Address;
+import com.ardikars.common.net.MacAddress;
 import com.ardikars.common.util.Hexs;
+import com.ardikars.common.util.Platforms;
 import com.ardikars.jxnet.Context;
+import com.ardikars.jxnet.Jxnet;
+import com.ardikars.jxnet.PcapAddr;
 import com.ardikars.jxnet.PcapHandler;
+import com.ardikars.jxnet.PcapIf;
 import com.ardikars.jxnet.PcapPktHdr;
+import com.ardikars.jxnet.SockAddr;
+import com.ardikars.jxnet.exception.DeviceNotFoundException;
+import com.ardikars.jxnet.exception.PlatformNotSupportedException;
+
+import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -45,8 +56,34 @@ public class Application implements CommandLineRunner  {
     @Autowired
     private Context context;
 
+    @Autowired
+    private PcapIf pcapIf;
+
     @Override
     public void run(String... args) throws Exception {
+        LOGGER.info("Network Interface : " + pcapIf.getName());
+        LOGGER.info("Addresses         : ");
+        for (PcapAddr addr : pcapIf.getAddresses()) {
+            if (addr.getAddr().getSaFamily() == SockAddr.Family.AF_INET) {
+                LOGGER.info("\tAddress       : " + Inet4Address.valueOf(addr.getAddr().getData()));
+                LOGGER.info("\tNetwork       : " + Inet4Address.valueOf(addr.getNetmask().getData()));
+                LOGGER.info("\tBroadcast     : " + Inet4Address.valueOf(addr.getBroadAddr().getData()));
+            }
+        }
+        if (Platforms.isWindows()) {
+            try {
+                byte[] hardwareAddress = Jxnet.FindHardwareAddress(pcapIf.getName());
+                LOGGER.info("\tMAC Address   : " + MacAddress.valueOf(hardwareAddress));
+            } catch (PlatformNotSupportedException | DeviceNotFoundException e) {
+                LOGGER.warn(e.getMessage());
+            }
+        } else {
+            try {
+                LOGGER.info("\tMAC Address   : " + MacAddress.fromNicName(pcapIf.getName()));
+            } catch (SocketException e) {
+                LOGGER.warn(e.getMessage());
+            }
+        }
         final ExecutorService pool = Executors.newCachedThreadPool();
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {

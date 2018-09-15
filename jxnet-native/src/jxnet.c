@@ -20,6 +20,8 @@
 #include "../include/jxnet/pcap/pcap-int.h"
 #else
 #include "../include/pcap-int.h"
+#include <winsock2.h>
+#include <iphlpapi.h>
 #endif
 
 #include <pcap.h>
@@ -1699,3 +1701,72 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCheckActivated
 //    return (jint) pcap_setnonblock_unactivated(pcap);
 //
 //  }
+
+
+/**
+ * Non pcap functions
+ */
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    FindHardwareAddress
+ * Signature: (Ljava/lang/String;)[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_ardikars_jxnet_Jxnet_FindHardwareAddress
+  (JNIEnv *env, jclass jclazz, jstring jnic_name) {
+#ifndef WIN32
+    ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, "FindHardwareAddress() only supported on windows.");
+    return NULL;
+#else
+    if (CheckNotNull(env, jnic_name, NULL) == NULL) return NULL;
+
+	jbyteArray hw_addr = NULL;
+    const char *buf = (*env)->GetStringUTFChars(env, jnic_name, 0);
+
+	PIP_ADAPTER_INFO pAdapterInfo;
+	PIP_ADAPTER_INFO pAdapter = NULL;
+	DWORD dwRetVal = 0;
+	ULONG ulOutBufLen = (ULONG) sizeof(IP_ADAPTER_INFO);
+	pAdapterInfo = (IP_ADAPTER_INFO *) malloc(sizeof (IP_ADAPTER_INFO));
+	if (pAdapterInfo == NULL) {
+		(*env)->ReleaseStringUTFChars(env, jnic_name, buf);
+		ThrowNew(env, NATIVE_EXCEPTION, "Error allocating memory needed to call GetAdaptersinfo");
+		return NULL;
+	}
+	if (GetAdaptersInfo(pAdapterInfo, &ulOutBufLen) == ERROR_BUFFER_OVERFLOW) {
+		free(pAdapterInfo);
+		pAdapterInfo = (IP_ADAPTER_INFO *) malloc(ulOutBufLen);
+		if (pAdapterInfo == NULL) {
+			(*env)->ReleaseStringUTFChars(env, jnic_name, buf);
+			ThrowNew(env, NATIVE_EXCEPTION, "Error allocating memory needed to call GetAdaptersinfo");
+			return NULL;
+		}
+	}
+	if ((dwRetVal = GetAdaptersInfo(pAdapterInfo, &ulOutBufLen)) == NO_ERROR) {
+		pAdapter = pAdapterInfo;
+		while (pAdapter) {
+			const char *p1 = strchr(buf, '{');
+			const char *p2 = strchr(pAdapter->AdapterName,  '{');
+			if (p1 == NULL || p2 == NULL) {
+				p1 = buf;
+				p2 = pAdapter->AdapterName;
+			}
+			if ((strcmp(p1, p2) == 0)) {
+				hw_addr = (*env)->NewByteArray(env, (jsize) pAdapter->AddressLength);
+				(*env)->SetByteArrayRegion(env, hw_addr, 0 , pAdapter->AddressLength, (jbyte *) pAdapter->Address);
+				break;
+			}
+			pAdapter = pAdapter->Next;
+        }
+	} else {
+		(*env)->ReleaseStringUTFChars(env, jnic_name, buf);
+		ThrowNew(env, DEVICE_NOT_FOUND_EXCEPTION, "GetAdaptersInfo failed");
+		return NULL;
+	}
+	if (pAdapterInfo)
+		free(pAdapterInfo);
+
+	(*env)->ReleaseStringUTFChars(env, jnic_name, buf);
+	return hw_addr;
+#endif
+  }

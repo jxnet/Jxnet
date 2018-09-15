@@ -17,86 +17,20 @@
 
 package com.ardikars.jxnet.packet;
 
-import com.ardikars.common.util.NamedNumber;
-import io.netty.buffer.ByteBuf;
+import java.nio.Buffer;
 
-import java.io.Serializable;
-import java.util.List;
-
-/**
- * This interface representing a packet which consists of a packet header and a payload.
- * @author Ardika Rommy Sanjaya
- * @since 1.5.0
- */
-public interface Packet extends Iterable<Packet>, Serializable {
+public interface Packet {
 
     /**
-     * Returns the {@link Header} object representing this packet's header.
-     * @return returns null if header doesn't exist, {@link Header} object otherwise.
+     * VOID PacketInitPacket(LPPACKET lpPacket, PVOID  Buffer, UINT  Length);
+     * @param buffer buffer.
+     * @param length length.
      */
-    Packet.Header getHeader();
+    void packetInitPacket(Buffer buffer, long length);
 
     /**
-     * Returns the {@link Packet} object representing this packet's payload.
-     * @return returns null if a payload doesn't exits, {@link Packet} object otherwise.
+     * VOID PacketFreePacket(LPPACKET lpPacket);
      */
-    Packet getPayload();
-
-    /**
-     * Ensures that given packet type is included on this {@link Packet} object.
-     * @param clazz packet type.
-     * @param <T> type.
-     * @return returns true if this packet is or its payload includes an object of
-     * specified packet class; false otherwise.
-     */
-    <T extends Packet> boolean contains(Class<T> clazz);
-
-    /**
-     * Returns list of specify packet's.
-     * @param clazz packet type.
-     * @param <T> type.
-     * @return returns list of {@link Packet} object.
-     */
-    <T extends Packet> List<T> get(Class<T> clazz);
-
-    /**
-     * The interface for packet builder.
-     */
-    interface Builder extends com.ardikars.common.util.Builder<Packet, ByteBuf> {
-
-    }
-
-    /**
-     * The interface for packet factory.
-     */
-    interface Factory extends com.ardikars.common.util.Factory<Packet, ByteBuf> {
-
-    }
-
-    /**
-     * This interface representing a packet header.
-     */
-    interface Header extends Serializable {
-
-        /**
-         * Returns the payload type.
-         * @param <T> type.
-         * @return returns payload type.
-         */
-        <T extends NamedNumber> T getPayloadType();
-
-        /**
-         * Returns header length.
-         * @return returns header length.
-         */
-        int getLength();
-
-        /**
-         * Returns header as byte buffer.
-         * @return return byte buffer.
-         */
-        ByteBuf getBuffer();
-
-    }
+    void packetFreePacket();
 
 }
