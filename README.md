@@ -205,5 +205,5 @@ Issues
 
 Have a bug? Please create an issue here on GitHub!
 
-https://github.com/ardikars/Jxnet/issues
+https://github.com/jxnet/Jxnet/issues
 
