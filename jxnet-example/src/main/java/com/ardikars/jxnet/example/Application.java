@@ -21,10 +21,13 @@ import static com.ardikars.jxnet.Jxnet.OK;
 import static com.ardikars.jxnet.Jxnet.PcapFindAllDevs;
 
 import com.ardikars.common.net.Inet4Address;
+import com.ardikars.common.net.MacAddress;
 import com.ardikars.common.util.Hexs;
+import com.ardikars.common.util.Platforms;
 import com.ardikars.jxnet.Context;
 import com.ardikars.jxnet.DataLinkType;
 import com.ardikars.jxnet.ImmediateMode;
+import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
 import com.ardikars.jxnet.PcapAddr;
 import com.ardikars.jxnet.PcapHandler;
@@ -36,7 +39,9 @@ import com.ardikars.jxnet.PromiscuousMode;
 import com.ardikars.jxnet.RadioFrequencyMonitorMode;
 import com.ardikars.jxnet.SockAddr;
 import com.ardikars.jxnet.exception.DeviceNotFoundException;
+import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 
+import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,6 +98,29 @@ public class Application {
                     .pcapType(PCAP_TYPE);
             com.ardikars.jxnet.Application.run("application", "Application", "", builder);
             Context context = com.ardikars.jxnet.Application.getApplicationContext();
+            System.out.println("Network Interface : " + pcapIf.getName());
+            System.out.println("Addresses         : ");
+            for (PcapAddr addr : pcapIf.getAddresses()) {
+                if (addr.getAddr().getSaFamily() == SockAddr.Family.AF_INET) {
+                    System.out.println("\tAddress       : " + Inet4Address.valueOf(addr.getAddr().getData()));
+                    System.out.println("\tNetwork       : " + Inet4Address.valueOf(addr.getNetmask().getData()));
+                    System.out.println("\tBroadcast     : " + Inet4Address.valueOf(addr.getBroadAddr().getData()));
+                }
+            }
+            if (Platforms.isWindows()) {
+                try {
+                    byte[] hardwareAddress = Jxnet.FindHardwareAddress(pcapIf.getName());
+                    System.out.println("\tMAC Address   : " + MacAddress.valueOf(hardwareAddress));
+                } catch (PlatformNotSupportedException | DeviceNotFoundException e) {
+                    System.out.println(e.getMessage());
+                }
+            } else {
+                try {
+                    System.out.println("\tMAC Address   : " + MacAddress.fromNicName(pcapIf.getName()));
+                } catch (SocketException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
             final ExecutorService pool = Executors.newCachedThreadPool();
             Runtime.getRuntime().addShutdownHook(new Thread() {
                 public void run() {
