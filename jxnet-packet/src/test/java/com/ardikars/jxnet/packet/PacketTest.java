@@ -9,8 +9,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class PacketTest {
 
-    NativeMappings mappings = LibraryLoader.create(NativeMappings.class).load("Adapter");
-    Runtime runtime = Runtime.getRuntime(mappings);
+    NativeMappings mappings = LibraryLoader.create(NativeMappings.class).load("Packet");
 
     @Test
     public void test01_PacketGetVersion() {

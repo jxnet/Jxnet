@@ -33,7 +33,6 @@
 
 #ifndef WIN32
 #include <sys/socket.h>
-#include <winsock2.h>
 #endif
 
 /*
