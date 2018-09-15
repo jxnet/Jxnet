@@ -97,28 +97,28 @@ public class Application {
                     .errbuf(errbuf)
                     .pcapType(PCAP_TYPE);
             com.ardikars.jxnet.Application.run("application", "Application", "", builder);
-            Context context = com.ardikars.jxnet.Application.getApplicationContext();
-            System.out.println("Network Interface : " + pcapIf.getName());
-            System.out.println("Addresses         : ");
+            final Context context = com.ardikars.jxnet.Application.getApplicationContext();
+            LOGGER.info("Network Interface : " + pcapIf.getName());
+            LOGGER.info("Addresses         : ");
             for (PcapAddr addr : pcapIf.getAddresses()) {
                 if (addr.getAddr().getSaFamily() == SockAddr.Family.AF_INET) {
-                    System.out.println("\tAddress       : " + Inet4Address.valueOf(addr.getAddr().getData()));
-                    System.out.println("\tNetwork       : " + Inet4Address.valueOf(addr.getNetmask().getData()));
-                    System.out.println("\tBroadcast     : " + Inet4Address.valueOf(addr.getBroadAddr().getData()));
+                    LOGGER.info("\tAddress       : " + Inet4Address.valueOf(addr.getAddr().getData()));
+                    LOGGER.info("\tNetwork       : " + Inet4Address.valueOf(addr.getNetmask().getData()));
+                    LOGGER.info("\tBroadcast     : " + Inet4Address.valueOf(addr.getBroadAddr().getData()));
                 }
             }
             if (Platforms.isWindows()) {
                 try {
                     byte[] hardwareAddress = Jxnet.FindHardwareAddress(pcapIf.getName());
-                    System.out.println("\tMAC Address   : " + MacAddress.valueOf(hardwareAddress));
+                    LOGGER.info("\tMAC Address   : " + MacAddress.valueOf(hardwareAddress));
                 } catch (PlatformNotSupportedException | DeviceNotFoundException e) {
-                    System.out.println(e.getMessage());
+                    LOGGER.warning(e.getMessage());
                 }
             } else {
                 try {
-                    System.out.println("\tMAC Address   : " + MacAddress.fromNicName(pcapIf.getName()));
+                    LOGGER.info("\tMAC Address   : " + MacAddress.fromNicName(pcapIf.getName()));
                 } catch (SocketException e) {
-                    System.out.println(e.getMessage());
+                    LOGGER.warning(e.getMessage());
                 }
             }
             final ExecutorService pool = Executors.newCachedThreadPool();
