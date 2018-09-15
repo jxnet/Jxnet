@@ -1714,11 +1714,16 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCheckActivated
  * Signature: (Ljava/lang/String;)[B
  */
 JNIEXPORT jbyteArray JNICALL Java_com_ardikars_jxnet_Jxnet_FindHardwareAddress
-  (JNIEnv *env, jclass jclazz, jstring jsource) {
+  (JNIEnv *env, jclass jclazz, jstring jnic_name) {
 #ifndef WIN32
     ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, "FindHardwareAddress() only supported on windows.");
     return NULL;
 #else
+    if (CheckNotNull(env, jnic_name, NULL) == NULL) return NULL;
+
+	jbyteArray hw_addr = NULL;
+    const char *buf = (*env)->GetStringUTFChars(env, jnic_name, 0);
+
 	PIP_ADAPTER_INFO pAdapterInfo;
 	PIP_ADAPTER_INFO pAdapter = NULL;
 	DWORD dwRetVal = 0;
@@ -1763,9 +1768,6 @@ JNIEXPORT jbyteArray JNICALL Java_com_ardikars_jxnet_Jxnet_FindHardwareAddress
 		free(pAdapterInfo);
 
 	(*env)->ReleaseStringUTFChars(env, jnic_name, buf);
-    SetMacAddressIDs(env);
-    jobject obj = (*env)->CallStaticObjectMethod(env, MacAddressClass,
-                    MacAddressValueOfMID, hw_addr);
-    return obj;
+	return hw_addr;
 #endif
   }
