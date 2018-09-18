@@ -17,18 +17,21 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.common.annotation.Mutable;
+
 /**
  * Class that keeps statistical values on an interface.
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
+@Mutable
 public final class PcapStat implements Cloneable {
 
-	private long ps_recv;
+	private volatile long ps_recv;
 	
-	private long ps_drop;
+	private volatile long ps_drop;
 	
-	private long ps_ifdrop;
+	private volatile long ps_ifdrop;
 
 	/**
 	 * Returns recieved packets.

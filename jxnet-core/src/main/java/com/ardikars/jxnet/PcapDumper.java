@@ -17,14 +17,20 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.common.annotation.Mutable;
 import com.ardikars.common.util.Validate;
+
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Savefile descriptor.
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
+@Mutable(blocking = true)
 public final class PcapDumper implements Cloneable {
+
+	private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock(true);
 
 	private long address;
 
@@ -37,9 +43,14 @@ public final class PcapDumper implements Cloneable {
 	 * @return returns pointer address.
 	 */
 	public long getAddress() {
-		synchronized (this) {
-			return this.address;
+		if (this.lock.readLock().tryLock()) {
+			try {
+				return this.address;
+			} finally {
+				this.lock.readLock().unlock();
+			}
 		}
+		return 0;
 	}
 
 	/**

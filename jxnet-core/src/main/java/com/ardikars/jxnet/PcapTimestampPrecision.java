@@ -17,10 +17,13 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.common.annotation.Immutable;
+
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.5
  */
+@Immutable
 public enum PcapTimestampPrecision {
 
 	MICRO(0), NANO(1);

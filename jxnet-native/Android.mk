@@ -14,7 +14,6 @@ LOCAL_SRC_FILES := \
 	src/ids.c \
 	src/utils.c \
 	src/preconditions.c \
-	src/mac_address.c
 
 LOCAL_STATIC_LIBRARIES := libpcap
 

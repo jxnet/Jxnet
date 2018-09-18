@@ -17,17 +17,21 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.common.annotation.Mutable;
 import com.ardikars.common.net.Inet4Address;
 import com.ardikars.common.util.Platforms;
 import com.ardikars.common.util.Validate;
 import com.ardikars.jxnet.exception.NativeException;
 import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 /**
  * This class storing pointer address of pcap handle and used for dereferencing the pointer.
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
+@Mutable(blocking = true)
 public final class Pcap implements PointerHandler {
 
 	/**
@@ -39,6 +43,8 @@ public final class Pcap implements PointerHandler {
 	 * Maximum snapshot length.
 	 */
 	public static final int MAXIMUM_SNAPLEN = 262144;
+
+	private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock(true);
 
 	/**
 	 * Indentify if pcap handle is dead and used for prevent user to make a SIGSEGV.
@@ -78,9 +84,14 @@ public final class Pcap implements PointerHandler {
 	 */
 	@Override
 	public long getAddress() {
-		synchronized (this) {
-			return this.address;
+		if (this.lock.readLock().tryLock()) {
+			try {
+				return this.address;
+			} finally {
+				this.lock.readLock().unlock();
+			}
 		}
+		return 0;
 	}
 
 	@Override
@@ -101,7 +112,7 @@ public final class Pcap implements PointerHandler {
 	 * @return returns true if pcap handle opened by PcapOpenDead*.
 	 */
 	public boolean isDead() {
-		return isDead;
+		return this.isDead;
 	}
 
 	@Override

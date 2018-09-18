@@ -17,6 +17,7 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.common.annotation.Mutable;
 import com.ardikars.jxnet.exception.OperationNotSupportedException;
 
 /**
@@ -24,6 +25,7 @@ import com.ardikars.jxnet.exception.OperationNotSupportedException;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
+@Mutable
 public final class PcapAddr implements Cloneable {
 	
 	private volatile SockAddr addr = new SockAddr();

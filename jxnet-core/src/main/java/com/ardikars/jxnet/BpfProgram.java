@@ -17,8 +17,11 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.common.annotation.Mutable;
 import com.ardikars.common.util.Validate;
 import com.ardikars.jxnet.exception.NativeException;
+
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * The Berkeley Packet Filter (BPF) allows a user-space program to attach a filter onto any socket and
@@ -27,7 +30,10 @@ import com.ardikars.jxnet.exception.NativeException;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
+@Mutable(blocking = true)
 public final class BpfProgram implements PointerHandler {
+
+	private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock(true);
 
 	private long address;
 
@@ -82,9 +88,14 @@ public final class BpfProgram implements PointerHandler {
 	 */
 	@Override
 	public long getAddress() {
-		synchronized (this) {
-			return this.address;
+		if (this.lock.readLock().tryLock()) {
+			try {
+				return this.address;
+			} finally {
+				this.lock.readLock().unlock();
+			}
 		}
+		return 0;
 	}
 
 	@Override

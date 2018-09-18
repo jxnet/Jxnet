@@ -17,6 +17,7 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.common.annotation.Mutable;
 import com.ardikars.common.net.Inet4Address;
 import com.ardikars.common.net.Inet6Address;
 import com.ardikars.common.util.NamedNumber;
@@ -29,6 +30,7 @@ import java.util.Map;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
+@Mutable
 public final class SockAddr implements Cloneable {
 
     private volatile short sa_family;

@@ -17,10 +17,13 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.common.annotation.Immutable;
+
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
+@Immutable
 public enum PromiscuousMode {
 
     PRIMISCUOUS(1), NON_PROMISCUOUS(0);

@@ -17,6 +17,8 @@
 
 package com.ardikars.jxnet;
 
+import jdk.nashorn.internal.ir.annotations.Immutable;
+
 /**
  * Libpcap never guarantee, that packets will be delivered immediately,
  * the instant that they arrive, unless you enable "immediate mode"
@@ -25,6 +27,7 @@ package com.ardikars.jxnet;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.4
  */
+@Immutable
 public enum ImmediateMode {
 
     IMMEDIATE(1), NON_IMMEDIATE(0);

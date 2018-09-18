@@ -17,6 +17,7 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.common.annotation.Mutable;
 import com.ardikars.jxnet.exception.OperationNotSupportedException;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import java.util.List;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
+@Mutable
 public final class PcapIf implements Cloneable {
 
 	/**
