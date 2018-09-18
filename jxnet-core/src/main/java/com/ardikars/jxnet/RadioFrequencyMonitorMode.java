@@ -17,10 +17,13 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.common.annotation.Immutable;
+
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.4
  */
+@Immutable
 public enum RadioFrequencyMonitorMode {
 
     RFMON(1), NON_RFMON(0);

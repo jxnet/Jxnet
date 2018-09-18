@@ -17,19 +17,22 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.common.annotation.Mutable;
+
 /**
  * Header of a packet in the dump file.
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
+@Mutable(volatiles = { "caplen", "len", "tv_sec", "tv_usec" })
 public final class PcapPktHdr implements Cloneable {
 
 	// This field value will be replaced by native code
-	private int caplen;
-	private int len;
+	private volatile int caplen;
+	private volatile int len;
 	
-	private int tv_sec;
-	private long tv_usec;
+	private volatile int tv_sec;
+	private volatile long tv_usec;
 
 	/**
 	 * Create PcapPktHdr instance.

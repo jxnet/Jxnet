@@ -24,7 +24,7 @@ if (NOT CONFIGURED_ONCE)
         CACHE STRING "Flags used by the compiler during all build types." FORCE)
 endif()
 
-set(SOURCE_FILES src/bpf.c src/jxnet.c src/preconditions.c src/utils.h src/ids.c src/mac_address.c src/preconditions.h src/ids.h src/utils.c)
+set(SOURCE_FILES src/bpf.c src/jxnet.c src/preconditions.c src/utils.h src/ids.c src/preconditions.h src/ids.h src/utils.c)
 set(SOURCE_APPLICATION_FILES src/main.c)
 
 find_package(JNI REQUIRED)

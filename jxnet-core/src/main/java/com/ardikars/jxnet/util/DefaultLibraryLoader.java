@@ -17,6 +17,7 @@
 
 package com.ardikars.jxnet.util;
 
+import com.ardikars.common.annotation.Mutable;
 import com.ardikars.common.util.Callback;
 import com.ardikars.common.util.InternalNativeLibrary;
 import com.ardikars.common.util.Loader;
@@ -25,6 +26,7 @@ import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 
 import java.io.File;
 
+@Mutable
 public class DefaultLibraryLoader implements Loader<Void> {
 
     public static final String NPCAP_DLL = "C:\\Windows\\System32\\Npcap\\wpcap.dll";

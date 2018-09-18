@@ -18,12 +18,17 @@
 package com.ardikars.jxnet.packet;
 
 import java.nio.Buffer;
+
+import jnr.ffi.LibraryLoader;
 import jnr.ffi.Pointer;
 import jnr.ffi.Runtime;
 import jnr.ffi.Struct;
 import jnr.ffi.annotations.Encoding;
 
+
 public interface NativeMappings {
+
+    NativeMappings INSTANCE = LibraryLoader.create(NativeMappings.class).load("Packet");
 
     /**
      * PCHAR PacketGetVersion();

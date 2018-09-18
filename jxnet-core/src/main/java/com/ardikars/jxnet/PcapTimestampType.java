@@ -17,10 +17,13 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.common.annotation.Immutable;
+
 /**
  * @author Ardika Rommy Sanjaya
  * @since 1.1.5
  */
+@Immutable
 public enum PcapTimestampType {
 
 	HOST(0), HOST_LOWPREC(1), HOST_HIPREC(2), ADAPTER(3), ADAPTER_UNSYNCED(4);

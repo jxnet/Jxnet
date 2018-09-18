@@ -17,9 +17,12 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.common.annotation.Immutable;
+
 /**
  * Result code from pcap functions.
  */
+@Immutable
 public enum PcapCode {
 
 	PCAP_ERROR(-1),                             /* generic error code */

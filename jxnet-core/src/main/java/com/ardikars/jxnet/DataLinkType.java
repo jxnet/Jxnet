@@ -17,6 +17,7 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.common.annotation.Immutable;
 import com.ardikars.common.util.NamedNumber;
 
 import java.util.HashMap;
@@ -27,6 +28,7 @@ import java.util.Map;
  * @author Ardika Rommy Sanjaya
  * @since 1.1.0
  */
+@Immutable
 public class DataLinkType extends NamedNumber<Short, DataLinkType> {
 
     /**

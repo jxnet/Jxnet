@@ -17,6 +17,8 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.common.annotation.Immutable;
+
 /**
  * Direction of packets.
  * typedef enum {
@@ -27,6 +29,7 @@ package com.ardikars.jxnet;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
+@Immutable
 public enum PcapDirection {
 
     PCAP_D_INOUT,

@@ -19,6 +19,7 @@ buildscript {
 		classpath 'gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:1.6.2'
 		classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
 		classpath 'gradle.plugin.co.riiid:gradle-github-plugin:0.4.2'
+		classpath 'gradle.plugin.gjnp:gjnp:1.0.0.Final'
 	}
 
 }
@@ -36,6 +37,10 @@ subprojects {
 		apply plugin: 'com.github.spotbugs'
 		apply plugin: 'com.github.kt3k.coveralls'
 
+		if (project.name.equals("jxnet-core")) {
+			apply plugin: 'com.ardikars.gjnp'
+		}
+
 		group = "${GROUP}"
 		version = "${VERSION}"
 
@@ -49,8 +54,8 @@ subprojects {
 		}
 
         dependencies {
-			compile('com.ardikars.common:common-net:1.2.0.RC2')
-            compile 'com.ardikars.common:common-util:1.2.0.RC2'
+			compile('com.ardikars.common:common-net:1.2.0.Final')
+            compile 'com.ardikars.common:common-util:1.2.0.Final'
         }
 
 		configurations.archives.artifacts.with { archives ->
