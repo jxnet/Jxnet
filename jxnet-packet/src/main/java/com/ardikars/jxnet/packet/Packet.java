@@ -17,9 +17,8 @@
 
 package com.ardikars.jxnet.packet;
 
-import jnr.ffi.Pointer;
-
 import java.nio.Buffer;
+import jnr.ffi.Pointer;
 
 public interface Packet {
 

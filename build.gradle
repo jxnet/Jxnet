@@ -54,8 +54,8 @@ subprojects {
 		}
 
         dependencies {
-			compile('com.ardikars.common:common-net:1.2.0.RC2')
-            compile 'com.ardikars.common:common-util:1.2.0.RC2'
+			compile('com.ardikars.common:common-net:1.2.0.Final')
+            compile 'com.ardikars.common:common-util:1.2.0.Final'
         }
 
 		configurations.archives.artifacts.with { archives ->
