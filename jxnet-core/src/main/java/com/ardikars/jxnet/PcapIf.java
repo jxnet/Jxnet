@@ -29,7 +29,7 @@ import java.util.List;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
-@Mutable
+@Mutable(volatiles = { "name", "description", "addresses", "flags" })
 public final class PcapIf implements Cloneable {
 
 	/**

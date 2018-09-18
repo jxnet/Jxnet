@@ -24,7 +24,7 @@ import com.ardikars.common.annotation.Mutable;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
-@Mutable
+@Mutable(volatiles = { "ps_recv", "ps_drop", "ps_ifdrop" })
 public final class PcapStat implements Cloneable {
 
 	private volatile long ps_recv;

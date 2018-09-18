@@ -24,7 +24,7 @@ import com.ardikars.common.annotation.Mutable;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
-@Mutable
+@Mutable(volatiles = { "caplen", "len", "tv_sec", "tv_usec" })
 public final class PcapPktHdr implements Cloneable {
 
 	// This field value will be replaced by native code

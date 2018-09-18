@@ -30,7 +30,7 @@ import java.util.Map;
  * @author Ardika Rommy Sanjaya
  * @since 1.0.0
  */
-@Mutable
+@Mutable(volatiles = { "sa_family", "data" })
 public final class SockAddr implements Cloneable {
 
     private volatile short sa_family;
