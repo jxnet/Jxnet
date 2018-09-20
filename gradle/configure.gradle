@@ -34,6 +34,8 @@ ext {
 	NETTY_VERSION = '4.1.29.Final'
 	JNR_VERSION = '2.1.9'
 
+	SPRING_BOOT_VERSION = '2.0.4.RELEASE'
+
 	pom_project = {
 
 		name = "${NAME}"
