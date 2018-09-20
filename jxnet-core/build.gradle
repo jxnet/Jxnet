@@ -13,8 +13,8 @@ sourceSets {
 }
 
 dependencies {
-	testCompile "junit:junit:${JUNIT_VERSION}"
-	testCompile "org.mockito:mockito-core:${MOCKITO_VERSION}"
+	testImplementation ("junit:junit:${JUNIT_VERSION}")
+	testImplementation ("org.mockito:mockito-core:${MOCKITO_VERSION}")
 }
 
 Gjnp {

@@ -14,14 +14,6 @@ buildscript {
 		}
 	}
 
-//	dependencies {
-//		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
-//		classpath 'gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:1.6.2'
-//		classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
-//		classpath 'gradle.plugin.co.riiid:gradle-github-plugin:0.4.2'
-//		classpath 'gradle.plugin.gjnp:gjnp:1.0.0.Final'
-//	}
-
 }
 
 plugins {
@@ -32,6 +24,7 @@ plugins {
 	id "jacoco"
 	id "checkstyle"
 	id "pmd"
+	id "org.springframework.boot" version "2.0.4.RELEASE" apply false
 	id "com.jfrog.bintray" version "1.7.3" apply false
 	id "com.github.spotbugs" version "1.6.2" apply false
 	id "com.github.kt3k.coveralls" version "2.8.2" apply false
@@ -53,6 +46,15 @@ subprojects {
 
 		if (project.name.equals("jxnet-core")) {
 			apply plugin: 'com.ardikars.gjnp'
+		} else if (project.name.startsWith("jxnet-spring-boot")) {
+			apply plugin: 'org.springframework.boot'
+			apply plugin: 'io.spring.dependency-management'
+			dependencyManagement {
+				imports { mavenBom("org.springframework.boot:spring-boot-dependencies:2.0.4.RELEASE") }
+			}
+			if (!project.name.endsWith("example")) {
+				bootJar.enabled = false
+			}
 		}
 
 		group = "${GROUP}"

@@ -3,31 +3,14 @@
  * Copyright (C) 2017-2018  Ardika Rommy Sanjaya
  */
 
-
-buildscript {
-    ext {
-        springBootVersion = '2.0.4.RELEASE'
-    }
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-    }
-}
-
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
-
 description = "Jxnet spring boot starter example"
 
 dependencies {
-    compile project(":jxnet-spring-boot-starter")
-    compile("org.springframework.boot:spring-boot-starter")
-}
-
-dependencyManagement {
-    imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}") }
+    implementation project (":jxnet-context")
+    implementation project (":jxnet-core")
+    implementation project (":jxnet-spring-boot-autoconfigure")
+    implementation project (":jxnet-spring-boot-starter")
+    implementation ("org.springframework.boot:spring-boot-starter")
 }
 
 bootJar {

@@ -6,8 +6,8 @@
 description = "Packet abstraction"
 
 dependencies {
-    compile('com.ardikars.common:common-util:1.2.0.RC2')
-    compile('com.github.jnr:jnr-ffi:2.1.9')
-    compile('io.netty:netty-buffer:4.1.29.Final')
-    testCompile "junit:junit:${JUNIT_VERSION}"
+    implementation ("com.ardikars.common:common-util:${COMMON_VERSION}")
+    implementation ("com.github.jnr:jnr-ffi:${JNR_VERSION}")
+    implementation ("io.netty:netty-buffer:${NETTY_VERSION}")
+    testImplementation ("junit:junit:${JUNIT_VERSION}")
 }

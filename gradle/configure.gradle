@@ -30,6 +30,10 @@ ext {
 	PMD_VERION = '6.5.0'
 	JACOCO_VERSION = '0.8.2'
 
+	COMMON_VERSION = '1.2.0.Final'
+	NETTY_VERSION = '4.1.29.Final'
+	JNR_VERSION = '2.1.9'
+
 	pom_project = {
 
 		name = "${NAME}"

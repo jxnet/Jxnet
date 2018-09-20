@@ -6,5 +6,5 @@
 description = "Jxnet spring boot starter"
 
 dependencies {
-    compile project(":jxnet-spring-boot-autoconfigure")
+    implementation project (":jxnet-spring-boot-autoconfigure")
 }
