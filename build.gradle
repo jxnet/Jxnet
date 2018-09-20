@@ -29,6 +29,7 @@ plugins {
 	id "com.github.spotbugs" version "1.6.2" apply false
 	id "com.github.kt3k.coveralls" version "2.8.2" apply false
 	id "com.ardikars.gjnp" version "1.0.0.Final" apply false
+	id "co.riiid.gradle" version "0.4.2" apply false
 }
 
 subprojects {
