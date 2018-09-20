@@ -47,14 +47,11 @@ subprojects {
 
 		if (project.name.equals("jxnet-core")) {
 			apply plugin: 'com.ardikars.gjnp'
-		} else if (project.name.startsWith("jxnet-spring-boot")) {
+		} else if (project.name.startsWith("jxnet-spring-boot") && project.name.endsWith("example")) {
 			apply plugin: 'org.springframework.boot'
 			apply plugin: 'io.spring.dependency-management'
 			dependencyManagement {
-				imports { mavenBom("org.springframework.boot:spring-boot-dependencies:2.0.4.RELEASE") }
-			}
-			if (!project.name.endsWith("example")) {
-				bootJar.enabled = false
+				imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${SPRING_BOOT_VERSION}") }
 			}
 		}
 
@@ -71,8 +68,8 @@ subprojects {
 		}
 
         dependencies {
-			implementation 'com.ardikars.common:common-net:1.2.0.Final'
-			implementation 'com.ardikars.common:common-util:1.2.0.Final'
+			implementation ("com.ardikars.common:common-net:${COMMON_VERSION}")
+			implementation ("com.ardikars.common:common-util:$COMMON_VERSION")
         }
 
 		configurations.archives.artifacts.with { archives ->

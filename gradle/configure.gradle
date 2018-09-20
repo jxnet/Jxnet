@@ -7,7 +7,7 @@ ext {
 
 	NAME = 'Jxnet'
 	GROUP = 'com.ardikars.jxnet'
-	VERSION = '1.4.3.Final'
+	VERSION = '1.4.3.RC1'
 
 	NDK_HOME = "${System.env.NDK_HOME}"
 	TOOLS_DIR = "${rootDir}/tools"
@@ -33,6 +33,8 @@ ext {
 	COMMON_VERSION = '1.2.0.Final'
 	NETTY_VERSION = '4.1.29.Final'
 	JNR_VERSION = '2.1.9'
+
+	SPRING_BOOT_VERSION = '2.0.4.RELEASE'
 
 	pom_project = {
 
@@ -68,6 +70,20 @@ ext {
 		organization {
 			name 'ardikars'
 			url 'http://ardikars.com'
+		}
+
+		if (project.name.startsWith("jxnet-spring-boot")) {
+			dependencyManagement {
+				dependencies {
+					dependency {
+						groupId "org.springframework.boot"
+						artifactId "spring-boot-dependencies"
+						version "${SPRING_BOOT_VERSION}"
+						type "pom"
+						scope "import"
+					}
+				}
+			}
 		}
 
 	}
