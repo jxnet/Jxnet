@@ -7,6 +7,6 @@ dependencies {
     implementation project (":jxnet-core")
     implementation project (":jxnet-context")
     implementation ("org.slf4j:slf4j-api:${SLF4J_VERSION}")
-    implementation ("org.springframework.boot:spring-boot-configuration-processor")
-    implementation ("org.springframework.boot:spring-boot-autoconfigure")
+    implementation ("org.springframework.boot:spring-boot-configuration-processor:${SPRING_BOOT_VERSION}")
+    implementation ("org.springframework.boot:spring-boot-autoconfigure:${SPRING_BOOT_VERSION}")
 }
