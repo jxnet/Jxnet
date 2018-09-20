@@ -1,6 +1,7 @@
 
 dependencies {
-    compile project(':jxnet-context')
+    implementation project (":jxnet-context")
+    implementation project (":jxnet-core")
 }
 
 jar {

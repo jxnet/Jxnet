@@ -9,7 +9,7 @@ Jxnet wraps a native packet capture library (libpcap/npcap) via JNI (Java Native
 [![Coverage Status](https://coveralls.io/repos/github/jxnet/Jxnet/badge.svg?branch=)](https://coveralls.io/github/jxnet/Jxnet?branch=)
 [![Build status](https://ci.appveyor.com/api/projects/status/ev4t6t1ssacwj18j?svg=true)](https://ci.appveyor.com/project/jxnet/jxnet)
 
-[ ![Download](https://api.bintray.com/packages/ardikars/maven/com.ardikars.jxnet/images/download.svg?version=1.4.1.Final) ](https://bintray.com/ardikars/maven/com.ardikars.jxnet/1.4.1.Final/link)
+[ ![Download](https://api.bintray.com/packages/ardikars/maven/com.ardikars.jxnet/images/download.svg?version=1.4.3.Final) ](https://bintray.com/ardikars/maven/com.ardikars.jxnet/1.4.3.Final/link)
 
 
 Getting Started
@@ -39,7 +39,7 @@ Getting Started
 >>>
 >>> ```
 >>> dependencies { 
->>>     compile 'com.ardikars.jxnet:jxnet-spring-boot-starter:1.4.1.Final'
+>>>     compile 'com.ardikars.jxnet:jxnet-spring-boot-starter:1.4.3.Final'
 >>> }
 >>>```
   - ##### Maven project
@@ -50,7 +50,7 @@ Getting Started
 >>>     <dependency>
 >>>         <groupId>com.ardikars.jxnet</groupId>
 >>>         <artifactId>jxnet-spring-boot-starter</artifactId>
->>>         <version>1.4.1.Final</version>
+>>>         <version>1.4.3.Final</version>
 >>>     </dependency>
 >>> </dependencies>
 >>>```
@@ -68,6 +68,12 @@ public class Application implements CommandLineRunner  {
 
     @Autowired
     private Context context;
+    
+    @Autowired
+    private PcapIf pcapIf;
+    
+    @Autowired
+    private MacAddress macAddress;
 
     @Override
     public void run(String... args) throws Exception {
@@ -77,6 +83,8 @@ public class Application implements CommandLineRunner  {
                 pool.shutdownNow();
             }
         });
+        LOGGER.info("Device        : " + pcapIf);
+        LOGGER.info("MacAddress    : " + macAddress);
         context.pcapLoop(MAX_PACKET, new PcapHandler<String>() {
             @Override
             public void nextPacket(String user, PcapPktHdr pktHdr, ByteBuffer buffer) {
@@ -167,6 +175,7 @@ Build Jxnet from Source
 
 Jxnet dependencies
 ==================
+  - com.ardikars.common:common-annotation
   - com.ardikars.common:common-util
   - com.ardikars.common:common-net
 
@@ -206,4 +215,3 @@ Issues
 Have a bug? Please create an issue here on GitHub!
 
 https://github.com/jxnet/Jxnet/issues
-

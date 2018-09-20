@@ -7,7 +7,7 @@ ext {
 
 	NAME = 'Jxnet'
 	GROUP = 'com.ardikars.jxnet'
-	VERSION = '1.4.2.Final'
+	VERSION = '1.4.3.Final'
 
 	NDK_HOME = "${System.env.NDK_HOME}"
 	TOOLS_DIR = "${rootDir}/tools"
@@ -29,6 +29,10 @@ ext {
 	SPOTBUGS_VERSION = '3.1.5'
 	PMD_VERION = '6.5.0'
 	JACOCO_VERSION = '0.8.2'
+
+	COMMON_VERSION = '1.2.0.Final'
+	NETTY_VERSION = '4.1.29.Final'
+	JNR_VERSION = '2.1.9'
 
 	pom_project = {
 
