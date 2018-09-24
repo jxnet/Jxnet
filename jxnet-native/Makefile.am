@@ -1,6 +1,6 @@
 
  ##
- # Copyright (C) 2017  Ardika Rommy Sanjaya
+ # Copyright (C) 2015-2018 Jxnet
  ##
 
 ACLOCAL_AMFLAGS = -I m4

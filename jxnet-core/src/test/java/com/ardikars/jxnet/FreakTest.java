@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2017-2018  Ardika Rommy Sanjaya <contact@ardikars.com>
+ * Copyright (C) 2015-2018 Jxnet
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by

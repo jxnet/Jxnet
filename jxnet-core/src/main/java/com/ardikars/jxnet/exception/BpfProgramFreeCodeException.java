@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2017-2018  Ardika Rommy Sanjaya <contact@ardikars.com>
+ * Copyright (C) 2015-2018 Jxnet
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,7 +20,7 @@ package com.ardikars.jxnet.exception;
 /**
  * BPF FreeCode Exception
  *
- * @author Ardika Rommy Sanjaya
+ * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
  * @since 1.0.0
  */
 public class BpfProgramFreeCodeException extends RuntimeException {

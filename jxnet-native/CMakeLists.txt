@@ -1,7 +1,7 @@
 
-#
-# Copyright (C) 2017  Ardika Rommy Sanjaya
-#
+ ##
+ # Copyright (C) 2015-2018 Jxnet
+ ##
 
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 

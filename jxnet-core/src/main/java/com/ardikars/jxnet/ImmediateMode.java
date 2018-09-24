@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2017-2018  Ardika Rommy Sanjaya <contact@ardikars.com>
+ * Copyright (C) 2015-2018 Jxnet
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,8 +23,9 @@ import jdk.nashorn.internal.ir.annotations.Immutable;
  * Libpcap never guarantee, that packets will be delivered immediately,
  * the instant that they arrive, unless you enable "immediate mode"
  * by calling pcap_set_immediate_mode() between pcap_create() and pcap_activate().
+ *
  * @see Jxnet PcapSetImmedateMode()
- * @author Ardika Rommy Sanjaya
+ * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
  * @since 1.1.4
  */
 @Immutable

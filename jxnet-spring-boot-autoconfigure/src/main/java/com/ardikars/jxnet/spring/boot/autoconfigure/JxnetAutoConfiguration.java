@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2017-2018  Ardika Rommy Sanjaya <contact@ardikars.com>
+ * Copyright (C) 2015-2018 Jxnet
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -50,6 +50,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 
+/**
+ * Spring autoconfiguration.
+ *
+ * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
+ * @since 1.4.0
+ */
 @Configuration
 @ConditionalOnClass(JxnetConfigurationProperties.class)
 @AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE)

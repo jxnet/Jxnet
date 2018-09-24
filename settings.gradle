@@ -1,3 +1,8 @@
+
+/**
+ * Copyright (C) 2015-2018 Jxnet
+ */
+
 rootProject.name = 'jxnet'
 
 include 'jxnet-native'

@@ -1,4 +1,8 @@
 
+/**
+ * Copyright (C) 2015-2018 Jxnet
+ */
+
 dependencies {
     implementation project (":jxnet-context")
     implementation project (":jxnet-core")

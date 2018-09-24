@@ -1,4 +1,8 @@
 
+/**
+ * Copyright (C) 2015-2018 Jxnet
+ */
+
 apply plugin: 'co.riiid.gradle'
 
 github {

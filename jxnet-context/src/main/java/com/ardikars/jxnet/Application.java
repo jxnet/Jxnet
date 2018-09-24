@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2017-2018  Ardika Rommy Sanjaya <contact@ardikars.com>
+ * Copyright (C) 2015-2018 Jxnet
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,7 +21,9 @@ import com.ardikars.common.util.Builder;
 import com.ardikars.common.util.Validate;
 
 /**
- * @author Ardika Rommy Sanjaya
+ * Helper class for bootstraping jxnet application.
+ *
+ * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
  * @since 1.1.5
  */
 public final class Application {
