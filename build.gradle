@@ -248,6 +248,32 @@ subprojects {
 					authentication(userName: defaultBlank({ sonatypeUser }), password: defaultBlank({ sonatypePass }))
 				}
 				pom.project pom_project
+				pom.project {
+
+					name = project.name
+					description = project.description
+
+					if (project.name.startsWith("jxnet-spring-boot") && !project.name.endsWith("example")) {
+						dependencyManagement {
+							dependencies {
+								dependency {
+									groupId "org.springframework.boot"
+									artifactId "spring-boot-dependencies"
+									version "${SPRING_BOOT_VERSION}"
+									type "pom"
+									scope "import"
+								}
+							}
+						}
+					}
+
+					if (project.name.equals('jxnet-bom')) {
+						dependencyManagement {
+							dependencies bom_dependencies
+						}
+					}
+
+				}
 			}
 		}
 
