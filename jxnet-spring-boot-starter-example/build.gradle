@@ -3,13 +3,30 @@
  * Copyright (C) 2015-2018 Jxnet
  */
 
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "io.spring.gradle:dependency-management-plugin:0.5.1.RELEASE"
+    }
+}
+
+apply plugin: "io.spring.dependency-management"
+
+dependencyManagement {
+    imports {
+        mavenBom "com.ardikars.jxnet:jxnet-bom:${VERSION}"
+    }
+}
+
 description = "Jxnet spring boot starter example"
 
 dependencies {
-    implementation project (":jxnet-context")
-    implementation project (":jxnet-core")
-    implementation project (":jxnet-spring-boot-autoconfigure")
-    implementation project (":jxnet-spring-boot-starter")
+    implementation ("${GROUP}:jxnet-context")
+    implementation ("${GROUP}:jxnet-core")
+    implementation ("${GROUP}:jxnet-spring-boot-autoconfigure")
+    implementation ("${GROUP}:jxnet-spring-boot-starter")
     implementation ("org.springframework.boot:spring-boot-starter")
 }
 
