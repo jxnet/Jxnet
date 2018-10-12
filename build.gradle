@@ -68,8 +68,10 @@ subprojects {
 		}
 
         dependencies {
-			implementation ("com.ardikars.common:common-net:${COMMON_VERSION}")
-			implementation ("com.ardikars.common:common-util:$COMMON_VERSION")
+			if (!project.name.equals("jxnet-bom")) {
+				implementation("com.ardikars.common:common-net:${COMMON_VERSION}")
+				implementation("com.ardikars.common:common-util:$COMMON_VERSION")
+			}
         }
 
 		configurations.archives.artifacts.with { archives ->
@@ -202,6 +204,32 @@ subprojects {
 			System.setProperty('maven.repo.local', "${MAVEN_LOCAL_REPOSITORY}")
 			repositories.mavenInstaller {
 				pom.project pom_project
+				pom.project {
+
+					name = project.name
+					description = project.description
+
+					if (project.name.startsWith("jxnet-spring-boot") && !project.name.endsWith("example")) {
+						dependencyManagement {
+							dependencies {
+								dependency {
+									groupId "org.springframework.boot"
+									artifactId "spring-boot-dependencies"
+									version "${SPRING_BOOT_VERSION}"
+									type "pom"
+									scope "import"
+								}
+							}
+						}
+					}
+
+					if (project.name.equals('jxnet-bom')) {
+						dependencyManagement {
+							dependencies bom_dependencies
+						}
+					}
+
+				}
 			}
 		}
 

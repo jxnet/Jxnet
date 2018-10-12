@@ -7,7 +7,7 @@ ext {
 
 	NAME = 'Jxnet'
 	GROUP = 'com.ardikars.jxnet'
-	VERSION = '1.4.3.RC1'
+	VERSION = '1.4.3.RC2'
 
 	NDK_HOME = "${System.env.NDK_HOME}"
 	TOOLS_DIR = "${rootDir}/tools"
@@ -38,11 +38,9 @@ ext {
 
 	pom_project = {
 
-		name = "${NAME}"
-
-		description = 'Jxnet is a java library for capturing and sending network paket.'
-
 		url 'https://github.com/jxnet/Jxnet'
+
+		inceptionYear '2015'
 
 		developers {
 			developer {
@@ -72,18 +70,44 @@ ext {
 			url 'http://ardikars.com'
 		}
 
-		if (project.name.startsWith("jxnet-spring-boot")) {
-			dependencyManagement {
-				dependencies {
-					dependency {
-						groupId "org.springframework.boot"
-						artifactId "spring-boot-dependencies"
-						version "${SPRING_BOOT_VERSION}"
-						type "pom"
-						scope "import"
-					}
-				}
-			}
+	}
+
+	bom_dependencies = {
+
+		dependency {
+			groupId "${GROUP}"
+			artifactId "jxnet-context"
+			version "${VERSION}"
+			type "pom"
+			scope "import"
+		}
+		dependency {
+			groupId "${GROUP}"
+			artifactId "jxnet-core"
+			version "${VERSION}"
+			type "pom"
+			scope "import"
+		}
+		dependency {
+			groupId "${GROUP}"
+			artifactId "jxnet-packet"
+			version "${VERSION}"
+			type "pom"
+			scope "import"
+		}
+		dependency {
+			groupId "${GROUP}"
+			artifactId "jxnet-spring-boot-autoconfigure"
+			version "${VERSION}"
+			type "pom"
+			scope "import"
+		}
+		dependency {
+			groupId "${GROUP}"
+			artifactId "jxnet-spring-boot-starter"
+			version "${VERSION}"
+			type "pom"
+			scope "import"
 		}
 
 	}

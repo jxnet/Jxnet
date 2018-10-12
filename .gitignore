@@ -36,6 +36,10 @@ a.out
 /obj
 /target
 /classes
+/jxnet-bom/.gradle
+/jxnet-bom/build
+/jxnet-bom/target
+/jxnet-bom/out
 /jxnet-context/.gradle
 /jxnet-context/build
 /jxnet-context/target
