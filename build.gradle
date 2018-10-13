@@ -38,6 +38,8 @@ allprojects {
 
 		apply plugin: 'java'
 		apply plugin: 'io.spring.dependency-management'
+		apply plugin: 'jacoco'
+		apply plugin: 'com.github.kt3k.coveralls'
 
 		group = "${GROUP}"
 		version = "${VERSION}"
@@ -115,9 +117,29 @@ allprojects {
 			//options.compilerArgs << "-Xlint:unchecked" << "-Werror"
 		}
 
-		clean {
-			file("${rootDir}/${project.name}/obj").deleteDir()
-			file("${rootDir}/${project.name}/out").deleteDir()
+		/**
+		 * Code coverage (Jacoco + coveralls)
+		 */
+
+		jacoco {
+			toolVersion = "${JACOCO_VERSION}"
+		}
+
+		jacocoTestReport {
+			reports {
+				csv.enabled false
+				xml.enabled true
+				html.enabled = true
+				html.destination file("${buildDir}/jacocoHtml")
+			}
+			enabled = false
+		}
+
+		/**
+		 * Upload converage report
+		 */
+		tasks.coveralls {
+			dependsOn 'check'
 		}
 
 	} else if (project.name.equals("jxnet")) {
@@ -154,10 +176,6 @@ if (gradle.startParameter.taskNames.contains("build")) {
 if (gradle.startParameter.taskNames.contains("bintrayUpload") ||
 		gradle.startParameter.taskNames.contains("uploadArchives")) {
 	apply from: 'gradle/artifactRelease.gradle'
-}
-
-if (gradle.startParameter.taskNames.contains("jacocoTestReport")) {
-	apply from: 'gradle/codeCoverage.gradle'
 }
 
 task wrapper(type: Wrapper) {
