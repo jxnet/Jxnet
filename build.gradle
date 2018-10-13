@@ -37,7 +37,6 @@ allprojects {
 	if (!project.name.equals("jxnet-native") && !project.name.equals("jxnet")) {
 
 		apply plugin: 'java'
-		apply plugin: 'com.github.kt3k.coveralls'
 		apply plugin: 'io.spring.dependency-management'
 
 		group = "${GROUP}"
@@ -59,12 +58,12 @@ allprojects {
 			imports { mavenBom("com.ardikars.common:common:${COMMON_VERSION}") }
 		}
 
-        dependencies {
+		dependencies {
 			if (!project.name.equals("jxnet") && !project.name.equals("jxnet-native")) {
 				implementation("com.ardikars.common:common-net")
 				implementation("com.ardikars.common:common-util")
 			}
-        }
+		}
 
 		configurations.archives.artifacts.with { archives ->
 			def jarArtifact
@@ -116,20 +115,9 @@ allprojects {
 			//options.compilerArgs << "-Xlint:unchecked" << "-Werror"
 		}
 
-		artifacts {
-			archives jar, sourcesJar, javadocJar
-		}
-
 		clean {
 			file("${rootDir}/${project.name}/obj").deleteDir()
 			file("${rootDir}/${project.name}/out").deleteDir()
-		}
-
-		/**
-		 * Upload converage report
-		 */
-		tasks.coveralls {
-			dependsOn 'check'
 		}
 
 	} else if (project.name.equals("jxnet")) {
@@ -166,6 +154,10 @@ if (gradle.startParameter.taskNames.contains("build")) {
 if (gradle.startParameter.taskNames.contains("bintrayUpload") ||
 		gradle.startParameter.taskNames.contains("uploadArchives")) {
 	apply from: 'gradle/artifactRelease.gradle'
+}
+
+if (gradle.startParameter.taskNames.contains("jacocoTestReport")) {
+	apply from: 'gradle/codeCoverage.gradle'
 }
 
 task wrapper(type: Wrapper) {

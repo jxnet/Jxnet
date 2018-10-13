@@ -23,7 +23,7 @@ jobs:
       - run: 'echo "signing.password=$SIGNING_PASS" >> gradle.properties'
       - run: 'echo "signing.secretKeyRingFile=/tmp/secring.gpg" >> gradle.properties'
       - run: 'gpg --batch --yes --passphrase=$SIGN_KEY --output /tmp/secring.gpg --decrypt --cipher-algo AES256 ./gradle/resources/gpg/secring.gpg.enc'
-      - run: './gradlew clean build bintrayUpload dist github -x test --no-daemon -q'
+      - run: './gradlew clean build install bintrayUpload dist github -x test --no-daemon -q'
       - save_cache:
           key: gradle
           paths:
