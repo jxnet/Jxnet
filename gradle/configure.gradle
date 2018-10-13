@@ -8,6 +8,7 @@ ext {
 	NAME = 'Jxnet'
 	GROUP = 'com.ardikars.jxnet'
 	VERSION = '1.4.3.RC4'
+	DESCRIPTION = 'Jxnet is a java library for capturing and sending network packet.'
 
 	NDK_HOME = "${System.env.NDK_HOME}"
 	TOOLS_DIR = "${rootDir}/tools"
@@ -15,8 +16,8 @@ ext {
 	TOOLS_OBJ = "${rootDir}/obj/tools"
 	JXNET_OUT = "${rootDir}/jxnet-core/src/main/resources/lib"
 	TOOLS_OUT = "${rootDir}/jxnet-core/src/main/resources/bin"
-//	MAVEN_LOCAL_REPOSITORY = "${rootDir}/build/repository"
-	MAVEN_LOCAL_REPOSITORY = "${System.env.HOME}/.m2/repository"
+	MAVEN_LOCAL_REPOSITORY = "${rootDir}/build/repository"
+//	MAVEN_LOCAL_REPOSITORY = "${System.env.HOME}/.m2/repository"
 
 	JAVA_VERSION = '1.7'
 	JUNIT_VERSION = '4.12'
@@ -37,9 +38,6 @@ ext {
 	SPRING_BOOT_VERSION = '2.0.4.RELEASE'
 
 	pom_project = {
-
-		name = "${NAME}"
-		description = 'Jxnet is a java library for capturing and sending network packet.'
 		
 		url 'https://github.com/jxnet/Jxnet'
 

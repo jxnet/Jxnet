@@ -3,6 +3,8 @@
  * Copyright (C) 2015-2018 Jxnet
  */
 
+description = 'Jxnet example application.'
+
 dependencies {
     implementation project (":jxnet-context")
     implementation project (":jxnet-core")

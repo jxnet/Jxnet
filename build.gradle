@@ -207,7 +207,12 @@ subprojects {
 				pom.project {
 
 					name = project.name
-					description = project.description
+
+					if (project.description == null || project.description.isEmpty()) {
+						description = "${DESCRIPTION}"
+					} else {
+						description = project.description
+					}
 
 					if (project.name.startsWith("jxnet-spring-boot") && !project.name.endsWith("example")) {
 						dependencyManagement {
@@ -251,7 +256,12 @@ subprojects {
 				pom.project {
 
 					name = project.name
-					description = project.description
+
+					if (project.description == null || project.description.isEmpty()) {
+						description = "${DESCRIPTION}"
+					} else {
+						description = project.description
+					}
 
 					if (project.name.startsWith("jxnet-spring-boot") && !project.name.endsWith("example")) {
 						dependencyManagement {
@@ -327,9 +337,9 @@ subprojects {
 
 apply plugin: 'java'
 
-description = 'Jxnet is a java library for capturing and sending network packet.'
 group = "${GROUP}"
 version = "${VERSION}"
+description = "${DESCRIPTION}"
 
 if (gradle.startParameter.taskNames.contains('github') ||
 		gradle.startParameter.taskNames.contains('githubRelease')) {

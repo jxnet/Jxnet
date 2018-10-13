@@ -3,7 +3,7 @@
  * Copyright (C) 2015-2018 Jxnet
  */
 
-description = "Packet abstraction"
+description = "Packet abstraction module."
 
 dependencies {
     implementation ("com.ardikars.common:common-util:${COMMON_VERSION}")

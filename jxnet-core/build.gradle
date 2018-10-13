@@ -3,6 +3,8 @@
  * Copyright (C) 2015-2018 Jxnet
  */
 
+description = 'Core module for Jxnet.'
+
 sourceSets {
 	main {
 		resources {

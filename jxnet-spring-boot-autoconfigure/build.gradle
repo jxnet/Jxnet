@@ -3,6 +3,8 @@
  * Copyright (C) 2015-2018 Jxnet
  */
 
+description = 'Spring boot auto configuration for Jxnet.'
+
 dependencies {
     implementation project (":jxnet-core")
     implementation project (":jxnet-context")

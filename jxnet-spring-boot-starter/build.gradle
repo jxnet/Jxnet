@@ -3,7 +3,7 @@
  * Copyright (C) 2015-2018 Jxnet
  */
 
-description = "Jxnet spring boot starter"
+description = "Jxnet spring boot starter."
 
 dependencies {
     implementation project (":jxnet-spring-boot-autoconfigure")
