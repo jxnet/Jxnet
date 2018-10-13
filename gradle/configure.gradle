@@ -7,7 +7,7 @@ ext {
 
 	NAME = 'Jxnet'
 	GROUP = 'com.ardikars.jxnet'
-	VERSION = '1.4.3.RC4'
+	VERSION = '1.4.3.RC5'
 	DESCRIPTION = 'Jxnet is a java library for capturing and sending network packet.'
 
 	NDK_HOME = "${System.env.NDK_HOME}"
@@ -16,8 +16,8 @@ ext {
 	TOOLS_OBJ = "${rootDir}/obj/tools"
 	JXNET_OUT = "${rootDir}/jxnet-core/src/main/resources/lib"
 	TOOLS_OUT = "${rootDir}/jxnet-core/src/main/resources/bin"
-	MAVEN_LOCAL_REPOSITORY = "${rootDir}/build/repository"
-//	MAVEN_LOCAL_REPOSITORY = "${System.env.HOME}/.m2/repository"
+//	MAVEN_LOCAL_REPOSITORY = "${rootDir}/build/repository"
+	MAVEN_LOCAL_REPOSITORY = "${System.env.HOME}/.m2/repository"
 
 	JAVA_VERSION = '1.7'
 	JUNIT_VERSION = '4.12'
@@ -79,36 +79,26 @@ ext {
 			groupId "${GROUP}"
 			artifactId "jxnet-context"
 			version "${VERSION}"
-			type "pom"
-			scope "import"
 		}
 		dependency {
 			groupId "${GROUP}"
 			artifactId "jxnet-core"
 			version "${VERSION}"
-			type "pom"
-			scope "import"
 		}
 		dependency {
 			groupId "${GROUP}"
 			artifactId "jxnet-packet"
 			version "${VERSION}"
-			type "pom"
-			scope "import"
 		}
 		dependency {
 			groupId "${GROUP}"
 			artifactId "jxnet-spring-boot-autoconfigure"
 			version "${VERSION}"
-			type "pom"
-			scope "import"
 		}
 		dependency {
 			groupId "${GROUP}"
 			artifactId "jxnet-spring-boot-starter"
 			version "${VERSION}"
-			type "pom"
-			scope "import"
 		}
 
 	}

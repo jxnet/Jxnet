@@ -65,6 +65,9 @@ subprojects {
 
 		repositories {
 			jcenter()
+			maven {
+				url "https://dl.bintray.com/ardikars/maven"
+			}
 		}
 
         dependencies {
