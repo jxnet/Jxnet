@@ -44,12 +44,12 @@ subprojects {
 		apply plugin: 'pmd'
 		apply plugin: 'com.github.spotbugs'
 		apply plugin: 'com.github.kt3k.coveralls'
+		apply plugin: 'io.spring.dependency-management'
 
 		if (project.name.equals("jxnet-core")) {
 			apply plugin: 'com.ardikars.gjnp'
 		} else if (project.name.startsWith("jxnet-spring-boot") && project.name.endsWith("example")) {
 			apply plugin: 'org.springframework.boot'
-			apply plugin: 'io.spring.dependency-management'
 			dependencyManagement {
 				imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${SPRING_BOOT_VERSION}") }
 			}
@@ -70,10 +70,14 @@ subprojects {
 			}
 		}
 
+		dependencyManagement {
+			imports { mavenBom("com.ardikars.common:common:${COMMON_VERSION}") }
+		}
+
         dependencies {
-			if (!project.name.equals("jxnet-bom")) {
-				implementation("com.ardikars.common:common-net:${COMMON_VERSION}")
-				implementation("com.ardikars.common:common-util:$COMMON_VERSION")
+			if (!project.name.equals("jxnet-bom") && !project.name.equals("jxnet-native")) {
+				implementation("com.ardikars.common:common-net")
+				implementation("com.ardikars.common:common-util")
 			}
         }
 

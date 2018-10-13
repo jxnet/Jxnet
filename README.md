@@ -9,7 +9,7 @@ Jxnet wraps a native packet capture library (libpcap/npcap) via JNI (Java Native
 [![Coverage Status](https://coveralls.io/repos/github/jxnet/Jxnet/badge.svg?branch=)](https://coveralls.io/github/jxnet/Jxnet?branch=)
 [![Build status](https://ci.appveyor.com/api/projects/status/ev4t6t1ssacwj18j?svg=true)](https://ci.appveyor.com/project/jxnet/jxnet)
 
-[ ![Download](https://api.bintray.com/packages/ardikars/maven/com.ardikars.jxnet/images/download.svg?version=1.4.3.Final) ](https://bintray.com/ardikars/maven/com.ardikars.jxnet/1.4.3.Final/link)
+[ ![Download](https://api.bintray.com/packages/ardikars/maven/com.ardikars.jxnet/images/download.svg?version=1.4.4.Final) ](https://bintray.com/ardikars/maven/com.ardikars.jxnet/1.4.4.Final/link)
 
 
 Getting Started
@@ -34,14 +34,6 @@ Getting Started
 
 ### How to Use
 
-  - ##### Gradle project
->> Add a dependency to the build.gradle as like below:
->>>
->>> ```
->>> dependencies { 
->>>     compile 'com.ardikars.jxnet:jxnet-spring-boot-starter:1.4.3.Final'
->>> }
->>>```
   - ##### Maven project
 >> Add a dependency to the pom.xml as like below:
 >>>
@@ -50,9 +42,26 @@ Getting Started
 >>>     <dependency>
 >>>         <groupId>com.ardikars.jxnet</groupId>
 >>>         <artifactId>jxnet-spring-boot-starter</artifactId>
->>>         <version>1.4.3.Final</version>
 >>>     </dependency>
 >>> </dependencies>
+>>> <dependencyManagement>
+>>>     <dependencies>
+>>>         <dependency>
+>>>             <groupId>com.ardikars.common</groupId>
+>>>             <artifactId>common</artifactId>
+>>>             <version>1.2.1.Final</version>
+>>>             <type>pom</type>
+>>>             <scope>import</scope>
+>>>         </dependency>
+>>>         <dependency>
+>>>             <groupId>com.ardikars.jxnet</groupId>
+>>>             <artifactId>jxnet-bom</artifactId>
+>>>             <version>1.4.4.Final</version>
+>>>             <type>pom</type>
+>>>             <scope>import</scope>
+>>>         </dependency>
+>>>     </dependencies>
+>>> </dependencyManagement>
 >>>```
   - ##### Example Application
   
@@ -172,12 +181,6 @@ Build Jxnet from Source
     - Install Autoconf & Automake & Make & Libtool & Libpcap-Dev
     - ```cd jxnet-native/ && ./bootstrap.sh && ./configure && make```
 
-
-Jxnet dependencies
-==================
-  - com.ardikars.common:common-annotation
-  - com.ardikars.common:common-util
-  - com.ardikars.common:common-net
 
 License
 =======
