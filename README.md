@@ -6,7 +6,6 @@ Jxnet is a Java library for capturing and sending custom network packet buffers 
 Jxnet wraps a native packet capture library (libpcap/npcap) via JNI (Java Native Interface).
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4d6ca7f3d9214098b1436990ac76a6cd)](https://www.codacy.com/project/jxnet/Jxnet/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jxnet/Jxnet&amp;utm_campaign=Badge_Grade_Dashboard)
-[![Coverage Status](https://coveralls.io/repos/github/jxnet/Jxnet/badge.svg?branch=)](https://coveralls.io/github/jxnet/Jxnet?branch=)
 [![Build status](https://ci.appveyor.com/api/projects/status/ev4t6t1ssacwj18j?svg=true)](https://ci.appveyor.com/project/jxnet/jxnet)
 
 [ ![Download](https://api.bintray.com/packages/ardikars/maven/com.ardikars.jxnet/images/download.svg?version=1.4.4.Final) ](https://bintray.com/ardikars/maven/com.ardikars.jxnet/1.4.4.Final/link)
@@ -44,6 +43,7 @@ Getting Started
 >>>         <artifactId>jxnet-spring-boot-starter</artifactId>
 >>>     </dependency>
 >>> </dependencies>
+>>>
 >>> <dependencyManagement>
 >>>     <dependencies>
 >>>         <dependency>
@@ -64,6 +64,11 @@ Getting Started
 >>>     </dependencies>
 >>> </dependencyManagement>
 >>>```
+
+  - ##### Gradle project
+>> You can use `dependency-management-plugin` for gradle.
+  
+
   - ##### Example Application
   
 ```java
