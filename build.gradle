@@ -32,28 +32,13 @@ plugins {
 	id "co.riiid.gradle" version "0.4.2" apply false
 }
 
-subprojects {
+allprojects {
 
-	if (!project.name.equals("jxnet-native")) {
+	if (!project.name.equals("jxnet-native") && !project.name.equals("jxnet")) {
+
 		apply plugin: 'java'
-		apply plugin: 'signing'
-		apply plugin: 'maven'
-		apply plugin: 'com.jfrog.bintray'
-		apply plugin: 'jacoco'
-		apply plugin: 'checkstyle'
-		apply plugin: 'pmd'
-		apply plugin: 'com.github.spotbugs'
 		apply plugin: 'com.github.kt3k.coveralls'
 		apply plugin: 'io.spring.dependency-management'
-
-		if (project.name.equals("jxnet-core")) {
-			apply plugin: 'com.ardikars.gjnp'
-		} else if (project.name.startsWith("jxnet-spring-boot") && project.name.endsWith("example")) {
-			apply plugin: 'org.springframework.boot'
-			dependencyManagement {
-				imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${SPRING_BOOT_VERSION}") }
-			}
-		}
 
 		group = "${GROUP}"
 		version = "${VERSION}"
@@ -75,7 +60,7 @@ subprojects {
 		}
 
         dependencies {
-			if (!project.name.equals("jxnet-bom") && !project.name.equals("jxnet-native")) {
+			if (!project.name.equals("jxnet") && !project.name.equals("jxnet-native")) {
 				implementation("com.ardikars.common:common-net")
 				implementation("com.ardikars.common:common-util")
 			}
@@ -117,78 +102,6 @@ subprojects {
 			}
 		}
 
-		checkstyle {
-			ignoreFailures = false
-			checkstyleTest.enabled = false
-
-			configFile = rootProject.file('gradle/resources/checkstyle/checkstyle.xml')
-			configProperties = [
-					"suppressionFile" : rootProject.file('gradle/resources/checkstyle/suppression.xml'),
-					"headerFile" : rootProject.file('gradle/resources/checkstyle/license.header')
-			]
-
-			checkstyleMain {
-				source = sourceSets.main.allSource
-			}
-			configurations {
-				checkstyle
-			}
-			checkstyleMain {
-				reports {
-					html {
-						//destination "${project.buildDir}/reports/checkstyle.html"
-					}
-				}
-			}
-			toolVersion = "${CHECKSTYLE_VERSION}"
-		}
-
-		spotbugs {
-			ignoreFailures = false
-			reportsDir = file("$project.buildDir/reports/findbugs")
-			effort = "max"
-			excludeFilter rootProject.file('gradle/resources/findbugs/findbugs-exclude.xml')
-			spotbugsMain {
-				reports {
-					xml.enabled = false
-					html.enabled = true
-				}
-			}
-			toolVersion "${SPOTBUGS_VERSION}"
-		}
-
-		pmd {
-			ignoreFailures = false
-			sourceSets = [sourceSets.main]
-			reportsDir = file("$project.buildDir/reports/pmd")
-			ruleSetFiles = rootProject.files("./gradle/resources/pmd/pmd.xml")
-			toolVersion "${PMD_VERION}"
-		}
-
-		jacoco {
-			toolVersion = "${JACOCO_VERSION}"
-		}
-
-		jacocoTestReport {
-			reports {
-				xml.enabled true
-				csv.enabled false
-				html.destination file("${buildDir}/jacocoHtml")
-			}
-		}
-
-
-		test {
-			testLogging {
-				showStandardStreams = true
-			}
-			jacoco {
-				append = false
-				destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
-				classDumpDir = file("$buildDir/jacoco/classpathdumps")
-			}
-		}
-
 		task javadocJar(type: Jar) {
 			classifier = 'javadoc'
 			from javadoc
@@ -207,123 +120,6 @@ subprojects {
 			archives jar, sourcesJar, javadocJar
 		}
 
-		install {
-			System.setProperty('maven.repo.local', "${MAVEN_LOCAL_REPOSITORY}")
-			repositories.mavenInstaller {
-				pom.project pom_project
-				pom.project {
-
-					name = project.name
-
-					if (project.description == null || project.description.isEmpty()) {
-						description = "${DESCRIPTION}"
-					} else {
-						description = project.description
-					}
-
-					if (project.name.startsWith("jxnet-spring-boot") && !project.name.endsWith("example")) {
-						dependencyManagement {
-							dependencies {
-								dependency {
-									groupId "org.springframework.boot"
-									artifactId "spring-boot-dependencies"
-									version "${SPRING_BOOT_VERSION}"
-									type "pom"
-									scope "import"
-								}
-							}
-						}
-					}
-
-					if (project.name.equals('jxnet-bom')) {
-						dependencyManagement {
-							dependencies bom_dependencies
-						}
-					}
-
-				}
-			}
-		}
-
-		signing {
-			required { gradle.taskGraph.hasTask('uploadArchives') || gradle.taskGraph.hasTask('bintrayUpload') }
-			sign configurations.archives
-		}
-
-		uploadArchives {
-			repositories.mavenDeployer {
-				beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-				repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
-					authentication(userName: defaultBlank({ sonatypeUser }), password: defaultBlank({ sonatypePass }))
-				}
-				snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
-					authentication(userName: defaultBlank({ sonatypeUser }), password: defaultBlank({ sonatypePass }))
-				}
-				pom.project pom_project
-				pom.project {
-
-					name = project.name
-
-					if (project.description == null || project.description.isEmpty()) {
-						description = "${DESCRIPTION}"
-					} else {
-						description = project.description
-					}
-
-					if (project.name.startsWith("jxnet-spring-boot") && !project.name.endsWith("example")) {
-						dependencyManagement {
-							dependencies {
-								dependency {
-									groupId "org.springframework.boot"
-									artifactId "spring-boot-dependencies"
-									version "${SPRING_BOOT_VERSION}"
-									type "pom"
-									scope "import"
-								}
-							}
-						}
-					}
-
-					if (project.name.equals('jxnet-bom')) {
-						dependencyManagement {
-							dependencies bom_dependencies
-						}
-					}
-
-				}
-			}
-		}
-
-		bintray {
-			user = defaultBlank({ bintrayUser })
-			key = defaultBlank({ bintrayPass })
-			configurations = ['archives']
-			dryRun = false
-			publish = true
-			override = true
-			pkg {
-				repo = 'maven'
-				name = 'com.ardikars.jxnet'
-				desc = 'Jxnet is a java library for capturing and sending network paket.'
-				licenses = ['GNU Lesser General Public License, Version 3.0']
-				vcsUrl = 'https://github.com/jxnet/Jxnet.git'
-				version {
-					name = project.version
-					vcsTag = project.version
-					gpg {
-						sign = true
-						passphrase = defaultBlank({ signing.password })
-					}
-					mavenCentralSync {
-						sync = true
-						user = defaultBlank({ sonatypeUser })
-						password = defaultBlank({ sonatypePass })
-						close = '1'
-					}
-				}
-			}
-		}
-
 		clean {
 			file("${rootDir}/${project.name}/obj").deleteDir()
 			file("${rootDir}/${project.name}/out").deleteDir()
@@ -336,16 +132,18 @@ subprojects {
 			dependsOn 'check'
 		}
 
+	} else if (project.name.equals("jxnet")) {
+		apply plugin: 'java'
+
+		group = "${GROUP}"
+		version = "${VERSION}"
+
 	} else {
 		apply plugin: 'c'
 	}
 
 }
 
-apply plugin: 'java'
-
-group = "${GROUP}"
-version = "${VERSION}"
 description = "${DESCRIPTION}"
 
 if (gradle.startParameter.taskNames.contains('github') ||
@@ -353,28 +151,16 @@ if (gradle.startParameter.taskNames.contains('github') ||
 	apply from: 'gradle/githubRelease.gradle'
 }
 
-task dist(type: Zip) {
-
-	rootProject.allprojects.collect { it.tasks }.flatten()
-
-	archiveName = "${NAME}-${VERSION}.zip"
-
-	subprojects.each { subproject ->
-		if (!subproject.name.equals("jxnet-native")) {
-			from subproject.jar.outputs.files
-			from subproject.javadocJar.outputs.files
-			from subproject.sourcesJar.outputs.files
-		}
-	}
-
+if (gradle.startParameter.taskNames.contains("install")) {
+	apply from: 'gradle/artifactInstall.gradle'
 }
 
-task ndkBuild(type: Exec) {
-	commandLine "${NDK_HOME}/ndk-build", '-C', "${TOOLS_DIR}",
-		"NDK_LIBS_OUT=${TOOLS_OUT}", "NDK_OUT=${TOOLS_OBJ}"
-	dependsOn ':jxnet-core:generateJNIHeaders'
-	commandLine "${NDK_HOME}/ndk-build", '-C', "${rootDir}",
-			"NDK_LIBS_OUT=${JXNET_OUT}", "NDK_OUT=${JXNET_OBJ}"
+if (gradle.startParameter.taskNames.contains("dist")) {
+	apply from: 'gradle/artifactDistribute.gradle'
+}
+
+if (gradle.startParameter.taskNames.contains("build")) {
+	apply from: 'gradle/codeAnalysis.gradle'
 }
 
 task wrapper(type: Wrapper) {

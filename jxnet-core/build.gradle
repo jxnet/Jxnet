@@ -5,6 +5,8 @@
 
 description = 'Core module for Jxnet.'
 
+apply plugin: 'com.ardikars.gjnp'
+
 sourceSets {
 	main {
 		resources {

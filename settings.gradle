@@ -12,6 +12,4 @@ include 'jxnet-spring-boot-autoconfigure'
 include 'jxnet-spring-boot-starter'
 include 'jxnet-spring-boot-starter-example'
 include 'jxnet-example'
-include 'jxnet-packet'
-include 'jxnet-bom'
-
+//include 'jxnet-packet'

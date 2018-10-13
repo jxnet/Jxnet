@@ -1,0 +1,38 @@
+
+/**
+ * Copyright (C) 2015-2018 Jxnet
+ */
+
+
+allprojects {
+
+    if (!project.name.equals("jxnet-native")) {
+        
+        apply plugin: 'maven'
+        
+        install {
+            System.setProperty('maven.repo.local', "${MAVEN_LOCAL_REPOSITORY}")
+            repositories.mavenInstaller {
+                pom.project pom_project
+                pom.project {
+
+                    name = project.name
+
+                    if (project.description == null || project.description.isEmpty()) {
+                        description = "${DESCRIPTION}"
+                    } else {
+                        description = project.description
+                    }
+
+                    if (project.name.equals('jxnet')) {
+                        dependencyManagement {
+                            dependencies bom_dependencies
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+
+}

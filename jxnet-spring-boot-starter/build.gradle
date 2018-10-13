@@ -5,6 +5,10 @@
 
 description = "Jxnet spring boot starter."
 
+dependencyManagement {
+    imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${SPRING_BOOT_VERSION}") }
+}
+
 dependencies {
     implementation project (":jxnet-spring-boot-autoconfigure")
 }

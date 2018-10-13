@@ -1,0 +1,79 @@
+
+/**
+ * Copyright (C) 2015-2018 Jxnet
+ */
+
+allprojects {
+
+    if (!project.name.equals("jxnet-native")) {
+
+        apply plugin: 'signing'
+        apply plugin: 'com.jfrog.bintray'
+        
+        signing {
+            required { gradle.taskGraph.hasTask('uploadArchives') || gradle.taskGraph.hasTask('bintrayUpload') }
+            sign configurations.archives
+        }
+
+        uploadArchives {
+            repositories.mavenDeployer {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+                repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
+                    authentication(userName: defaultBlank({ sonatypeUser }), password: defaultBlank({ sonatypePass }))
+                }
+                snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
+                    authentication(userName: defaultBlank({ sonatypeUser }), password: defaultBlank({ sonatypePass }))
+                }
+                pom.project pom_project
+                pom.project {
+
+                    name = project.name
+
+                    if (project.description == null || project.description.isEmpty()) {
+                        description = "${DESCRIPTION}"
+                    } else {
+                        description = project.description
+                    }
+
+                    if (project.name.equals('jxnet')) {
+                        dependencyManagement {
+                            dependencies bom_dependencies
+                        }
+                    }
+
+                }
+            }
+        }
+
+        bintray {
+            user = defaultBlank({ bintrayUser })
+            key = defaultBlank({ bintrayPass })
+            configurations = ['archives']
+            dryRun = false
+            publish = true
+            override = true
+            pkg {
+                repo = 'maven'
+                name = 'com.ardikars.jxnet'
+                desc = 'Jxnet is a java library for capturing and sending network paket.'
+                licenses = ['GNU Lesser General Public License, Version 3.0']
+                vcsUrl = 'https://github.com/jxnet/Jxnet.git'
+                version {
+                    name = project.version
+                    vcsTag = project.version
+                    gpg {
+                        sign = true
+                        passphrase = defaultBlank({ signing.password })
+                    }
+                    mavenCentralSync {
+                        sync = true
+                        user = defaultBlank({ sonatypeUser })
+                        password = defaultBlank({ sonatypePass })
+                        close = '1'
+                    }
+                }
+            }
+        }
+    }
+
+}

@@ -5,6 +5,12 @@
 
 description = "Jxnet spring boot starter example"
 
+apply plugin: 'org.springframework.boot'
+
+dependencyManagement {
+    imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${SPRING_BOOT_VERSION}") }
+}
+
 dependencies {
     implementation project (":jxnet-context")
     implementation project (":jxnet-core")

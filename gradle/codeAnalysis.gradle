@@ -1,0 +1,77 @@
+
+/**
+ * Copyright (C) 2015-2018 Jxnet
+ */
+
+subprojects {
+
+    if (!project.name.equals("jxnet-native")) {
+
+        apply plugin: 'jacoco'
+        apply plugin: 'checkstyle'
+        apply plugin: 'pmd'
+        apply plugin: 'com.github.spotbugs'
+
+        checkstyle {
+            ignoreFailures = false
+            checkstyleTest.enabled = false
+
+            configFile = rootProject.file('gradle/resources/checkstyle/checkstyle.xml')
+            configProperties = [
+                    "suppressionFile" : rootProject.file('gradle/resources/checkstyle/suppression.xml'),
+                    "headerFile" : rootProject.file('gradle/resources/checkstyle/license.header')
+            ]
+
+            checkstyleMain {
+                source = project.sourceSets.main.allSource
+            }
+            configurations {
+                checkstyle
+            }
+            checkstyleMain {
+                reports {
+                    html {
+                        //destination "${project.buildDir}/reports/checkstyle.html"
+                    }
+                }
+            }
+            toolVersion = "${CHECKSTYLE_VERSION}"
+        }
+
+        spotbugs {
+            ignoreFailures = false
+            reportsDir = file("$project.buildDir/reports/findbugs")
+            effort = "max"
+            excludeFilter rootProject.file('gradle/resources/findbugs/findbugs-exclude.xml')
+            spotbugsMain {
+                reports {
+                    xml.enabled = false
+                    html.enabled = true
+                }
+            }
+            toolVersion "${SPOTBUGS_VERSION}"
+        }
+
+        pmd {
+            ignoreFailures = false
+            sourceSets = [project.sourceSets.main]
+            reportsDir = file("$project.buildDir/reports/pmd")
+            ruleSetFiles = rootProject.files("./gradle/resources/pmd/pmd.xml")
+            toolVersion "${PMD_VERION}"
+        }
+
+        jacoco {
+            toolVersion = "${JACOCO_VERSION}"
+        }
+
+        jacocoTestReport {
+            reports {
+                xml.enabled true
+                csv.enabled false
+                html.destination file("${buildDir}/jacocoHtml")
+            }
+        }
+
+    }
+
+}

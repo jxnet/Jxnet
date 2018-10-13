@@ -47,15 +47,8 @@ Getting Started
 >>> <dependencyManagement>
 >>>     <dependencies>
 >>>         <dependency>
->>>             <groupId>com.ardikars.common</groupId>
->>>             <artifactId>common</artifactId>
->>>             <version>1.2.1.Final</version>
->>>             <type>pom</type>
->>>             <scope>import</scope>
->>>         </dependency>
->>>         <dependency>
 >>>             <groupId>com.ardikars.jxnet</groupId>
->>>             <artifactId>jxnet-bom</artifactId>
+>>>             <artifactId>jxnet</artifactId>
 >>>             <version>1.4.4.Final</version>
 >>>             <type>pom</type>
 >>>             <scope>import</scope>

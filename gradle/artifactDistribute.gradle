@@ -1,0 +1,20 @@
+
+/**
+ * Copyright (C) 2015-2018 Jxnet
+ */
+
+task dist(type: Zip) {
+
+    rootProject.allprojects.collect { it.tasks }.flatten()
+
+    archiveName = "${NAME}-${VERSION}.zip"
+
+    subprojects.each { subproject ->
+        if (!subproject.name.equals("jxnet-native")) {
+            from subproject.jar.outputs.files
+            from subproject.javadocJar.outputs.files
+            from subproject.sourcesJar.outputs.files
+        }
+    }
+
+}
