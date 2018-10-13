@@ -16,8 +16,10 @@ allprojects {
             sign configurations.archives
         }
 
-        artifacts {
-            archives jar, sourcesJar, javadocJar
+        if (!project.name.equals("jxnet")) {
+            artifacts {
+                archives project.jar, project.sourcesJar, project.javadocJar
+            }
         }
 
         uploadArchives {
