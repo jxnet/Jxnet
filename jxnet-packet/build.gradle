@@ -6,8 +6,9 @@
 description = "Packet abstraction module."
 
 dependencies {
-    implementation ("com.ardikars.common:common-util:${COMMON_VERSION}")
-    implementation ("com.github.jnr:jnr-ffi:${JNR_VERSION}")
-    implementation ("io.netty:netty-buffer:${NETTY_VERSION}")
+    implementation("com.github.jnr:jnr-ffi:${JNR_VERSION}")
+    implementation("com.ardikars.common:common-net")
+    implementation("com.ardikars.common:common-util")
     testImplementation ("junit:junit:${JUNIT_VERSION}")
+    testImplementation ("org.mockito:mockito-core:${MOCKITO_VERSION}")
 }

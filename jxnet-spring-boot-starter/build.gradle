@@ -11,4 +11,8 @@ dependencyManagement {
 
 dependencies {
     implementation project (":jxnet-spring-boot-autoconfigure")
+    implementation ("com.ardikars.common:common-net")
+    implementation ("com.ardikars.common:common-util")
+    testImplementation ("junit:junit:${JUNIT_VERSION}")
+    testImplementation ("org.mockito:mockito-core:${MOCKITO_VERSION}")
 }

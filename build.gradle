@@ -60,13 +60,6 @@ allprojects {
 			imports { mavenBom("com.ardikars.common:common:${COMMON_VERSION}") }
 		}
 
-		dependencies {
-			if (!project.name.equals("jxnet") && !project.name.equals("jxnet-native")) {
-				implementation("com.ardikars.common:common-net")
-				implementation("com.ardikars.common:common-util")
-			}
-		}
-
 		configurations.archives.artifacts.with { archives ->
 			def jarArtifact
 			archives.each {

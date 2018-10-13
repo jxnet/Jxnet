@@ -12,7 +12,11 @@ dependencyManagement {
 dependencies {
     implementation project (":jxnet-core")
     implementation project (":jxnet-context")
-    implementation ("org.slf4j:slf4j-api:${SLF4J_VERSION}")
     implementation ("org.springframework.boot:spring-boot-configuration-processor")
     implementation ("org.springframework.boot:spring-boot-autoconfigure")
+    implementation ("com.ardikars.common:common-net")
+    implementation ("com.ardikars.common:common-util")
+    implementation ("org.slf4j:slf4j-api:${SLF4J_VERSION}")
+    testImplementation ("junit:junit:${JUNIT_VERSION}")
+    testImplementation ("org.mockito:mockito-core:${MOCKITO_VERSION}")
 }
