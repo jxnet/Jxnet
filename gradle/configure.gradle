@@ -7,7 +7,7 @@ ext {
 
 	NAME = 'Jxnet'
 	GROUP = 'com.ardikars.jxnet'
-	VERSION = '1.4.3.RC3'
+	VERSION = '1.4.3.RC4'
 
 	NDK_HOME = "${System.env.NDK_HOME}"
 	TOOLS_DIR = "${rootDir}/tools"
@@ -38,6 +38,9 @@ ext {
 
 	pom_project = {
 
+		name = "${NAME}"
+		description = 'Jxnet is a java library for capturing and sending network packet.'
+		
 		url 'https://github.com/jxnet/Jxnet'
 
 		inceptionYear '2015'
