@@ -29,6 +29,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Application context for wrap a pcap handle.
@@ -114,6 +115,27 @@ public final class ApplicationContext implements Context {
 			@Override
 			public void nextPacket(final T user, final PcapPktHdr h, final ByteBuffer bytes) {
 				executor.execute(new Runnable() {
+					@Override
+					public void run() {
+						callback.nextPacket(user, h, bytes);
+					}
+				});
+			}
+		}, user);
+		if (result == 0) {
+			return PcapCode.PCAP_OK;
+		}
+		return PcapCode.PCAP_ERROR;
+	}
+
+	@Override
+	public <T> PcapCode pcapLoop(final int cnt, final PcapHandler<T> callback, final T user, final ExecutorService executor) throws PcapCloseException {
+		Validate.notIllegalArgument(executor != null,
+				new IllegalArgumentException("Executor should be not null."));
+		int result = Jxnet.PcapLoop(pcap, cnt, new PcapHandler<T>() {
+			@Override
+			public void nextPacket(final T user, final PcapPktHdr h, final ByteBuffer bytes) {
+				executor.submit(new Runnable() {
 					@Override
 					public void run() {
 						callback.nextPacket(user, h, bytes);

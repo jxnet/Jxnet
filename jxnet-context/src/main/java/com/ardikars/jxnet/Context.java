@@ -28,6 +28,7 @@ import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Application context for wrap a pcap handle.
@@ -80,6 +81,23 @@ public interface Context extends Factory<Context, Builder<Pcap, Void>> {
 	 * @since 1.1.4
 	 */
 	<T> PcapCode pcapLoop(int cnt, PcapHandler<T> callback, T user, Executor executor) throws PcapCloseException;
+
+	/**
+	 * Collect a group of packets.
+	 * @param cnt maximum iteration, -1 is infinite iteration.
+	 * @param callback callback funtion.
+	 * @param user args
+	 * @param executor executor service.
+	 * @param <T> args type.
+	 * @return PcapLoop() returns 0 if cnt is exhausted or if, when reading from a
+	 * savefile, no more packets are available. It returns -1 if an error
+	 * occurs or -2 if the loop terminated due to a call to PcapBreakLoop()
+	 * before any packets were processed.  It does not return when live packet
+	 * buffer timeouts occur; instead, it attempts to read more packets.
+	 * @throws PcapCloseException pcap close exception.
+	 * @since 1.1.4
+	 */
+	<T> PcapCode pcapLoop(int cnt, PcapHandler<T> callback, T user, ExecutorService executor) throws PcapCloseException;
 
 	/**
 	 * Collect a group of packets.
