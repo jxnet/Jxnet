@@ -108,7 +108,8 @@ public final class ApplicationContext implements Context {
 	}
 
 	@Override
-	public <T> PcapCode pcapLoop(final int cnt, final PcapHandler<T> callback, final T user, final Executor executor) throws PcapCloseException {
+	public <T> PcapCode pcapLoop(final int cnt, final PcapHandler<T> callback, final T user, final Executor executor)
+			throws PcapCloseException {
 		Validate.notIllegalArgument(executor != null,
 				new IllegalArgumentException("Executor should be not null."));
 		int result = Jxnet.PcapLoop(pcap, cnt, new PcapHandler<T>() {
@@ -129,7 +130,8 @@ public final class ApplicationContext implements Context {
 	}
 
 	@Override
-	public <T> PcapCode pcapLoop(final int cnt, final PcapHandler<T> callback, final T user, final ExecutorService executor) throws PcapCloseException {
+	public <T> PcapCode pcapLoop(final int cnt, final PcapHandler<T> callback, final T user, final ExecutorService executor)
+			throws PcapCloseException {
 		Validate.notIllegalArgument(executor != null,
 				new IllegalArgumentException("Executor should be not null."));
 		int result = Jxnet.PcapLoop(pcap, cnt, new PcapHandler<T>() {
