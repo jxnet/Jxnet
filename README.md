@@ -8,7 +8,7 @@ Jxnet wraps a native packet capture library (libpcap/npcap) via JNI (Java Native
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4d6ca7f3d9214098b1436990ac76a6cd)](https://www.codacy.com/project/jxnet/Jxnet/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jxnet/Jxnet&amp;utm_campaign=Badge_Grade_Dashboard)
 [![Build status](https://ci.appveyor.com/api/projects/status/ev4t6t1ssacwj18j?svg=true)](https://ci.appveyor.com/project/jxnet/jxnet)
 
-[ ![Download](https://api.bintray.com/packages/ardikars/maven/com.ardikars.jxnet/images/download.svg?version=1.4.4.Final) ](https://bintray.com/ardikars/maven/com.ardikars.jxnet/1.4.4.Final/link)
+[ ![Download](https://api.bintray.com/packages/ardikars/maven/com.ardikars.jxnet/images/download.svg?version=1.4.7.Final) ](https://bintray.com/ardikars/maven/com.ardikars.jxnet/1.4.7.Final/link)
 
 
 Getting Started
@@ -47,17 +47,9 @@ Getting Started
 >>> <dependencyManagement>
 >>>     <dependencies>
 >>>         <dependency>
->>>             <groupId>com.ardikars.common</groupId>
->>>             <artifactId>common</artifactId>
->>>             <version>1.2.1.Final</version>
->>>             <type>pom</type>
->>>             <scope>import</scope>
->>>         </dependency>
->>>     <dependencies>
->>>         <dependency>
 >>>             <groupId>com.ardikars.jxnet</groupId>
 >>>             <artifactId>jxnet</artifactId>
->>>             <version>1.4.4.Final</version>
+>>>             <version>1.4.7.Final</version>
 >>>             <type>pom</type>
 >>>             <scope>import</scope>
 >>>         </dependency>
@@ -66,8 +58,19 @@ Getting Started
 >>>```
 
   - ##### Gradle project
->> You can use `dependency-management-plugin` for gradle.
-  
+>> Add a dependency to the build.gradle as like below:
+>>>
+>>> ```
+>>> apply plugin: 'io.spring.dependency-management'
+>>>
+>>> dependencies {
+>>>     compile ("com.ardikars.jxnet:jxnet-spring-boot-starter")
+>>> }
+>>>
+>>> dependencyManagement {
+>>>     imports { mavenBom("com.ardikars.jxnet:jxnet:1.4.7.Final") }
+>>> }
+>>> ```  
 
   - ##### Example Application
   
