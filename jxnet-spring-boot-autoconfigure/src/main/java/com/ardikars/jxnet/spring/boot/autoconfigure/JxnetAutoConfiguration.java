@@ -41,11 +41,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -57,19 +56,26 @@ import org.springframework.core.Ordered;
  * @since 1.4.0
  */
 @Configuration
-@ConditionalOnClass(JxnetConfigurationProperties.class)
+@ConditionalOnClass({Jxnet.class, Context.class})
 @AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE)
 @EnableConfigurationProperties(JxnetConfigurationProperties.class)
 public class JxnetAutoConfiguration {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JxnetAutoConfiguration.class.getName());
 
-    private final ApplicationContext context;
+    @Value("${spring.application.name:}")
+    private String applicationName;
+
+    @Value("${spring.application.displayName:}")
+    private String applicationDisplayName;
+
+    @Value("${spring.application.version:0.0.0}")
+    private String applicationVersion;
+
     private final JxnetConfigurationProperties properties;
 
     @Autowired
-    public JxnetAutoConfiguration(ApplicationContext context, JxnetConfigurationProperties properties) {
-        this.context = context;
+    public JxnetAutoConfiguration(JxnetConfigurationProperties properties) {
         this.properties = properties;
     }
 
@@ -80,8 +86,7 @@ public class JxnetAutoConfiguration {
      * @return returns application context.
      */
     @Bean("com.ardikars.jxnet.contex")
-    public Context context(PcapIf pcapIf,
-                           @Qualifier("com.ardikars.jxnet.errbuf") StringBuilder errbuf) {
+    public Context context(PcapIf pcapIf, StringBuilder errbuf) {
         String source = pcapIf.getName();
         Pcap.Builder builder = new Pcap.Builder()
                 .source(source)
@@ -117,7 +122,7 @@ public class JxnetAutoConfiguration {
                 builder.pcapType(Pcap.PcapType.LIVE);
                 break;
         }
-        Application.run(context.getApplicationName(), context.getDisplayName(), "", builder);
+        Application.run(applicationName, applicationDisplayName, applicationVersion, builder);
         return Application.getApplicationContext();
     }
 
@@ -128,7 +133,7 @@ public class JxnetAutoConfiguration {
      * @throws DeviceNotFoundException device not found exception.
      */
     @Bean
-    public PcapIf pcapIf(@Qualifier("com.ardikars.jxnet.errbuf") StringBuilder errbuf) throws DeviceNotFoundException {
+    public PcapIf pcapIf(StringBuilder errbuf) throws DeviceNotFoundException {
         String source = properties.getSource();
         List<PcapIf> alldevsp = new ArrayList<>();
         if (PcapFindAllDevs(alldevsp, errbuf) != OK && LOGGER.isDebugEnabled()) {
@@ -184,7 +189,7 @@ public class JxnetAutoConfiguration {
      * Error buffer.
      * @return error buffer.
      */
-    @Bean("com.ardikars.jxnet.errbuf")
+    @Bean
     public StringBuilder errbuf() {
         return new StringBuilder(PCAP_ERRBUF_SIZE);
     }

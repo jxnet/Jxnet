@@ -10,6 +10,8 @@ dependencyManagement {
 }
 
 dependencies {
+    implementation project (":jxnet-context")
+    implementation project (":jxnet-core")
     implementation project (":jxnet-spring-boot-autoconfigure")
     implementation ("com.ardikars.common:common-net")
     implementation ("com.ardikars.common:common-util")
