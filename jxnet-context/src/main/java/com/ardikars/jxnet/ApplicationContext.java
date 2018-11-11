@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Application context for wrap a pcap handle.
@@ -39,7 +40,7 @@ import java.util.concurrent.ExecutorService;
  */
 public final class ApplicationContext implements Context {
 
-	private static final Object LOCK = new Object();
+	private static final ReentrantReadWriteLock LOCK = new ReentrantReadWriteLock(true);
 
 	private final String applicationName;
 
@@ -57,7 +58,7 @@ public final class ApplicationContext implements Context {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
-				synchronized (LOCK) {
+				if (LOCK.readLock().tryLock() && LOCK.writeLock().tryLock()) {
 					if (pcap != null && !pcap.isClosed()) {
 						pcapBreakLoop(); // Force the loop in "pcap_read()" or "pcap_read_offline()" to terminate.
 						Jxnet.PcapClose(pcap);

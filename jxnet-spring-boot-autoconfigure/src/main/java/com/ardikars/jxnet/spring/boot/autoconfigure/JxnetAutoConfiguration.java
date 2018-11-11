@@ -55,7 +55,7 @@ import org.springframework.core.Ordered;
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
  * @since 1.4.0
  */
-@Configuration
+@Configuration("com.ardikars.jxnet.autoConfiguration")
 @ConditionalOnClass({Jxnet.class, Context.class})
 @AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE)
 @EnableConfigurationProperties(JxnetConfigurationProperties.class)
@@ -132,7 +132,7 @@ public class JxnetAutoConfiguration {
      * @return pcap_if.
      * @throws DeviceNotFoundException device not found exception.
      */
-    @Bean
+    @Bean("com.ardikars.jxnet.pcapIf")
     public PcapIf pcapIf(StringBuilder errbuf) throws DeviceNotFoundException {
         String source = properties.getSource();
         List<PcapIf> alldevsp = new ArrayList<>();
@@ -168,7 +168,7 @@ public class JxnetAutoConfiguration {
      * @throws DeviceNotFoundException device not found exception.
      * @throws SocketException socket exception.
      */
-    @Bean
+    @Bean("com.ardikars.jxnet.macAddress")
     public MacAddress macAddress(PcapIf pcapIf) throws PlatformNotSupportedException, DeviceNotFoundException, SocketException {
         if (pcapIf.isLoopback()) {
             return MacAddress.ZERO;
@@ -189,7 +189,7 @@ public class JxnetAutoConfiguration {
      * Error buffer.
      * @return error buffer.
      */
-    @Bean
+    @Bean("com.ardikars.jxnet.errbuf")
     public StringBuilder errbuf() {
         return new StringBuilder(PCAP_ERRBUF_SIZE);
     }
