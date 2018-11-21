@@ -1,0 +1,8 @@
+
+subprojects {
+    
+    if (!project.name.equals("jxnet-native")) {
+        apply plugin: 'org.owasp.dependencycheck'
+    }
+    
+}
