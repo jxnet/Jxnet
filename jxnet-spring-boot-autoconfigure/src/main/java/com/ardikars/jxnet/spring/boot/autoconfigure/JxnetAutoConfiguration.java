@@ -47,7 +47,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
 
 /**
  * Spring autoconfiguration.
@@ -57,7 +56,7 @@ import org.springframework.core.Ordered;
  */
 @Configuration("com.ardikars.jxnet.autoConfiguration")
 @ConditionalOnClass({Jxnet.class, Context.class})
-@AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE)
+@AutoConfigureOrder
 @EnableConfigurationProperties(JxnetConfigurationProperties.class)
 public class JxnetAutoConfiguration {
 

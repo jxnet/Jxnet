@@ -7,7 +7,7 @@ ext {
 
 	NAME = 'Jxnet'
 	GROUP = 'com.ardikars.jxnet'
-	VERSION = '1.4.7.Final'
+	VERSION = '1.4.8.RC1'
 	DESCRIPTION = 'Jxnet is a java library for capturing and sending network packet.'
 
 	NDK_HOME = "${System.env.NDK_HOME}"
