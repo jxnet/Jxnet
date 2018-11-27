@@ -1,0 +1,82 @@
+{
+  "properties": [
+    {
+      "name": "jxnet.source",
+      "type": "java.lang.String",
+      "description": "Network interface name (Adapter name).",
+      "defaultValue": "auto"
+    },
+    {
+      "name": "jxnet.snapshot",
+      "type": "java.lang.Integer",
+      "description": "Specifies the snapshot length to be set on the handle (16 bit).",
+      "defaultValue": 65535
+    },
+    {
+      "name": "jxnet.promiscuous",
+      "type": "com.ardikars.jxnet.PromiscuousMode",
+      "description": "Sets whether promiscuous mode should be set on a capture handle when the handle is activated.",
+      "defaultValue": "PRIMISCUOUS"
+    },
+    {
+      "name": "jxnet.timeout",
+      "type": "java.lang.Integer",
+      "description": "Sets the packet buffer timeout that will be used on a capture handle when the handle is activated.",
+      "defaultValue": 2000
+    },
+    {
+      "name": "jxnet.immediate",
+      "type": "com.ardikars.jxnet.ImmediateMode",
+      "description": "Sets whether immediate mode should be set on a capture handle when the handle is activated.",
+      "defaultValue": "IMMEDIATE"
+    },
+    {
+      "name": "jxnet.timestampType",
+      "type": "com.ardikars.jxnet.PcapTimestampType",
+      "description": "Set the time stamp type returned in captures.",
+      "defaultValue": "HOST"
+    },
+    {
+      "name": "jxnet.timestampPrecision",
+      "type": "com.ardikars.jxnet.PcapTimestampPrecision",
+      "description": "Set the time stamp precision returned in captures.",
+      "defaultValue": "MICRO"
+    },
+    {
+      "name": "jxnet.rfmon",
+      "type": "com.ardikars.jxnet.RadioFrequencyMonitorMode",
+      "description": "Sets whether monitor mode should be set on a capture handle when the handle is activated.",
+      "defaultValue": "NON_RFMON"
+    },
+    {
+      "name": "jxnet.blocking",
+      "type": "java.lang.Boolean",
+      "description": "Switch between blocking and nonblocking mode.",
+      "defaultValue": true
+    },
+    {
+      "name": "jxnet.direction",
+      "type": "com.ardikars.jxnet.PcapDirection",
+      "description": "Used to specify a direction that packets will be captured.",
+      "defaultValue": "PCAP_D_INOUT"
+    },
+    {
+      "name": "jxnet.datalink",
+      "type": "java.lang.Integer",
+      "description": "Set the current data link type of the pcap descriptor to the type specified by datalink.",
+      "defaultValue": 1
+    },
+    {
+      "name": "jxnet.file",
+      "type": "java.lang.String",
+      "description": "File name in the pcap format to read packets.",
+      "defaultValue": null
+    },
+    {
+      "name": "jxnet.pcapType",
+      "type": "com.ardikars.jxnet.Pcap$PcapType",
+      "description": "Specifies the pcap handle.",
+      "defaultValue": "LIVE"
+    }
+  ]
+}

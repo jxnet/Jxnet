@@ -85,6 +85,7 @@ public class JxnetAutoConfiguration {
      * @param errbuf error buffer.
      * @return returns application context.
      */
+    @ConditionalOnClass({Pcap.class})
     @Bean("com.ardikars.jxnet.contex")
     public Context context(PcapIf pcapIf, StringBuilder errbuf) {
         String source = pcapIf.getName();
@@ -132,6 +133,7 @@ public class JxnetAutoConfiguration {
      * @return pcap_if.
      * @throws DeviceNotFoundException device not found exception.
      */
+    @ConditionalOnClass(value = {PcapIf.class, PcapAddr.class, SockAddr.class, DeviceNotFoundException.class})
     @Bean("com.ardikars.jxnet.pcapIf")
     public PcapIf pcapIf(StringBuilder errbuf) throws DeviceNotFoundException {
         String source = properties.getSource();
@@ -168,6 +170,8 @@ public class JxnetAutoConfiguration {
      * @throws DeviceNotFoundException device not found exception.
      * @throws SocketException socket exception.
      */
+    @ConditionalOnClass({MacAddress.class, PcapIf.class, PcapAddr.class, SockAddr.class,
+            DeviceNotFoundException.class, PlatformNotSupportedException.class})
     @Bean("com.ardikars.jxnet.macAddress")
     public MacAddress macAddress(PcapIf pcapIf) throws PlatformNotSupportedException, DeviceNotFoundException, SocketException {
         if (pcapIf.isLoopback()) {
