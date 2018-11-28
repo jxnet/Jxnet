@@ -20,13 +20,16 @@ package com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket;
 import com.ardikars.jxnet.DataLinkType;
 import com.ardikars.jxnet.PcapHandler;
 import com.ardikars.jxnet.PcapPktHdr;
+import com.ardikars.jxnet.spring.boot.autoconfigure.PacketHandler;
 import com.ardikars.jxpacket.common.Packet;
 import com.ardikars.jxpacket.common.UnknownPacket;
 import com.ardikars.jxpacket.core.ethernet.Ethernet;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
-
 import java.nio.ByteBuffer;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * Jxpacket handler.
@@ -34,12 +37,17 @@ import java.nio.ByteBuffer;
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
  * @since 1.4.8
  */
-public abstract class DefaultJxpacketHandler<T> implements PcapHandler<T> {
+@ConditionalOnClass(Packet.class)
+@ConditionalOnBean(PacketHandler.class)
+@Configuration("com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket.jxpacketHandler")
+public class JxpacketHandler<T> implements PcapHandler<T> {
 
     private final int rawDataLinkType;
+    private final PacketHandler<T> packetHandler;
 
-    public DefaultJxpacketHandler(DataLinkType dataLinkType) {
+    public JxpacketHandler(DataLinkType dataLinkType, PacketHandler<T> packetHandler) {
         this.rawDataLinkType = dataLinkType != null ? dataLinkType.getValue() : 1;
+        this.packetHandler = packetHandler;
     }
 
     @Override
@@ -52,9 +60,7 @@ public abstract class DefaultJxpacketHandler<T> implements PcapHandler<T> {
         } else {
             packet = UnknownPacket.newPacket(buffer);
         }
-        next(user, h, packet);
+        packetHandler.next(user, h, packet);
     }
-
-    public abstract void next(T argument, PcapPktHdr header, Packet packet);
 
 }
