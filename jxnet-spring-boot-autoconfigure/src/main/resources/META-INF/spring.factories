@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.ardikars.jxnet.spring.boot.autoconfigure.JxnetAutoConfiguration
+  com.ardikars.jxnet.spring.boot.autoconfigure.JxnetAutoConfiguration,\
+  com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket.JxpacketAutoconfiguration

@@ -30,6 +30,7 @@
     <!-- Verify that EVERY source file has the appropriate license -->
     <module name="Header">
         <property name="headerFile" value="${headerFile}"/>
+        <property name="fileExtensions" value="java, c" />
     </module>
 
     <property name="fileExtensions" value="java, properties, xml"/>

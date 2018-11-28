@@ -26,6 +26,7 @@ import com.ardikars.common.net.MacAddress;
 import com.ardikars.common.util.Platforms;
 import com.ardikars.jxnet.Application;
 import com.ardikars.jxnet.Context;
+import com.ardikars.jxnet.DataLinkType;
 import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
 import com.ardikars.jxnet.PcapAddr;
@@ -40,7 +41,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -73,7 +73,6 @@ public class JxnetAutoConfiguration {
 
     private final JxnetConfigurationProperties properties;
 
-    @Autowired
     public JxnetAutoConfiguration(JxnetConfigurationProperties properties) {
         this.properties = properties;
     }
@@ -186,6 +185,16 @@ public class JxnetAutoConfiguration {
         } else {
             return MacAddress.fromNicName(pcapIf.getName());
         }
+    }
+
+    /**
+     * A handle link type.
+     * @param context application context.
+     * @return returns {@link com.ardikars.jxpacket.common.layer.DataLinkLayer}.
+     */
+    @Bean("com.ardikars.jxnet.dataLinkType")
+    public DataLinkType dataLinkType(Context context) {
+        return context.pcapDataLink();
     }
 
     /**

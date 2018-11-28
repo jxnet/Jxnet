@@ -6,7 +6,10 @@
 description = 'Spring boot auto configuration for Jxnet.'
 
 dependencyManagement {
-    imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${SPRING_BOOT_VERSION}") }
+    imports {
+        mavenBom("org.springframework.boot:spring-boot-dependencies:${SPRING_BOOT_VERSION}")
+        mavenBom("com.ardikars.jxpacket:jxpacket:${JXPACKET_VERSION}")
+    }
 }
 
 dependencies {
@@ -16,6 +19,8 @@ dependencies {
     implementation ("org.springframework.boot:spring-boot-autoconfigure")
     implementation ("com.ardikars.common:common-net")
     implementation ("com.ardikars.common:common-util")
+    implementation ("com.ardikars.jxpacket:jxpacket-common")
+    implementation ("com.ardikars.jxpacket:jxpacket-core")
     implementation ("org.slf4j:slf4j-api:${SLF4J_VERSION}")
     testImplementation ("junit:junit:${JUNIT_VERSION}")
     testImplementation ("org.mockito:mockito-core:${MOCKITO_VERSION}")

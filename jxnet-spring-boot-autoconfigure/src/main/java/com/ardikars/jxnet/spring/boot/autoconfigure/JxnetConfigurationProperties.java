@@ -63,6 +63,8 @@ public class JxnetConfigurationProperties {
 
     private Pcap.PcapType pcapType;
 
+    private Boolean jxpacketAutoRegister;
+
     /**
      * Initialize field.
      */
@@ -103,6 +105,9 @@ public class JxnetConfigurationProperties {
         }
         if (file == null) {
             file = null;
+        }
+        if (jxpacketAutoRegister == null) {
+            jxpacketAutoRegister = false;
         }
     }
 
@@ -208,6 +213,14 @@ public class JxnetConfigurationProperties {
 
     public void setPcapType(Pcap.PcapType pcapType) {
         this.pcapType = pcapType;
+    }
+
+    public Boolean getJxpacketAutoRegister() {
+        return jxpacketAutoRegister;
+    }
+
+    public void setJxpacketAutoRegister(Boolean jxpacketAutoRegister) {
+        this.jxpacketAutoRegister = jxpacketAutoRegister;
     }
 
 }
