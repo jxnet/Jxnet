@@ -137,6 +137,19 @@ public final class PcapPktHdr implements Cloneable {
 		return  (PcapPktHdr) super.clone();
 	}
 
+	/**
+	 * Copy this instance.
+	 * @return returns new {@link PcapPktHdr} instance.
+	 */
+	public PcapPktHdr copy() {
+		PcapPktHdr pktHdr = new PcapPktHdr();
+		pktHdr.caplen = this.caplen;
+		pktHdr.len = this.len;
+		pktHdr.tv_sec = this.tv_sec;
+		pktHdr.tv_usec = this.tv_usec;
+		return pktHdr;
+	}
+
 	@Override
 	public String toString() {
 		return new StringBuilder(94)

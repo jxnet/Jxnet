@@ -77,6 +77,12 @@
       "type": "com.ardikars.jxnet.Pcap$PcapType",
       "description": "Specifies the pcap handle.",
       "defaultValue": "LIVE"
+    },
+    {
+      "name": "jxnet.jxpacketAutoRegister",
+      "type": "java.lang.Boolean",
+      "description": "Register all supported packet by Jxpacket.",
+      "defaultValue": false
     }
   ]
 }

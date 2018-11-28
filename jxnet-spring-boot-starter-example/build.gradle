@@ -8,7 +8,10 @@ description = "Jxnet spring boot starter example"
 apply plugin: 'org.springframework.boot'
 
 dependencyManagement {
-    imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${SPRING_BOOT_VERSION}") }
+    imports {
+        mavenBom("org.springframework.boot:spring-boot-dependencies:${SPRING_BOOT_VERSION}")
+        mavenBom("com.ardikars.jxpacket:jxpacket:${JXPACKET_VERSION}")
+    }
 }
 
 dependencies {
@@ -17,8 +20,11 @@ dependencies {
     implementation project (":jxnet-spring-boot-autoconfigure")
     implementation project (":jxnet-spring-boot-starter")
     implementation ("org.springframework.boot:spring-boot-starter")
-    implementation("com.ardikars.common:common-net")
-    implementation("com.ardikars.common:common-util")
+    implementation ("com.ardikars.common:common-annotation")
+    implementation ("com.ardikars.common:common-net")
+    implementation ("com.ardikars.common:common-util")
+    implementation ("com.ardikars.jxpacket:jxpacket-common")
+    implementation ("com.ardikars.jxpacket:jxpacket-core")
 }
 
 bootJar {

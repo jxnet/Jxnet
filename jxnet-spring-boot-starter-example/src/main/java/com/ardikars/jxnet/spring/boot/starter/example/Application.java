@@ -19,26 +19,28 @@ package com.ardikars.jxnet.spring.boot.starter.example;
 
 import com.ardikars.common.net.Inet4Address;
 import com.ardikars.common.net.MacAddress;
-import com.ardikars.common.util.Hexs;
+
 import com.ardikars.jxnet.Context;
+import com.ardikars.jxnet.DataLinkType;
 import com.ardikars.jxnet.PcapAddr;
-import com.ardikars.jxnet.PcapHandler;
 import com.ardikars.jxnet.PcapIf;
 import com.ardikars.jxnet.PcapPktHdr;
 import com.ardikars.jxnet.SockAddr;
+import com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket.DefaultJxpacketHandler;
+import com.ardikars.jxpacket.common.Packet;
 
-import java.nio.ByteBuffer;
+import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.stereotype.Component;
 
 @SpringBootApplication
 public class Application implements CommandLineRunner  {
@@ -58,6 +60,9 @@ public class Application implements CommandLineRunner  {
     @Autowired
     private MacAddress macAddress;
 
+    @Autowired
+    private Handler handler;
+
     @Override
     public void run(String... args) throws Exception {
         LOGGER.info("Network Interface : " + pcapIf.getName());
@@ -75,19 +80,25 @@ public class Application implements CommandLineRunner  {
                 pool.shutdownNow();
             }
         });
-        context.pcapLoop(MAX_PACKET, new PcapHandler<String>() {
-            @Override
-            public void nextPacket(String user, PcapPktHdr pktHdr, ByteBuffer buffer) {
-                byte[] bytes = new byte[buffer.capacity()];
-                buffer.get(bytes, 0, bytes.length);
-                String hexDump = Hexs.toPrettyHexDump(bytes);
-                LOGGER.info("User argument : " + user);
-                LOGGER.info("Packet header : " + pktHdr);
-                LOGGER.info("Packet buffer : \n" + hexDump);
-            }
-        }, "Jxnet!", pool);
+        context.pcapLoop(MAX_PACKET, handler, "Jxnet!", pool);
 		pool.shutdown();
 		pool.awaitTermination(WAIT_TIME_FOR_THREAD_TERMINATION, TimeUnit.MICROSECONDS);
+    }
+
+    @Component
+    public static class Handler extends DefaultJxpacketHandler<String> {
+
+        public Handler(DataLinkType dataLinkType) {
+            super(dataLinkType);
+        }
+
+        @Override
+        public void next(String argument, PcapPktHdr header, Packet packet) {
+            Iterator<Packet> iterator = packet.iterator();
+            while (iterator.hasNext()) {
+                LOGGER.info(iterator.next().toString());
+            }
+        }
     }
 
     public static void main(String[] args) {

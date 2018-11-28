@@ -6,15 +6,21 @@
 description = "Jxnet spring boot starter."
 
 dependencyManagement {
-    imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${SPRING_BOOT_VERSION}") }
+    imports {
+        mavenBom("org.springframework.boot:spring-boot-dependencies:${SPRING_BOOT_VERSION}")
+        mavenBom("com.ardikars.jxpacket:jxpacket:${JXPACKET_VERSION}")
+    }
 }
 
 dependencies {
     compile project (":jxnet-context")
     compile project (":jxnet-core")
     compile project (":jxnet-spring-boot-autoconfigure")
+    compile ("com.ardikars.common:common-annotation")
     compile ("com.ardikars.common:common-net")
     compile ("com.ardikars.common:common-util")
+    compile ("com.ardikars.jxpacket:jxpacket-common")
+    compile ("com.ardikars.jxpacket:jxpacket-core")
     testImplementation ("junit:junit:${JUNIT_VERSION}")
     testImplementation ("org.mockito:mockito-core:${MOCKITO_VERSION}")
 }
