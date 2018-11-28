@@ -19,7 +19,6 @@ package com.ardikars.jxnet.spring.boot.starter.example;
 
 import com.ardikars.common.net.Inet4Address;
 import com.ardikars.common.net.MacAddress;
-
 import com.ardikars.jxnet.Context;
 import com.ardikars.jxnet.PcapAddr;
 import com.ardikars.jxnet.PcapHandler;
@@ -28,12 +27,7 @@ import com.ardikars.jxnet.PcapPktHdr;
 import com.ardikars.jxnet.SockAddr;
 import com.ardikars.jxnet.spring.boot.autoconfigure.PacketHandler;
 import com.ardikars.jxpacket.common.Packet;
-
 import java.util.Iterator;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,44 +38,38 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class Application implements PacketHandler<String>, CommandLineRunner  {
 
-    public static final int MAX_PACKET = -1;
-
-    public static final int WAIT_TIME_FOR_THREAD_TERMINATION = 10000;
+    public static final int MAX_PACKET = -1; // infinite loop
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Application.class.getName());
 
-    @Autowired
+    private static final String PRETTY_FOOTER = ""
+            + "+-----------------------------------------------------------------------------------------------------+";
+
     private Context context;
-
-    @Autowired
     private PcapIf pcapIf;
-
-    @Autowired
     private MacAddress macAddress;
 
     @Autowired
-    private PcapHandler<String> handler;
+    private PcapHandler<String> pcapHandler;
+
+    public Application(Context context, PcapIf pcapIf, MacAddress macAddress) {
+        this.context = context;
+        this.pcapIf = pcapIf;
+        this.macAddress = macAddress;
+    }
 
     @Override
     public void run(String... args) throws Exception {
-        LOGGER.info("Network Interface : " + pcapIf.getName());
+        LOGGER.info("Network Interface : {}", pcapIf.getName());
+        LOGGER.info("MAC Address       : {}", macAddress);
         LOGGER.info("Addresses         : ");
         for (PcapAddr addr : pcapIf.getAddresses()) {
             if (addr.getAddr().getSaFamily() == SockAddr.Family.AF_INET) {
-                LOGGER.info("\tAddress       : " + Inet4Address.valueOf(addr.getAddr().getData()));
-                LOGGER.info("\tNetwork       : " + Inet4Address.valueOf(addr.getNetmask().getData()));
+                LOGGER.info("\tAddress       : {}", Inet4Address.valueOf(addr.getAddr().getData()));
+                LOGGER.info("\tNetwork       : {}", Inet4Address.valueOf(addr.getNetmask().getData()));
             }
         }
-        LOGGER.info("\tMAC Address   : " + macAddress);
-        final ExecutorService pool = Executors.newCachedThreadPool();
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            public void run() {
-                pool.shutdownNow();
-            }
-        });
-        context.pcapLoop(MAX_PACKET, handler, "Jxnet!", pool);
-		pool.shutdown();
-		pool.awaitTermination(WAIT_TIME_FOR_THREAD_TERMINATION, TimeUnit.MICROSECONDS);
+        context.pcapLoop(MAX_PACKET, pcapHandler, "Jxnet!");
     }
 
     @Override
@@ -90,6 +78,7 @@ public class Application implements PacketHandler<String>, CommandLineRunner  {
         while (iterator.hasNext()) {
             LOGGER.info(iterator.next().toString());
         }
+        LOGGER.info(PRETTY_FOOTER);
     }
 
     public static void main(String[] args) {

@@ -22,6 +22,7 @@ import com.ardikars.jxpacket.common.Packet;
 import com.ardikars.jxpacket.common.layer.DataLinkLayer;
 import com.ardikars.jxpacket.common.layer.NetworkLayer;
 import com.ardikars.jxpacket.common.layer.TransportLayer;
+import com.ardikars.jxpacket.core.arp.Arp;
 import com.ardikars.jxpacket.core.ethernet.Ethernet;
 import com.ardikars.jxpacket.core.ethernet.Vlan;
 import com.ardikars.jxpacket.core.icmp.Icmp4;
@@ -62,6 +63,7 @@ public class JxpacketAutoconfiguration {
     private void register() {
         if (this.autoRegister) {
             DataLinkLayer.register(DataLinkLayer.EN10MB, new Ethernet.Builder());
+            NetworkLayer.register(NetworkLayer.ARP, new Arp.Builder());
             NetworkLayer.register(NetworkLayer.IPV4, new Ip4.Builder());
             NetworkLayer.register(NetworkLayer.IPV6, new Ip6.Builder());
             NetworkLayer.register(NetworkLayer.DOT1Q_VLAN_TAGGED_FRAMES, new Vlan.Builder());
