@@ -17,8 +17,10 @@
 
 package com.ardikars.jxnet.spring.boot.autoconfigure;
 
+import com.ardikars.jxnet.Context;
 import com.ardikars.jxnet.DataLinkType;
 import com.ardikars.jxnet.ImmediateMode;
+import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
 import com.ardikars.jxnet.PcapDirection;
 import com.ardikars.jxnet.PcapTimestampPrecision;
@@ -26,6 +28,7 @@ import com.ardikars.jxnet.PcapTimestampType;
 import com.ardikars.jxnet.PromiscuousMode;
 import com.ardikars.jxnet.RadioFrequencyMonitorMode;
 import javax.annotation.PostConstruct;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -34,6 +37,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
  * @since 1.4.0
  */
+@ConditionalOnClass({Context.class, Jxnet.class})
 @ConfigurationProperties(prefix = "jxnet")
 public class JxnetConfigurationProperties {
 
@@ -62,8 +66,6 @@ public class JxnetConfigurationProperties {
     private String file;
 
     private Pcap.PcapType pcapType;
-
-    private Boolean jxpacketAutoRegister;
 
     /**
      * Initialize field.
@@ -105,9 +107,6 @@ public class JxnetConfigurationProperties {
         }
         if (file == null) {
             file = null;
-        }
-        if (jxpacketAutoRegister == null) {
-            jxpacketAutoRegister = false;
         }
     }
 
@@ -213,14 +212,6 @@ public class JxnetConfigurationProperties {
 
     public void setPcapType(Pcap.PcapType pcapType) {
         this.pcapType = pcapType;
-    }
-
-    public Boolean getJxpacketAutoRegister() {
-        return jxpacketAutoRegister;
-    }
-
-    public void setJxpacketAutoRegister(Boolean jxpacketAutoRegister) {
-        this.jxpacketAutoRegister = jxpacketAutoRegister;
     }
 
 }

@@ -17,7 +17,6 @@
 
 package com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket;
 
-import com.ardikars.jxnet.spring.boot.autoconfigure.JxnetConfigurationProperties;
 import com.ardikars.jxpacket.common.Packet;
 import com.ardikars.jxpacket.common.layer.DataLinkLayer;
 import com.ardikars.jxpacket.common.layer.NetworkLayer;
@@ -36,9 +35,12 @@ import com.ardikars.jxpacket.core.ip.ip6.HopByHopOptions;
 import com.ardikars.jxpacket.core.ip.ip6.Routing;
 import com.ardikars.jxpacket.core.tcp.Tcp;
 import com.ardikars.jxpacket.core.udp.Udp;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -50,14 +52,32 @@ import org.springframework.context.annotation.Configuration;
 @Configuration("com.ardikras.jxnet.spring.boot.autoconfiguration.jxpacket.jxpacketAutoconfiguration")
 @ConditionalOnClass(Packet.class)
 @AutoConfigureOrder
-@EnableConfigurationProperties(JxnetConfigurationProperties.class)
+@EnableConfigurationProperties(JxpacketConfigurationProperties.class)
 public class JxpacketAutoconfiguration {
 
     private final Boolean autoRegister;
+    private final Integer numberOfThread;
 
-    public JxpacketAutoconfiguration(JxnetConfigurationProperties properties) {
-        this.autoRegister = properties.getJxpacketAutoRegister();
+    /**
+     *
+     * @param properties jxpacket configuration properties.
+     */
+    public JxpacketAutoconfiguration(JxpacketConfigurationProperties properties) {
+        this.autoRegister = properties.getAutoRegister();
+        this.numberOfThread = properties.getNumberOfThread();
         register();
+    }
+
+    /**
+     * Thread pool.
+     * @return returns {@link ExecutorService} object.
+     */
+    @Bean("com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket.executorService")
+    public ExecutorService executorService() {
+        if (this.numberOfThread == 0) {
+            return Executors.newCachedThreadPool();
+        }
+        return Executors.newFixedThreadPool(this.numberOfThread);
     }
 
     private void register() {
@@ -71,6 +91,7 @@ public class JxpacketAutoconfiguration {
             TransportLayer.register(TransportLayer.TCP, new Tcp.Builder());
             TransportLayer.register(TransportLayer.UDP, new Udp.Builder());
             TransportLayer.register(TransportLayer.ICMP, new Icmp4.Builder());
+            TransportLayer.register(TransportLayer.IPV6, new Ip6.Builder());
             TransportLayer.register(TransportLayer.IPV6_ICMP, new Icmp6.Builder());
             TransportLayer.register(TransportLayer.IPV6_AH, new Authentication.Builder());
             TransportLayer.register(TransportLayer.IPV6_DSTOPT, new DestinationOptions.Builder());

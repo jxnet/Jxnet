@@ -79,10 +79,16 @@
       "defaultValue": "LIVE"
     },
     {
-      "name": "jxnet.jxpacketAutoRegister",
+      "name": "jxnet.jxpacket.autoRegister",
       "type": "java.lang.Boolean",
       "description": "Register all supported packet by Jxpacket.",
       "defaultValue": false
+    },
+    {
+      "name": "jxnet.jxpacket.numberOfThread",
+      "type": "java.lang.Integer",
+      "description": "Number of fixed thread in pool.",
+      "defaultValue": "Cached thread pool."
     }
   ]
 }

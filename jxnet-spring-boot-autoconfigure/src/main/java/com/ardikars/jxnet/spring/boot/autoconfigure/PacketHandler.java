@@ -20,6 +20,9 @@ package com.ardikars.jxnet.spring.boot.autoconfigure;
 import com.ardikars.jxnet.PcapPktHdr;
 import com.ardikars.jxpacket.common.Packet;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
 /**
  * Callback function used for capturing packets.
  *
@@ -33,7 +36,9 @@ public interface PacketHandler<T> {
      * @param argument user argument.
      * @param header pcap header.
      * @param packet {@link Packet} object.
+     * @throws ExecutionException execution exception.
+     * @throws InterruptedException interrupted exception.
      */
-    void next(T argument, PcapPktHdr header, Packet packet);
+    void next(T argument, PcapPktHdr header, Future<Packet> packet) throws ExecutionException, InterruptedException;
 
 }

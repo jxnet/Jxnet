@@ -23,11 +23,7 @@ import com.ardikars.jxnet.Context;
 import com.ardikars.jxnet.PcapAddr;
 import com.ardikars.jxnet.PcapHandler;
 import com.ardikars.jxnet.PcapIf;
-import com.ardikars.jxnet.PcapPktHdr;
 import com.ardikars.jxnet.SockAddr;
-import com.ardikars.jxnet.spring.boot.autoconfigure.PacketHandler;
-import com.ardikars.jxpacket.common.Packet;
-import java.util.Iterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,22 +32,24 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Application implements PacketHandler<String>, CommandLineRunner  {
+public class Application implements CommandLineRunner  {
 
     public static final int MAX_PACKET = -1; // infinite loop
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Application.class.getName());
 
-    private static final String PRETTY_FOOTER = ""
-            + "+-----------------------------------------------------------------------------------------------------+";
-
-    private Context context;
-    private PcapIf pcapIf;
-    private MacAddress macAddress;
+    private final Context context;
+    private final PcapIf pcapIf;
+    private final MacAddress macAddress;
 
     @Autowired
     private PcapHandler<String> pcapHandler;
 
+    /**
+     * @param context application context.
+     * @param pcapIf spring {@link PcapIf} bean.
+     * @param macAddress spring {@link MacAddress} bean.
+     */
     public Application(Context context, PcapIf pcapIf, MacAddress macAddress) {
         this.context = context;
         this.pcapIf = pcapIf;
@@ -70,15 +68,6 @@ public class Application implements PacketHandler<String>, CommandLineRunner  {
             }
         }
         context.pcapLoop(MAX_PACKET, pcapHandler, "Jxnet!");
-    }
-
-    @Override
-    public void next(String argument, PcapPktHdr header, Packet packet) {
-        Iterator<Packet> iterator = packet.iterator();
-        while (iterator.hasNext()) {
-            LOGGER.info(iterator.next().toString());
-        }
-        LOGGER.info(PRETTY_FOOTER);
     }
 
     public static void main(String[] args) {

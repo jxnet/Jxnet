@@ -8,7 +8,7 @@ Jxnet wraps a native packet capture library (libpcap/npcap) via JNI (Java Native
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4d6ca7f3d9214098b1436990ac76a6cd)](https://www.codacy.com/project/jxnet/Jxnet/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jxnet/Jxnet&amp;utm_campaign=Badge_Grade_Dashboard)
 [![Build status](https://ci.appveyor.com/api/projects/status/ev4t6t1ssacwj18j?svg=true)](https://ci.appveyor.com/project/jxnet/jxnet)
 
-[ ![Download](https://api.bintray.com/packages/ardikars/maven/com.ardikars.jxnet/images/download.svg?version=1.4.7.Final) ](https://bintray.com/ardikars/maven/com.ardikars.jxnet/1.4.7.Final/link)
+[ ![Download](https://api.bintray.com/packages/ardikars/maven/com.ardikars.jxnet/images/download.svg?version=1.4.8.Final) ](https://bintray.com/ardikars/maven/com.ardikars.jxnet/1.4.8.Final/link)
 
 
 Getting Started
@@ -31,6 +31,10 @@ Getting Started
       - Libpcap
 
 
+### Supported Protocol
+List of supported protocol available at [Jxpacket](https://github.com/jxnet/Jxpacket).
+
+
 ### How to Use
 
   - ##### Maven project
@@ -49,7 +53,7 @@ Getting Started
 >>>         <dependency>
 >>>             <groupId>com.ardikars.jxnet</groupId>
 >>>             <artifactId>jxnet</artifactId>
->>>             <version>1.4.7.Final</version>
+>>>             <version>1.4.8.Final</version>
 >>>             <type>pom</type>
 >>>             <scope>import</scope>
 >>>         </dependency>
@@ -68,7 +72,7 @@ Getting Started
 >>> }
 >>>
 >>> dependencyManagement {
->>>     imports { mavenBom("com.ardikars.jxnet:jxnet:1.4.7.Final") }
+>>>     imports { mavenBom("com.ardikars.jxnet:jxnet:1.4.8.Final") }
 >>> }
 >>> ```  
 
@@ -78,44 +82,35 @@ Getting Started
 @SpringBootApplication
 public class Application implements CommandLineRunner  {
 
-    public static final int MAX_PACKET = 10;
-
-    public static final int WAIT_TIME_FOR_THREAD_TERMINATION = 10000;
+    public static final int MAX_PACKET = -1; // infinite loop
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Application.class.getName());
 
-    @Autowired
     private Context context;
-    
-    @Autowired
     private PcapIf pcapIf;
-    
-    @Autowired
     private MacAddress macAddress;
+
+    @Autowired
+    private PcapHandler<String> pcapHandler;
+
+    public Application(Context context, PcapIf pcapIf, MacAddress macAddress) {
+        this.context = context;
+        this.pcapIf = pcapIf;
+        this.macAddress = macAddress;
+    }
 
     @Override
     public void run(String... args) throws Exception {
-        final ExecutorService pool = Executors.newCachedThreadPool();
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            public void run() {
-                pool.shutdownNow();
+        LOGGER.info("Network Interface : {}", pcapIf.getName());
+        LOGGER.info("MAC Address       : {}", macAddress);
+        LOGGER.info("Addresses         : ");
+        for (PcapAddr addr : pcapIf.getAddresses()) {
+            if (addr.getAddr().getSaFamily() == SockAddr.Family.AF_INET) {
+                LOGGER.info("\tAddress       : {}", Inet4Address.valueOf(addr.getAddr().getData()));
+                LOGGER.info("\tNetwork       : {}", Inet4Address.valueOf(addr.getNetmask().getData()));
             }
-        });
-        LOGGER.info("Device        : " + pcapIf);
-        LOGGER.info("MacAddress    : " + macAddress);
-        context.pcapLoop(MAX_PACKET, new PcapHandler<String>() {
-            @Override
-            public void nextPacket(String user, PcapPktHdr pktHdr, ByteBuffer buffer) {
-                byte[] bytes = new byte[buffer.capacity()];
-                buffer.get(bytes, 0, bytes.length);
-                String hexDump = Hexs.toPrettyHexDump(bytes);
-                LOGGER.info("User argument : " + user);
-                LOGGER.info("Packet header : " + pktHdr);
-                LOGGER.info("Packet buffer : \n" + hexDump);
-            }
-        }, "Jxnet!", pool);
-		pool.shutdown();
-		pool.awaitTermination(WAIT_TIME_FOR_THREAD_TERMINATION, TimeUnit.MICROSECONDS);
+        }
+        context.pcapLoop(MAX_PACKET, pcapHandler, "Jxnet!");
     }
 
     public static void main(String[] args) {
@@ -124,41 +119,26 @@ public class Application implements CommandLineRunner  {
 
 }
 ```
-  - ##### Pcap Configuration (Optional)
+  - ##### Pcap Packet Handler Configuration
   
 ```java
 @Configuration
-public class Config {
-    
-    @Bean
-    @Primary
-    public static PcapIf pcapIf(StringBuilder errbuf) throws DeviceNotFoundException {
-        String source = null;
-        List<PcapIf> alldevsp = new ArrayList<>();
-        if (PcapFindAllDevs(alldevsp, errbuf) != OK && LOGGER.isLoggable(Level.WARNING)) {
-            LOGGER.warning("Error: {}" + errbuf.toString());
+public class DefaultPacketHandler implements PacketHandler<String> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultPacketHandler.class.getName());
+
+    private static final String PRETTY_FOOTER = ""
+            + "+-----------------------------------------------------------------------------------------------------+";
+
+    @Override
+    public void next(String argument, PcapPktHdr header, Future<Packet> packet) throws ExecutionException, InterruptedException {
+        Iterator<Packet> iterator = packet.get().iterator();
+        while (iterator.hasNext()) {
+            LOGGER.info(iterator.next().toString());
         }
-        if (source == null || source.isEmpty()) {
-            for (PcapIf dev : alldevsp) {
-                for (PcapAddr addr : dev.getAddresses()) {
-                    if (addr.getAddr().getSaFamily() == SockAddr.Family.AF_INET && addr.getAddr().getData() != null) {
-                        Inet4Address d = Inet4Address.valueOf(addr.getAddr().getData());
-                        if (!d.equals(Inet4Address.LOCALHOST) && !d.equals(Inet4Address.ZERO)) {
-                            return dev;
-                        }
-                    }
-                }
-            }
-        } else {
-            for (PcapIf dev : alldevsp) {
-                if (dev.getName().equals(source)) {
-                    return dev;
-                }
-            }
-        }
-        throw new DeviceNotFoundException("No device connected to the network.");
+        LOGGER.info(PRETTY_FOOTER);
     }
-    
+
 }
 ```
 
