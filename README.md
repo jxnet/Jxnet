@@ -142,6 +142,23 @@ public class DefaultPacketHandler implements PacketHandler<String> {
 }
 ```
 
+  - #### Spring properties (Optional)
+    - jxnet.source
+    - jxnet.snapshot
+    - jxnet.promiscuous
+    - jxnet.timeout
+    - jxnet.immediate
+    - jxnet.timestampType
+    - jxnet.timestampPrecision
+    - jxnet.rfmon
+    - jxnet.blocking
+    - jxnet.direction
+    - jxnet.datalink
+    - jxnet.file
+    - jxnet.pcapType
+    - jxnet.jxpacket.autoRegister=true
+    - jxnet.jxpacket.numberOfThread=10
+
 Build Jxnet from Source
 =============================
 
