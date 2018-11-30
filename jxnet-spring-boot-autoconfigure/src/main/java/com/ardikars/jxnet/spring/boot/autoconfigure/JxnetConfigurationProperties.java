@@ -67,6 +67,8 @@ public class JxnetConfigurationProperties {
 
     private Pcap.PcapType pcapType;
 
+    private Integer numberOfThread;
+
     /**
      * Initialize field.
      */
@@ -107,6 +109,9 @@ public class JxnetConfigurationProperties {
         }
         if (file == null) {
             file = null;
+        }
+        if (numberOfThread == null) {
+            numberOfThread = 0;
         }
     }
 
@@ -212,6 +217,14 @@ public class JxnetConfigurationProperties {
 
     public void setPcapType(Pcap.PcapType pcapType) {
         this.pcapType = pcapType;
+    }
+
+    public Integer getNumberOfThread() {
+        return numberOfThread;
+    }
+
+    public void setNumberOfThread(Integer numberOfThread) {
+        this.numberOfThread = numberOfThread;
     }
 
 }

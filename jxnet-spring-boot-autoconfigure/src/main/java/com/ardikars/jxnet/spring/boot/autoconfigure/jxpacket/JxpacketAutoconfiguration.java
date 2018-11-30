@@ -35,12 +35,9 @@ import com.ardikars.jxpacket.core.ip.ip6.HopByHopOptions;
 import com.ardikars.jxpacket.core.ip.ip6.Routing;
 import com.ardikars.jxpacket.core.tcp.Tcp;
 import com.ardikars.jxpacket.core.udp.Udp;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -56,7 +53,6 @@ import org.springframework.context.annotation.Configuration;
 public class JxpacketAutoconfiguration {
 
     private final Boolean autoRegister;
-    private final Integer numberOfThread;
 
     /**
      *
@@ -64,20 +60,7 @@ public class JxpacketAutoconfiguration {
      */
     public JxpacketAutoconfiguration(JxpacketConfigurationProperties properties) {
         this.autoRegister = properties.getAutoRegister();
-        this.numberOfThread = properties.getNumberOfThread();
         register();
-    }
-
-    /**
-     * Thread pool.
-     * @return returns {@link ExecutorService} object.
-     */
-    @Bean("com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket.executorService")
-    public ExecutorService executorService() {
-        if (this.numberOfThread == 0) {
-            return Executors.newCachedThreadPool();
-        }
-        return Executors.newFixedThreadPool(this.numberOfThread);
     }
 
     private void register() {

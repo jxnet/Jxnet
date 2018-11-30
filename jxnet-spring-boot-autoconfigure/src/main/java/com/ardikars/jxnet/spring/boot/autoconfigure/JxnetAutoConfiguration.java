@@ -38,6 +38,8 @@ import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -204,6 +206,18 @@ public class JxnetAutoConfiguration {
     @Bean("com.ardikars.jxnet.errbuf")
     public StringBuilder errbuf() {
         return new StringBuilder(PCAP_ERRBUF_SIZE);
+    }
+
+    /**
+     * Thread pool.
+     * @return returns {@link ExecutorService} object.
+     */
+    @Bean("com.ardikars.jxnet.spring.boot.autoconfigure.executorService")
+    public ExecutorService executorService() {
+        if (this.properties.getNumberOfThread() == 0) {
+            return Executors.newCachedThreadPool();
+        }
+        return Executors.newFixedThreadPool(this.properties.getNumberOfThread());
     }
 
 }

@@ -32,8 +32,6 @@ public class JxpacketConfigurationProperties {
 
     private Boolean autoRegister;
 
-    private Integer numberOfThread;
-
     /**
      * Initialize properties.
      */
@@ -41,9 +39,6 @@ public class JxpacketConfigurationProperties {
     public void initialize() {
         if (autoRegister == null) {
             this.autoRegister = false;
-        }
-        if (numberOfThread == null) {
-            numberOfThread = 0;
         }
     }
 
@@ -53,14 +48,6 @@ public class JxpacketConfigurationProperties {
 
     public void setAutoRegister(Boolean autoRegister) {
         this.autoRegister = autoRegister;
-    }
-
-    public Integer getNumberOfThread() {
-        return numberOfThread;
-    }
-
-    public void setNumberOfThread(Integer numberOfThread) {
-        this.numberOfThread = numberOfThread;
     }
 
 }

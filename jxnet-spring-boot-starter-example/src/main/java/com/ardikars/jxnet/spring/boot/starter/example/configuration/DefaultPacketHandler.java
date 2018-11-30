@@ -19,6 +19,7 @@ package com.ardikars.jxnet.spring.boot.starter.example.configuration;
 
 import com.ardikars.jxnet.PcapPktHdr;
 import com.ardikars.jxnet.spring.boot.autoconfigure.PacketHandler;
+import com.ardikars.jxnet.spring.boot.autoconfigure.annotation.EnablePacket;
 import com.ardikars.jxpacket.common.Packet;
 import java.util.Iterator;
 import java.util.concurrent.ExecutionException;
@@ -31,6 +32,7 @@ import org.springframework.context.annotation.Configuration;
  * @author jxnet 2018/11/29
  * @author <a href="mailto:contact@ardikars.com">Langkuy</a>
  */
+@EnablePacket
 @Configuration
 public class DefaultPacketHandler implements PacketHandler<String> {
 
@@ -41,7 +43,10 @@ public class DefaultPacketHandler implements PacketHandler<String> {
 
     @Override
     public void next(String argument, PcapPktHdr header, Future<Packet> packet) throws ExecutionException, InterruptedException {
-        Iterator<Packet> iterator = packet.get().iterator();
+        print(packet.get().iterator());
+    }
+
+    private void print(Iterator<Packet> iterator) {
         while (iterator.hasNext()) {
             LOGGER.info(iterator.next().toString());
         }
