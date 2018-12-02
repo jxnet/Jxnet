@@ -40,7 +40,7 @@ import org.springframework.context.annotation.Configuration;
  * @since 1.4.9
  */
 @ConditionalOnClass(Packet.class)
-@Configuration("com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket.nioBufferHandler")
+@Configuration("com.ardikars.jxnet.nioBufferHandlerConfiguration")
 public class NioBufferHandlerConfiguration<T> implements PcapHandler<T> {
 
     private static final Log LOG = LogFactory.getLog(NioBufferHandlerConfiguration.class.getName());
@@ -53,7 +53,7 @@ public class NioBufferHandlerConfiguration<T> implements PcapHandler<T> {
      * @param executorService thread pool.
      * @param packetHandler callback function.
      */
-    public NioBufferHandlerConfiguration(@Qualifier("com.ardikars.jxnet.spring.boot.autoconfigure.executorService") ExecutorService executorService,
+    public NioBufferHandlerConfiguration(@Qualifier("com.ardikars.jxnet.executorService") ExecutorService executorService,
                                          NioBufferHandler<T> packetHandler) {
         this.packetHandler = packetHandler;
         this.executorService = executorService;

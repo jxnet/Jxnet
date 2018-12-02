@@ -56,7 +56,7 @@ import org.springframework.context.annotation.Configuration;
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
  * @since 1.4.0
  */
-@Configuration("com.ardikars.jxnet.autoConfiguration")
+@Configuration("com.ardikars.jxnet.jxnetAutoConfiguration")
 @ConditionalOnClass({Jxnet.class, Context.class})
 @AutoConfigureOrder
 @EnableConfigurationProperties(JxnetConfigurationProperties.class)
@@ -212,7 +212,7 @@ public class JxnetAutoConfiguration {
      * Thread pool.
      * @return returns {@link ExecutorService} object.
      */
-    @Bean("com.ardikars.jxnet.spring.boot.autoconfigure.executorService")
+    @Bean("com.ardikars.jxnet.executorService")
     public ExecutorService executorService() {
         if (this.properties.getNumberOfThread() == 0) {
             return Executors.newCachedThreadPool();

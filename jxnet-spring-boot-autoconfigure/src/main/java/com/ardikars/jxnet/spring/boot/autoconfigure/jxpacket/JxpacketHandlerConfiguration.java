@@ -47,7 +47,7 @@ import org.springframework.context.annotation.Configuration;
  * @since 1.4.9
  */
 @ConditionalOnClass({Packet.class, ByteBuf.class})
-@Configuration("com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket.jxpacketHandler")
+@Configuration("com.ardikars.jxnet.jxpacketHandlerConfiguration")
 public class JxpacketHandlerConfiguration<T> implements PcapHandler<T> {
 
     private static final Log LOG = LogFactory.getLog(JxpacketHandlerConfiguration.class.getName());
@@ -62,8 +62,8 @@ public class JxpacketHandlerConfiguration<T> implements PcapHandler<T> {
      * @param dataLinkType datalink type.
      * @param packetHandler callback function.
      */
-    public JxpacketHandlerConfiguration(@Qualifier("com.ardikars.jxnet.spring.boot.autoconfigure.executorService") ExecutorService executorService,
-                                        DataLinkType dataLinkType,
+    public JxpacketHandlerConfiguration(@Qualifier("com.ardikars.jxnet.executorService") ExecutorService executorService,
+                                        @Qualifier("com.ardikars.jxnet.dataLinkType") DataLinkType dataLinkType,
                                         JxpacketHandler<T> packetHandler) {
         this.rawDataLinkType = dataLinkType != null ? dataLinkType.getValue() : 1;
         this.packetHandler = packetHandler;

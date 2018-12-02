@@ -17,7 +17,13 @@
 
 package com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket;
 
+import com.ardikars.common.tuple.Pair;
+import com.ardikars.common.tuple.Tuple;
+import com.ardikars.jxnet.Context;
+import com.ardikars.jxnet.DataLinkType;
+import com.ardikars.jxnet.PcapPktHdr;
 import com.ardikars.jxpacket.common.Packet;
+import com.ardikars.jxpacket.common.UnknownPacket;
 import com.ardikars.jxpacket.common.layer.DataLinkLayer;
 import com.ardikars.jxpacket.common.layer.NetworkLayer;
 import com.ardikars.jxpacket.common.layer.TransportLayer;
@@ -35,6 +41,13 @@ import com.ardikars.jxpacket.core.ip.ip6.HopByHopOptions;
 import com.ardikars.jxpacket.core.ip.ip6.Routing;
 import com.ardikars.jxpacket.core.tcp.Tcp;
 import com.ardikars.jxpacket.core.udp.Udp;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+import java.nio.ByteBuffer;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -46,21 +59,39 @@ import org.springframework.context.annotation.Configuration;
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
  * @since 1.4.8
  */
-@Configuration("com.ardikras.jxnet.spring.boot.autoconfiguration.jxpacket.jxpacketAutoconfiguration")
+@Configuration("com.ardikras.jxnet.jxpacketAutoconfiguration")
 @ConditionalOnClass(Packet.class)
 @AutoConfigureOrder
 @EnableConfigurationProperties(JxpacketConfigurationProperties.class)
-public class JxpacketAutoconfiguration {
+public class JxpacketAutoconfiguration implements JxpacketContext {
 
     private final Boolean autoRegister;
 
+    private final Context context;
+    private final ExecutorService executorService;
+    private final int rawDataLinkType;
+    private final int pcapMinorVersion;
+    private final int pcapMajorVersion;
+
     /**
+     * Jxpacket autoconfiguraton constractor.
      *
+     * @param context application context.
+     * @param executorService thread pool.
+     * @param dataLinkType datalink type.
      * @param properties jxpacket configuration properties.
      */
-    public JxpacketAutoconfiguration(JxpacketConfigurationProperties properties) {
+    public JxpacketAutoconfiguration(@Qualifier("com.ardikars.jxnet.contex") Context context,
+                                     @Qualifier("com.ardikars.jxnet.executorService") ExecutorService executorService,
+                                     @Qualifier("com.ardikars.jxnet.dataLinkType") DataLinkType dataLinkType,
+                                     JxpacketConfigurationProperties properties) {
         this.autoRegister = properties.getAutoRegister();
         register();
+        this.context = context;
+        this.executorService = executorService;
+        this.rawDataLinkType = dataLinkType != null ? dataLinkType.getValue() : 1;
+        this.pcapMinorVersion = this.context.pcapMinorVersion();
+        this.pcapMajorVersion = this.context.pcapMajorVersion();
     }
 
     private void register() {
@@ -82,6 +113,39 @@ public class JxpacketAutoconfiguration {
             TransportLayer.register(TransportLayer.IPV6_FRAGMENT, new Fragment.Builder());
             TransportLayer.register(TransportLayer.IPV6_HOPOPT, new HopByHopOptions.Builder());
         }
+    }
+
+    @Override
+    public Future<Pair<PcapPktHdr, Packet>> nextPacket() {
+        return executorService.submit(new Callable<Pair<PcapPktHdr, Packet>>() {
+            @Override
+            public Pair<PcapPktHdr, Packet> call() throws Exception {
+                PcapPktHdr pktHdr = new PcapPktHdr();
+                ByteBuffer bytes = null;
+                while (bytes == null) {
+                    bytes = context.pcapNext(pktHdr);
+                }
+                ByteBuf buffer = ByteBufAllocator.DEFAULT.directBuffer(bytes.capacity());
+                buffer.setBytes(0, bytes);
+                Packet packet;
+                if (rawDataLinkType == 1) {
+                    packet = Ethernet.newPacket(buffer);
+                } else {
+                    packet = UnknownPacket.newPacket(buffer);
+                }
+                return Tuple.of(pktHdr, packet);
+            }
+        });
+    }
+
+    @Override
+    public int getPcapMinorVersion() {
+        return pcapMinorVersion;
+    }
+
+    @Override
+    public int getPcapMajorVersion() {
+        return pcapMajorVersion;
     }
 
 }

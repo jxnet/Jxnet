@@ -24,6 +24,7 @@ import com.ardikars.jxnet.PcapAddr;
 import com.ardikars.jxnet.PcapHandler;
 import com.ardikars.jxnet.PcapIf;
 import com.ardikars.jxnet.SockAddr;
+//import com.ardikars.jxnet.spring.boot.starter.example.configuration.DefaultNextPacketLoop;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,9 @@ public class Application implements CommandLineRunner  {
 
     @Autowired
     private PcapHandler<String> pcapHandler;
+
+    //@Autowired
+    //private DefaultNextPacketLoop nextPacketLoop;
 
     /**
      * @param context application context.
@@ -68,6 +72,7 @@ public class Application implements CommandLineRunner  {
             }
         }
         context.pcapLoop(MAX_PACKET, pcapHandler, "Jxnet!");
+        //nextPacketLoop.loop(MAX_PACKET);
     }
 
     public static void main(String[] args) {
