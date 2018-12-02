@@ -153,19 +153,19 @@ public class DefaultJxpacketHandler implements JxpacketHandler<String> {
   - #### Spring properties (Optional)
     - jxnet.source=
     - jxnet.snapshot=65535
-    - jxnet.promiscuous=PRIMISCUOUS
+    - jxnet.promiscuous=primiscuous
     - jxnet.timeout=2000
-    - jxnet.immediate=IMMEDIATE
-    - jxnet.timestampType=HOST
-    - jxnet.timestampPrecision=MICRO
-    - jxnet.rfmon=NON_RFMON
+    - jxnet.immediate=immediate
+    - jxnet.timestampType=host
+    - jxnet.timestampPrecision=micro
+    - jxnet.rfmon=non_rfmon
     - jxnet.blocking=false
-    - jxnet.direction=PCAP_D_INOUT
+    - jxnet.direction=pcap_d_inout
     - jxnet.datalink=1
     - jxnet.file=
-    - jxnet.pcapType=LIVE
+    - jxnet.pcapType=live
     - jxnet.numberOfThread=0
-    - jxnet.jxpacket.autoRegister=true
+    - jxnet.jxpacket.autoRegister=true # Register all packet (recommended)
 
 Build Jxnet from Source
 =============================
