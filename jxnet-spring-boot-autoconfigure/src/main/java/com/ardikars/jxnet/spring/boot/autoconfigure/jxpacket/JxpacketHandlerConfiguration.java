@@ -17,10 +17,12 @@
 
 package com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket;
 
+import com.ardikars.common.tuple.Pair;
+import com.ardikars.common.tuple.Tuple;
 import com.ardikars.jxnet.DataLinkType;
 import com.ardikars.jxnet.PcapHandler;
 import com.ardikars.jxnet.PcapPktHdr;
-import com.ardikars.jxnet.spring.boot.autoconfigure.PacketHandler;
+import com.ardikars.jxnet.spring.boot.autoconfigure.JxpacketHandler;
 import com.ardikars.jxpacket.common.Packet;
 import com.ardikars.jxpacket.common.UnknownPacket;
 import com.ardikars.jxpacket.core.ethernet.Ethernet;
@@ -42,7 +44,7 @@ import org.springframework.context.annotation.Configuration;
  * Jxpacket handler.
  *
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
- * @since 1.4.8
+ * @since 1.4.9
  */
 @ConditionalOnClass({Packet.class, ByteBuf.class})
 @Configuration("com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket.jxpacketHandler")
@@ -51,7 +53,7 @@ public class JxpacketHandlerConfiguration<T> implements PcapHandler<T> {
     private static final Log LOG = LogFactory.getLog(JxpacketHandlerConfiguration.class.getName());
 
     private final int rawDataLinkType;
-    private final PacketHandler<T> packetHandler;
+    private final JxpacketHandler<T> packetHandler;
     private final ExecutorService executorService;
 
     /**
@@ -62,7 +64,7 @@ public class JxpacketHandlerConfiguration<T> implements PcapHandler<T> {
      */
     public JxpacketHandlerConfiguration(@Qualifier("com.ardikars.jxnet.spring.boot.autoconfigure.executorService") ExecutorService executorService,
                                         DataLinkType dataLinkType,
-                                        PacketHandler<T> packetHandler) {
+                                        JxpacketHandler<T> packetHandler) {
         this.rawDataLinkType = dataLinkType != null ? dataLinkType.getValue() : 1;
         this.packetHandler = packetHandler;
         this.executorService = executorService;
@@ -70,9 +72,9 @@ public class JxpacketHandlerConfiguration<T> implements PcapHandler<T> {
 
     @Override
     public void nextPacket(final T user, final PcapPktHdr h, final ByteBuffer bytes) {
-        Future<Packet> packet = executorService.submit(new Callable<Packet>() {
+        Future<Pair<PcapPktHdr, Packet>> packet = executorService.submit(new Callable<Pair<PcapPktHdr, Packet>>() {
             @Override
-            public Packet call() throws Exception {
+            public Pair<PcapPktHdr, Packet> call() throws Exception {
                 ByteBuf buffer = ByteBufAllocator.DEFAULT.directBuffer(bytes.capacity());
                 buffer.setBytes(0, bytes);
                 Packet packet;
@@ -81,11 +83,11 @@ public class JxpacketHandlerConfiguration<T> implements PcapHandler<T> {
                 } else {
                     packet = UnknownPacket.newPacket(buffer);
                 }
-                return packet;
+                return Tuple.of(h, packet);
             }
         });
         try {
-            packetHandler.next(user, h, packet);
+            packetHandler.next(user, packet);
         } catch (ExecutionException | InterruptedException e) {
             LOG.warn(e.getMessage());
         }

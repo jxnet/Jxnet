@@ -10,7 +10,6 @@ dependencyManagement {
         mavenBom("org.springframework.boot:spring-boot-dependencies:${SPRING_BOOT_VERSION}")
         mavenBom("com.ardikars.jxpacket:jxpacket:${JXPACKET_VERSION}")
         mavenBom("io.netty:netty-bom:${NETTY_VERSION}")
-        mavenBom("io.projectreactor:reactor-bom:${REACTOR_VERSION}")
     }
 }
 
@@ -19,11 +18,13 @@ dependencies {
     implementation project (":jxnet-context")
     implementation ("org.springframework.boot:spring-boot-configuration-processor")
     implementation ("org.springframework.boot:spring-boot-autoconfigure")
+    implementation ("com.ardikars.common:common-annotation")
     implementation ("com.ardikars.common:common-net")
     implementation ("com.ardikars.common:common-util")
+    implementation ("com.ardikars.common:common-tuple")
+    implementation ("io.netty:netty-buffer")
     implementation ("com.ardikars.jxpacket:jxpacket-common")
     implementation ("com.ardikars.jxpacket:jxpacket-core")
-    implementation ("io.projectreactor:reactor-core")
     implementation ("org.slf4j:slf4j-api:${SLF4J_VERSION}")
     testImplementation ("junit:junit:${JUNIT_VERSION}")
     testImplementation ("org.mockito:mockito-core:${MOCKITO_VERSION}")

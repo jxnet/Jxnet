@@ -17,6 +17,8 @@
 
 package com.ardikars.jxnet.spring.boot.autoconfigure.netty;
 
+import com.ardikars.common.tuple.Pair;
+import com.ardikars.common.tuple.Tuple;
 import com.ardikars.jxnet.PcapHandler;
 import com.ardikars.jxnet.PcapPktHdr;
 import com.ardikars.jxnet.spring.boot.autoconfigure.NettyBufferHandler;
@@ -61,16 +63,16 @@ public class NettyBufferHandlerConfiguration<T> implements PcapHandler<T> {
 
     @Override
     public void nextPacket(final T user, final PcapPktHdr h, final ByteBuffer bytes) {
-        Future<ByteBuf> packet = executorService.submit(new Callable<ByteBuf>() {
+        Future<Pair<PcapPktHdr, ByteBuf>> packet = executorService.submit(new Callable<Pair<PcapPktHdr, ByteBuf>>() {
             @Override
-            public ByteBuf call() throws Exception {
+            public Pair<PcapPktHdr, ByteBuf> call() throws Exception {
                 ByteBuf buffer = ByteBufAllocator.DEFAULT.directBuffer(bytes.capacity());
                 buffer.setBytes(0, bytes);
-                return buffer;
+                return Tuple.of(h.copy(), buffer);
             }
         });
         try {
-            packetHandler.next(user, h, packet);
+            packetHandler.next(user, packet);
         } catch (Exception e) {
             LOG.warn(e.getMessage());
         }

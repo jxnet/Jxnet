@@ -39,8 +39,6 @@ public class JxpacketConfigurationSelector implements ImportSelector {
         }
         PacketHandlerType type = attributes.getEnum("packetHandlerType");
         switch (type) {
-            case REACTOR:
-                return new String[] {"com.ardikars.jxnet.spring.boot.autoconfigure.reactor.ReactorPacketHandlerConfiguration"};
             case NETTY_BUFFER:
                 return new String[] {"com.ardikars.jxnet.spring.boot.autoconfigure.netty.NettyBufferHandlerConfiguration"};
             case NIO_BUFFER:

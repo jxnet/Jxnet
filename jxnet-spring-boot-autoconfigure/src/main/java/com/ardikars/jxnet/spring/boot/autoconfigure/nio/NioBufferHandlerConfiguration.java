@@ -17,6 +17,8 @@
 
 package com.ardikars.jxnet.spring.boot.autoconfigure.nio;
 
+import com.ardikars.common.tuple.Pair;
+import com.ardikars.common.tuple.Tuple;
 import com.ardikars.jxnet.PcapHandler;
 import com.ardikars.jxnet.PcapPktHdr;
 import com.ardikars.jxnet.spring.boot.autoconfigure.NioBufferHandler;
@@ -59,14 +61,14 @@ public class NioBufferHandlerConfiguration<T> implements PcapHandler<T> {
 
     @Override
     public void nextPacket(final T user, final PcapPktHdr h, final ByteBuffer bytes) {
-        Future<ByteBuffer> packet = executorService.submit(new Callable<ByteBuffer>() {
+        Future<Pair<PcapPktHdr, ByteBuffer>> packet = executorService.submit(new Callable<Pair<PcapPktHdr, ByteBuffer>>() {
             @Override
-            public ByteBuffer call() throws Exception {
-                return bytes;
+            public Pair<PcapPktHdr, ByteBuffer> call() throws Exception {
+                return Tuple.of(h, bytes);
             }
         });
         try {
-            packetHandler.next(user, h, packet);
+            packetHandler.next(user, packet);
         } catch (Exception e) {
             LOG.warn(e.getMessage());
         }
