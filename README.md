@@ -8,7 +8,7 @@ Jxnet wraps a native packet capture library (libpcap/npcap) via JNI (Java Native
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4d6ca7f3d9214098b1436990ac76a6cd)](https://www.codacy.com/project/jxnet/Jxnet/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jxnet/Jxnet&amp;utm_campaign=Badge_Grade_Dashboard)
 [![Build status](https://ci.appveyor.com/api/projects/status/ev4t6t1ssacwj18j?svg=true)](https://ci.appveyor.com/project/jxnet/jxnet)
 
-[ ![Download](https://api.bintray.com/packages/ardikars/maven/com.ardikars.jxnet/images/download.svg?version=1.4.8.Final) ](https://bintray.com/ardikars/maven/com.ardikars.jxnet/1.4.8.Final/link)
+[ ![Download](https://api.bintray.com/packages/ardikars/maven/com.ardikars.jxnet/images/download.svg?version=1.4.9.Final) ](https://bintray.com/ardikars/maven/com.ardikars.jxnet/1.4.9.Final/link)
 
 
 Getting Started
@@ -53,7 +53,7 @@ List of supported protocol available at [Jxpacket](https://github.com/jxnet/Jxpa
 >>>         <dependency>
 >>>             <groupId>com.ardikars.jxnet</groupId>
 >>>             <artifactId>jxnet</artifactId>
->>>             <version>1.4.8.Final</version>
+>>>             <version>1.4.9.Final</version>
 >>>             <type>pom</type>
 >>>             <scope>import</scope>
 >>>         </dependency>
@@ -72,7 +72,7 @@ List of supported protocol available at [Jxpacket](https://github.com/jxnet/Jxpa
 >>> }
 >>>
 >>> dependencyManagement {
->>>     imports { mavenBom("com.ardikars.jxnet:jxnet:1.4.8.Final") }
+>>>     imports { mavenBom("com.ardikars.jxnet:jxnet:1.4.9.Final") }
 >>> }
 >>> ```  
 
@@ -151,21 +151,21 @@ public class DefaultJxpacketHandler implements JxpacketHandler<String> {
 ```
 
   - #### Spring properties (Optional)
-    - jxnet.source
-    - jxnet.snapshot
-    - jxnet.promiscuous
-    - jxnet.timeout
-    - jxnet.immediate
-    - jxnet.timestampType
-    - jxnet.timestampPrecision
-    - jxnet.rfmon
-    - jxnet.blocking
-    - jxnet.direction
-    - jxnet.datalink
-    - jxnet.file
-    - jxnet.pcapType
+    - jxnet.source=
+    - jxnet.snapshot=65535
+    - jxnet.promiscuous=PRIMISCUOUS
+    - jxnet.timeout=2000
+    - jxnet.immediate=IMMEDIATE
+    - jxnet.timestampType=HOST
+    - jxnet.timestampPrecision=MICRO
+    - jxnet.rfmon=NON_RFMON
+    - jxnet.blocking=false
+    - jxnet.direction=PCAP_D_INOUT
+    - jxnet.datalink=1
+    - jxnet.file=
+    - jxnet.pcapType=LIVE
+    - jxnet.numberOfThread=0
     - jxnet.jxpacket.autoRegister=true
-    - jxnet.jxpacket.numberOfThread=10
 
 Build Jxnet from Source
 =============================
