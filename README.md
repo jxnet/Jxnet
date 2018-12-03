@@ -153,7 +153,7 @@ public class DefaultJxpacketHandler implements JxpacketHandler<String> {
   - #### Spring properties (Optional)
     - jxnet.source=
     - jxnet.snapshot=65535
-    - jxnet.promiscuous=primiscuous
+    - jxnet.promiscuous=promiscuous
     - jxnet.timeout=2000
     - jxnet.immediate=immediate
     - jxnet.timestampType=host

@@ -6,9 +6,10 @@
 description = "Common module for Jxnet."
 
 dependencies {
-    implementation project (":jxnet-core")
-    implementation ("com.ardikars.common:common-net")
+    implementation ("com.ardikars.common:common-annotation")
     implementation ("com.ardikars.common:common-util")
+    implementation ("com.ardikars.common:common-net")
+    implementation project (":jxnet-core")
     testImplementation ("junit:junit:${JUNIT_VERSION}")
     testImplementation ("org.mockito:mockito-core:${MOCKITO_VERSION}")
 }

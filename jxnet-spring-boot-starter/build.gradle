@@ -14,16 +14,17 @@ dependencyManagement {
 }
 
 dependencies {
-    compile project (":jxnet-context")
-    compile project (":jxnet-core")
-    compile project (":jxnet-spring-boot-autoconfigure")
     compile ("com.ardikars.common:common-annotation")
-    compile ("com.ardikars.common:common-net")
-    compile ("com.ardikars.common:common-util")
     compile ("com.ardikars.common:common-tuple")
+    compile ("com.ardikars.common:common-util")
+    compile ("com.ardikars.common:common-net")
+    compile ("io.netty:netty-common")
     compile ("io.netty:netty-buffer")
     compile ("com.ardikars.jxpacket:jxpacket-common")
     compile ("com.ardikars.jxpacket:jxpacket-core")
+    compile project (":jxnet-core")
+    compile project (":jxnet-context")
+    compile project (":jxnet-spring-boot-autoconfigure")
     testImplementation ("junit:junit:${JUNIT_VERSION}")
     testImplementation ("org.mockito:mockito-core:${MOCKITO_VERSION}")
 }

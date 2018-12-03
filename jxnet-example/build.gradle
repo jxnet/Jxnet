@@ -6,10 +6,11 @@
 description = 'Jxnet example application.'
 
 dependencies {
-    implementation project (":jxnet-context")
-    implementation project (":jxnet-core")
-    implementation ("com.ardikars.common:common-net")
+    implementation ("com.ardikars.common:common-annotation")
     implementation ("com.ardikars.common:common-util")
+    implementation ("com.ardikars.common:common-net")
+    implementation project (":jxnet-core")
+    implementation project (":jxnet-context")
     testImplementation ("junit:junit:${JUNIT_VERSION}")
     testImplementation ("org.mockito:mockito-core:${MOCKITO_VERSION}")
 }

@@ -17,8 +17,9 @@ sourceSets {
 }
 
 dependencies {
-	implementation ("com.ardikars.common:common-net")
+	implementation ("com.ardikars.common:common-annotation")
 	implementation ("com.ardikars.common:common-util")
+	implementation ("com.ardikars.common:common-net")
 	testImplementation ("junit:junit:${JUNIT_VERSION}")
 	testImplementation ("org.mockito:mockito-core:${MOCKITO_VERSION}")
 }

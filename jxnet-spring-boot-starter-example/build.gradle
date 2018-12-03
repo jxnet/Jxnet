@@ -16,17 +16,19 @@ dependencyManagement {
 }
 
 dependencies {
-    implementation project (":jxnet-context")
-    implementation project (":jxnet-core")
-    implementation project (":jxnet-spring-boot-autoconfigure")
-    implementation project (":jxnet-spring-boot-starter")
-    implementation ("org.springframework.boot:spring-boot-starter")
     implementation ("com.ardikars.common:common-annotation")
-    implementation ("com.ardikars.common:common-net")
+    implementation ("com.ardikars.common:common-tuple")
     implementation ("com.ardikars.common:common-util")
+    implementation ("com.ardikars.common:common-net")
+    implementation ("io.netty:netty-common")
+    implementation ("io.netty:netty-buffer")
     implementation ("com.ardikars.jxpacket:jxpacket-common")
     implementation ("com.ardikars.jxpacket:jxpacket-core")
-    implementation ("io.projectreactor:reactor-core")
+    implementation ("org.springframework.boot:spring-boot-starter")
+    implementation project (":jxnet-core")
+    implementation project (":jxnet-context")
+    implementation project (":jxnet-spring-boot-starter")
+    implementation project (":jxnet-spring-boot-autoconfigure")
 }
 
 bootJar {
