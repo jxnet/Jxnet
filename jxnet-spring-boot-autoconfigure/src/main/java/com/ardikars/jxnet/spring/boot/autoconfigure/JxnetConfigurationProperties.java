@@ -90,7 +90,7 @@ public class JxnetConfigurationProperties {
             datalink = (int) DataLinkType.EN10MB.getValue();
         }
         if (promiscuous == null) {
-            promiscuous = PromiscuousMode.PRIMISCUOUS;
+            promiscuous = PromiscuousMode.PROMISCUOUS;
         }
         if (timeout == null || timeout <= 0) {
             timeout = 2000;

@@ -153,7 +153,7 @@ public final class Pcap implements PointerHandler {
 
 		private String source;
 		private int snaplen = 65535;
-		private PromiscuousMode promiscuousMode = PromiscuousMode.PRIMISCUOUS;
+		private PromiscuousMode promiscuousMode = PromiscuousMode.PROMISCUOUS;
 		private ImmediateMode immediateMode = ImmediateMode.IMMEDIATE;
 		private PcapDirection direction = PcapDirection.PCAP_D_INOUT;
 		private PcapTimestampType timestampType = PcapTimestampType.HOST;
