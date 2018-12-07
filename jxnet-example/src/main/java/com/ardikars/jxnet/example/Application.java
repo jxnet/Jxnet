@@ -57,7 +57,7 @@ public class Application {
 
     public static final String source = null;
     public static final int SNAPLEN = 65535;
-    public static final PromiscuousMode PROMISCUOUS = PromiscuousMode.PRIMISCUOUS;
+    public static final PromiscuousMode PROMISCUOUS = PromiscuousMode.PROMISCUOUS;
     public static final int TIMEOUT = 2000;
     public static final ImmediateMode IMMEDIATE = ImmediateMode.IMMEDIATE;
     public static final PcapTimestampType TIMESTAMP_TYPE = PcapTimestampType.HOST;

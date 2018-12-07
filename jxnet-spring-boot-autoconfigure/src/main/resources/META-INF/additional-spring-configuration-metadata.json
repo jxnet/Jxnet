@@ -16,7 +16,7 @@
       "name": "jxnet.promiscuous",
       "type": "com.ardikars.jxnet.PromiscuousMode",
       "description": "Sets whether promiscuous mode should be set on a capture handle when the handle is activated.",
-      "defaultValue": "PRIMISCUOUS"
+      "defaultValue": "PROMISCUOUS"
     },
     {
       "name": "jxnet.timeout",

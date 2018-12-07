@@ -28,7 +28,7 @@ import com.ardikars.common.annotation.Immutable;
 @Immutable
 public enum PromiscuousMode {
 
-    PRIMISCUOUS(1), NON_PROMISCUOUS(0);
+    PROMISCUOUS(1), NON_PROMISCUOUS(0);
 
     private final int value;
 
