@@ -52,6 +52,9 @@ import java.nio.ByteBuffer;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -69,6 +72,8 @@ import org.springframework.context.annotation.Configuration;
 @AutoConfigureOrder
 @EnableConfigurationProperties(JxpacketConfigurationProperties.class)
 public class JxpacketAutoconfiguration implements JxpacketContext {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(JxpacketAutoconfiguration.class);
 
     private final Boolean autoRegister;
 
@@ -101,6 +106,7 @@ public class JxpacketAutoconfiguration implements JxpacketContext {
 
     private void register() {
         if (this.autoRegister) {
+            LOGGER.debug("Auto registering default packet.");
             DataLinkLayer.register(DataLinkLayer.EN10MB, new Ethernet.Builder());
             NetworkLayer.register(NetworkLayer.ARP, new Arp.Builder());
             NetworkLayer.register(NetworkLayer.IPV4, new Ip4.Builder());
@@ -117,6 +123,8 @@ public class JxpacketAutoconfiguration implements JxpacketContext {
             TransportLayer.register(TransportLayer.IPV6_ROUTING, new Routing.Builder());
             TransportLayer.register(TransportLayer.IPV6_FRAGMENT, new Fragment.Builder());
             TransportLayer.register(TransportLayer.IPV6_HOPOPT, new HopByHopOptions.Builder());
+        } else {
+            LOGGER.warn("No packet has been registered.");
         }
     }
 
