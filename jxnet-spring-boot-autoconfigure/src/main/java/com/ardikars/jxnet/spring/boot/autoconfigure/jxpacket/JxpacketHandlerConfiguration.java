@@ -27,13 +27,12 @@ import com.ardikars.jxpacket.common.Packet;
 import com.ardikars.jxpacket.common.UnknownPacket;
 import com.ardikars.jxpacket.core.ethernet.Ethernet;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.Unpooled;
 import java.nio.ByteBuffer;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -75,8 +74,7 @@ public class JxpacketHandlerConfiguration<T> implements PcapHandler<T> {
         Future<Pair<PcapPktHdr, Packet>> packet = executorService.submit(new Callable<Pair<PcapPktHdr, Packet>>() {
             @Override
             public Pair<PcapPktHdr, Packet> call() throws Exception {
-                ByteBuf buffer = ByteBufAllocator.DEFAULT.directBuffer(bytes.capacity());
-                buffer.setBytes(0, bytes);
+                ByteBuf buffer = Unpooled.wrappedBuffer(bytes);
                 Packet packet;
                 if (rawDataLinkType == 1) {
                     packet = Ethernet.newPacket(buffer);

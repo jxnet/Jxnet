@@ -19,10 +19,10 @@ package com.ardikars.jxnet.benchmark.jxnet;
 
 import com.ardikars.common.tuple.Pair;
 import com.ardikars.jxnet.PcapPktHdr;
-import com.ardikars.jxnet.spring.boot.autoconfigure.NioBufferHandler;
+import com.ardikars.jxnet.spring.boot.autoconfigure.JxpacketHandler;
 import com.ardikars.jxnet.spring.boot.autoconfigure.annotation.EnablePacket;
 import com.ardikars.jxnet.spring.boot.autoconfigure.constant.PacketHandlerType;
-import java.nio.ByteBuffer;
+import com.ardikars.jxpacket.common.Packet;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import org.springframework.context.annotation.Configuration;
@@ -31,11 +31,11 @@ import org.springframework.context.annotation.Configuration;
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
  */
 @Configuration("springJxnetRunnerConfig")
-@EnablePacket(packetHandlerType = PacketHandlerType.NIO_BUFFER)
-public class SpringJxnetRunnerConfig implements NioBufferHandler<String> {
+@EnablePacket(packetHandlerType = PacketHandlerType.JXPACKET)
+public class SpringJxnetRunnerConfig implements JxpacketHandler<String> {
 
     @Override
-    public void next(String argument, Future<Pair<PcapPktHdr, ByteBuffer>> packet) throws ExecutionException, InterruptedException {
+    public void next(String argument, Future<Pair<PcapPktHdr, Packet>> packet) throws ExecutionException, InterruptedException {
         // do nothing
     }
 
