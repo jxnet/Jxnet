@@ -17,6 +17,11 @@
 
 package com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket;
 
+import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.CONTEXT_BEAN_NAME;
+import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.DATALINK_TYPE_BEAN_NAME;
+import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.EXECUTOR_SERVICE_BEAN_NAME;
+import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.JXPACKET_AUTO_CONFIGURATION_BEAN_NAME;
+
 import com.ardikars.common.tuple.Pair;
 import com.ardikars.common.tuple.Tuple;
 import com.ardikars.jxnet.Context;
@@ -59,7 +64,7 @@ import org.springframework.context.annotation.Configuration;
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
  * @since 1.4.8
  */
-@Configuration("com.ardikras.jxnet.jxpacketAutoconfiguration")
+@Configuration(JXPACKET_AUTO_CONFIGURATION_BEAN_NAME)
 @ConditionalOnClass(Packet.class)
 @AutoConfigureOrder
 @EnableConfigurationProperties(JxpacketConfigurationProperties.class)
@@ -81,9 +86,9 @@ public class JxpacketAutoconfiguration implements JxpacketContext {
      * @param dataLinkType datalink type.
      * @param properties jxpacket configuration properties.
      */
-    public JxpacketAutoconfiguration(@Qualifier("com.ardikars.jxnet.contex") Context context,
-                                     @Qualifier("com.ardikars.jxnet.executorService") ExecutorService executorService,
-                                     @Qualifier("com.ardikars.jxnet.dataLinkType") DataLinkType dataLinkType,
+    public JxpacketAutoconfiguration(@Qualifier(CONTEXT_BEAN_NAME) Context context,
+                                     @Qualifier(EXECUTOR_SERVICE_BEAN_NAME) ExecutorService executorService,
+                                     @Qualifier(DATALINK_TYPE_BEAN_NAME) DataLinkType dataLinkType,
                                      JxpacketConfigurationProperties properties) {
         this.autoRegister = properties.getAutoRegister();
         register();

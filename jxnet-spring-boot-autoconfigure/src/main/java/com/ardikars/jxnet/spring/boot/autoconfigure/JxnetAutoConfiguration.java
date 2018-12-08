@@ -20,6 +20,14 @@ package com.ardikars.jxnet.spring.boot.autoconfigure;
 import static com.ardikars.jxnet.Jxnet.OK;
 import static com.ardikars.jxnet.Jxnet.PCAP_ERRBUF_SIZE;
 import static com.ardikars.jxnet.Jxnet.PcapFindAllDevs;
+import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.CONTEXT_BEAN_NAME;
+import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.DATALINK_TYPE_BEAN_NAME;
+import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.ERRBUF_BEAN_NAME;
+import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.EXECUTOR_SERVICE_BEAN_NAME;
+import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.JXNET_AUTO_CONFIGURATION_BEAN_NAME;
+import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.MAC_ADDRESS_BEAN_NAME;
+import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.NETMASK_BEAN_NAME;
+import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.PCAP_IF_BEAN_NAME;
 
 import com.ardikars.common.net.Inet4Address;
 import com.ardikars.common.net.MacAddress;
@@ -30,21 +38,24 @@ import com.ardikars.jxnet.DataLinkType;
 import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
 import com.ardikars.jxnet.PcapAddr;
+import com.ardikars.jxnet.PcapCode;
 import com.ardikars.jxnet.PcapIf;
 import com.ardikars.jxnet.SockAddr;
 import com.ardikars.jxnet.exception.DeviceNotFoundException;
 import com.ardikars.jxnet.exception.PlatformNotSupportedException;
-
+import com.ardikars.jxnet.exception.UnknownNetmaskException;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -56,7 +67,7 @@ import org.springframework.context.annotation.Configuration;
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
  * @since 1.4.0
  */
-@Configuration("com.ardikars.jxnet.jxnetAutoConfiguration")
+@Configuration(JXNET_AUTO_CONFIGURATION_BEAN_NAME)
 @ConditionalOnClass({Jxnet.class, Context.class})
 @AutoConfigureOrder
 @EnableConfigurationProperties(JxnetConfigurationProperties.class)
@@ -80,14 +91,139 @@ public class JxnetAutoConfiguration {
     }
 
     /**
+     * Pcap if (source).
+     * @param errbuf error buffer.
+     * @return pcap_if.
+     * @throws DeviceNotFoundException device not found exception.
+     */
+    @ConditionalOnClass(value = {PcapIf.class, PcapAddr.class, SockAddr.class, DeviceNotFoundException.class})
+    @Bean(PCAP_IF_BEAN_NAME)
+    public PcapIf pcapIf(@Qualifier(ERRBUF_BEAN_NAME) StringBuilder errbuf) throws DeviceNotFoundException {
+        String source = properties.getSource();
+        List<PcapIf> alldevsp = new ArrayList<>();
+        if (PcapFindAllDevs(alldevsp, errbuf) != OK && LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Error: {}", errbuf.toString());
+        }
+        if (source == null || source.isEmpty()) {
+            for (PcapIf dev : alldevsp) {
+                for (PcapAddr addr : dev.getAddresses()) {
+                    if (addr.getAddr().getSaFamily() == SockAddr.Family.AF_INET && addr.getAddr().getData() != null) {
+                        Inet4Address d = Inet4Address.valueOf(addr.getAddr().getData());
+                        if (!d.equals(Inet4Address.LOCALHOST) && !d.equals(Inet4Address.ZERO)) {
+                            return dev;
+                        }
+                    }
+                }
+            }
+        } else {
+            for (PcapIf dev : alldevsp) {
+                if (dev.getName().equals(source)) {
+                    return dev;
+                }
+            }
+        }
+        for (PcapIf dev : alldevsp) {
+            if (dev.isLoopback()) {
+                LOGGER.warn("No device connected to the network. Auto selected {}.", dev.getName());
+                return dev;
+            }
+        }
+        throw new DeviceNotFoundException();
+    }
+
+    /**
+     * Default netmask.
+     * @param pcapIf default {@link PcapIf} object.
+     * @return returns default netmask specified by {@link PcapIf} object.
+     */
+    @ConditionalOnClass({Inet4Address.class, PcapIf.class})
+    @ConditionalOnBean({PcapIf.class})
+    @Bean(NETMASK_BEAN_NAME)
+    public Inet4Address netmask(@Qualifier(PCAP_IF_BEAN_NAME) PcapIf pcapIf) {
+        Iterator<PcapAddr> iterator = pcapIf.getAddresses().iterator();
+        while (iterator.hasNext()) {
+            PcapAddr pcapAddr = iterator.next();
+            if (pcapAddr.getNetmask() != null
+                    && pcapAddr.getNetmask().getSaFamily() == SockAddr.Family.AF_INET
+                    && pcapAddr.getNetmask().getData() != null) {
+                return Inet4Address.valueOf(pcapAddr.getNetmask().getData());
+            }
+        }
+        throw new UnknownNetmaskException();
+    }
+
+    /**
+     * Default mac address specified by pcapIf.
+     * @param pcapIf pcapIf.
+     * @return returns mac address.
+     * @throws PlatformNotSupportedException platform not supported exception.
+     * @throws DeviceNotFoundException device not found exception.
+     * @throws SocketException socket exception.
+     */
+    @ConditionalOnClass({MacAddress.class, PcapIf.class, PcapAddr.class, SockAddr.class,
+            DeviceNotFoundException.class, PlatformNotSupportedException.class})
+    @Bean(MAC_ADDRESS_BEAN_NAME)
+    public MacAddress macAddress(@Qualifier(PCAP_IF_BEAN_NAME) PcapIf pcapIf)
+            throws PlatformNotSupportedException, DeviceNotFoundException, SocketException {
+        if (pcapIf.isLoopback()) {
+            return MacAddress.ZERO;
+        }
+        if (Platforms.isWindows()) {
+            byte[] hardwareAddress = Jxnet.FindHardwareAddress(pcapIf.getName());
+            if (hardwareAddress != null && hardwareAddress.length == MacAddress.MAC_ADDRESS_LENGTH) {
+                return MacAddress.valueOf(hardwareAddress);
+            } else {
+                throw new DeviceNotFoundException();
+            }
+        } else {
+            return MacAddress.fromNicName(pcapIf.getName());
+        }
+    }
+
+    /**
+     * A handle link type.
+     * @param context application context.
+     * @return returns {@link com.ardikars.jxpacket.common.layer.DataLinkLayer}.
+     */
+    @Bean(DATALINK_TYPE_BEAN_NAME)
+    public DataLinkType dataLinkType(@Qualifier(CONTEXT_BEAN_NAME) Context context) {
+        return context.pcapDataLink();
+    }
+
+    /**
+     * Error buffer.
+     * @return error buffer.
+     */
+    @Bean(ERRBUF_BEAN_NAME)
+    public StringBuilder errbuf() {
+        return new StringBuilder(PCAP_ERRBUF_SIZE);
+    }
+
+    /**
+     * Thread pool.
+     * @return returns {@link ExecutorService} object.
+     */
+    @Bean(EXECUTOR_SERVICE_BEAN_NAME)
+    public ExecutorService executorService() {
+        if (this.properties.getNumberOfThread() == 0) {
+            return Executors.newCachedThreadPool();
+        }
+        return Executors.newFixedThreadPool(this.properties.getNumberOfThread());
+    }
+
+    /**
      * Jxnet application context.
      * @param pcapIf pcap if.
      * @param errbuf error buffer.
+     * @param netmask netmask.
      * @return returns application context.
      */
     @ConditionalOnClass({Pcap.class})
-    @Bean("com.ardikars.jxnet.contex")
-    public Context context(PcapIf pcapIf, StringBuilder errbuf) {
+    @ConditionalOnBean({PcapIf.class, Inet4Address.class})
+    @Bean(CONTEXT_BEAN_NAME)
+    public Context context(@Qualifier(PCAP_IF_BEAN_NAME) PcapIf pcapIf,
+                           @Qualifier(NETMASK_BEAN_NAME) Inet4Address netmask,
+                           @Qualifier(ERRBUF_BEAN_NAME) StringBuilder errbuf) {
         String source = pcapIf.getName();
         Pcap.Builder builder = new Pcap.Builder()
                 .source(source)
@@ -124,100 +260,19 @@ public class JxnetAutoConfiguration {
                 break;
         }
         Application.run(applicationName, applicationDisplayName, applicationVersion, builder);
-        return Application.getApplicationContext();
-    }
-
-    /**
-     * Pcap if (source).
-     * @param errbuf error buffer.
-     * @return pcap_if.
-     * @throws DeviceNotFoundException device not found exception.
-     */
-    @ConditionalOnClass(value = {PcapIf.class, PcapAddr.class, SockAddr.class, DeviceNotFoundException.class})
-    @Bean("com.ardikars.jxnet.pcapIf")
-    public PcapIf pcapIf(StringBuilder errbuf) throws DeviceNotFoundException {
-        String source = properties.getSource();
-        List<PcapIf> alldevsp = new ArrayList<>();
-        if (PcapFindAllDevs(alldevsp, errbuf) != OK && LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Error: {}", errbuf.toString());
-        }
-        if (source == null || source.isEmpty()) {
-            for (PcapIf dev : alldevsp) {
-                for (PcapAddr addr : dev.getAddresses()) {
-                    if (addr.getAddr().getSaFamily() == SockAddr.Family.AF_INET && addr.getAddr().getData() != null) {
-                        Inet4Address d = Inet4Address.valueOf(addr.getAddr().getData());
-                        if (!d.equals(Inet4Address.LOCALHOST) && !d.equals(Inet4Address.ZERO)) {
-                            return dev;
-                        }
-                    }
+        Context context =  Application.getApplicationContext();
+        if (properties.getFilter() != null) {
+            if (context.pcapCompile(properties.getFilter(),
+                    properties.getBpfCompileMode(),
+                    netmask.toInt()) == PcapCode.PCAP_OK) {
+                if (context.pcapSetFilter() != PcapCode.PCAP_OK) {
+                    LOGGER.warn(context.pcapGetErr());
                 }
-            }
-        } else {
-            for (PcapIf dev : alldevsp) {
-                if (dev.getName().equals(source)) {
-                    return dev;
-                }
-            }
-        }
-        throw new DeviceNotFoundException("No device connected to the network.");
-    }
-
-    /**
-     * Default mac address specified by pcapIf.
-     * @param pcapIf pcapIf.
-     * @return returns mac address.
-     * @throws PlatformNotSupportedException platform not supported exception.
-     * @throws DeviceNotFoundException device not found exception.
-     * @throws SocketException socket exception.
-     */
-    @ConditionalOnClass({MacAddress.class, PcapIf.class, PcapAddr.class, SockAddr.class,
-            DeviceNotFoundException.class, PlatformNotSupportedException.class})
-    @Bean("com.ardikars.jxnet.macAddress")
-    public MacAddress macAddress(PcapIf pcapIf) throws PlatformNotSupportedException, DeviceNotFoundException, SocketException {
-        if (pcapIf.isLoopback()) {
-            return MacAddress.ZERO;
-        }
-        if (Platforms.isWindows()) {
-            byte[] hardwareAddress = Jxnet.FindHardwareAddress(pcapIf.getName());
-            if (hardwareAddress != null && hardwareAddress.length == MacAddress.MAC_ADDRESS_LENGTH) {
-                return MacAddress.valueOf(hardwareAddress);
             } else {
-                throw new DeviceNotFoundException();
+                LOGGER.warn(context.pcapGetErr());
             }
-        } else {
-            return MacAddress.fromNicName(pcapIf.getName());
         }
-    }
-
-    /**
-     * A handle link type.
-     * @param context application context.
-     * @return returns {@link com.ardikars.jxpacket.common.layer.DataLinkLayer}.
-     */
-    @Bean("com.ardikars.jxnet.dataLinkType")
-    public DataLinkType dataLinkType(Context context) {
-        return context.pcapDataLink();
-    }
-
-    /**
-     * Error buffer.
-     * @return error buffer.
-     */
-    @Bean("com.ardikars.jxnet.errbuf")
-    public StringBuilder errbuf() {
-        return new StringBuilder(PCAP_ERRBUF_SIZE);
-    }
-
-    /**
-     * Thread pool.
-     * @return returns {@link ExecutorService} object.
-     */
-    @Bean("com.ardikars.jxnet.executorService")
-    public ExecutorService executorService() {
-        if (this.properties.getNumberOfThread() == 0) {
-            return Executors.newCachedThreadPool();
-        }
-        return Executors.newFixedThreadPool(this.properties.getNumberOfThread());
+        return context;
     }
 
 }

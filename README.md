@@ -163,6 +163,8 @@ public class DefaultJxpacketHandler implements JxpacketHandler<String> {
     - jxnet.direction=pcap_d_inout
     - jxnet.datalink=1
     - jxnet.file=
+    - jxnet.bpfCompileMode=optimize
+    - jxnet.filter=tcp
     - jxnet.pcapType=live
     - jxnet.numberOfThread=0
     - jxnet.jxpacket.autoRegister=true # Register all packet (recommended)
@@ -229,6 +231,4 @@ Email: Ardika Rommy Sanjaya (contact@ardikars.com)
 Issues
 ======
 
-Have a bug? Please create an issue here on GitHub!
-
-https://github.com/jxnet/Jxnet/issues
+Have a bug or question? Please create an issue [here on Github!](https://github.com/jxnet/Jxnet/issues "Github issues")

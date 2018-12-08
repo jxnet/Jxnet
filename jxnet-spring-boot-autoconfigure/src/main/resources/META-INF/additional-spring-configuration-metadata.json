@@ -73,6 +73,12 @@
       "defaultValue": null
     },
     {
+      "name": "jxnet.filter",
+      "type": "java.lang.String",
+      "description": "Bpf filter.",
+      "defaultValue": null
+    },
+    {
       "name": "jxnet.pcapType",
       "type": "com.ardikars.jxnet.Pcap$PcapType",
       "description": "Specifies the pcap handle.",

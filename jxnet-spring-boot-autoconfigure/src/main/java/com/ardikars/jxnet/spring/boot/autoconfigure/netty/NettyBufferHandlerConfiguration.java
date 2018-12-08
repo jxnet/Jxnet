@@ -17,6 +17,9 @@
 
 package com.ardikars.jxnet.spring.boot.autoconfigure.netty;
 
+import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.EXECUTOR_SERVICE_BEAN_NAME;
+import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.NETTY_BUFFER_HANDLER_CONFIGURATION_BEAN_NAME;
+
 import com.ardikars.common.tuple.Pair;
 import com.ardikars.common.tuple.Tuple;
 import com.ardikars.jxnet.PcapHandler;
@@ -42,7 +45,7 @@ import org.springframework.context.annotation.Configuration;
  * @since 1.4.9
  */
 @ConditionalOnClass({Packet.class, ByteBuf.class})
-@Configuration("com.ardikars.jxnet.nettyBufferHandlerConfiguration")
+@Configuration(NETTY_BUFFER_HANDLER_CONFIGURATION_BEAN_NAME)
 public class NettyBufferHandlerConfiguration<T> implements PcapHandler<T> {
 
     private static final Log LOG = LogFactory.getLog(NettyBufferHandlerConfiguration.class.getName());
@@ -55,7 +58,7 @@ public class NettyBufferHandlerConfiguration<T> implements PcapHandler<T> {
      * @param executorService thread pool.
      * @param packetHandler callback function.
      */
-    public NettyBufferHandlerConfiguration(@Qualifier("com.ardikars.jxnet.executorService") ExecutorService executorService,
+    public NettyBufferHandlerConfiguration(@Qualifier(EXECUTOR_SERVICE_BEAN_NAME) ExecutorService executorService,
                                            NettyBufferHandler<T> packetHandler) {
         this.packetHandler = packetHandler;
         this.executorService = executorService;

@@ -17,6 +17,7 @@
 
 package com.ardikars.jxnet.spring.boot.autoconfigure;
 
+import com.ardikars.jxnet.BpfProgram;
 import com.ardikars.jxnet.Context;
 import com.ardikars.jxnet.DataLinkType;
 import com.ardikars.jxnet.ImmediateMode;
@@ -65,6 +66,10 @@ public class JxnetConfigurationProperties {
 
     private String file;
 
+    private BpfProgram.BpfCompileMode bpfCompileMode;
+
+    private String filter;
+
     private Pcap.PcapType pcapType;
 
     private Integer numberOfThread;
@@ -109,6 +114,12 @@ public class JxnetConfigurationProperties {
         }
         if (file == null) {
             file = null;
+        }
+        if (bpfCompileMode == null) {
+            bpfCompileMode = BpfProgram.BpfCompileMode.OPTIMIZE;
+        }
+        if (filter == null || filter.isEmpty()) {
+            filter = null;
         }
         if (numberOfThread == null) {
             numberOfThread = 0;
@@ -209,6 +220,22 @@ public class JxnetConfigurationProperties {
 
     public void setFile(String file) {
         this.file = file;
+    }
+
+    public String getFilter() {
+        return filter;
+    }
+
+    public void setFilter(String filter) {
+        this.filter = filter;
+    }
+
+    public BpfProgram.BpfCompileMode getBpfCompileMode() {
+        return bpfCompileMode;
+    }
+
+    public void setBpfCompileMode(BpfProgram.BpfCompileMode bpfCompileMode) {
+        this.bpfCompileMode = bpfCompileMode;
     }
 
     public Pcap.PcapType getPcapType() {

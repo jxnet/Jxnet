@@ -247,7 +247,7 @@
     <!--<rule ref="rulesets/plsql/TomKytesDespair.xml/TomKytesDespair"/>-->
     <rule ref="rulesets/java/design.xml/TooFewBranchesForASwitchStatement"/>
     <!--<rule ref="rulesets/plsql/codesize.xml/TooManyFields"/>-->
-    <rule ref="rulesets/java/codesize.xml/TooManyFields"/>
+    <!--<rule ref="rulesets/java/codesize.xml/TooManyFields"/>-->
     <!--<rule ref="rulesets/plsql/codesize.xml/TooManyMethods"/>-->
     <rule ref="rulesets/java/design.xml/UncommentedEmptyMethod"/>
     <rule ref="rulesets/java/basic.xml/UnconditionalIfStatement"/>

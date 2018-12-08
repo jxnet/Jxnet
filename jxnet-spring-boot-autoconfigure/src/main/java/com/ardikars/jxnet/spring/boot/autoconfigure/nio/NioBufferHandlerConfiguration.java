@@ -17,6 +17,9 @@
 
 package com.ardikars.jxnet.spring.boot.autoconfigure.nio;
 
+import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.EXECUTOR_SERVICE_BEAN_NAME;
+import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.NIO_BUFFER_HANDLER_CONFIGURATION_BEAN_NAME;
+
 import com.ardikars.common.tuple.Pair;
 import com.ardikars.common.tuple.Tuple;
 import com.ardikars.jxnet.PcapHandler;
@@ -40,7 +43,7 @@ import org.springframework.context.annotation.Configuration;
  * @since 1.4.9
  */
 @ConditionalOnClass(Packet.class)
-@Configuration("com.ardikars.jxnet.nioBufferHandlerConfiguration")
+@Configuration(NIO_BUFFER_HANDLER_CONFIGURATION_BEAN_NAME)
 public class NioBufferHandlerConfiguration<T> implements PcapHandler<T> {
 
     private static final Log LOG = LogFactory.getLog(NioBufferHandlerConfiguration.class.getName());
@@ -53,7 +56,7 @@ public class NioBufferHandlerConfiguration<T> implements PcapHandler<T> {
      * @param executorService thread pool.
      * @param packetHandler callback function.
      */
-    public NioBufferHandlerConfiguration(@Qualifier("com.ardikars.jxnet.executorService") ExecutorService executorService,
+    public NioBufferHandlerConfiguration(@Qualifier(EXECUTOR_SERVICE_BEAN_NAME) ExecutorService executorService,
                                          NioBufferHandler<T> packetHandler) {
         this.packetHandler = packetHandler;
         this.executorService = executorService;

@@ -17,6 +17,10 @@
 
 package com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket;
 
+import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.DATALINK_TYPE_BEAN_NAME;
+import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.EXECUTOR_SERVICE_BEAN_NAME;
+import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.JXPACKET_HANDLER_CONFIGURATION_BEAN_NAME;
+
 import com.ardikars.common.tuple.Pair;
 import com.ardikars.common.tuple.Tuple;
 import com.ardikars.jxnet.DataLinkType;
@@ -46,7 +50,7 @@ import org.springframework.context.annotation.Configuration;
  * @since 1.4.9
  */
 @ConditionalOnClass({Packet.class, ByteBuf.class})
-@Configuration("com.ardikars.jxnet.jxpacketHandlerConfiguration")
+@Configuration(JXPACKET_HANDLER_CONFIGURATION_BEAN_NAME)
 public class JxpacketHandlerConfiguration<T> implements PcapHandler<T> {
 
     private static final Log LOG = LogFactory.getLog(JxpacketHandlerConfiguration.class.getName());
@@ -61,8 +65,8 @@ public class JxpacketHandlerConfiguration<T> implements PcapHandler<T> {
      * @param dataLinkType datalink type.
      * @param packetHandler callback function.
      */
-    public JxpacketHandlerConfiguration(@Qualifier("com.ardikars.jxnet.executorService") ExecutorService executorService,
-                                        @Qualifier("com.ardikars.jxnet.dataLinkType") DataLinkType dataLinkType,
+    public JxpacketHandlerConfiguration(@Qualifier(EXECUTOR_SERVICE_BEAN_NAME) ExecutorService executorService,
+                                        @Qualifier(DATALINK_TYPE_BEAN_NAME) DataLinkType dataLinkType,
                                         JxpacketHandler<T> packetHandler) {
         this.rawDataLinkType = dataLinkType != null ? dataLinkType.getValue() : 1;
         this.packetHandler = packetHandler;
