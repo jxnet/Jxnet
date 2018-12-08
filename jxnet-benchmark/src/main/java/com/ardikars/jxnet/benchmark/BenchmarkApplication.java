@@ -67,34 +67,34 @@ public class BenchmarkApplication implements CommandLineRunner {
      */
     public void run(String... args) {
         int maxIteration = 10;
-        int totalWin = 0;
-        int totalWinWithThreadPool = 0;
+        int totalMoreFast = 0;
+        int totalMoreFastWithThreadPool = 0;
         for (int i = 0; i < maxIteration; i++) {
             LOGGER.info("**********************************");
             long jxnetRunnerRes = jxnetRunner.run();
             long jxnetWithThreadPoolRunnerRes = jxnetWithThreadPoolRunner.run();
             long pcap4jRunnerRes = pcap4jRunner.run();
             long pcap4jWithThreadPoolRunnerRes = pcap4jWithThreadPoolRunner.run();
-            LOGGER.info("Jxnet vs Pcap4j");
-            boolean win = jxnetRunnerRes < pcap4jRunnerRes;
-            boolean winWithThreadPool = jxnetWithThreadPoolRunnerRes < pcap4jWithThreadPoolRunnerRes;
-            if (win) {
-                totalWin++;
+            LOGGER.info("Jxnet x Pcap4j");
+            boolean moreFast = jxnetRunnerRes < pcap4jRunnerRes;
+            boolean moreFastWithThreadPool = jxnetWithThreadPoolRunnerRes < pcap4jWithThreadPoolRunnerRes;
+            if (moreFast) {
+                totalMoreFast++;
             }
-            if (winWithThreadPool) {
-                totalWinWithThreadPool++;
+            if (moreFastWithThreadPool) {
+                totalMoreFastWithThreadPool++;
             }
-            LOGGER.info("Is Jxnet runner win? {} : {}",
-                     win ? "YES" : "NO",
-                    jxnetRunnerRes + " vs " + pcap4jRunnerRes);
-            LOGGER.info("Is Jxnet with thread pool runner win? {} : {}",
-                    winWithThreadPool ? "YES" : "NO",
-                    jxnetWithThreadPoolRunnerRes + " vs " + pcap4jWithThreadPoolRunnerRes);
+            LOGGER.info("Is Jxnet runner more fast? {} : {}",
+                     moreFast ? "YES" : "NO",
+                    jxnetRunnerRes + " and " + pcap4jRunnerRes);
+            LOGGER.info("Is Jxnet with thread pool runner more fast? {} : {}",
+                    moreFastWithThreadPool ? "YES" : "NO",
+                    jxnetWithThreadPoolRunnerRes + " and " + pcap4jWithThreadPoolRunnerRes);
             LOGGER.info("**********************************\n");
         }
-        LOGGER.info("Total win                               : {}/{}", totalWin, maxIteration);
-        LOGGER.info("Total win with thread pool              : {}/{}", totalWinWithThreadPool, maxIteration);
-        LOGGER.info("Spring test with thread pool and future : {}", springJxnetWithThreadPoolRunner.run());
+        LOGGER.info("Total jxnet more fast                               : {}/{}", totalMoreFast, maxIteration);
+        LOGGER.info("Total jxnet more fast with thread pool              : {}/{}", totalMoreFastWithThreadPool, maxIteration);
+        LOGGER.info("Jxnet spring test with thread pool and future       : {}", springJxnetWithThreadPoolRunner.run());
         executorService.shutdownNow();
     }
 
