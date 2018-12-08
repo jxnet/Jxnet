@@ -40,6 +40,10 @@ a.out
 /jxnet-bom/build
 /jxnet-bom/target
 /jxnet-bom/out
+/jxnet-benchmark/.gradle
+/jxnet-benchmark/build
+/jxnet-benchmark/target
+/jxnet-benchmark/out
 /jxnet-context/.gradle
 /jxnet-context/build
 /jxnet-context/target

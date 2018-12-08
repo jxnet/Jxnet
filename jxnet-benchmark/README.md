@@ -1,0 +1,4 @@
+
+## Run bencmarking tool
+
+java -jar -DPCAP_FILE=$YOUR_PCAP_FILE -DNUMBER_OF_THREAD=$NUMBER_OF_THREAD

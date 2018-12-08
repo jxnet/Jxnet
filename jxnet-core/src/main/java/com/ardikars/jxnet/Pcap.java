@@ -310,7 +310,7 @@ public final class Pcap implements PointerHandler {
 				pcap = Jxnet.PcapOpenOfflineWithTStampPrecision(fileName, timestampPrecision.getValue(), errbuf);
 			}
 			if (pcap == null) {
-				throw new NativeException();
+				throw new NativeException(errbuf.toString());
 			}
 			return pcap;
 		}

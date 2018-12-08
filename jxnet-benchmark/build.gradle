@@ -1,0 +1,22 @@
+
+description = "Jxnet benchmark."
+
+apply plugin: 'org.springframework.boot'
+
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.boot:spring-boot-dependencies:${SPRING_BOOT_VERSION}")
+        mavenBom("com.ardikars.jxpacket:jxpacket:${JXPACKET_VERSION}")
+    }
+}
+
+dependencies {
+//    implementation('org.openjdk.jmh:jmh-core:1.19')
+//    implementation('org.openjdk.jmh:jmh-generator-annprocess:1.19')
+
+    compile project (":jxnet-spring-boot-starter")
+    implementation ("org.springframework.boot:spring-boot-starter")
+
+    implementation ('org.pcap4j:pcap4j-core:1.7.4')
+
+}
