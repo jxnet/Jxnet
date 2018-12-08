@@ -32,8 +32,8 @@ import java.nio.ByteBuffer;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Configuration;
@@ -48,7 +48,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration(NETTY_BUFFER_HANDLER_CONFIGURATION_BEAN_NAME)
 public class NettyBufferHandlerConfiguration<T> implements PcapHandler<T> {
 
-    private static final Log LOG = LogFactory.getLog(NettyBufferHandlerConfiguration.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(NettyBufferHandlerConfiguration.class);
 
     private final NettyBufferHandler<T> packetHandler;
     private final ExecutorService executorService;
@@ -77,7 +77,9 @@ public class NettyBufferHandlerConfiguration<T> implements PcapHandler<T> {
         try {
             packetHandler.next(user, packet);
         } catch (Exception e) {
-            LOG.warn(e.getMessage());
+            if (LOGGER.isWarnEnabled()) {
+                LOGGER.warn(e.getMessage());
+            }
         }
     }
 

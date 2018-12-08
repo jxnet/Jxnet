@@ -42,7 +42,7 @@ public class DefaultNextPacketLoop {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultJxpacketHandler.class.getName());
 
-    private static final String PRETTY_FOOTER = "+---------------------------------------------------"
+    private final static String PRETTY_FOOTER = "+---------------------------------------------------"
             + "--------------------------------------------------+";
 
     @Autowired

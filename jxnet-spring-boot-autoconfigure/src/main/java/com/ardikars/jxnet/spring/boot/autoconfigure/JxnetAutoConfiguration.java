@@ -42,6 +42,7 @@ import com.ardikars.jxnet.PcapCode;
 import com.ardikars.jxnet.PcapIf;
 import com.ardikars.jxnet.SockAddr;
 import com.ardikars.jxnet.exception.DeviceNotFoundException;
+import com.ardikars.jxnet.exception.NativeException;
 import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 import com.ardikars.jxnet.exception.UnknownNetmaskException;
 import java.net.SocketException;
@@ -99,17 +100,20 @@ public class JxnetAutoConfiguration {
     @ConditionalOnClass(value = {PcapIf.class, PcapAddr.class, SockAddr.class, DeviceNotFoundException.class})
     @Bean(PCAP_IF_BEAN_NAME)
     public PcapIf pcapIf(@Qualifier(ERRBUF_BEAN_NAME) StringBuilder errbuf) throws DeviceNotFoundException {
-        String source = properties.getSource();
         List<PcapIf> alldevsp = new ArrayList<>();
-        if (PcapFindAllDevs(alldevsp, errbuf) != OK && LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Error: {}", errbuf.toString());
+        if (PcapFindAllDevs(alldevsp, errbuf) != OK) {
+            throw new NativeException(errbuf.toString());
         }
+        String source = properties.getSource();
         if (source == null || source.isEmpty()) {
             for (PcapIf dev : alldevsp) {
                 for (PcapAddr addr : dev.getAddresses()) {
                     if (addr.getAddr().getSaFamily() == SockAddr.Family.AF_INET && addr.getAddr().getData() != null) {
                         Inet4Address d = Inet4Address.valueOf(addr.getAddr().getData());
                         if (!d.equals(Inet4Address.LOCALHOST) && !d.equals(Inet4Address.ZERO)) {
+                            if (LOGGER.isDebugEnabled()) {
+                                LOGGER.debug("Device: {}.", dev);
+                            }
                             return dev;
                         }
                     }
@@ -118,13 +122,18 @@ public class JxnetAutoConfiguration {
         } else {
             for (PcapIf dev : alldevsp) {
                 if (dev.getName().equals(source)) {
+                    if (LOGGER.isDebugEnabled()) {
+                        LOGGER.debug("Device: {}.", dev);
+                    }
                     return dev;
                 }
             }
         }
         for (PcapIf dev : alldevsp) {
             if (dev.isLoopback()) {
-                LOGGER.warn("No device connected to the network. Auto selected {}.", dev.getName());
+                if (LOGGER.isWarnEnabled()) {
+                    LOGGER.warn("No device connected to the network. Auto selected {}.", dev.getName());
+                }
                 return dev;
             }
         }
@@ -146,7 +155,11 @@ public class JxnetAutoConfiguration {
             if (pcapAddr.getNetmask() != null
                     && pcapAddr.getNetmask().getSaFamily() == SockAddr.Family.AF_INET
                     && pcapAddr.getNetmask().getData() != null) {
-                return Inet4Address.valueOf(pcapAddr.getNetmask().getData());
+                Inet4Address netmask = Inet4Address.valueOf(pcapAddr.getNetmask().getData());
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("Default netmask: {}.", netmask);
+                }
+                return netmask;
             }
         }
         throw new UnknownNetmaskException();
@@ -165,19 +178,28 @@ public class JxnetAutoConfiguration {
     @Bean(MAC_ADDRESS_BEAN_NAME)
     public MacAddress macAddress(@Qualifier(PCAP_IF_BEAN_NAME) PcapIf pcapIf)
             throws PlatformNotSupportedException, DeviceNotFoundException, SocketException {
+        MacAddress macAddress;
         if (pcapIf.isLoopback()) {
-            return MacAddress.ZERO;
+            macAddress = MacAddress.ZERO;
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("No MAC address for loopback interface, use default address: {}.", macAddress);
+            }
+            return macAddress;
         }
         if (Platforms.isWindows()) {
             byte[] hardwareAddress = Jxnet.FindHardwareAddress(pcapIf.getName());
             if (hardwareAddress != null && hardwareAddress.length == MacAddress.MAC_ADDRESS_LENGTH) {
-                return MacAddress.valueOf(hardwareAddress);
+                macAddress = MacAddress.valueOf(hardwareAddress);
             } else {
                 throw new DeviceNotFoundException();
             }
         } else {
-            return MacAddress.fromNicName(pcapIf.getName());
+            macAddress = MacAddress.fromNicName(pcapIf.getName());
         }
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Mac address: {}.", macAddress);
+        }
+        return macAddress;
     }
 
     /**
@@ -187,7 +209,11 @@ public class JxnetAutoConfiguration {
      */
     @Bean(DATALINK_TYPE_BEAN_NAME)
     public DataLinkType dataLinkType(@Qualifier(CONTEXT_BEAN_NAME) Context context) {
-        return context.pcapDataLink();
+        DataLinkType dataLinkType = context.pcapDataLink();
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Datalink type: {}.", dataLinkType);
+        }
+        return dataLinkType;
     }
 
     /**
@@ -196,6 +222,9 @@ public class JxnetAutoConfiguration {
      */
     @Bean(ERRBUF_BEAN_NAME)
     public StringBuilder errbuf() {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Create error buffer with size: {}.", PCAP_ERRBUF_SIZE);
+        }
         return new StringBuilder(PCAP_ERRBUF_SIZE);
     }
 
@@ -206,7 +235,13 @@ public class JxnetAutoConfiguration {
     @Bean(EXECUTOR_SERVICE_BEAN_NAME)
     public ExecutorService executorService() {
         if (this.properties.getNumberOfThread() == 0) {
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Use cached thread pool.");
+            }
             return Executors.newCachedThreadPool();
+        }
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Use {} fixed thread pool.", this.properties.getNumberOfThread());
         }
         return Executors.newFixedThreadPool(this.properties.getNumberOfThread());
     }
@@ -266,10 +301,20 @@ public class JxnetAutoConfiguration {
                     properties.getBpfCompileMode(),
                     netmask.toInt()) == PcapCode.PCAP_OK) {
                 if (context.pcapSetFilter() != PcapCode.PCAP_OK) {
-                    LOGGER.warn(context.pcapGetErr());
+                    if (LOGGER.isWarnEnabled()) {
+                        LOGGER.warn(context.pcapGetErr());
+                    }
+                } else {
+                    LOGGER.debug("Filter \'{}\' has been applied.", this.properties.getFilter());
                 }
             } else {
-                LOGGER.warn(context.pcapGetErr());
+                if (LOGGER.isWarnEnabled()) {
+                    LOGGER.warn(context.pcapGetErr());
+                }
+            }
+        } else {
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("No filter has been applied.");
             }
         }
         return context;
