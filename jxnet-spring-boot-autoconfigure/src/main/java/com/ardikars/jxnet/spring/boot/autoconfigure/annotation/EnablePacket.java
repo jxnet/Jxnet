@@ -28,7 +28,7 @@ import org.springframework.context.annotation.Import;
 /**
  * Enable packet handler configuration.
  *
- * @see {@link JxpacketConfigurationSelector}.
+ * @see JxpacketConfigurationSelector
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
  * @since 1.4.9
  */

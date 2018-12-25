@@ -27,7 +27,7 @@ import org.springframework.core.type.AnnotationMetadata;
 
 /**
  * Configuration selector.
- * @see {@link EnablePacket}.
+ * @see EnablePacket
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
  */
 public class JxpacketConfigurationSelector implements ImportSelector {
