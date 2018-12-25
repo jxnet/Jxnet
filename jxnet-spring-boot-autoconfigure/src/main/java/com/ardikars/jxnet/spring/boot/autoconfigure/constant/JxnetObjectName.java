@@ -21,6 +21,7 @@ import com.ardikars.common.annotation.Incubating;
 
 /**
  * Jxnet spring bean name.
+ *
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
  * @since 1.5.0
  */

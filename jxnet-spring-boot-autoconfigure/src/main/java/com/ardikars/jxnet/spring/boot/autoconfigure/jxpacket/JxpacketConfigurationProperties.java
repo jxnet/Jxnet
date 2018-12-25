@@ -23,8 +23,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * @author jxnet 2018/11/29
- * @author <a href="mailto:contact@ardikars.com">Langkuy</a>
+ * Jxpacket configuration properties.
+ *
+ * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
+ * @since 1.4.9
  */
 @ConditionalOnClass(Packet.class)
 @ConfigurationProperties(prefix = "jxnet.jxpacket")

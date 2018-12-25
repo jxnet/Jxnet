@@ -22,6 +22,8 @@ import com.ardikars.jxnet.PcapPktHdr;
 import com.ardikars.jxnet.spring.boot.autoconfigure.NettyBufferHandler;
 //import com.ardikars.jxnet.spring.boot.autoconfigure.annotation.EnablePacket;
 //import com.ardikars.jxnet.spring.boot.autoconfigure.constant.PacketHandlerType;
+import com.ardikars.jxnet.spring.boot.autoconfigure.annotation.EnablePacket;
+import com.ardikars.jxnet.spring.boot.autoconfigure.constant.PacketHandlerType;
 import io.netty.buffer.ByteBuf;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -46,7 +48,7 @@ public class DefaultNettyBufferHandler implements NettyBufferHandler<String> {
 
     private void print(Pair<PcapPktHdr, ByteBuf> packet) {
         LOGGER.info("Pcap packet header : {}", packet.getLeft());
-        LOGGER.info("Packet header      : {}", packet.getRight());
+        LOGGER.info("Pcap packet buffer : {}", packet.getRight());
         LOGGER.info(PRETTY_FOOTER);
     }
 

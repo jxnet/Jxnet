@@ -49,6 +49,8 @@ public enum PcapCode {
 
 	private final int value;
 
+	private static final PcapCode[] VALUES = values();
+
 	PcapCode(final int value) {
 		this.value = value;
 	}
@@ -59,6 +61,20 @@ public enum PcapCode {
 	 */
 	public int getValue() {
 		return value;
+	}
+
+	/**
+	 * Parse {@link PcapCode} from status code.
+	 * @param statusCode status code.
+	 * @return returns {@link PcapCode} object.
+	 */
+	public PcapCode fromStatusCode(int statusCode) {
+		for (PcapCode pcapCode : VALUES) {
+			if (pcapCode.value == statusCode) {
+				return pcapCode;
+			}
+		}
+		return null;
 	}
 
 }

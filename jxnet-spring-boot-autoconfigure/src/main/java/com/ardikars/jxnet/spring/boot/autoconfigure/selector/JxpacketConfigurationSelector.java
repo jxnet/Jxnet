@@ -26,8 +26,9 @@ import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
 
 /**
- * @author jxnet 2018/11/30
- * @author <a href="mailto:contact@ardikars.com">Langkuy</a>
+ * Configuration selector.
+ * @see {@link EnablePacket}.
+ * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
  */
 public class JxpacketConfigurationSelector implements ImportSelector {
 
