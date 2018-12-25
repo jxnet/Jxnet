@@ -25,6 +25,8 @@ package com.ardikars.jxnet.exception;
  */
 public class BpfProgramFreeCodeException extends RuntimeException {
 
+    private static final long serialVersionUID = 8585240545825444724L;
+
     public BpfProgramFreeCodeException() {
         super();
     }

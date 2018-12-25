@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet.benchmark.jxnet;
+package com.ardikars.jxnet.benchmark.jxnet.config;
 
 import com.ardikars.common.tuple.Pair;
 import com.ardikars.jxnet.PcapPktHdr;

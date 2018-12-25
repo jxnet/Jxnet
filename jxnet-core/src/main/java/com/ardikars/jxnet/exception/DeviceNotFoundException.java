@@ -25,6 +25,8 @@ package com.ardikars.jxnet.exception;
  */
 public class DeviceNotFoundException extends RuntimeException {
 
+	private static final long serialVersionUID = -7426666725353676994L;
+
 	public DeviceNotFoundException() {
 		super();
 	}

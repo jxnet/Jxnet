@@ -25,6 +25,8 @@ package com.ardikars.jxnet.exception;
  */
 public class PlatformNotSupportedException extends RuntimeException {
 
+    private static final long serialVersionUID = -5714154798477963289L;
+
     public PlatformNotSupportedException() {
         super();
     }

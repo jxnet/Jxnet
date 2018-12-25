@@ -61,6 +61,10 @@ public class BenchmarkApplication implements CommandLineRunner {
     @Qualifier("pcap4jWithThreadPoolRunner")
     Runner pcap4jWithThreadPoolRunner;
 
+    @Autowired
+    @Qualifier("pcap4jPacketWithThreadPoolRunner")
+    Runner pcap4jPacketWithThreadPoolRunner;
+
     /**
      * Run bencmarking test.
      * @param args args.
@@ -69,20 +73,27 @@ public class BenchmarkApplication implements CommandLineRunner {
         int maxIteration = 10;
         int totalMoreFast = 0;
         int totalMoreFastWithThreadPool = 0;
+        int totalMoreFastPacketThreadPool = 0;
         for (int i = 0; i < maxIteration; i++) {
             LOGGER.info("**********************************");
             long jxnetRunnerRes = jxnetRunner.run();
             long jxnetWithThreadPoolRunnerRes = jxnetWithThreadPoolRunner.run();
+            long jxnetPacketThreadPoolRunnerRes = springJxnetWithThreadPoolRunner.run();
             long pcap4jRunnerRes = pcap4jRunner.run();
             long pcap4jWithThreadPoolRunnerRes = pcap4jWithThreadPoolRunner.run();
+            long pcap4jPacketThreadPoolRunnerRes = pcap4jPacketWithThreadPoolRunner.run();
             LOGGER.info("Jxnet x Pcap4j");
             boolean moreFast = jxnetRunnerRes < pcap4jRunnerRes;
             boolean moreFastWithThreadPool = jxnetWithThreadPoolRunnerRes < pcap4jWithThreadPoolRunnerRes;
+            boolean moreFastPacketThreadPool = jxnetPacketThreadPoolRunnerRes < pcap4jPacketThreadPoolRunnerRes;
             if (moreFast) {
                 totalMoreFast++;
             }
             if (moreFastWithThreadPool) {
                 totalMoreFastWithThreadPool++;
+            }
+            if (moreFastPacketThreadPool) {
+                totalMoreFastPacketThreadPool++;
             }
             LOGGER.info("Is Jxnet runner more fast? {} : {}",
                      moreFast ? "YES" : "NO",
@@ -90,11 +101,14 @@ public class BenchmarkApplication implements CommandLineRunner {
             LOGGER.info("Is Jxnet with thread pool runner more fast? {} : {}",
                     moreFastWithThreadPool ? "YES" : "NO",
                     jxnetWithThreadPoolRunnerRes + " and " + pcap4jWithThreadPoolRunnerRes);
+            LOGGER.info("IS Jxnet packet with thread pool runner more fast? {} : {}",
+                    moreFastPacketThreadPool ? "YES" : "NO",
+                    jxnetPacketThreadPoolRunnerRes + " and " + pcap4jPacketThreadPoolRunnerRes);
             LOGGER.info("**********************************\n");
         }
-        LOGGER.info("Total jxnet more fast                               : {}/{}", totalMoreFast, maxIteration);
-        LOGGER.info("Total jxnet more fast with thread pool              : {}/{}", totalMoreFastWithThreadPool, maxIteration);
-        LOGGER.info("Jxnet spring test with thread pool and future       : {}", springJxnetWithThreadPoolRunner.run());
+        LOGGER.info("Total jxnet more fast                                 : {}/{}", totalMoreFast, maxIteration);
+        LOGGER.info("Total jxnet more fast with thread pool                : {}/{}", totalMoreFastWithThreadPool, maxIteration);
+        LOGGER.info("Total jxnet more fast packet decoder with thread pool : {}/{}", totalMoreFastPacketThreadPool, maxIteration);
         executorService.shutdownNow();
     }
 

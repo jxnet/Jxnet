@@ -27,6 +27,7 @@ import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectN
 import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.JXNET_AUTO_CONFIGURATION_BEAN_NAME;
 import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.MAC_ADDRESS_BEAN_NAME;
 import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.NETMASK_BEAN_NAME;
+import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.PCAP_BUILDER_BEAN_NAME;
 import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.PCAP_IF_BEAN_NAME;
 
 import com.ardikars.common.net.Inet4Address;
@@ -56,7 +57,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+//import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -98,6 +99,7 @@ public class JxnetAutoConfiguration {
      * @throws DeviceNotFoundException device not found exception.
      */
     @ConditionalOnClass(value = {PcapIf.class, PcapAddr.class, SockAddr.class, DeviceNotFoundException.class})
+    //@ConditionalOnBean(StringBuilder.class)
     @Bean(PCAP_IF_BEAN_NAME)
     public PcapIf pcapIf(@Qualifier(ERRBUF_BEAN_NAME) StringBuilder errbuf) throws DeviceNotFoundException {
         List<PcapIf> alldevsp = new ArrayList<>();
@@ -146,7 +148,7 @@ public class JxnetAutoConfiguration {
      * @return returns default netmask specified by {@link PcapIf} object.
      */
     @ConditionalOnClass({Inet4Address.class, PcapIf.class})
-    @ConditionalOnBean({PcapIf.class})
+    //ConditionalOnBean({PcapIf.class})
     @Bean(NETMASK_BEAN_NAME)
     public Inet4Address netmask(@Qualifier(PCAP_IF_BEAN_NAME) PcapIf pcapIf) {
         Iterator<PcapAddr> iterator = pcapIf.getAddresses().iterator();
@@ -175,6 +177,7 @@ public class JxnetAutoConfiguration {
      */
     @ConditionalOnClass({MacAddress.class, PcapIf.class, PcapAddr.class, SockAddr.class,
             DeviceNotFoundException.class, PlatformNotSupportedException.class})
+    //@ConditionalOnBean(PcapIf.class)
     @Bean(MAC_ADDRESS_BEAN_NAME)
     public MacAddress macAddress(@Qualifier(PCAP_IF_BEAN_NAME) PcapIf pcapIf)
             throws PlatformNotSupportedException, DeviceNotFoundException, SocketException {
@@ -207,6 +210,8 @@ public class JxnetAutoConfiguration {
      * @param context application context.
      * @return returns {@link com.ardikars.jxpacket.common.layer.DataLinkLayer}.
      */
+    @ConditionalOnClass({Context.class, DataLinkType.class})
+    //@ConditionalOnBean(Context.class)
     @Bean(DATALINK_TYPE_BEAN_NAME)
     public DataLinkType dataLinkType(@Qualifier(CONTEXT_BEAN_NAME) Context context) {
         DataLinkType dataLinkType = context.pcapDataLink();
@@ -247,18 +252,16 @@ public class JxnetAutoConfiguration {
     }
 
     /**
-     * Jxnet application context.
+     * Pcap builder.
      * @param pcapIf pcap if.
      * @param errbuf error buffer.
-     * @param netmask netmask.
-     * @return returns application context.
+     * @return returns pcap builder.
      */
-    @ConditionalOnClass({Pcap.class})
-    @ConditionalOnBean({PcapIf.class, Inet4Address.class})
-    @Bean(CONTEXT_BEAN_NAME)
-    public Context context(@Qualifier(PCAP_IF_BEAN_NAME) PcapIf pcapIf,
-                           @Qualifier(NETMASK_BEAN_NAME) Inet4Address netmask,
-                           @Qualifier(ERRBUF_BEAN_NAME) StringBuilder errbuf) {
+    @ConditionalOnClass({PcapIf.class})
+    //@ConditionalOnBean({PcapIf.class, StringBuilder.class})
+    @Bean(PCAP_BUILDER_BEAN_NAME)
+    public Pcap.Builder pcapBuilder(@Qualifier(PCAP_IF_BEAN_NAME) PcapIf pcapIf,
+                                    @Qualifier(ERRBUF_BEAN_NAME) StringBuilder errbuf) {
         String source = pcapIf.getName();
         Pcap.Builder builder = new Pcap.Builder()
                 .source(source)
@@ -274,6 +277,21 @@ public class JxnetAutoConfiguration {
                 .dataLinkType(properties.getDatalink())
                 .fileName(properties.getFile())
                 .errbuf(errbuf);
+        return builder;
+    }
+
+    /**
+     * Jxnet application context.
+     * @param builder pcap builder.
+     * @param netmask netmask.
+     * @return returns application context.
+     */
+    @ConditionalOnClass({Pcap.class, Inet4Address.class, Context.class})
+    //@ConditionalOnBean({Pcap.Builder.class, Inet4Address.class})
+    @Bean(CONTEXT_BEAN_NAME)
+    public Context context(@Qualifier(PCAP_BUILDER_BEAN_NAME) Pcap.Builder builder,
+                           @Qualifier(NETMASK_BEAN_NAME) Inet4Address netmask) {
+
         switch (properties.getPcapType()) {
             case DEAD:
                 if (LOGGER.isDebugEnabled()) {

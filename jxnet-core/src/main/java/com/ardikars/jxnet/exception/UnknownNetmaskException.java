@@ -28,6 +28,8 @@ import com.ardikars.common.annotation.Incubating;
 @Incubating
 public class UnknownNetmaskException extends RuntimeException {
 
+    private static final long serialVersionUID = -3436588540149037097L;
+
     public UnknownNetmaskException() {
         super();
     }

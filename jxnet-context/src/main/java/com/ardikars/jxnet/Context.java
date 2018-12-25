@@ -36,7 +36,7 @@ import java.util.concurrent.ExecutorService;
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
  * @since 1.1.5
  */
-public interface Context extends Factory<Context, Builder<Pcap, Void>> {
+public interface Context extends Factory<Context, Builder<Pcap, Void>>, AutoCloseable {
 
 	String getApplicationName();
 

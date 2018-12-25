@@ -27,6 +27,7 @@ import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
@@ -414,8 +415,9 @@ public final class ApplicationContext implements Context {
 		int result = Jxnet.PcapListDataLinks(pcap, buffers);
 		if (result == 0) {
 			dtlBuffer.clear(); // clear buffer.
-			for (Integer datalink : buffers) {
-				dtlBuffer.add(DataLinkType.valueOf(datalink.shortValue()));
+			Iterator<Integer> iterator = buffers.iterator();
+			while (iterator.hasNext()) {
+				dtlBuffer.add(DataLinkType.valueOf(iterator.next().shortValue()));
 			}
 			return PcapCode.PCAP_OK;
 		}
@@ -428,8 +430,9 @@ public final class ApplicationContext implements Context {
 		int result = Jxnet.PcapListTStampTypes(pcap, buffers);
 		if (result == 0) {
 			tstampTypesp.clear(); // clear buffer.
-			for (Integer tstampType : buffers) {
-				switch (tstampType) {
+			Iterator<Integer> iterator = buffers.iterator();
+			while (iterator.hasNext()) {
+				switch (iterator.next()) {
 					case 0:
 						tstampTypesp.add(PcapTimestampType.HOST);
 						break;
@@ -471,6 +474,22 @@ public final class ApplicationContext implements Context {
 			return PcapCode.PCAP_OK;
 		}
 		return PcapCode.PCAP_ERROR;
+	}
+
+	@Override
+	public void close() throws Exception {
+		if (LOCK.readLock().tryLock() && LOCK.writeLock().tryLock()) {
+			if (pcap != null && !pcap.isClosed()) {
+				pcapBreakLoop(); // Force the loop in "pcap_read()" or "pcap_read_offline()" to terminate.
+				Jxnet.PcapClose(pcap);
+			}
+			if (bpfProgram != null && !bpfProgram.isClosed()) {
+				Jxnet.PcapFreeCode(bpfProgram);
+			}
+			if (pcapDumper != null && !pcapDumper.isClosed()) {
+				Jxnet.PcapDumpClose(pcapDumper);
+			}
+		}
 	}
 
 }

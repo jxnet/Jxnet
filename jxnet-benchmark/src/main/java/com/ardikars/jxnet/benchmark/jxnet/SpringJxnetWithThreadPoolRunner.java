@@ -18,6 +18,7 @@
 package com.ardikars.jxnet.benchmark.jxnet;
 
 import com.ardikars.jxnet.Context;
+import com.ardikars.jxnet.Pcap;
 import com.ardikars.jxnet.PcapHandler;
 import com.ardikars.jxnet.benchmark.Runner;
 import org.springframework.stereotype.Component;
@@ -28,12 +29,20 @@ import org.springframework.stereotype.Component;
 @Component("springJxnetWithThreadPoolRunner")
 public class SpringJxnetWithThreadPoolRunner implements Runner {
 
-    private final Context context;
+    private Context context;
     private final PcapHandler<String> pcapHandler;
+    private final Pcap.Builder builder;
 
-    public SpringJxnetWithThreadPoolRunner(Context context, PcapHandler<String> pcapHandler) {
+    /**
+     * Constractor.
+     * @param context pcap context.
+     * @param pcapHandler pcap handler.
+     * @param builder pcap builder.
+     */
+    public SpringJxnetWithThreadPoolRunner(Context context, PcapHandler<String> pcapHandler, Pcap.Builder builder) {
         this.context = context;
         this.pcapHandler = pcapHandler;
+        this.builder = builder;
     }
 
     @Override
@@ -41,8 +50,10 @@ public class SpringJxnetWithThreadPoolRunner implements Runner {
         long before = System.currentTimeMillis();
         context.pcapLoop(-1, pcapHandler, "Jxnet!.");
         long now = System.currentTimeMillis();
+        long epoch = now - before;
         context.pcapClose();
-        return now - before;
+        context = context.newInstance(builder);
+        return epoch;
     }
 
 }

@@ -46,7 +46,7 @@ public class DefaultNettyBufferHandler implements NettyBufferHandler<String> {
 
     private void print(Pair<PcapPktHdr, ByteBuf> packet) {
         LOGGER.info("Pcap packet header : {}", packet.getLeft());
-        LOGGER.info("Packet header      : {}", packet.getRight());
+        LOGGER.info("Pcap packet buffer : {}", packet.getRight());
         LOGGER.info(PRETTY_FOOTER);
     }
 
