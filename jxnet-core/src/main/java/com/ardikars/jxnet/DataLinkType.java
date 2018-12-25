@@ -32,6 +32,8 @@ import java.util.Map;
 @Immutable
 public class DataLinkType extends NamedNumber<Short, DataLinkType> {
 
+    private static final long serialVersionUID = -6280382058829316836L;
+
     /**
      * Ethernet (10Mb, 100Mb, 1000Mb, and up): 1
      */

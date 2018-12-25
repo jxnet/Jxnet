@@ -24,7 +24,9 @@ package com.ardikars.jxnet.exception;
  * @since 1.0.0
  */
 public class PcapCloseException extends RuntimeException {
-	
+
+	private static final long serialVersionUID = 8393262940022738877L;
+
 	public PcapCloseException() {
 		super();
 	}

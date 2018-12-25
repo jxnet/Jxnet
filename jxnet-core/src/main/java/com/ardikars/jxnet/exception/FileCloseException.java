@@ -25,6 +25,8 @@ package com.ardikars.jxnet.exception;
  */
 public class FileCloseException extends RuntimeException {
 
+    private static final long serialVersionUID = -6594191206649507159L;
+
     public FileCloseException() {
         super();
     }

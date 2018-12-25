@@ -25,6 +25,8 @@ package com.ardikars.jxnet.exception;
  */
 public class NativeException extends RuntimeException {
 
+	private static final long serialVersionUID = -3993889826336916332L;
+
 	public NativeException() {
 		super();
 	}

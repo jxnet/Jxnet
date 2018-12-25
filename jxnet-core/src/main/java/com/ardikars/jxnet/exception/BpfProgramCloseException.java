@@ -25,6 +25,8 @@ package com.ardikars.jxnet.exception;
  */
 public class BpfProgramCloseException extends RuntimeException {
 
+	private static final long serialVersionUID = 981862853161292421L;
+
 	public BpfProgramCloseException() {
 		super();
 	}

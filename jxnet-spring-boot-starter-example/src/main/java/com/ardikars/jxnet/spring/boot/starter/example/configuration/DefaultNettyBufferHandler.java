@@ -22,8 +22,6 @@ import com.ardikars.jxnet.PcapPktHdr;
 import com.ardikars.jxnet.spring.boot.autoconfigure.NettyBufferHandler;
 //import com.ardikars.jxnet.spring.boot.autoconfigure.annotation.EnablePacket;
 //import com.ardikars.jxnet.spring.boot.autoconfigure.constant.PacketHandlerType;
-import com.ardikars.jxnet.spring.boot.autoconfigure.annotation.EnablePacket;
-import com.ardikars.jxnet.spring.boot.autoconfigure.constant.PacketHandlerType;
 import io.netty.buffer.ByteBuf;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;

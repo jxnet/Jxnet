@@ -52,37 +52,10 @@ subprojects {
         }
 
         pmd {
-            ignoreFailures = true
+            ignoreFailures = false
             sourceSets = [project.sourceSets.main]
             reportsDir = file("$project.buildDir/reports/pmd")
-            //ruleSetFiles = rootProject.files("./gradle/resources/pmd/pmd.xml")
-            // https://github.com/pmd/pmd/tree/master/pmd-java/src/main/resources/rulesets/java
-            ruleSets = [
-                    'java-basic',
-                    'java-braces',
-                    'java-clone',
-                    'java-codesize',
-                    'java-comments',
-                    'java-controversial',
-                    'java-coupling',
-                    'java-design',
-                    'java-empty',
-                    'java-finalizers',
-                    'java-imports',
-                    'java-j2ee',
-                    'java-javabeans',
-                    'java-logging-java',
-                    'java-naming',
-                    'java-optimizations',
-                    'java-quickstart',
-                    'java-strictexception',
-                    'java-strings',
-                    'java-sunsecure',
-                    'java-typeresolution',
-                    'java-unnecessary',
-                    'java-unusedcode'
-            ]
-            targetJdk = 1.7
+            ruleSetFiles = rootProject.files("./gradle/resources/pmd/pmd.xml")
             toolVersion "${PMD_VERION}"
         }
 

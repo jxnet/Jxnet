@@ -25,6 +25,8 @@ package com.ardikars.jxnet.exception;
  */
 public class OperationNotSupportedException extends RuntimeException {
 
+    private static final long serialVersionUID = 4918064360828376142L;
+
     public OperationNotSupportedException() {
         super();
     }
