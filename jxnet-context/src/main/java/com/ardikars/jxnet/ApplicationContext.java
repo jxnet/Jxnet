@@ -17,6 +17,8 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.common.logging.Logger;
+import com.ardikars.common.logging.LoggerFactory;
 import com.ardikars.common.net.Inet4Address;
 import com.ardikars.common.util.Builder;
 import com.ardikars.common.util.Validate;
@@ -41,6 +43,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public final class ApplicationContext implements Context {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationContext.class);
+
 	private static final ReentrantReadWriteLock LOCK = new ReentrantReadWriteLock(true);
 
 	private final String applicationName;
@@ -59,17 +63,10 @@ public final class ApplicationContext implements Context {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
-				if (LOCK.readLock().tryLock() && LOCK.writeLock().tryLock()) {
-					if (pcap != null && !pcap.isClosed()) {
-						pcapBreakLoop(); // Force the loop in "pcap_read()" or "pcap_read_offline()" to terminate.
-						Jxnet.PcapClose(pcap);
-					}
-					if (bpfProgram != null && !bpfProgram.isClosed()) {
-						Jxnet.PcapFreeCode(bpfProgram);
-					}
-					if (pcapDumper != null && !pcapDumper.isClosed()) {
-						Jxnet.PcapDumpClose(pcapDumper);
-					}
+				try {
+					close();
+				} catch (Exception e) {
+					LOGGER.error(e.getMessage());
 				}
 			}
 		});
@@ -77,7 +74,15 @@ public final class ApplicationContext implements Context {
 		this.applicationDisplayName = applicationDisplayName;
 		this.applicationVersion = applicationVersion;
 		Validate.notIllegalArgument(builder != null, new IllegalArgumentException("Pcap builder should be not null."));
-		this.pcap = builder.build();
+		Pcap pcap;
+		try {
+			pcap = builder.build();
+			LOGGER.debug("Create new application context instance.");
+		} catch (Exception e) {
+			pcap = null;
+			LOGGER.error(e.getMessage());
+		}
+		this.pcap = pcap;
 	}
 
     @Override
@@ -478,6 +483,7 @@ public final class ApplicationContext implements Context {
 
 	@Override
 	public void close() throws Exception {
+		LOGGER.debug("Shuting down jxnet application context.");
 		if (LOCK.readLock().tryLock() && LOCK.writeLock().tryLock()) {
 			if (pcap != null && !pcap.isClosed()) {
 				pcapBreakLoop(); // Force the loop in "pcap_read()" or "pcap_read_offline()" to terminate.

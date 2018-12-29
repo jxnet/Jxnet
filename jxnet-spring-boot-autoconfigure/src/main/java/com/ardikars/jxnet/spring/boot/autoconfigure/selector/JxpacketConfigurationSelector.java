@@ -17,10 +17,10 @@
 
 package com.ardikars.jxnet.spring.boot.autoconfigure.selector;
 
+import com.ardikars.common.logging.Logger;
+import com.ardikars.common.logging.LoggerFactory;
 import com.ardikars.jxnet.spring.boot.autoconfigure.annotation.EnablePacket;
 import com.ardikars.jxnet.spring.boot.autoconfigure.constant.PacketHandlerType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.ImportSelector;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
@@ -54,6 +54,11 @@ public class JxpacketConfigurationSelector implements ImportSelector {
                     LOGGER.debug("Applying nio buffer handler configuration.");
                 }
                 return new String[] {"com.ardikars.jxnet.spring.boot.autoconfigure.nio.NioBufferHandlerConfiguration"};
+            case JXPACKET_ASYNC:
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("Applying jxpacket async handler configuration.");
+                }
+                return new String[] {"com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket.JxpacketAsyncHandlerConfiguration"};
             default:
                 if (LOGGER.isDebugEnabled()) {
                     LOGGER.debug("Applying jxpacket handler configuration.");

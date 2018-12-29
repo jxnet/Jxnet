@@ -18,6 +18,7 @@ sourceSets {
 
 dependencies {
 	implementation ("com.ardikars.common:common-annotation")
+	implementation ("com.ardikars.common:common-logging")
 	implementation ("com.ardikars.common:common-util")
 	implementation ("com.ardikars.common:common-net")
 	testImplementation ("junit:junit:${JUNIT_VERSION}")

@@ -15,16 +15,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet.spring.boot.autoconfigure.constant;
+package com.ardikars.jxnet.spring.boot.autoconfigure;
+
+import com.ardikars.common.tuple.Pair;
+import com.ardikars.jxnet.PcapPktHdr;
+import com.ardikars.jxpacket.common.Packet;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
- * Packet handler type.
+ * Callback function used for capturing packets.
  *
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
  * @since 1.4.9
  */
-public enum PacketHandlerType {
+public interface JxpacketAsyncHandler<T> {
 
-    JXPACKET, JXPACKET_ASYNC, NETTY_BUFFER, NIO_BUFFER
+    /**
+     * Next available packet.
+     * @param argument user argument.
+     * @param packet a tuple of {@link PcapPktHdr} and {@link Packet}.
+     * @throws ExecutionException execution exception.
+     * @throws InterruptedException interrupted exception.
+     */
+    void next(T argument, CompletableFuture<Pair<PcapPktHdr, Packet>> packet) throws ExecutionException, InterruptedException;
 
 }

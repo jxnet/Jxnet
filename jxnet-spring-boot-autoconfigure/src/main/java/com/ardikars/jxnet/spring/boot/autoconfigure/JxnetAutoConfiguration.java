@@ -30,6 +30,8 @@ import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectN
 import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.PCAP_BUILDER_BEAN_NAME;
 import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.PCAP_IF_BEAN_NAME;
 
+import com.ardikars.common.logging.Logger;
+import com.ardikars.common.logging.LoggerFactory;
 import com.ardikars.common.net.Inet4Address;
 import com.ardikars.common.net.MacAddress;
 import com.ardikars.common.util.Platforms;
@@ -52,8 +54,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
@@ -75,7 +75,7 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties(JxnetConfigurationProperties.class)
 public class JxnetAutoConfiguration {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(JxnetAutoConfiguration.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(JxnetAutoConfiguration.class);
 
     @Value("${spring.application.name:}")
     private String applicationName;

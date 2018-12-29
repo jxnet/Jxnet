@@ -17,6 +17,10 @@
 
 package com.ardikars.jxnet.spring.boot.autoconfigure;
 
+import com.ardikars.common.logging.Logger;
+import com.ardikars.common.logging.LoggerFactory;
+import com.ardikars.common.util.management.Jvm;
+import com.ardikars.common.util.management.Jvms;
 import com.ardikars.jxnet.BpfProgram;
 import com.ardikars.jxnet.Context;
 import com.ardikars.jxnet.DataLinkType;
@@ -41,6 +45,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConditionalOnClass({Context.class, Jxnet.class})
 @ConfigurationProperties(prefix = "jxnet")
 public class JxnetConfigurationProperties {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(JxnetConfigurationProperties.class);
 
     private String source;
 
@@ -73,6 +79,8 @@ public class JxnetConfigurationProperties {
     private Pcap.PcapType pcapType;
 
     private Integer numberOfThread;
+
+    private Jvm jvm;
 
     /**
      * Initialize field.
@@ -121,9 +129,35 @@ public class JxnetConfigurationProperties {
         if (filter == null || filter.isEmpty()) {
             filter = null;
         }
-        if (numberOfThread == null) {
-            numberOfThread = 0;
+
+        try {
+            jvm = Jvms.getJvm();
+            if (numberOfThread == null) {
+                if (jvm.hasJvm()) {
+                    numberOfThread = jvm.getAvailableProcessors();
+                } else {
+                    numberOfThread = 0;
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.warn(e.getMessage());
         }
+        LOGGER.debug("Source                       : {}", source);
+        LOGGER.debug("Snapshot length              : {}", snapshot);
+        LOGGER.debug("Promiscuous                  : {}", promiscuous);
+        LOGGER.debug("Timeout                      : {}", timeout);
+        LOGGER.debug("Immediate mode               : {}", immediate);
+        LOGGER.debug("Timestamp type               : {}", timestampType);
+        LOGGER.debug("Timestamp precision          : {}", timestampPrecision);
+        LOGGER.debug("Redio frequency monitor mode : {}", rfmon);
+        LOGGER.debug("Blocking                     : {}", blocking);
+        LOGGER.debug("Direction                    : {}", direction);
+        LOGGER.debug("Datalink                     : {}", datalink);
+        LOGGER.debug("Pcap file                    : {}", file);
+        LOGGER.debug("Bpf compile mode             : {}", bpfCompileMode);
+        LOGGER.debug("Filter                       : {}", filter);
+        LOGGER.debug("Pcap type                    : {}", pcapType);
+        LOGGER.debug("Number of thread             : {}", numberOfThread);
     }
 
     public String getSource() {

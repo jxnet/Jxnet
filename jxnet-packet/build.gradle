@@ -7,6 +7,8 @@ description = "Packet abstraction module."
 
 dependencies {
     implementation("com.github.jnr:jnr-ffi:${JNR_VERSION}")
+    implementation ("com.ardikars.common:common-annotation")
+    implementation ("com.ardikars.common:common-logging")
     implementation("com.ardikars.common:common-net")
     implementation("com.ardikars.common:common-util")
     testImplementation ("junit:junit:${JUNIT_VERSION}")

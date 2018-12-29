@@ -7,6 +7,7 @@ description = "Common module for Jxnet."
 
 dependencies {
     implementation ("com.ardikars.common:common-annotation")
+    implementation ("com.ardikars.common:common-logging")
     implementation ("com.ardikars.common:common-util")
     implementation ("com.ardikars.common:common-net")
     implementation project (":jxnet-core")

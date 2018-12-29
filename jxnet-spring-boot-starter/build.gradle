@@ -15,6 +15,7 @@ dependencyManagement {
 
 dependencies {
     compile ("com.ardikars.common:common-annotation")
+    compile ("com.ardikars.common:common-logging")
     compile ("com.ardikars.common:common-tuple")
     compile ("com.ardikars.common:common-util")
     compile ("com.ardikars.common:common-net")

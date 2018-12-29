@@ -17,6 +17,8 @@
 
 package com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket;
 
+import com.ardikars.common.logging.Logger;
+import com.ardikars.common.logging.LoggerFactory;
 import com.ardikars.jxpacket.common.Packet;
 import javax.annotation.PostConstruct;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -32,6 +34,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "jxnet.jxpacket")
 public class JxpacketConfigurationProperties {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(JxpacketConfigurationProperties.class);
+
     private Boolean autoRegister;
 
     /**
@@ -42,6 +46,7 @@ public class JxpacketConfigurationProperties {
         if (autoRegister == null) {
             this.autoRegister = false;
         }
+        LOGGER.debug("Jxpacket auto register: {}", autoRegister);
     }
 
     public Boolean getAutoRegister() {

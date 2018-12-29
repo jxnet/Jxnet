@@ -35,7 +35,7 @@ import org.springframework.context.annotation.Configuration;
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
  * @since 1.4.9
  */
-@EnablePacket
+//@EnablePacket
 @Configuration
 public class DefaultJxpacketHandler implements JxpacketHandler<String> {
 

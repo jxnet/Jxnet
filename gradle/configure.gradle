@@ -19,7 +19,7 @@ ext {
 	MAVEN_LOCAL_REPOSITORY = "${rootDir}/build/repository"
 //	MAVEN_LOCAL_REPOSITORY = "${System.env.HOME}/.m2/repository"
 
-	JAVA_VERSION = '1.7'
+	JAVA_VERSION = '1.8'
 	JUNIT_VERSION = '4.12'
 	MOCKITO_VERSION = '2.13.0'
 	GRADLE_VERSION = '5.0'
@@ -31,7 +31,7 @@ ext {
 	PMD_VERION = '6.10.0'
 	JACOCO_VERSION = '0.8.2'
 
-	COMMON_VERSION = '1.2.2.Final'
+	COMMON_VERSION = '1.2.4.RELEASE'
 	JXPACKET_VERSION = '1.2.1.RC1'
 	NETTY_VERSION = '4.1.31.Final'
 	REACTOR_VERSION = 'Californium-RELEASE'
