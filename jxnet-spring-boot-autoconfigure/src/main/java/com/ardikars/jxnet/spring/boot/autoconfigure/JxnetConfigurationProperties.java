@@ -288,4 +288,8 @@ public class JxnetConfigurationProperties {
         this.numberOfThread = numberOfThread;
     }
 
+    public Jvm getJvm() {
+        return jvm;
+    }
+
 }
