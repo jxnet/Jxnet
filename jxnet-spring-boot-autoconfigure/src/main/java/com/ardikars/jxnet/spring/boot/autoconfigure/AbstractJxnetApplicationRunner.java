@@ -21,6 +21,7 @@ import com.ardikars.common.logging.Logger;
 import com.ardikars.common.logging.LoggerFactory;
 import com.ardikars.common.net.Inet4Address;
 import com.ardikars.common.net.MacAddress;
+import com.ardikars.common.util.Platforms;
 import com.ardikars.common.util.management.Jvm;
 import com.ardikars.common.util.management.OperatingSystem;
 import com.ardikars.jxnet.Context;
@@ -69,16 +70,18 @@ public abstract class AbstractJxnetApplicationRunner implements CommandLineRunne
 
     protected void showSystemInfo() {
         if (jvm != null && jvm.getOperatingSystem() != null) {
-            OperatingSystem os = jvm.getOperatingSystem();
-            long mbDivider = 20;
-            long physicalMemoryInBytes = os.getTotalPhysicalMemorySize();
-            long physicalMemoryInMegaBytes = physicalMemoryInBytes >> mbDivider;
-            long swapSpaceInBytes = os.getTotalSwapSpaceSize();
-            long swapSpaceInMegaBytes = swapSpaceInBytes >> mbDivider;
-            LOGGER.info("{}----------------------- {} -----------------------{}", "+", "System Information ", "+");
-            LOGGER.info("Operating system       : {}  {}  {}", os.getName(), os.getArch(), os.getVersion());
-            LOGGER.info("Total physical memory  : {} bytes ({} MB)", physicalMemoryInBytes, physicalMemoryInMegaBytes);
-            LOGGER.info("Total swap space       : {} bytes ({} MB)", swapSpaceInBytes, swapSpaceInMegaBytes);
+            if (Platforms.getJavaMojorVersion() < 9) { // bug in java-common version 1.2.5.RELEASE
+                OperatingSystem os = jvm.getOperatingSystem();
+                long mbDivider = 20;
+                long physicalMemoryInBytes = os.getTotalPhysicalMemorySize();
+                long physicalMemoryInMegaBytes = physicalMemoryInBytes >> mbDivider;
+                long swapSpaceInBytes = os.getTotalSwapSpaceSize();
+                long swapSpaceInMegaBytes = swapSpaceInBytes >> mbDivider;
+                LOGGER.info("{}----------------------- {} -----------------------{}", "+", "System Information ", "+");
+                LOGGER.info("Operating system       : {}  {}  {}", os.getName(), os.getArch(), os.getVersion());
+                LOGGER.info("Total physical memory  : {} bytes ({} MB)", physicalMemoryInBytes, physicalMemoryInMegaBytes);
+                LOGGER.info("Total swap space       : {} bytes ({} MB)", swapSpaceInBytes, swapSpaceInMegaBytes);
+            }
             LOGGER.info("Available processors   : {} cores", jvm.getAvailableProcessors());
             LOGGER.info("{}-------------------------------------------------------------------{}", "+", "+");
         }
