@@ -17,60 +17,21 @@
 
 package com.ardikars.jxnet.spring.boot.starter.example;
 
-import com.ardikars.common.net.Inet4Address;
-import com.ardikars.common.net.MacAddress;
-import com.ardikars.jxnet.Context;
-import com.ardikars.jxnet.PcapAddr;
-import com.ardikars.jxnet.PcapHandler;
-import com.ardikars.jxnet.PcapIf;
-import com.ardikars.jxnet.SockAddr;
-//import com.ardikars.jxnet.spring.boot.starter.example.configuration.DefaultNextPacketLoop;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
+import com.ardikars.jxnet.spring.boot.autoconfigure.AbstractJxnetApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+//import com.ardikars.jxnet.spring.boot.starter.example.configuration.DefaultNextPacketLoop;
+
 @SpringBootApplication
-public class Application implements CommandLineRunner  {
+public class Application extends AbstractJxnetApplicationRunner {
 
     public static final int MAX_PACKET = -1; // infinite loop
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Application.class.getName());
-
-    private final Context context;
-    private final PcapIf pcapIf;
-    private final MacAddress macAddress;
-
-    @Autowired
-    private PcapHandler<String> pcapHandler;
-
-    //@Autowired
-    //private DefaultNextPacketLoop nextPacketLoop;
-
-    /**
-     * @param context application context.
-     * @param pcapIf spring {@link PcapIf} bean.
-     * @param macAddress spring {@link MacAddress} bean.
-     */
-    public Application(Context context, PcapIf pcapIf, MacAddress macAddress) {
-        this.context = context;
-        this.pcapIf = pcapIf;
-        this.macAddress = macAddress;
-    }
-
     @Override
     public void run(String... args) throws Exception {
-        LOGGER.info("Network Interface : {}", pcapIf.getName());
-        LOGGER.info("MAC Address       : {}", macAddress);
-        LOGGER.info("Addresses         : ");
-        for (PcapAddr addr : pcapIf.getAddresses()) {
-            if (addr.getAddr().getSaFamily() == SockAddr.Family.AF_INET) {
-                LOGGER.info("\tAddress       : {}", Inet4Address.valueOf(addr.getAddr().getData()));
-                LOGGER.info("\tNetwork       : {}", Inet4Address.valueOf(addr.getNetmask().getData()));
-            }
-        }
+        showSystemInfo();
+        showNetworkInfo();
         context.pcapLoop(MAX_PACKET, pcapHandler, "Jxnet!");
         //nextPacketLoop.loop(MAX_PACKET);
     }

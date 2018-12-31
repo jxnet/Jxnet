@@ -363,8 +363,14 @@ public final class Pcap implements PointerHandler {
 			}
 		}
 
+		/**
+		 * Only set the {@link Pcap} handle into non-blocking mode if we have a timeout greater than zero
+		 * and enbaleNonBlock property is true.
+		 * @param pcap pcap handle.
+		 * @throws NativeException native exception.
+		 */
 		private void setEnableNonBlock(Pcap pcap) throws NativeException {
-			if (enableNonBlock) {
+			if (enableNonBlock && timeout > 0) {
 				if (Jxnet.PcapSetNonBlock(pcap, 1, errbuf) < Jxnet.OK) {
 					throw new NativeException(Jxnet.PcapGetErr(pcap));
 				}
