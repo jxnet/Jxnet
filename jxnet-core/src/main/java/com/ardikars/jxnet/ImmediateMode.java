@@ -17,7 +17,7 @@
 
 package com.ardikars.jxnet;
 
-import jdk.nashorn.internal.ir.annotations.Immutable;
+import com.ardikars.common.annotation.Immutable;
 
 /**
  * Libpcap never guarantee, that packets will be delivered immediately,
