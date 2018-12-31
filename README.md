@@ -161,23 +161,28 @@ public class DefaultJxpacketHandler implements JxpacketHandler<String> {
 ```
 
   - #### Spring properties (Optional)
-    - jxnet.source=
-    - jxnet.snapshot=65535
-    - jxnet.promiscuous=promiscuous
-    - jxnet.timeout=2000
-    - jxnet.immediate=immediate
-    - jxnet.timestampType=host
-    - jxnet.timestampPrecision=micro
-    - jxnet.rfmon=non_rfmon
-    - jxnet.blocking=false
-    - jxnet.direction=pcap_d_inout
-    - jxnet.datalink=1
-    - jxnet.file=
-    - jxnet.bpfCompileMode=optimize
-    - jxnet.filter=tcp
-    - jxnet.pcapType=live
-    - jxnet.numberOfThread=0
-    - jxnet.jxpacket.autoRegister=true # Register all packet (recommended)
+    
+| Property                      | Pcap Type            | Default Value                      | Description                                      |
+| :-----------------------------| :------------------- | :--------------------------------- | :----------------------------------------------- |
+| jxnet.source                  | LIVE                 | Auto selected                      | A device (source) used to create a pcap handle   |
+| jxnet.snaphot                 | LIVE                 | 65535                              | Dimension of the packet portion (in bytes)       |
+| jxnet.promiscuous             | LIVE                 | `PROMISCUOUS`                      | Pomiscuous mode                                  |
+| jxnet.timeout                 | LIVE                 | 2000                               | Packet buffer timeout                            |
+| jxnet.immediate               | LIVE                 | `IMMEDIATE`                        | Immediate mode                                   |
+| jxnet.timestampType           | LIVE                 | `HOST`                             | Typestamp type                                   |
+| jxnet.timestampPrecision      | LIVE                 | `MICRO`                            | Typestamp precision                              |
+| jxnet.rfmon                   | LIVE                 | `NON_RFMON`                        | Radio frequency monitor mode                     |
+| jxnet.blocking                | LIVE                 | false                              | Blocking mode                                    |
+| jxnet.direction               | LIVE                 | `PCAP_D_INOUT`                     | Specify a direction that packet will be captured |
+| jxnet.datalink                | DEAD                 | 1 (Ethernet)                       | Datalink type                                    |
+| jxnet.file                    | OFFLINE              | `null`                             | Absulute path of pcap file                       |
+| jxnet.bpfCompileMode          | LIVE                 | `OPTIMIZE`                         | Berkeley packet filter compile mode              |
+| jxnet.filter                  | LIVE                 | `null`                             | Filtering expression syntax                      |
+| jxnet.pcapType                | LIVE/OFFLINE/DEAD    | `LIVE`                             | Pcap type (live/offline/dead)                    |
+| jxnet.numberOfThread          | LIVE, OFFLINE        | Depends on available processors    | Number of pooled thread                          |
+| jxnet.jxpacket.autoRegister   | LIVE, OFFLINE        | false                              | Auto register jxpacket protocol                  |
+
+
 
 Build Jxnet from Source
 =============================
