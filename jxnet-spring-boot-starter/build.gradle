@@ -23,9 +23,11 @@ dependencies {
     compile ("io.netty:netty-buffer:${NETTY_VERSION}")
     compile ("com.ardikars.jxpacket:jxpacket-common:${JXPACKET_VERSION}")
     compile ("com.ardikars.jxpacket:jxpacket-core:${JXPACKET_VERSION}")
+    compile ("org.springframework.boot:spring-boot-autoconfigure:${SPRING_BOOT_VERSION}")
+    compile ("org.springframework.boot:spring-boot-configuration-processor:${SPRING_BOOT_VERSION}")
     compile project (":jxnet-core")
     compile project (":jxnet-context")
     compile project (":jxnet-spring-boot-autoconfigure")
-    testImplementation ("junit:junit:${JUNIT_VERSION}")
-    testImplementation ("org.mockito:mockito-core:${MOCKITO_VERSION}")
+    testCompile ("junit:junit:${JUNIT_VERSION}")
+    testCompile ("org.mockito:mockito-core:${MOCKITO_VERSION}")
 }
