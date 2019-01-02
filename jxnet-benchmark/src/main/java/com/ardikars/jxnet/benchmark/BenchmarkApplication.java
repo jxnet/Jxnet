@@ -17,7 +17,7 @@
 
 package com.ardikars.jxnet.benchmark;
 
-import com.ardikars.jxnet.Context;
+import com.ardikars.jxnet.context.Context;
 import java.util.concurrent.ExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

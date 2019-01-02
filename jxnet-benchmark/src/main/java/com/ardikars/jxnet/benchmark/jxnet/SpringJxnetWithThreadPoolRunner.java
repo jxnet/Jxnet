@@ -17,10 +17,10 @@
 
 package com.ardikars.jxnet.benchmark.jxnet;
 
-import com.ardikars.jxnet.Context;
 import com.ardikars.jxnet.Pcap;
 import com.ardikars.jxnet.PcapHandler;
 import com.ardikars.jxnet.benchmark.Runner;
+import com.ardikars.jxnet.context.Context;
 import org.springframework.stereotype.Component;
 
 /**

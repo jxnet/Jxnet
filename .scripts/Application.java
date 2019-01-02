@@ -25,16 +25,10 @@ import com.ardikars.common.util.Validate;
  *
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
  * @since 1.1.5
+ * @deprecated please use {@link com.ardikars.jxnet.context.Application}.
  */
-public final class Application {
-
-    private static final Application instance = new Application();
-
-    private Context context;
-
-    private Application() {
-
-    }
+@Deprecated
+public class Application {
 
     /**
      * Bootstraping application.
@@ -46,7 +40,7 @@ public final class Application {
     public static void run(String aplicationName, String applicationDisplayName, String applicationVersion, Builder<Pcap, Void> builder) {
         Validate.notIllegalArgument(builder != null,
                 new IllegalArgumentException("Pcap builder should be not null."));
-        instance.context = new ApplicationContext(aplicationName, applicationDisplayName, applicationVersion, builder);
+        com.ardikars.jxnet.context.Application.run(aplicationName, applicationDisplayName, applicationVersion, builder);
     }
 
     /**
@@ -54,7 +48,8 @@ public final class Application {
      * @return application context.
      */
     public static Context getApplicationContext() {
-        return instance.context;
+        com.ardikars.jxnet.context.Context context = com.ardikars.jxnet.context.Application.getApplicationContext();
+        return new ApplicationContext(context);
     }
 
 }
