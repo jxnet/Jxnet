@@ -24,7 +24,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 //import com.ardikars.jxnet.spring.boot.starter.example.configuration.DefaultNextPacketLoop;
 
 @SpringBootApplication
-public class Application extends AbstractJxnetApplicationRunner {
+public class Application extends AbstractJxnetApplicationRunner<String> {
 
     public static final int MAX_PACKET = -1; // infinite loop
 
@@ -32,7 +32,7 @@ public class Application extends AbstractJxnetApplicationRunner {
     public void run(String... args) throws Exception {
         showSystemInfo();
         showNetworkInfo();
-        context.pcapLoop(MAX_PACKET, pcapHandler, "Jxnet!");
+        loop(MAX_PACKET, "Jxnet!");
         //nextPacketLoop.loop(MAX_PACKET);
     }
 

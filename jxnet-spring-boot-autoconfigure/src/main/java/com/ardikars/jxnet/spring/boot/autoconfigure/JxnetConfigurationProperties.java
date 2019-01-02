@@ -32,7 +32,7 @@ import com.ardikars.jxnet.PcapTimestampPrecision;
 import com.ardikars.jxnet.PcapTimestampType;
 import com.ardikars.jxnet.PromiscuousMode;
 import com.ardikars.jxnet.RadioFrequencyMonitorMode;
-import javax.annotation.PostConstruct;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -83,10 +83,10 @@ public class JxnetConfigurationProperties {
     private Jvm jvm;
 
     /**
-     * Initialize field.
+     * Initialize properties.
      */
-    @PostConstruct
-    public void initialize() {
+    @SuppressFBWarnings(value = "UR_UNINIT_READ", justification = "Already handled by spring property value")
+    public JxnetConfigurationProperties() {
         if (pcapType == null) {
             pcapType = Pcap.PcapType.LIVE;
         }
@@ -129,7 +129,6 @@ public class JxnetConfigurationProperties {
         if (filter == null || filter.isEmpty()) {
             filter = null;
         }
-
         try {
             jvm = Jvms.getJvm();
             if (numberOfThread == null) {
@@ -140,6 +139,7 @@ public class JxnetConfigurationProperties {
                 }
             }
         } catch (Exception e) {
+            jvm = null;
             LOGGER.warn(e.getMessage());
         }
         LOGGER.debug("Source                       : {}", source);

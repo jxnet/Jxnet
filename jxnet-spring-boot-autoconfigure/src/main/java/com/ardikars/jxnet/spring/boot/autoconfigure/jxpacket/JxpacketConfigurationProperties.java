@@ -20,7 +20,6 @@ package com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket;
 import com.ardikars.common.logging.Logger;
 import com.ardikars.common.logging.LoggerFactory;
 import com.ardikars.jxpacket.common.Packet;
-import javax.annotation.PostConstruct;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -41,8 +40,7 @@ public class JxpacketConfigurationProperties {
     /**
      * Initialize properties.
      */
-    @PostConstruct
-    public void initialize() {
+    public JxpacketConfigurationProperties() {
         if (autoRegister == null) {
             this.autoRegister = false;
         }

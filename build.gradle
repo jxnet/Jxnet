@@ -61,6 +61,10 @@ allprojects {
 			imports { mavenBom("com.ardikars.common:common:${COMMON_VERSION}") }
 		}
 
+		dependencies {
+			compileOnly ("com.github.spotbugs:spotbugs-annotations:${SPOTBUGS_VERSION}")
+		}
+
 		configurations.archives.artifacts.with { archives ->
 			def jarArtifact
 			archives.each {
