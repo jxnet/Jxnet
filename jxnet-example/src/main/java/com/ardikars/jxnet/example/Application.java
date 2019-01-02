@@ -24,7 +24,6 @@ import com.ardikars.common.net.Inet4Address;
 import com.ardikars.common.net.MacAddress;
 import com.ardikars.common.util.Hexs;
 import com.ardikars.common.util.Platforms;
-import com.ardikars.jxnet.Context;
 import com.ardikars.jxnet.DataLinkType;
 import com.ardikars.jxnet.ImmediateMode;
 import com.ardikars.jxnet.Jxnet;
@@ -38,6 +37,7 @@ import com.ardikars.jxnet.PcapTimestampType;
 import com.ardikars.jxnet.PromiscuousMode;
 import com.ardikars.jxnet.RadioFrequencyMonitorMode;
 import com.ardikars.jxnet.SockAddr;
+import com.ardikars.jxnet.context.Context;
 import com.ardikars.jxnet.exception.DeviceNotFoundException;
 import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 
@@ -96,8 +96,8 @@ public class Application {
                     .fileName(FILE_NAME)
                     .errbuf(errbuf)
                     .pcapType(PCAP_TYPE);
-            com.ardikars.jxnet.Application.run("application", "Application", "", builder);
-            final Context context = com.ardikars.jxnet.Application.getApplicationContext();
+            com.ardikars.jxnet.context.Application.run("application", "Application", "", builder);
+            final Context context = com.ardikars.jxnet.context.Application.getApplicationContext();
             LOGGER.info("Network Interface : " + pcapIf.getName());
             LOGGER.info("Addresses         : ");
             for (PcapAddr addr : pcapIf.getAddresses()) {

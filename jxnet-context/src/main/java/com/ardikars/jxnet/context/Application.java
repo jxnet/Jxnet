@@ -15,20 +15,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet;
+package com.ardikars.jxnet.context;
 
 import com.ardikars.common.util.Builder;
 import com.ardikars.common.util.Validate;
+import com.ardikars.jxnet.Pcap;
 
 /**
  * Helper class for bootstraping jxnet application.
  *
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
- * @since 1.1.5
- * @deprecated please use {@link com.ardikars.jxnet.context.Application}.
+ * @since 1.5.3
  */
-@Deprecated
-public class Application {
+public final class Application {
+
+    private static final Application instance = new Application();
+
+    private Context context;
+
+    private Application() {
+
+    }
 
     /**
      * Bootstraping application.
@@ -40,7 +47,7 @@ public class Application {
     public static void run(String aplicationName, String applicationDisplayName, String applicationVersion, Builder<Pcap, Void> builder) {
         Validate.notIllegalArgument(builder != null,
                 new IllegalArgumentException("Pcap builder should be not null."));
-        com.ardikars.jxnet.context.Application.run(aplicationName, applicationDisplayName, applicationVersion, builder);
+        instance.context = new ApplicationContext(aplicationName, applicationDisplayName, applicationVersion, builder);
     }
 
     /**
@@ -48,8 +55,7 @@ public class Application {
      * @return application context.
      */
     public static Context getApplicationContext() {
-        com.ardikars.jxnet.context.Context context = com.ardikars.jxnet.context.Application.getApplicationContext();
-        return new ApplicationContext(context);
+        return instance.context;
     }
 
 }

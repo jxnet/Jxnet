@@ -18,4 +18,4 @@
 /**
  * Jxnet context.
  */
-package com.ardikars.jxnet;
+package com.ardikars.jxnet.context;

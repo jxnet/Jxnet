@@ -17,13 +17,13 @@
 
 package com.ardikars.jxnet.benchmark.jxnet;
 
-import com.ardikars.jxnet.Application;
-import com.ardikars.jxnet.Context;
 import com.ardikars.jxnet.Pcap;
 import com.ardikars.jxnet.PcapHandler;
 import com.ardikars.jxnet.PcapPktHdr;
 import com.ardikars.jxnet.PcapTimestampPrecision;
 import com.ardikars.jxnet.benchmark.Runner;
+import com.ardikars.jxnet.context.Application;
+import com.ardikars.jxnet.context.Context;
 import java.nio.ByteBuffer;
 import java.util.concurrent.ExecutorService;
 import org.springframework.beans.factory.annotation.Autowired;
