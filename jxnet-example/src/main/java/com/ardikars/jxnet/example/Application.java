@@ -110,7 +110,9 @@ public class Application {
                 try {
                     byte[] hardwareAddress = Jxnet.FindHardwareAddress(pcapIf.getName());
                     LOGGER.info("\tMAC Address   : " + MacAddress.valueOf(hardwareAddress));
-                } catch (PlatformNotSupportedException | DeviceNotFoundException e) {
+                } catch (PlatformNotSupportedException e) {
+                    LOGGER.warning(e.getMessage());
+                } catch (DeviceNotFoundException e) {
                     LOGGER.warning(e.getMessage());
                 }
             } else {
@@ -153,7 +155,7 @@ public class Application {
      */
     public static PcapIf pcapIf(StringBuilder errbuf) throws DeviceNotFoundException {
         String source = Application.source;
-        List<PcapIf> alldevsp = new ArrayList<>();
+        List<PcapIf> alldevsp = new ArrayList<PcapIf>();
         if (PcapFindAllDevs(alldevsp, errbuf) != OK && LOGGER.isLoggable(Level.WARNING)) {
             LOGGER.warning("Error: {}" + errbuf.toString());
         }

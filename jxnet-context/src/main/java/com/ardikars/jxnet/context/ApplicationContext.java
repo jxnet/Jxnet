@@ -428,7 +428,7 @@ public final class ApplicationContext implements Context {
 
 	@Override
 	public PcapCode pcapListDataLinks(List<DataLinkType> dtlBuffer) throws PcapCloseException, PlatformNotSupportedException {
-		List<Integer> buffers = new ArrayList<>();
+		List<Integer> buffers = new ArrayList<Integer>();
 		int result = Jxnet.PcapListDataLinks(pcap, buffers);
 		if (result == 0) {
 			dtlBuffer.clear(); // clear buffer.
@@ -443,7 +443,7 @@ public final class ApplicationContext implements Context {
 
 	@Override
 	public PcapCode pcapListTStampTypes(List<PcapTimestampType> tstampTypesp) throws PcapCloseException, PlatformNotSupportedException {
-		List<Integer> buffers = new ArrayList<>();
+		List<Integer> buffers = new ArrayList<Integer>();
 		int result = Jxnet.PcapListTStampTypes(pcap, buffers);
 		if (result == 0) {
 			tstampTypesp.clear(); // clear buffer.

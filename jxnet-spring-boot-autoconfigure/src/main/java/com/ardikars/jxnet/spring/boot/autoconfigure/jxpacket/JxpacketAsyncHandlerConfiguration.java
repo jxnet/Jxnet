@@ -46,7 +46,9 @@ public class JxpacketAsyncHandlerConfiguration<T> extends HandlerConfigurer<T, P
             public void run() {
                 try {
                     getHandler().next(user, Tuple.of(h, decode(bytes)));
-                } catch (ExecutionException | InterruptedException e) {
+                } catch (ExecutionException e) {
+                    LOGGER.warn(e);
+                } catch (InterruptedException e) {
                     LOGGER.warn(e);
                 }
             }

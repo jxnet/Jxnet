@@ -50,7 +50,7 @@ public class DataLinkType extends NamedNumber<Short, DataLinkType> {
     public static final DataLinkType LINUX_SLL = new DataLinkType((short) 113, "Linux SLL");
 
     private static final Map<DataLinkType, Short> registry =
-            new HashMap<>();
+            new HashMap<DataLinkType, Short>();
 
     public DataLinkType(Short value, String name) {
         super(value, name);

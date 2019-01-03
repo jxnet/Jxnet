@@ -700,7 +700,9 @@ public class JxnetTest {
             if (address.length == 6) {
                 System.out.println(MacAddress.valueOf(address));
             }
-        } catch (DeviceNotFoundException | PlatformNotSupportedException e) {
+        } catch (DeviceNotFoundException e) {
+            System.out.println(e.getMessage());
+        } catch (PlatformNotSupportedException e) {
             System.out.println(e.getMessage());
         }
     }

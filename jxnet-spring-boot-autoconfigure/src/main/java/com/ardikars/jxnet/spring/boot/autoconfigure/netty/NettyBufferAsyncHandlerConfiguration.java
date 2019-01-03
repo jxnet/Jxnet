@@ -59,7 +59,9 @@ public class NettyBufferAsyncHandlerConfiguration<T> extends HandlerConfigurer<T
         });
         try {
             getHandler().next(user, packet);
-        } catch (ExecutionException | InterruptedException e) {
+        } catch (ExecutionException e) {
+            LOGGER.warn(e);
+        } catch (InterruptedException e) {
             LOGGER.warn(e);
         }
     }

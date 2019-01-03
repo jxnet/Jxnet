@@ -48,8 +48,10 @@ public class NioBufferAsyncHandlerConfiguration<T> extends HandlerConfigurer<T, 
     public void nextPacket(T user, PcapPktHdr h, ByteBuffer bytes) {
         try {
             getHandler().next(user, Tuple.of(h, bytes));
-        } catch (ExecutionException | InterruptedException e) {
-            LOGGER.debug(e);
+        } catch (ExecutionException e) {
+            LOGGER.warn(e);
+        } catch (InterruptedException e) {
+            LOGGER.warn(e);
         }
     }
 

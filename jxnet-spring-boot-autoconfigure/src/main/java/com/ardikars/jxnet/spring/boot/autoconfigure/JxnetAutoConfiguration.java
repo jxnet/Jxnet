@@ -105,7 +105,7 @@ public class JxnetAutoConfiguration {
     //@ConditionalOnBean(StringBuilder.class)
     @Bean(PCAP_IF_BEAN_NAME)
     public PcapIf pcapIf(@Qualifier(ERRBUF_BEAN_NAME) StringBuilder errbuf) throws DeviceNotFoundException {
-        List<PcapIf> alldevsp = new ArrayList<>();
+        List<PcapIf> alldevsp = new ArrayList<PcapIf>();
         if (PcapFindAllDevs(alldevsp, errbuf) != OK) {
             throw new NativeException(errbuf.toString());
         }

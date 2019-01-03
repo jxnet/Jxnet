@@ -122,7 +122,7 @@ public final class SockAddr implements Cloneable {
 
         private static final long serialVersionUID = 3311056956556965869L;
 
-        private static final Map<Short, Family> registry = new HashMap<>();
+        private static final Map<Short, Family> registry = new HashMap<Short, Family>();
 
         public static final Family AF_INET = new Family((short) 2, "Internet IP Protocol");
 

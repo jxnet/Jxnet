@@ -57,8 +57,10 @@ public class JxpacketHandlerConfiguration<T> extends HandlerConfigurer<T, Future
         });
         try {
             getHandler().next(user, packet);
-        } catch (ExecutionException | InterruptedException e) {
-            LOGGER.warn(e.getMessage());
+        } catch (ExecutionException e) {
+            LOGGER.warn(e);
+        } catch (InterruptedException e) {
+            LOGGER.warn(e);
         }
     }
 
