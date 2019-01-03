@@ -45,24 +45,22 @@ public class JxpacketConfigurationSelector implements ImportSelector {
         PacketHandlerType type = attributes.getEnum("packetHandlerType");
         switch (type) {
             case NETTY_BUFFER:
-                if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("Applying netty buffer handler configuration.");
-                }
+                LOGGER.debug("Applying netty buffer handler configuration.");
                 return new String[] {"com.ardikars.jxnet.spring.boot.autoconfigure.netty.NettyBufferHandlerConfiguration"};
+            case NETTY_BUFFER_ASYNC:
+                LOGGER.debug("Applying netty buffer async handler configuration.");
+                return new String[] {"com.ardikars.jxnet.spring.boot.autoconfigure.netty.NettyBufferAsyncHandlerConfiguration"};
             case NIO_BUFFER:
-                if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("Applying nio buffer handler configuration.");
-                }
+                LOGGER.debug("Applying nio buffer handler configuration.");
                 return new String[] {"com.ardikars.jxnet.spring.boot.autoconfigure.nio.NioBufferHandlerConfiguration"};
+            case NIO_BUFFER_ASYNC:
+                LOGGER.debug("Applying nio buffer async handler configuration.");
+                return new String[] {"com.ardikars.jxnet.spring.boot.autoconfigure.nio.NioBufferAsyncHandlerConfiguration"};
             case JXPACKET_ASYNC:
-                if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("Applying jxpacket async handler configuration.");
-                }
+                LOGGER.debug("Applying jxpacket async handler configuration.");
                 return new String[] {"com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket.JxpacketAsyncHandlerConfiguration"};
             default:
-                if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("Applying jxpacket handler configuration.");
-                }
+                LOGGER.debug("Applying jxpacket handler configuration.");
                 return new String[] {"com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket.JxpacketHandlerConfiguration"};
         }
     }

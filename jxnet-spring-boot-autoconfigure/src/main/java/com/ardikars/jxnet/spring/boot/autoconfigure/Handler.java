@@ -15,16 +15,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet.spring.boot.autoconfigure.constant;
+package com.ardikars.jxnet.spring.boot.autoconfigure;
+
+import com.ardikars.common.annotation.Incubating;
+import com.ardikars.jxnet.PcapPktHdr;
+import com.ardikars.jxpacket.common.Packet;
+
+import java.util.concurrent.ExecutionException;
 
 /**
- * Packet handler type.
- *
+ * Handler
+ * @param <T> arg type.
+ * @param <V> packet type.
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
- * @since 1.4.9
+ * @since 1.5.3
  */
-public enum PacketHandlerType {
+@Incubating
+public interface Handler<T, V> {
 
-    JXPACKET, JXPACKET_ASYNC, NETTY_BUFFER, NETTY_BUFFER_ASYNC, NIO_BUFFER, NIO_BUFFER_ASYNC
+    /**
+     * Next available packet.
+     * @param argument user argument.
+     * @param packet a tuple of {@link PcapPktHdr} and {@link Packet}.
+     * @throws ExecutionException execution exception.
+     * @throws InterruptedException interrupted exception.
+     */
+    void next(T argument, V packet) throws ExecutionException, InterruptedException;
 
 }

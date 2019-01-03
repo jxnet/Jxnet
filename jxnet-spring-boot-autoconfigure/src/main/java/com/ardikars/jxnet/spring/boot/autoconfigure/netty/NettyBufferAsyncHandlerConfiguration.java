@@ -17,7 +17,7 @@
 
 package com.ardikars.jxnet.spring.boot.autoconfigure.netty;
 
-import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.NETTY_BUFFER_HANDLER_CONFIGURATION_BEAN_NAME;
+import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.NETTY_BUFFER_ASYCN_HANDLER_CONFIGURATION_BEAN_NAME;
 
 import com.ardikars.common.logging.Logger;
 import com.ardikars.common.logging.LoggerFactory;
@@ -26,40 +26,41 @@ import com.ardikars.common.tuple.Tuple;
 import com.ardikars.jxnet.PcapHandler;
 import com.ardikars.jxnet.PcapPktHdr;
 import com.ardikars.jxnet.spring.boot.autoconfigure.HandlerConfigurer;
-import com.ardikars.jxpacket.common.Packet;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import java.nio.ByteBuffer;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Netty buffer handler.
+ * Async netty buffer.
  *
+ * @param <T> type.
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
- * @since 1.4.9
+ * @since 1.5.3
  */
-@ConditionalOnClass({Packet.class, ByteBuf.class})
-@Configuration(NETTY_BUFFER_HANDLER_CONFIGURATION_BEAN_NAME)
-public class NettyBufferHandlerConfiguration<T> extends HandlerConfigurer<T, Future<Pair<PcapPktHdr, ByteBuf>>> implements PcapHandler<T> {
+@ConditionalOnClass({ByteBuf.class})
+@Configuration(NETTY_BUFFER_ASYCN_HANDLER_CONFIGURATION_BEAN_NAME)
+public class NettyBufferAsyncHandlerConfiguration<T> extends HandlerConfigurer<T, Future<Pair<PcapPktHdr, ByteBuf>>> implements PcapHandler<T> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(NettyBufferHandlerConfiguration.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(NettyBufferAsyncHandlerConfiguration.class);
 
     @Override
     public void nextPacket(final T user, final PcapPktHdr h, final ByteBuffer bytes) {
         Future<Pair<PcapPktHdr, ByteBuf>> packet = executorService.submit(new Callable<Pair<PcapPktHdr, ByteBuf>>() {
             @Override
             public Pair<PcapPktHdr, ByteBuf> call() throws Exception {
-                ByteBuf buffer = Unpooled.wrappedBuffer(bytes);
-                return Tuple.of(h, buffer);
+                ByteBuf buf = Unpooled.wrappedBuffer(bytes);
+                return Tuple.of(h, buf);
             }
         });
         try {
             getHandler().next(user, packet);
-        } catch (Exception e) {
-            LOGGER.warn(e.getMessage());
+        } catch (ExecutionException | InterruptedException e) {
+            LOGGER.warn(e);
         }
     }
 

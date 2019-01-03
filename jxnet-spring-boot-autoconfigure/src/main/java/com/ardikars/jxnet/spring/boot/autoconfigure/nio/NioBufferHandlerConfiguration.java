@@ -17,7 +17,6 @@
 
 package com.ardikars.jxnet.spring.boot.autoconfigure.nio;
 
-import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.EXECUTOR_SERVICE_BEAN_NAME;
 import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.NIO_BUFFER_HANDLER_CONFIGURATION_BEAN_NAME;
 
 import com.ardikars.common.logging.Logger;
@@ -26,13 +25,11 @@ import com.ardikars.common.tuple.Pair;
 import com.ardikars.common.tuple.Tuple;
 import com.ardikars.jxnet.PcapHandler;
 import com.ardikars.jxnet.PcapPktHdr;
-import com.ardikars.jxnet.spring.boot.autoconfigure.NioBufferHandler;
+import com.ardikars.jxnet.spring.boot.autoconfigure.HandlerConfigurer;
 import com.ardikars.jxpacket.common.Packet;
 import java.nio.ByteBuffer;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Configuration;
 
@@ -44,23 +41,9 @@ import org.springframework.context.annotation.Configuration;
  */
 @ConditionalOnClass(Packet.class)
 @Configuration(NIO_BUFFER_HANDLER_CONFIGURATION_BEAN_NAME)
-public class NioBufferHandlerConfiguration<T> implements PcapHandler<T> {
+public class NioBufferHandlerConfiguration<T> extends HandlerConfigurer<T, Future<Pair<PcapPktHdr, ByteBuffer>>> implements PcapHandler<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NioBufferHandlerConfiguration.class);
-
-    private final NioBufferHandler<T> packetHandler;
-    private final ExecutorService executorService;
-
-    /**
-     *
-     * @param executorService thread pool.
-     * @param packetHandler callback function.
-     */
-    public NioBufferHandlerConfiguration(@Qualifier(EXECUTOR_SERVICE_BEAN_NAME) ExecutorService executorService,
-                                         NioBufferHandler<T> packetHandler) {
-        this.packetHandler = packetHandler;
-        this.executorService = executorService;
-    }
 
     @Override
     public void nextPacket(final T user, final PcapPktHdr h, final ByteBuffer bytes) {
@@ -71,11 +54,9 @@ public class NioBufferHandlerConfiguration<T> implements PcapHandler<T> {
             }
         });
         try {
-            packetHandler.next(user, packet);
+            getHandler().next(user, packet);
         } catch (Exception e) {
-            if (LOGGER.isWarnEnabled()) {
-                LOGGER.warn(e.getMessage());
-            }
+            LOGGER.warn(e.getMessage());
         }
     }
 

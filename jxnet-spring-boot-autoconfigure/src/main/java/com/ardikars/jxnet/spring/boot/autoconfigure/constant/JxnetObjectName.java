@@ -40,7 +40,9 @@ public final class JxnetObjectName {
     public static final String JXPACKET_HANDLER_CONFIGURATION_BEAN_NAME = "com.ardikras.jxnet.jxpacketHandlerConfiguration";
     public static final String JXPACKET_ASYNC_HANDLER_CONFIGURATION_BEAN_NAME = "com.ardikras.jxnet.jxpacketAsyncHandlerConfiguration";
     public static final String NETTY_BUFFER_HANDLER_CONFIGURATION_BEAN_NAME = "com.ardikras.jxnet.nettyBufferHandlerConfiguration";
+    public static final String NETTY_BUFFER_ASYCN_HANDLER_CONFIGURATION_BEAN_NAME = "com.ardikras.jxnet.nettyBufferAsycHandlerConfiguration";
     public static final String NIO_BUFFER_HANDLER_CONFIGURATION_BEAN_NAME = "com.ardikras.jxnet.nioBufferHandlerConfiguration";
+    public static final String NIO_BUFFER_ASYNC_HANDLER_CONFIGURATION_BEAN_NAME = "com.ardikras.jxnet.nioBufferAsyncHandlerConfiguration";
     public static final String PCAP_BUILDER_BEAN_NAME = "com.ardikras.jxnet.pcapBuilder";
     public static final String JVM_BEAN_NAME = "com.ardikras.jxnet.jvm";
 

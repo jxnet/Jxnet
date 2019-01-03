@@ -17,29 +17,21 @@
 
 package com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket;
 
-import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.DATALINK_TYPE_BEAN_NAME;
-import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.EXECUTOR_SERVICE_BEAN_NAME;
 import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.JXPACKET_HANDLER_CONFIGURATION_BEAN_NAME;
 
 import com.ardikars.common.logging.Logger;
 import com.ardikars.common.logging.LoggerFactory;
 import com.ardikars.common.tuple.Pair;
 import com.ardikars.common.tuple.Tuple;
-import com.ardikars.jxnet.DataLinkType;
 import com.ardikars.jxnet.PcapHandler;
 import com.ardikars.jxnet.PcapPktHdr;
-import com.ardikars.jxnet.spring.boot.autoconfigure.JxpacketHandler;
+import com.ardikars.jxnet.spring.boot.autoconfigure.HandlerConfigurer;
 import com.ardikars.jxpacket.common.Packet;
-import com.ardikars.jxpacket.common.UnknownPacket;
-import com.ardikars.jxpacket.core.ethernet.Ethernet;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import java.nio.ByteBuffer;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Configuration;
 
@@ -51,49 +43,22 @@ import org.springframework.context.annotation.Configuration;
  */
 @ConditionalOnClass({Packet.class, ByteBuf.class})
 @Configuration(JXPACKET_HANDLER_CONFIGURATION_BEAN_NAME)
-public class JxpacketHandlerConfiguration<T> implements PcapHandler<T> {
+public class JxpacketHandlerConfiguration<T> extends HandlerConfigurer<T, Future<Pair<PcapPktHdr, Packet>>> implements PcapHandler<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JxpacketHandlerConfiguration.class);
 
-    private final int rawDataLinkType;
-    private final JxpacketHandler<T> packetHandler;
-    private final ExecutorService executorService;
-
-    /**
-     *
-     * @param executorService thread pool.
-     * @param dataLinkType datalink type.
-     * @param packetHandler callback function.
-     */
-    public JxpacketHandlerConfiguration(@Qualifier(EXECUTOR_SERVICE_BEAN_NAME) ExecutorService executorService,
-                                        @Qualifier(DATALINK_TYPE_BEAN_NAME) DataLinkType dataLinkType,
-                                        JxpacketHandler<T> packetHandler) {
-        this.rawDataLinkType = dataLinkType != null ? dataLinkType.getValue() : 1;
-        this.packetHandler = packetHandler;
-        this.executorService = executorService;
-    }
-
     @Override
     public void nextPacket(final T user, final PcapPktHdr h, final ByteBuffer bytes) {
-        Future<Pair<PcapPktHdr, Packet>> packet = executorService.submit(new Callable<Pair<PcapPktHdr, Packet>>() {
+        final Future<Pair<PcapPktHdr, Packet>> packet = executorService.submit(new Callable<Pair<PcapPktHdr, Packet>>() {
             @Override
             public Pair<PcapPktHdr, Packet> call() throws Exception {
-                ByteBuf buffer = Unpooled.wrappedBuffer(bytes);
-                Packet packet;
-                if (rawDataLinkType == 1) {
-                    packet = Ethernet.newPacket(buffer);
-                } else {
-                    packet = UnknownPacket.newPacket(buffer);
-                }
-                return Tuple.of(h, packet);
+                return Tuple.of(h, decode(bytes));
             }
         });
         try {
-            packetHandler.next(user, packet);
+            getHandler().next(user, packet);
         } catch (ExecutionException | InterruptedException e) {
-            if (LOGGER.isWarnEnabled()) {
-                LOGGER.warn(e.getMessage());
-            }
+            LOGGER.warn(e.getMessage());
         }
     }
 

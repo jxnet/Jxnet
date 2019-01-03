@@ -33,6 +33,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 
+/**
+ * Abstract jxnet spring boot runner.
+ * @param <T> type.
+ * @since 1.5.3
+ */
 @Order(Integer.MIN_VALUE)
 public abstract class AbstractJxnetApplicationRunner<T> implements CommandLineRunner {
 

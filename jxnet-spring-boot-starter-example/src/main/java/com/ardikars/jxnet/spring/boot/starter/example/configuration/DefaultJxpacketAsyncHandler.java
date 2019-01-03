@@ -24,9 +24,7 @@ import com.ardikars.jxnet.spring.boot.autoconfigure.JxpacketAsyncHandler;
 //import com.ardikars.jxnet.spring.boot.autoconfigure.constant.PacketHandlerType;
 import com.ardikars.jxpacket.common.Packet;
 import java.util.Iterator;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.function.Consumer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,14 +56,9 @@ public class DefaultJxpacketAsyncHandler implements JxpacketAsyncHandler<String>
     }
 
     @Override
-    public void next(String argument, CompletableFuture<Pair<PcapPktHdr, Packet>> packet) throws ExecutionException, InterruptedException {
+    public void next(String argument, Pair<PcapPktHdr, Packet> packet) throws ExecutionException, InterruptedException {
         LOGGER.info("User argument      : {}", argument);
-        packet.thenAccept(new Consumer<Pair<PcapPktHdr, Packet>>() {
-            @Override
-            public void accept(Pair<PcapPktHdr, Packet> pcapPktHdrPacketPair) {
-                print(pcapPktHdrPacketPair);
-            }
-        });
+        print(packet);
     }
 
 }

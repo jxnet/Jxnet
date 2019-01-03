@@ -21,7 +21,6 @@ import com.ardikars.common.tuple.Pair;
 import com.ardikars.jxnet.PcapPktHdr;
 import com.ardikars.jxpacket.common.Packet;
 
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /**
@@ -30,15 +29,6 @@ import java.util.concurrent.Future;
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
  * @since 1.4.9
  */
-public interface JxpacketHandler<T> {
-
-    /**
-     * Next available packet.
-     * @param argument user argument.
-     * @param packet a tuple of {@link PcapPktHdr} and {@link Packet}.
-     * @throws ExecutionException execution exception.
-     * @throws InterruptedException interrupted exception.
-     */
-    void next(T argument, Future<Pair<PcapPktHdr, Packet>> packet) throws ExecutionException, InterruptedException;
+public interface JxpacketHandler<T> extends Handler<T, Future<Pair<PcapPktHdr, Packet>>> {
 
 }

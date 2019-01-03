@@ -20,7 +20,7 @@ package com.ardikars.jxnet.spring.boot.autoconfigure;
 import com.ardikars.common.tuple.Pair;
 import com.ardikars.jxnet.PcapPktHdr;
 import io.netty.buffer.ByteBuf;
-import java.util.concurrent.ExecutionException;
+
 import java.util.concurrent.Future;
 
 /**
@@ -29,15 +29,6 @@ import java.util.concurrent.Future;
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
  * @since 1.4.9
  */
-public interface NettyBufferHandler<T> {
-
-    /**
-     * Next available packet.
-     * @param argument user argument.
-     * @param packet a taple of {@link PcapPktHdr} and {@link ByteBuf}.
-     * @throws ExecutionException execution exception.
-     * @throws InterruptedException interrupted exception.
-     */
-    void next(T argument, Future<Pair<PcapPktHdr, ByteBuf>> packet) throws ExecutionException, InterruptedException;
+public interface NettyBufferHandler<T> extends Handler<T, Future<Pair<PcapPktHdr, ByteBuf>>> {
 
 }
