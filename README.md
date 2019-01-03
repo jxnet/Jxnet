@@ -8,7 +8,7 @@ Jxnet wraps a native packet capture library (libpcap/npcap) via JNI (Java Native
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4d6ca7f3d9214098b1436990ac76a6cd)](https://www.codacy.com/project/jxnet/Jxnet/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jxnet/Jxnet&amp;utm_campaign=Badge_Grade_Dashboard)
 [![Build status](https://ci.appveyor.com/api/projects/status/ev4t6t1ssacwj18j?svg=true)](https://ci.appveyor.com/project/jxnet/jxnet)
 
-[ ![Download](https://api.bintray.com/packages/ardikars/maven/com.ardikars.jxnet/images/download.svg?version=1.4.9.Final) ](https://bintray.com/ardikars/maven/com.ardikars.jxnet/1.4.9.Final/link)
+[ ![Download](https://api.bintray.com/packages/ardikars/maven/com.ardikars.jxnet/images/download.svg?version=1.5.3.RELEASE) ](https://bintray.com/ardikars/maven/com.ardikars.jxnet/1.5.3.RELEASE/link)
 
 
 Features
@@ -63,7 +63,7 @@ List of supported protocol available at [Jxpacket](https://github.com/jxnet/Jxpa
 >>>         <dependency>
 >>>             <groupId>com.ardikars.jxnet</groupId>
 >>>             <artifactId>jxnet</artifactId>
->>>             <version>1.4.9.Final</version>
+>>>             <version>1.5.3.RELEASE</version>
 >>>             <type>pom</type>
 >>>             <scope>import</scope>
 >>>         </dependency>
@@ -82,7 +82,7 @@ List of supported protocol available at [Jxpacket](https://github.com/jxnet/Jxpa
 >>> }
 >>>
 >>> dependencyManagement {
->>>     imports { mavenBom("com.ardikars.jxnet:jxnet:1.4.9.Final") }
+>>>     imports { mavenBom("com.ardikars.jxnet:jxnet:1.5.3.RELEASE") }
 >>> }
 >>> ```  
 
@@ -90,37 +90,15 @@ List of supported protocol available at [Jxpacket](https://github.com/jxnet/Jxpa
   
 ```java
 @SpringBootApplication
-public class Application implements CommandLineRunner  {
-
+public class Application extends AbstractJxnetApplicationRunner<String>  {
+    
     public static final int MAX_PACKET = -1; // infinite loop
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(Application.class.getName());
-
-    private Context context;
-    private PcapIf pcapIf;
-    private MacAddress macAddress;
-
-    @Autowired
-    private PcapHandler<String> pcapHandler;
-
-    public Application(Context context, PcapIf pcapIf, MacAddress macAddress) {
-        this.context = context;
-        this.pcapIf = pcapIf;
-        this.macAddress = macAddress;
-    }
-
+    
     @Override
     public void run(String... args) throws Exception {
-        LOGGER.info("Network Interface : {}", pcapIf.getName());
-        LOGGER.info("MAC Address       : {}", macAddress);
-        LOGGER.info("Addresses         : ");
-        for (PcapAddr addr : pcapIf.getAddresses()) {
-            if (addr.getAddr().getSaFamily() == SockAddr.Family.AF_INET) {
-                LOGGER.info("\tAddress       : {}", Inet4Address.valueOf(addr.getAddr().getData()));
-                LOGGER.info("\tNetwork       : {}", Inet4Address.valueOf(addr.getNetmask().getData()));
-            }
-        }
-        context.pcapLoop(MAX_PACKET, pcapHandler, "Jxnet!");
+        showSystemInfo();
+        showNetworkInfo();
+        loop(MAX_PACKET, "Jxnet!");
     }
 
     public static void main(String[] args) {
