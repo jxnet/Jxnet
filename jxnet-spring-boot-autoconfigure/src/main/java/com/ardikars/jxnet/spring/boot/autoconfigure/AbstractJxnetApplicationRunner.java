@@ -83,18 +83,22 @@ public abstract class AbstractJxnetApplicationRunner<T> implements CommandLineRu
     protected void showSystemInfo() {
         if (jvm != null && jvm.getOperatingSystem() != null) {
             OperatingSystem os = jvm.getOperatingSystem();
-            long mbDivider = 20;
-            long physicalMemoryInBytes = os.getTotalPhysicalMemorySize();
-            long physicalMemoryInMegaBytes = physicalMemoryInBytes >> mbDivider;
-            long swapSpaceInBytes = os.getTotalSwapSpaceSize();
-            long swapSpaceInMegaBytes = swapSpaceInBytes >> mbDivider;
-            LOGGER.info("{}----------------------- {} -----------------------{}", "+", "System Information ", "+");
-            LOGGER.info("Operating system       : {}  {}  {}", os.getName(), os.getArch(), os.getVersion());
-            if (physicalMemoryInBytes > 0 && physicalMemoryInMegaBytes > 0 && swapSpaceInBytes > 0 && swapSpaceInMegaBytes > 0) {
-                LOGGER.info("Total physical memory  : {} bytes ({} MB)", physicalMemoryInBytes, physicalMemoryInMegaBytes);
-                LOGGER.info("Total swap space       : {} bytes ({} MB)", swapSpaceInBytes, swapSpaceInMegaBytes);
+            if (os.isAccessible()) {
+                long mbDivider = 20;
+                long physicalMemoryInBytes = os.getTotalPhysicalMemorySize();
+                long physicalMemoryInMegaBytes = physicalMemoryInBytes >> mbDivider;
+                long swapSpaceInBytes = os.getTotalSwapSpaceSize();
+                long swapSpaceInMegaBytes = swapSpaceInBytes >> mbDivider;
+                LOGGER.info("{}----------------------- {} -----------------------{}", "+", "System Information ", "+");
+                LOGGER.info("Operating system       : {}  {}  {}", os.getName(), os.getArch(), os.getVersion());
+                if (physicalMemoryInBytes > 0 && physicalMemoryInMegaBytes > 0 && swapSpaceInBytes > 0 && swapSpaceInMegaBytes > 0) {
+                    LOGGER.info("Total physical memory  : {} bytes ({} MB)", physicalMemoryInBytes, physicalMemoryInMegaBytes);
+                    LOGGER.info("Total swap space       : {} bytes ({} MB)", swapSpaceInBytes, swapSpaceInMegaBytes);
+                }
             }
-            LOGGER.info("Available processors   : {} cores", jvm.getAvailableProcessors());
+            if (jvm.hasJvm()) {
+                LOGGER.info("Available processors   : {} cores", jvm.getAvailableProcessors());
+            }
             LOGGER.info("{}-------------------------------------------------------------------{}", "+", "+");
         }
     }
