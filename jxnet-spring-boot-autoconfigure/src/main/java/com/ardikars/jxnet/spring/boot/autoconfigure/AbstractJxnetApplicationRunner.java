@@ -90,8 +90,10 @@ public abstract class AbstractJxnetApplicationRunner<T> implements CommandLineRu
             long swapSpaceInMegaBytes = swapSpaceInBytes >> mbDivider;
             LOGGER.info("{}----------------------- {} -----------------------{}", "+", "System Information ", "+");
             LOGGER.info("Operating system       : {}  {}  {}", os.getName(), os.getArch(), os.getVersion());
-            LOGGER.info("Total physical memory  : {} bytes ({} MB)", physicalMemoryInBytes, physicalMemoryInMegaBytes);
-            LOGGER.info("Total swap space       : {} bytes ({} MB)", swapSpaceInBytes, swapSpaceInMegaBytes);
+            if (physicalMemoryInBytes > 0 && physicalMemoryInMegaBytes > 0 && swapSpaceInBytes > 0 && swapSpaceInMegaBytes > 0) {
+                LOGGER.info("Total physical memory  : {} bytes ({} MB)", physicalMemoryInBytes, physicalMemoryInMegaBytes);
+                LOGGER.info("Total swap space       : {} bytes ({} MB)", swapSpaceInBytes, swapSpaceInMegaBytes);
+            }
             LOGGER.info("Available processors   : {} cores", jvm.getAvailableProcessors());
             LOGGER.info("{}-------------------------------------------------------------------{}", "+", "+");
         }
