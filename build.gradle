@@ -179,6 +179,11 @@ if (gradle.startParameter.taskNames.contains("bintrayUpload") ||
 if (gradle.startParameter.taskNames.contains('dependencyCheckAnalyze')) {
 	apply from: 'gradle/dependencyAnalysis.gradle'
 }
+
+if (gradle.startParameter.taskNames.contains('generateDockerfile')) {
+	apply from: 'gradle/generateDockerfile.gradle'
+}
+
 //
 //task wrapper(type: Wrapper) {
 //	distributionUrl = "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-all.zip"

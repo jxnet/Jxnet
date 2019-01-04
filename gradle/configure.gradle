@@ -39,9 +39,11 @@ ext {
 
 	SPRING_BOOT_VERSION = '2.0.4.RELEASE'
 
+	REPOSITORY = 'https://github.com/jxnet/Jxnet'
+	
 	pom_project = {
 		
-		url 'https://github.com/jxnet/Jxnet'
+		url "${REPOSITORY}"
 
 		inceptionYear '2015'
 
@@ -62,9 +64,9 @@ ext {
 		}
 
 		scm {
-			url 'https://github.com/jxnet/Jxnet.git'
-			connection 'scm:git:https://github.com/jxnet/Jxnet.git'
-			developerConnection 'scm:git:git@github.com/jxnet/Jxnet.git'
+			url "${REPOSITORY}"
+			connection "scm:git:${REPOSITORY}"
+			developerConnection "scm:git:${REPOSITORY}"
 			tag 'HEAD'
 		}
 
