@@ -8,7 +8,7 @@ Jxnet wraps a native packet capture library (libpcap/npcap) via JNI (Java Native
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4d6ca7f3d9214098b1436990ac76a6cd)](https://www.codacy.com/project/jxnet/Jxnet/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jxnet/Jxnet&amp;utm_campaign=Badge_Grade_Dashboard)
 [![Build status](https://ci.appveyor.com/api/projects/status/ev4t6t1ssacwj18j?svg=true)](https://ci.appveyor.com/project/jxnet/jxnet)
 
-[ ![Download](https://api.bintray.com/packages/ardikars/maven/com.ardikars.jxnet/images/download.svg?version=1.5.3.RELEASE) ](https://bintray.com/ardikars/maven/com.ardikars.jxnet/1.5.3.RELEASE/link)
+[ ![Download](https://api.bintray.com/packages/ardikars/maven/com.ardikars.jxnet/images/download.svg?version=1.5.4.RELEASE) ](https://bintray.com/ardikars/maven/com.ardikars.jxnet/1.5.4.RELEASE/link)
 
 
 Features
@@ -63,7 +63,7 @@ List of supported protocol available at [Jxpacket](https://github.com/jxnet/Jxpa
 >>>         <dependency>
 >>>             <groupId>com.ardikars.jxnet</groupId>
 >>>             <artifactId>jxnet</artifactId>
->>>             <version>1.5.3.RELEASE</version>
+>>>             <version>1.5.4.RELEASE</version>
 >>>             <type>pom</type>
 >>>             <scope>import</scope>
 >>>         </dependency>
@@ -82,7 +82,7 @@ List of supported protocol available at [Jxpacket](https://github.com/jxnet/Jxpa
 >>> }
 >>>
 >>> dependencyManagement {
->>>     imports { mavenBom("com.ardikars.jxnet:jxnet:1.5.3.RELEASE") }
+>>>     imports { mavenBom("com.ardikars.jxnet:jxnet:1.5.4.RELEASE") }
 >>> }
 >>> ```  
 
@@ -161,7 +161,6 @@ public class DefaultJxpacketHandler implements JxpacketHandler<String> {
 | jxnet.jxpacket.autoRegister   | LIVE, OFFLINE        | false                              | Auto register jxpacket protocol                  |
 
 
-
 Build Jxnet from Source
 =============================
 
@@ -214,12 +213,6 @@ GNU Lesser General Public License, Version 3
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 ```
-
-Contact
-=======
-
-Email: Ardika Rommy Sanjaya (contact@ardikars.com)
-
 
 Issues
 ======
