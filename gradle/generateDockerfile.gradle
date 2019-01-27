@@ -9,7 +9,7 @@ apt-get install -y libpcap0.8 libpcap-dev wget git gcc
 
 WORKDIR /usr/local/jxnet
 
-RUN git clone https://github.com/jxnet/Jxnet.git Jxnet
+RUN git clone -b v1 --single-branch https://github.com/jxnet/Jxnet.git Jxnet
 RUN cd Jxnet && ./gradlew build -x test
 ENTRYPOINT ["java", "-jar", "jxnet-spring-boot-starter-example/build/libs/jxnet-spring-boot-starter-example-${VERSION}.jar"]
 """
