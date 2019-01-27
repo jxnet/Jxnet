@@ -76,6 +76,7 @@ void SetPcapPktHdrIDs(JNIEnv *env);
 extern jclass ByteBufferClass;
 extern jmethodID ByteBufferClearMID;
 extern jmethodID ByteBufferPutMID;
+extern jfieldID ByteBufferAddressFID;
 
 void SetByteBufferIDs(JNIEnv *env);
 

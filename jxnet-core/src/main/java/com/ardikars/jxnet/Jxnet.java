@@ -808,12 +808,37 @@ public final class Jxnet {
 	 */
 	public static native byte[] FindHardwareAddress(String source) throws PlatformNotSupportedException, DeviceNotFoundException;
 
+	/**
+	 * Initialize default IDs.
+	 */
+	private static native void initIDs();
+
+	private static void initialize() {
+		try {
+			Class.forName("com.ardikars.jxnet.PcapIf");
+			Class.forName("com.ardikars.jxnet.PcapAddr");
+			Class.forName("com.ardikars.jxnet.SockAddr");
+			Class.forName("com.ardikars.jxnet.Pcap");
+			Class.forName("com.ardikars.jxnet.BpfProgram");
+			Class.forName("com.ardikars.common.net.MacAddress");
+			Class.forName("com.ardikars.common.net.Inet4Address");
+			Class.forName("java.io.File");
+			Class.forName("java.lang.StringBuilder");
+			Class.forName("java.util.List");
+			initIDs();
+			LOGGER.debug("Load classes and initialize IDs.");
+		} catch (ClassNotFoundException e) {
+			loaded = false;
+		}
+	}
+
 	static {
 		if (!loaded) {
 			new DefaultLibraryLoader().load(new Callback<Void>() {
 				@Override
 				public void onSuccess(Void value) {
 					loaded = true;
+					initialize();
 					LOGGER.debug("Jxnet native library loaded sucessfully.");
 				}
 

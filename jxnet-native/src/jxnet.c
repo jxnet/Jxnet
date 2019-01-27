@@ -46,11 +46,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapFindAllDevs
 	if (CheckNotNull(env, jlist_pcap_if, NULL) == NULL) return -1;
 	if (CheckNotNull(env, jerrbuf, NULL) == NULL) return -1;
 
-	SetListIDs(env);
-	SetPcapIfIDs(env);
-	SetPcapAddrIDs(env);
-	SetSockAddrIDs(env);
-
 	pcap_if_t *alldevsp = NULL;
 	char errbuf[PCAP_ERRBUF_SIZE];
 	int r = -1;
@@ -59,7 +54,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapFindAllDevs
 	r = pcap_findalldevs(&alldevsp, errbuf);
 
 	if (r != 0 || alldevsp == NULL) {
-		// Including SetStringBuilderIDs().
 		SetStringBuilder(env, jerrbuf, errbuf);
 		return (jint) r;
 	}
@@ -175,11 +169,9 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapOpenLive
 	(*env)->ReleaseStringUTFChars(env, jsource, source);
 
 	if (pcap == NULL) {
-		// Including SetStringBuilderIDs().
 		SetStringBuilder(env, jerrbuf, errbuf);
 		return NULL;
 	}
-	// Including SetPcapIDs().
 	return SetPcap(env, pcap);
 }
 
@@ -194,8 +186,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapLoop
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
 	if (CheckNotNull(env, jcallback, NULL) == NULL) return -1;
 
-	SetPcapPktHdrIDs(env);
-	// Including SetPcapIDs().
 	pcap_t *pcap = GetNotDeadPcap(env, jpcap); // Exception already thrown
 
 	if (pcap == NULL) {
@@ -226,8 +216,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapLoop0
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
 	if (CheckNotNull(env, jcallback, NULL) == NULL) return -1;
 
-	SetPcapPktHdrIDs(env);
-	// Including SetPcapIDs().
 	pcap_t *pcap = GetNotDeadPcap(env, jpcap); // Exception already thrown
 
 	if (pcap == NULL) {
@@ -259,8 +247,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDispatch
 	if (CheckNotNull(env, jcallback, NULL) == NULL) return -1;
 	if (!CheckArgument(env, (jcnt > 0), NULL)) return -1;
 
-	SetPcapPktHdrIDs(env);
-	// Including SetPcapIDs().
 	pcap_t *pcap = GetNotDeadPcap(env, jpcap); // Exception already thrown
 
 	if (pcap == NULL) {
@@ -291,8 +277,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDispatch0
 	if (CheckNotNull(env, jcallback, NULL) == NULL) return -1;
 	if (!CheckArgument(env, (jcnt > 0), NULL)) return -1;
 
-	SetPcapPktHdrIDs(env);
-	// Including SetPcapIDs().
 	pcap_t *pcap = GetNotDeadPcap(env, jpcap); // Exception already thrown
 
 	if (pcap == NULL) {
@@ -324,7 +308,6 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDumpOpen
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return NULL;
 	if (CheckNotNull(env, jfname, NULL) == NULL) return NULL;
 
-	// Including SetPcapIDs().
 	pcap_t *pcap = GetPcap(env, jpcap); // Exception already thrown
 
 	if (pcap == NULL) {
@@ -339,7 +322,6 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDumpOpen
 		ThrowNew(env, PCAP_DUMPER_CLOSE_EXCEPTION, pcap_geterr(pcap));
 		return NULL;
 	}
-	// SetPcapDumperIDs().
 	return SetPcapDumper(env, pcap_dumper);
 }
 
@@ -351,13 +333,10 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDumpOpen
 JNIEXPORT void JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDump
 		(JNIEnv *env, jclass jcls, jobject jpcap_dumper, jobject jh, jobject jsp) {
 
-	SetPcapPktHdrIDs(env);
-
 	if (CheckNotNull(env, jpcap_dumper, "") == NULL) return;
 	if (CheckNotNull(env, jh, NULL) == NULL) return;
 	if (CheckNotNull(env, jsp, NULL) == NULL) return;
 
-	// Including SetPcapDumperIDs().
 	pcap_dumper_t *pcap_dumper = GetPcapDumper(env, jpcap_dumper);
 
 	if (pcap_dumper == NULL) {
@@ -393,11 +372,9 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapOpenOffline
 	(*env)->ReleaseStringUTFChars(env, jfname, fname);
 
 	if (pcap == NULL) {
-		// Including SetStringBuilderIDs().
 		SetStringBuilder(env, jerrbuf, errbuf);
 		return NULL;
 	}
-	// Including SetPcapIDs().
 	return SetPcap(env, pcap);
 }
 
@@ -414,7 +391,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCompile
 	if (CheckNotNull(env, jstr, NULL) == NULL) return -1;
 	if (!CheckArgument(env, (joptimize == 0 || joptimize == 1), NULL)) return -1;
 
-	// Including SetPcapIDs().
 	pcap_t *pcap = GetPcap(env, jpcap); // Exception already thrown
 
 	if (pcap == NULL) {
@@ -447,7 +423,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetFilter
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
 	if (CheckNotNull(env, jfp, NULL) == NULL) return -1;
 
-	// Including SetPcapIDs().
 	pcap_t *pcap = GetNotDeadPcap(env, jpcap); // Exception already thrown
 
 	if (pcap == NULL) {
@@ -475,7 +450,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSendPacket
 	if (CheckNotNull(env, jbuf, NULL) == NULL) return -1;
 	if (!CheckArgument(env, (jsize > 0), NULL)) return -1;
 
-	// Including SetPcapIDs().
 	pcap_t *pcap = GetNotDeadPcap(env, jpcap); // Exception already thrown
 
 	if (pcap == NULL) {
@@ -503,14 +477,11 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapNext
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return NULL;
 	if (CheckNotNull(env, jh, NULL) == NULL) return NULL;
 
-	// Including SetPcapIDs().
 	pcap_t *pcap = GetNotDeadPcap(env, jpcap); // Exception already thrown
 
 	if (pcap == NULL) {
 		return NULL;
 	}
-
-	SetPcapPktHdrIDs(env);
 
 	struct pcap_pkthdr pkt_header;
 
@@ -544,9 +515,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapNextEx
 	if (pcap == NULL) {
 		return -1;
 	}
-
-	SetPcapPktHdrIDs(env);
-	SetByteBufferIDs(env);
 
 	struct pcap_pkthdr *pkt_header;
 	const u_char *data = NULL;
@@ -640,7 +608,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDataLink
 
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
 
-	// Including SetPcapIDs().
 	pcap_t *pcap = GetPcap(env, jpcap); // Exception already thrown
 
 	if (pcap == NULL) {
@@ -661,7 +628,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetDataLink
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
 	if (!CheckArgument(env, (jdtl > -1), NULL)) return -1;
 
-	// Including SetPcapIDs().
 	pcap_t *pcap = GetNotDeadPcap(env, jpcap); // Exception already thrown
 
 	if (pcap == NULL) {
@@ -681,7 +647,6 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxnet_Jxnet_PcapBreakLoop
 
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return;
 
-	// Including SetPcapIDs().
 	pcap_t *pcap = GetPcap(env, jpcap); // Exception already thrown
 
 	if (pcap == NULL) {
@@ -707,7 +672,6 @@ JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_Jxnet_PcapLookupDev
 	const char *r = pcap_lookupdev(errbuf);
 
 	if (r == NULL) {
-		// Including SetStringBuilderIDs().
 		SetStringBuilder(env, jerrbuf, errbuf);
 	}
 
@@ -730,7 +694,6 @@ JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_Jxnet_PcapGetErr
 
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return NULL;
 
-	// Including SetPcapIDs().
 	pcap_t *pcap = GetPcap(env, jpcap); // Exception already thrown
 
 	if (pcap == NULL) {
@@ -760,7 +723,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapIsSwapped
 
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
 
-	// Including SetPcapIDs().
 	pcap_t *pcap = GetPcap(env, jpcap); // Exception already thrown
 
 	if (pcap == NULL) {
@@ -780,7 +742,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSnapshot
 
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
 
-	// Including SetPcapIDs().
 	pcap_t *pcap = GetPcap(env, jpcap); // Exception already thrown
 
 	if (pcap == NULL) {
@@ -810,7 +771,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapMajorVersion
 
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
 
-	// Including SetPcapIDs().
 	pcap_t *pcap = GetPcap(env, jpcap); // Exception already thrown
 
 	if (pcap == NULL) {
@@ -830,7 +790,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapMinorVersion
 
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
 
-	// Including SetPcapIDs().
 	pcap_t *pcap = GetPcap(env, jpcap); // Exception already thrown
 
 	if (pcap == NULL) {
@@ -897,7 +856,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetNonBlock
 					   "1 to enable non blocking, 0 otherwise.")) return -1;
 	if (CheckNotNull(env, jerrbuf, NULL) == NULL) return -1;
 
-	// Including SetPcapIDs().
 	pcap_t *pcap = GetNotDeadPcap(env, jpcap); // Exception already thrown
 
 	if (pcap == NULL) {
@@ -909,7 +867,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetNonBlock
 
 	int r = pcap_setnonblock(pcap, (int) jnonblock, errbuf);
 
-	// Including SetStringBuilderIDs().
 	SetStringBuilder(env, jerrbuf, errbuf);
 
 	return (jint) r;
@@ -926,7 +883,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapGetNonBlock
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
 	if (CheckNotNull(env, jerrbuf, NULL) == NULL) return -1;
 
-	// Including SetPcapIDs().
 	pcap_t *pcap = GetNotDeadPcap(env, jpcap); // Exception already thrown
 
 	if (pcap == NULL) {
@@ -954,7 +910,6 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapOpenDead
 
 	pcap_t *pcap = pcap_open_dead((int) jlinktype, (int) jsnaplen);
 
-	// Including SetPcapIDs().
 	return SetDeadPcap(env, pcap);
 }
 
@@ -1012,10 +967,8 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDumpFile
 		return NULL;
 	}
 
-	// Including SetPcapDumperIDs().
 	FILE *file = pcap_dump_file(pcap_dumper);
 
-	// Including SetFileIDs().
 	return SetFile(env, file);
 }
 
@@ -1029,8 +982,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapStats
 
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
 	if (CheckNotNull(env, jpcap_stat, NULL) == NULL) return -1;
-
-	SetPcapStatIDs(env);
 
     pcap_t *pcap = GetNotDeadPcap(env, jpcap);
 
@@ -1125,7 +1076,6 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCreate
 	(*env)->ReleaseStringUTFChars(env, jsource, source);
 
 	if (pcap == NULL) {
-		// Including SetStringBuilderIDs().
 		SetStringBuilder(env, jerrbuf, errbuf);
 		return NULL;
 	}
@@ -1312,8 +1262,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetDirection
 	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
 	if (CheckNotNull(env, jdirection, NULL) == NULL) return -1;
 
-	SetPcapDirectionIDs(env);
-
     pcap_t *pcap = GetNotDeadPcap(env, jpcap);
 
     if (pcap == NULL) {
@@ -1419,7 +1367,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapGetTStampPrecision
  */
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapListDataLinks
 		(JNIEnv *env, jclass jclazz, jobject jpcap, jobject jdtl_buffer) {
-	SetListIDs(env);
+
 #if defined(WIN32)
 	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
 	return -1;
@@ -1574,7 +1522,6 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapOpenDeadWithTStampPr
 	return NULL;
 #else
 	pcap_t *pcap = pcap_open_dead_with_tstamp_precision(jlinktype, jsnaplen, jprecision);
-	// Including SetPcapIDs().
 	return SetDeadPcap(env, pcap);
 #endif
     return NULL;
@@ -1633,11 +1580,9 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapOpenOfflineWithTStam
 	(*env)->ReleaseStringUTFChars(env, jfname, fname);
 
 	if (pcap == NULL) {
-		// Including SetStringBuilderIDs().
 		SetStringBuilder(env, jerrbuf, errbuf);
 		return NULL;
 	}
-	// Including SetPcapIDs().
 	return SetPcap(env, pcap);
 #endif
     return NULL;
@@ -1659,7 +1604,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapInject
 	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
 	return -1;
 #else
-	// Including SetPcapIDs().
 	pcap_t *pcap = GetNotDeadPcap(env, jpcap); // Exception already thrown
 
 	if (pcap == NULL) {
@@ -1688,7 +1632,6 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCheckActivated
 
     if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
 
-    // Including SetPcapIDs().
    	pcap_t *pcap = GetPcap(env, jpcap); // Exception already thrown
 
    	if (pcap == NULL) {
@@ -1835,4 +1778,23 @@ JNIEXPORT jbyteArray JNICALL Java_com_ardikars_jxnet_Jxnet_FindHardwareAddress
 	(*env)->ReleaseStringUTFChars(env, jnic_name, buf);
 	return hw_addr;
 #endif
+  }
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    initIDs
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_ardikars_jxnet_Jxnet_initIDs
+  (JNIEnv *env, jclass jcls) {
+    SetStringBuilderIDs(env);
+    SetListIDs(env);
+    SetPcapIfIDs(env);
+    SetPcapAddrIDs(env);
+    SetFileIDs(env);
+    SetSockAddrIDs(env);
+    SetPcapIDs(env);
+    SetBpfProgramIDs(env);
+    SetInet4AddressIDs(env);
+    SetMacAddressIDs(env);
   }

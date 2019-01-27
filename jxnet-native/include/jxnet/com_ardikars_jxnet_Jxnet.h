@@ -523,6 +523,14 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCheckActivated
 JNIEXPORT jbyteArray JNICALL Java_com_ardikars_jxnet_Jxnet_FindHardwareAddress
   (JNIEnv *, jclass, jstring);
 
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    initIDs
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_ardikars_jxnet_Jxnet_initIDs
+  (JNIEnv *, jclass);
+
 #ifdef __cplusplus
 }
 #endif

@@ -349,6 +349,7 @@ void SetPcapPktHdrIDs(JNIEnv *env) {
 jclass ByteBufferClass = NULL;
 jmethodID ByteBufferClearMID = NULL;
 jmethodID ByteBufferPutMID = NULL;
+jfieldID ByteBufferAddressFID = NULL;
 
 void SetByteBufferIDs(JNIEnv *env) {
 
@@ -375,6 +376,13 @@ void SetByteBufferIDs(JNIEnv *env) {
 	if (ByteBufferPutMID == NULL) {
 		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method ByteBuffer.put(ByteBuffer)");
 		return;
+	}
+
+	ByteBufferAddressFID = (*env)->GetFieldID(env, ByteBufferClass, "address", "J");
+
+	if (ByteBufferAddressFID == NULL) {
+        ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field ByteBuffer.address:long");
+        return;
 	}
 
 }

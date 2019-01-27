@@ -32,6 +32,14 @@
 #include <netinet/in.h>
 #endif
 
+void SetContextIDs(JNIEnv *env) {
+    SetPcapDirectionIDs(env);
+    SetPcapDumperIDs(env);
+    SetPcapStatIDs(env);
+    SetPcapPktHdrIDs(env);
+    SetByteBufferIDs(env);
+}
+
 void swap_order_uint32(uint32_t *value) {
 	*value = ((*value << 8) & 0xFF00FF00 ) | ((*value >> 8) & 0xFF00FF);
 	*value = (*value << 16) | (*value >> 16);
@@ -108,17 +116,17 @@ jobject NewSockAddr(JNIEnv *env, struct sockaddr *addr) {
 }
 
 jobject SetPcap(JNIEnv *env, pcap_t *pcap) {
-	SetPcapIDs(env);
 	jobject obj = NewObject(env, "com/ardikars/jxnet/Pcap", "<init>", "()V");
 	(*env)->SetLongField(env, obj, PcapAddressFID, PointerToJlong(pcap));
+	SetContextIDs(env);
 	return obj;
 }
 
 jobject SetDeadPcap(JNIEnv *env, pcap_t *pcap) {
-	SetPcapIDs(env);
 	jobject obj = NewObject(env, "com/ardikars/jxnet/Pcap", "<init>", "()V");
 	(*env)->SetLongField(env, obj, PcapAddressFID, PointerToJlong(pcap));
 	(*env)->SetBooleanField(env, obj, PcapIsDeadFID, JNI_TRUE);
+	SetContextIDs(env);
 	return obj;
 }
 
@@ -127,7 +135,6 @@ pcap_t *GetPcap(JNIEnv *env, jobject jpcap) {
 		ThrowNew(env, NULL_PTR_EXCEPTION, NULL);
 		return NULL;
 	}
-	SetPcapIDs(env);
 	jlong pcap = 0;
 	if ((pcap = (*env)->CallLongMethod(env, jpcap, PcapGetAddressMID)) == 0) {
 		ThrowNew(env, PCAP_CLOSE_EXCEPTION, NULL);
@@ -141,7 +148,6 @@ pcap_t *GetNotDeadPcap(JNIEnv *env, jobject jpcap) {
 		ThrowNew(env, NULL_PTR_EXCEPTION, NULL);
 		return NULL;
 	}
-	SetPcapIDs(env);
 	if (JNI_TRUE == (*env)->CallBooleanMethod(env, jpcap, PcapIsDeadMID)) {
         ThrowNew(env, NATIVE_EXCEPTION, "Operation not supported on a PcapOpenDead():Pcap.");
         return NULL;
@@ -155,14 +161,12 @@ pcap_t *GetNotDeadPcap(JNIEnv *env, jobject jpcap) {
 }
 
 jobject SetFile(JNIEnv *env, FILE *file) {
-	SetFileIDs(env);
 	jobject obj = NewObject(env, "com/ardikars/jxnet/File", "<init>", "()V");
 	(*env)->SetLongField(env, obj, FileAddressFID, PointerToJlong(file));
 	return obj;
 }
 
 jobject SetPcapDumper(JNIEnv *env, pcap_dumper_t *pcap_dumper) {
-	SetPcapDumperIDs(env);
 	jobject obj = NewObject(env, "com/ardikars/jxnet/PcapDumper", "<init>", "()V");
 	(*env)->SetLongField(env, obj, PcapDumperAddressFID, PointerToJlong(pcap_dumper));
 	return obj;
@@ -173,7 +177,6 @@ pcap_dumper_t *GetPcapDumper(JNIEnv *env, jobject jpcap_dumper) {
 		ThrowNew(env, NULL_PTR_EXCEPTION, NULL);
 		return NULL;
 	}
-	SetPcapDumperIDs(env);
 	jlong pcap_dumper = 0;
 	if ((pcap_dumper = (*env)->CallLongMethod(env, jpcap_dumper, PcapDumperGetAddressMID)) == 0) {
 		ThrowNew(env, PCAP_DUMPER_CLOSE_EXCEPTION, NULL);
@@ -183,7 +186,6 @@ pcap_dumper_t *GetPcapDumper(JNIEnv *env, jobject jpcap_dumper) {
 }
 
 jobject SetBpfProgram(JNIEnv *env, jobject obj, struct bpf_program *fp) {
-	SetBpfProgramIDs(env);
 	(*env)->SetLongField(env, obj, BpfProgramAddressFID, PointerToJlong(fp));
 	return obj;
 }
@@ -193,7 +195,6 @@ struct bpf_program *GetBpfProgram(JNIEnv *env, jobject jbpf_program) {
 		ThrowNew(env, NULL_PTR_EXCEPTION, NULL);
 		return NULL;
 	}
-	SetBpfProgramIDs(env);
 	jlong bpf_program = 0;
 	if ((bpf_program = (*env)->CallLongMethod(env, jbpf_program, BpfProgramGetAddressMID)) == 0) {
 		ThrowNew(env, BPF_PROGRAM_CLOSE_EXCEPTION, NULL);
