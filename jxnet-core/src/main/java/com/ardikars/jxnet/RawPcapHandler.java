@@ -15,16 +15,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet.spring.boot.autoconfigure.constant;
+package com.ardikars.jxnet;
+
+import com.ardikars.common.annotation.Incubating;
 
 /**
- * Packet handler type.
+ * Callback function used for capturing packets.
  *
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
- * @since 1.4.9
+ * @since 1.0.0
  */
-public enum PacketHandlerType {
+@Incubating
+public interface RawPcapHandler<T> {
 
-    JXPACKET, JXPACKET_ASYNC, NETTY_BUFFER, NETTY_BUFFER_ASYNC, NETTY_RAW_BUFFER, NETTY_RAW_BUFFER_ASYNC, NIO_BUFFER, NIO_BUFFER_ASYNC
+    /**
+     * Next available packet.
+     * @param user user arg.
+     * @param capLen captured length.
+     * @param len length.
+     * @param tvSec tvSec.
+     * @param tvUsec tvUsec.
+     * @param memoryAddress memory address.
+     */
+    void nextPacket(T user, int capLen, int len, int tvSec, long tvUsec, long memoryAddress); // Asyncronous
 
 }

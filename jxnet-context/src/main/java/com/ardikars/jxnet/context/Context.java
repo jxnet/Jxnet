@@ -31,6 +31,7 @@ import com.ardikars.jxnet.PcapPktHdr;
 import com.ardikars.jxnet.PcapStat;
 import com.ardikars.jxnet.PcapTimestampPrecision;
 import com.ardikars.jxnet.PcapTimestampType;
+import com.ardikars.jxnet.RawPcapHandler;
 import com.ardikars.jxnet.exception.BpfProgramCloseException;
 import com.ardikars.jxnet.exception.PcapCloseException;
 import com.ardikars.jxnet.exception.PcapDumperCloseException;
@@ -112,6 +113,57 @@ public interface Context extends Factory<Context, Builder<Pcap, Void>>, AutoClos
 
 	/**
 	 * Collect a group of packets.
+	 * Callback argument already asyncronous.
+	 * @param cnt maximum iteration, -1 is infinite iteration.
+	 * @param callback callback funtion.
+	 * @param user args
+	 * @param <T> args type.
+	 * @return PcapLoop() returns 0 if cnt is exhausted or if, when reading from a
+	 * savefile, no more packets are available. It returns -1 if an error
+	 * occurs or -2 if the loop terminated due to a call to PcapBreakLoop()
+	 * before any packets were processed.  It does not return when live packet
+	 * buffer timeouts occur; instead, it attempts to read more packets.
+	 * @throws PcapCloseException pcap close exception.
+	 * @since 1.1.4
+	 */
+	<T> PcapCode pcapLoop(int cnt, RawPcapHandler<T> callback, T user) throws PcapCloseException;
+
+	/**
+	 * Collect a group of packets.
+	 * @param cnt maximum iteration, -1 is infinite iteration.
+	 * @param callback callback funtion.
+	 * @param user args
+	 * @param executor executor service.
+	 * @param <T> args type.
+	 * @return PcapLoop() returns 0 if cnt is exhausted or if, when reading from a
+	 * savefile, no more packets are available. It returns -1 if an error
+	 * occurs or -2 if the loop terminated due to a call to PcapBreakLoop()
+	 * before any packets were processed.  It does not return when live packet
+	 * buffer timeouts occur; instead, it attempts to read more packets.
+	 * @throws PcapCloseException pcap close exception.
+	 * @since 1.1.4
+	 */
+	<T> PcapCode pcapLoop(int cnt, RawPcapHandler<T> callback, T user, Executor executor) throws PcapCloseException;
+
+	/**
+	 * Collect a group of packets.
+	 * @param cnt maximum iteration, -1 is infinite iteration.
+	 * @param callback callback funtion.
+	 * @param user args
+	 * @param executor executor service.
+	 * @param <T> args type.
+	 * @return PcapLoop() returns 0 if cnt is exhausted or if, when reading from a
+	 * savefile, no more packets are available. It returns -1 if an error
+	 * occurs or -2 if the loop terminated due to a call to PcapBreakLoop()
+	 * before any packets were processed.  It does not return when live packet
+	 * buffer timeouts occur; instead, it attempts to read more packets.
+	 * @throws PcapCloseException pcap close exception.
+	 * @since 1.1.4
+	 */
+	<T> PcapCode pcapLoop(int cnt, RawPcapHandler<T> callback, T user, ExecutorService executor) throws PcapCloseException;
+
+	/**
+	 * Collect a group of packets.
 	 * @param cnt maximum iteration, -1 to infinite.
 	 * @param callback callback function.
 	 * @param user arg.
@@ -156,6 +208,53 @@ public interface Context extends Factory<Context, Builder<Pcap, Void>>, AutoClos
 	 * @since 1.1.4
 	 */
 	<T> PcapCode pcapDispatch(int cnt, PcapHandler<T> callback, T user, Executor executor) throws PcapCloseException;
+
+	/**
+	 * Collect a group of packets.
+	 * @param cnt maximum iteration, -1 to infinite.
+	 * @param callback callback function.
+	 * @param user arg.
+	 * @param <T> args type.
+	 * @return PcapDispatch() returns the number of packets processed on success;
+	 * this can be 0 if no packets were read from a live capture (if, for
+	 * example, they were discarded because they didn't pass the packet filter,
+	 * or if, on platforms that support a packet buffer timeout that
+	 * starts before any packets arrive, the timeout expires before any packets
+	 * arrive, or if the file descriptor for the capture device is in non-blocking
+	 * mode and no packets were available to be read) or if no more
+	 * packets are available in a savefile. It returns -1 if an error
+	 * occurs or -2 if the loop terminated due to a call to PcapBreakLoop()
+	 * before any packets were processed. If your application uses
+	 * PcapBreakLoop(), make sure that you explicitly check for -1 and -2,
+	 * rather than just checking for a return value less then 0.
+	 * @throws PcapCloseException pcap close exception.
+	 * @since 1.5.4
+	 */
+	<T> PcapCode pcapDispatch(int cnt, RawPcapHandler<T> callback, T user) throws PcapCloseException;
+
+	/**
+	 * Collect a group of packets.
+	 * @param cnt maximum iteration, -1 to infinite.
+	 * @param callback callback function.
+	 * @param user arg.
+	 * @param executor executor.
+	 * @param <T> args type.
+	 * @return PcapDispatch() returns the number of packets processed on success;
+	 * this can be 0 if no packets were read from a live capture (if, for
+	 * example, they were discarded because they didn't pass the packet filter,
+	 * or if, on platforms that support a packet buffer timeout that
+	 * starts before any packets arrive, the timeout expires before any packets
+	 * arrive, or if the file descriptor for the capture device is in non-blocking
+	 * mode and no packets were available to be read) or if no more
+	 * packets are available in a savefile. It returns -1 if an error
+	 * occurs or -2 if the loop terminated due to a call to PcapBreakLoop()
+	 * before any packets were processed. If your application uses
+	 * PcapBreakLoop(), make sure that you explicitly check for -1 and -2,
+	 * rather than just checking for a return value less then 0.
+	 * @throws PcapCloseException pcap close exception.
+	 * @since 1.5.4
+	 */
+	<T> PcapCode pcapDispatch(int cnt, RawPcapHandler<T> callback, T user, Executor executor) throws PcapCloseException;
 
 	/**
 	 * Open a file to write packets.

@@ -17,29 +17,20 @@
 
 package com.ardikars.jxnet.spring.boot.starter.example.configuration;
 
+import com.ardikars.common.logging.Logger;
+import com.ardikars.common.logging.LoggerFactory;
 import com.ardikars.common.tuple.Pair;
 import com.ardikars.jxnet.PcapPktHdr;
-import com.ardikars.jxnet.spring.boot.autoconfigure.NettyBufferHandler;
-//import com.ardikars.jxnet.spring.boot.autoconfigure.annotation.EnablePacket;
-//import com.ardikars.jxnet.spring.boot.autoconfigure.constant.PacketHandlerType;
+import com.ardikars.jxnet.spring.boot.autoconfigure.NettyRawBufferHandler;
 import io.netty.buffer.ByteBuf;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-//import org.springframework.context.annotation.Configuration;
 
-/**
- * Netty buffer configuration.
- *
- * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
- * @since 1.4.9
- */
-//@EnablePacket(packetHandlerType = PacketHandlerType.NETTY_BUFFER)
+//@EnablePacket(packetHandlerType = PacketHandlerType.NETTY_RAW_BUFFER)
 //@Configuration
-public class DefaultNettyBufferHandler implements NettyBufferHandler<String> {
+public class DefaultNettyRawBufferHandler implements NettyRawBufferHandler<String> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultJxpacketHandler.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultNettyRawBufferHandler.class);
 
     private static final String PRETTY_FOOTER = "+---------------------------------------------------"
             + "--------------------------------------------------+";

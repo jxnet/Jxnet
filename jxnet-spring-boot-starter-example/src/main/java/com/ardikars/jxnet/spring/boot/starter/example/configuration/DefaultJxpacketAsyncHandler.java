@@ -28,7 +28,7 @@ import java.util.concurrent.ExecutionException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Configuration;
+//import org.springframework.context.annotation.Configuration;
 
 /**
  * Jxpacket configuration.
@@ -37,7 +37,7 @@ import org.springframework.context.annotation.Configuration;
  * @since 1.4.9
  */
 //@EnablePacket(packetHandlerType = PacketHandlerType.JXPACKET_ASYNC)
-@Configuration
+//@Configuration
 public class DefaultJxpacketAsyncHandler implements JxpacketAsyncHandler<String> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultJxpacketHandler.class.getName());

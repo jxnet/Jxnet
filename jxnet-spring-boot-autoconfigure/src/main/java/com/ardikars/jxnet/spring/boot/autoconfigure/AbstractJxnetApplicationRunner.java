@@ -27,6 +27,7 @@ import com.ardikars.jxnet.PcapAddr;
 import com.ardikars.jxnet.PcapCode;
 import com.ardikars.jxnet.PcapHandler;
 import com.ardikars.jxnet.PcapIf;
+import com.ardikars.jxnet.RawPcapHandler;
 import com.ardikars.jxnet.SockAddr;
 import com.ardikars.jxnet.context.Context;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,13 @@ public abstract class AbstractJxnetApplicationRunner<T> implements CommandLineRu
     @Autowired(required = false)
     protected PcapHandler<T> pcapHandler;
 
+    @Autowired(required = false)
+    protected RawPcapHandler<T> rawPcapHandler;
+
     protected PcapCode loop(int count, T args) {
+        if (rawPcapHandler != null) {
+            return context.pcapLoop(count, rawPcapHandler, args);
+        }
         if (pcapHandler != null) {
             return context.pcapLoop(count, pcapHandler, args);
         }

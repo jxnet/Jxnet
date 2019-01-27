@@ -29,9 +29,7 @@ import com.ardikars.jxnet.spring.boot.autoconfigure.HandlerConfigurer;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import java.nio.ByteBuffer;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Configuration;
 
@@ -44,26 +42,24 @@ import org.springframework.context.annotation.Configuration;
  */
 @ConditionalOnClass({ByteBuf.class})
 @Configuration(NETTY_BUFFER_ASYCN_HANDLER_CONFIGURATION_BEAN_NAME)
-public class NettyBufferAsyncHandlerConfiguration<T> extends HandlerConfigurer<T, Future<Pair<PcapPktHdr, ByteBuf>>> implements PcapHandler<T> {
+public class NettyBufferAsyncHandlerConfiguration<T> extends HandlerConfigurer<T, Pair<PcapPktHdr, ByteBuf>> implements PcapHandler<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NettyBufferAsyncHandlerConfiguration.class);
 
     @Override
     public void nextPacket(final T user, final PcapPktHdr h, final ByteBuffer bytes) {
-        Future<Pair<PcapPktHdr, ByteBuf>> packet = executorService.submit(new Callable<Pair<PcapPktHdr, ByteBuf>>() {
+        executorService.submit(new Runnable() {
             @Override
-            public Pair<PcapPktHdr, ByteBuf> call() throws Exception {
-                ByteBuf buf = Unpooled.wrappedBuffer(bytes);
-                return Tuple.of(h, buf);
+            public void run() {
+                try {
+                    getHandler().next(user, Tuple.of(h, Unpooled.wrappedBuffer(bytes)));
+                } catch (ExecutionException e) {
+                    LOGGER.warn(e);
+                } catch (InterruptedException e) {
+                    LOGGER.warn(e);
+                }
             }
         });
-        try {
-            getHandler().next(user, packet);
-        } catch (ExecutionException e) {
-            LOGGER.warn(e);
-        } catch (InterruptedException e) {
-            LOGGER.warn(e);
-        }
     }
 
 }

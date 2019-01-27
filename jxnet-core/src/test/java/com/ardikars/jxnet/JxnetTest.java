@@ -31,6 +31,7 @@ import static com.ardikars.jxnet.Jxnet.PcapDataLinkNameToVal;
 import static com.ardikars.jxnet.Jxnet.PcapDataLinkValToDescription;
 import static com.ardikars.jxnet.Jxnet.PcapDataLinkValToName;
 import static com.ardikars.jxnet.Jxnet.PcapDispatch;
+import static com.ardikars.jxnet.Jxnet.PcapDispatch0;
 import static com.ardikars.jxnet.Jxnet.PcapDump;
 import static com.ardikars.jxnet.Jxnet.PcapDumpClose;
 import static com.ardikars.jxnet.Jxnet.PcapDumpFTell;
@@ -46,6 +47,7 @@ import static com.ardikars.jxnet.Jxnet.PcapLibVersion;
 import static com.ardikars.jxnet.Jxnet.PcapListDataLinks;
 import static com.ardikars.jxnet.Jxnet.PcapListTStampTypes;
 import static com.ardikars.jxnet.Jxnet.PcapLoop;
+import static com.ardikars.jxnet.Jxnet.PcapLoop0;
 import static com.ardikars.jxnet.Jxnet.PcapMajorVersion;
 import static com.ardikars.jxnet.Jxnet.PcapMinorVersion;
 import static com.ardikars.jxnet.Jxnet.PcapNext;
@@ -142,6 +144,18 @@ public class JxnetTest {
             System.out.println("Argument    : " + user);
             System.out.println("PacketHeader: " + h);
             System.out.println("PacketBuffer: " + bytes);
+        }
+    };
+
+    private final RawPcapHandler<String> callback0 = new RawPcapHandler<String>() {
+        @Override
+        public void nextPacket(String user, int capLen, int len, int tvSec, long tvUsec, long memoryAddress) {
+            System.out.println("Argument       : " + user);
+            System.out.println("Calen          : " + capLen);
+            System.out.println("Len            : " + len);
+            System.out.println("TvSec          : " + tvSec);
+            System.out.println("TvUSec         : " + tvUsec);
+            System.out.println("Memory Address : " + memoryAddress);
         }
     };
 
@@ -291,6 +305,10 @@ public class JxnetTest {
             logger.warning("PcapDispatch:PcapDispatch(): " + PcapStrError(resultCode));
             return;
         }
+        if ((resultCode = PcapDispatch0(pcap, maxPkt, callback0, "This Is User Argument")) != OK) {
+            logger.warning("PcapDispatch:PcapDispatch0(): " + PcapStrError(resultCode));
+            return;
+        }
     }
 
     @Test
@@ -334,6 +352,7 @@ public class JxnetTest {
             return;
         }
         PcapLoop(pcap, maxPkt, callback, "");
+        PcapLoop0(pcap,maxPkt, callback0, "");
         PcapClose(pcap);
     }
 

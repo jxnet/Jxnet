@@ -21,14 +21,12 @@ import com.ardikars.common.tuple.Pair;
 import com.ardikars.jxnet.PcapPktHdr;
 import io.netty.buffer.ByteBuf;
 
-import java.util.concurrent.Future;
-
 /**
  * Callback function used for capturing packets.
  *
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
  * @since 1.5.4
  */
-public interface NettyAsyncBufferHandler<T> extends Handler<T, Future<Pair<PcapPktHdr, ByteBuf>>> {
+public interface NettyAsyncBufferHandler<T> extends Handler<T, Pair<PcapPktHdr, ByteBuf>> {
 
 }

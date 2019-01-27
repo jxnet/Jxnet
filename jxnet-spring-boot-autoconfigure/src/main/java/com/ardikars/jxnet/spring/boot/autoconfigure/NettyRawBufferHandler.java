@@ -15,16 +15,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet.spring.boot.autoconfigure.constant;
+package com.ardikars.jxnet.spring.boot.autoconfigure;
+
+import com.ardikars.common.annotation.Incubating;
+import com.ardikars.common.tuple.Pair;
+import com.ardikars.jxnet.PcapPktHdr;
+import io.netty.buffer.ByteBuf;
+
+import java.util.concurrent.Future;
 
 /**
- * Packet handler type.
+ * Callback function used for capturing packets.
  *
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
- * @since 1.4.9
+ * @since 1.5.0
  */
-public enum PacketHandlerType {
-
-    JXPACKET, JXPACKET_ASYNC, NETTY_BUFFER, NETTY_BUFFER_ASYNC, NETTY_RAW_BUFFER, NETTY_RAW_BUFFER_ASYNC, NIO_BUFFER, NIO_BUFFER_ASYNC
+@Incubating
+public interface NettyRawBufferHandler<T> extends Handler<T, Future<Pair<PcapPktHdr, ByteBuf>>> {
 
 }

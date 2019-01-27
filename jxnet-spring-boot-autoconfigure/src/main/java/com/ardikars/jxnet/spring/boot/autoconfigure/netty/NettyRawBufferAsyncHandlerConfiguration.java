@@ -15,42 +15,45 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet.spring.boot.autoconfigure.nio;
+package com.ardikars.jxnet.spring.boot.autoconfigure.netty;
 
-import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.NIO_BUFFER_ASYNC_HANDLER_CONFIGURATION_BEAN_NAME;
+import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.NETTY_RAW_BUFFER_ASYCN_HANDLER_CONFIGURATION_BEAN_NAME;
 
+import com.ardikars.common.annotation.Incubating;
 import com.ardikars.common.logging.Logger;
 import com.ardikars.common.logging.LoggerFactory;
 import com.ardikars.common.tuple.Pair;
 import com.ardikars.common.tuple.Tuple;
-import com.ardikars.jxnet.PcapHandler;
 import com.ardikars.jxnet.PcapPktHdr;
+import com.ardikars.jxnet.RawPcapHandler;
 import com.ardikars.jxnet.spring.boot.autoconfigure.HandlerConfigurer;
-import java.nio.ByteBuffer;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import java.util.concurrent.ExecutionException;
-
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Nio buffer async handler.
+ * Async netty raw buffer.
+ *
  * @param <T> type.
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
- * @since 1.5.3
  */
-@ConditionalOnClass({ByteBuffer.class})
-@Configuration(NIO_BUFFER_ASYNC_HANDLER_CONFIGURATION_BEAN_NAME)
-public class NioBufferAsyncHandlerConfiguration<T> extends HandlerConfigurer<T, Pair<PcapPktHdr, ByteBuffer>> implements PcapHandler<T> {
+@Incubating
+@ConditionalOnClass({ByteBuf.class})
+@Configuration(NETTY_RAW_BUFFER_ASYCN_HANDLER_CONFIGURATION_BEAN_NAME)
+public class NettyRawBufferAsyncHandlerConfiguration<T> extends HandlerConfigurer<T, Pair<PcapPktHdr, ByteBuf>> implements RawPcapHandler<T> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(NioBufferAsyncHandlerConfiguration.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(NettyRawBufferAsyncHandlerConfiguration.class);
 
     @Override
-    public void nextPacket(final T user, final PcapPktHdr h, final ByteBuffer bytes) {
+    public void nextPacket(final T user, final int capLen, final int len, final int tvSec, final long tvUsec, final long memoryAddress) {
         executorService.submit(new Runnable() {
             @Override
             public void run() {
+                PcapPktHdr pcapPktHdr = PcapPktHdr.newInstance(capLen, len, tvSec, tvUsec);
                 try {
-                    getHandler().next(user, Tuple.of(h, bytes));
+                    getHandler().next(user, Tuple.of(pcapPktHdr, Unpooled.wrappedBuffer(memoryAddress, capLen, true)));
                 } catch (ExecutionException e) {
                     LOGGER.warn(e);
                 } catch (InterruptedException e) {

@@ -217,6 +217,38 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapLoop
 
 /*
  * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapLoop0
+ * Signature: (Lcom/ardikars/jxnet/Pcap;ILcom/ardikars/jxnet/RawPcapHandler;Ljava/lang/Object;)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapLoop0
+		(JNIEnv *env, jclass jcls, jobject jpcap, jint jcnt, jobject jcallback, jobject juser) {
+
+	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
+	if (CheckNotNull(env, jcallback, NULL) == NULL) return -1;
+
+	SetPcapPktHdrIDs(env);
+	// Including SetPcapIDs().
+	pcap_t *pcap = GetNotDeadPcap(env, jpcap); // Exception already thrown
+
+	if (pcap == NULL) {
+		return -1;
+	}
+
+	pcap_user_data_t user_data;
+	memset(&user_data, 0, sizeof(user_data));
+	user_data.env = env;
+	user_data.callback = jcallback;
+	user_data.user = juser;
+	user_data.PcapHandlerClass = (*env)->GetObjectClass(env, jcallback);
+	user_data.PcapHandlerNextPacketMID = (*env)->GetMethodID(env,
+															 user_data.PcapHandlerClass, "nextPacket",
+															 "(Ljava/lang/Object;IIIJJ)V");
+
+	return pcap_loop(pcap, (int) jcnt, pcap_callback0, (u_char *) &user_data);
+}
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
  * Method:    PcapDispatch
  * Signature: (Lcom/ardikars/jxnet/Pcap;ILcom/ardikars/jxnet/PcapHandler;Ljava/lang/Object;)I
  */
@@ -246,6 +278,40 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDispatch
 
 	return pcap_dispatch(pcap, (int) jcnt, pcap_callback, (u_char *) &user_data);
 }
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapDispatch0
+ * Signature: (Lcom/ardikars/jxnet/Pcap;ILcom/ardikars/jxnet/RawPcapHandler;Ljava/lang/Object;)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDispatch0
+		(JNIEnv *env, jclass jcls, jobject jpcap, jint jcnt, jobject jcallback, jobject juser) {
+
+	if (CheckNotNull(env, jpcap, NULL) == NULL) return -1;
+	if (CheckNotNull(env, jcallback, NULL) == NULL) return -1;
+	if (!CheckArgument(env, (jcnt > 0), NULL)) return -1;
+
+	SetPcapPktHdrIDs(env);
+	// Including SetPcapIDs().
+	pcap_t *pcap = GetNotDeadPcap(env, jpcap); // Exception already thrown
+
+	if (pcap == NULL) {
+		return (jint) -1;
+	}
+
+	pcap_user_data_t user_data;
+	memset(&user_data, 0, sizeof(user_data));
+	user_data.env = env;
+	user_data.callback = jcallback;
+	user_data.user = juser;
+	user_data.PcapHandlerClass = (*env)->GetObjectClass(env, jcallback);
+	user_data.PcapHandlerNextPacketMID = (*env)->GetMethodID(env,
+															 user_data.PcapHandlerClass, "nextPacket",
+															  "(Ljava/lang/Object;IIIJJ)V");
+
+	return pcap_dispatch(pcap, (int) jcnt, pcap_callback0, (u_char *) &user_data);
+}
+
 
 /*
  * Class:     com_ardikars_jxnet_Jxnet

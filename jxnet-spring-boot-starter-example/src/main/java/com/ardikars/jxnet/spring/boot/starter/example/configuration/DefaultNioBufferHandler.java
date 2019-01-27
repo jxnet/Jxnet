@@ -27,7 +27,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Configuration;
+//import org.springframework.context.annotation.Configuration;
 
 /**
  * Nio buffer configuration.
@@ -36,7 +36,7 @@ import org.springframework.context.annotation.Configuration;
  * @since 1.4.9
  */
 //@EnablePacket(packetHandlerType = PacketHandlerType.NIO_BUFFER)
-@Configuration
+//@Configuration
 public class DefaultNioBufferHandler implements NioBufferHandler<String> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultJxpacketHandler.class.getName());

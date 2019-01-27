@@ -37,10 +37,26 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapLoop
 
 /*
  * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapLoop0
+ * Signature: (Lcom/ardikars/jxnet/Pcap;ILcom/ardikars/jxnet/RawPcapHandler;Ljava/lang/Object;)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapLoop0
+  (JNIEnv *, jclass, jobject, jint, jobject, jobject);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
  * Method:    PcapDispatch
  * Signature: (Lcom/ardikars/jxnet/Pcap;ILcom/ardikars/jxnet/PcapHandler;Ljava/lang/Object;)I
  */
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDispatch
+  (JNIEnv *, jclass, jobject, jint, jobject, jobject);
+
+/*
+ * Class:     com_ardikars_jxnet_Jxnet
+ * Method:    PcapDispatch0
+ * Signature: (Lcom/ardikars/jxnet/Pcap;ILcom/ardikars/jxnet/RawPcapHandler;Ljava/lang/Object;)I
+ */
+JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDispatch0
   (JNIEnv *, jclass, jobject, jint, jobject, jobject);
 
 /*

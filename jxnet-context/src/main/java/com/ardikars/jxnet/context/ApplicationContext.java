@@ -34,6 +34,7 @@ import com.ardikars.jxnet.PcapPktHdr;
 import com.ardikars.jxnet.PcapStat;
 import com.ardikars.jxnet.PcapTimestampPrecision;
 import com.ardikars.jxnet.PcapTimestampType;
+import com.ardikars.jxnet.RawPcapHandler;
 import com.ardikars.jxnet.exception.BpfProgramCloseException;
 import com.ardikars.jxnet.exception.PcapCloseException;
 import com.ardikars.jxnet.exception.PcapDumperCloseException;
@@ -58,6 +59,9 @@ public final class ApplicationContext implements Context {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationContext.class);
 
 	private static final ReentrantReadWriteLock LOCK = new ReentrantReadWriteLock(true);
+
+	private static final IllegalArgumentException NULL_EXECUTOR_EXCEPTION =
+			new IllegalArgumentException("Executor should be not null.");
 
 	private final String applicationName;
 
@@ -129,8 +133,7 @@ public final class ApplicationContext implements Context {
 	@Override
 	public <T> PcapCode pcapLoop(final int cnt, final PcapHandler<T> callback, final T user, final Executor executor)
 			throws PcapCloseException {
-		Validate.notIllegalArgument(executor != null,
-				new IllegalArgumentException("Executor should be not null."));
+		Validate.notIllegalArgument(executor != null, NULL_EXECUTOR_EXCEPTION);
 		int result = Jxnet.PcapLoop(pcap, cnt, new PcapHandler<T>() {
 			@Override
 			public void nextPacket(final T user, final PcapPktHdr h, final ByteBuffer bytes) {
@@ -151,8 +154,7 @@ public final class ApplicationContext implements Context {
 	@Override
 	public <T> PcapCode pcapLoop(final int cnt, final PcapHandler<T> callback, final T user, final ExecutorService executor)
 			throws PcapCloseException {
-		Validate.notIllegalArgument(executor != null,
-				new IllegalArgumentException("Executor should be not null."));
+		Validate.notIllegalArgument(executor != null, NULL_EXECUTOR_EXCEPTION);
 		int result = Jxnet.PcapLoop(pcap, cnt, new PcapHandler<T>() {
 			@Override
 			public void nextPacket(final T user, final PcapPktHdr h, final ByteBuffer bytes) {
@@ -160,6 +162,59 @@ public final class ApplicationContext implements Context {
 					@Override
 					public void run() {
 						callback.nextPacket(user, h, bytes);
+					}
+				});
+			}
+		}, user);
+		if (result == 0) {
+			return PcapCode.PCAP_OK;
+		}
+		return PcapCode.PCAP_ERROR;
+	}
+
+	@Override
+	public <T> PcapCode pcapLoop(int cnt, RawPcapHandler<T> callback, T user) throws PcapCloseException {
+		int result = Jxnet.PcapLoop0(pcap, cnt, callback, user);
+		if (result == 0) {
+			return PcapCode.PCAP_OK;
+		}
+		return PcapCode.PCAP_ERROR;
+	}
+
+	@Override
+	public <T> PcapCode pcapLoop(final int cnt, final RawPcapHandler<T> callback, final T user, final Executor executor)
+			throws PcapCloseException {
+		Validate.notIllegalArgument(executor != null, NULL_EXECUTOR_EXCEPTION);
+		int result = Jxnet.PcapLoop0(pcap, cnt, new RawPcapHandler<T>() {
+			@Override
+			public void nextPacket(final T user, final int capLen, final int len, final int tvSec, final long tvUsec,
+								   final long memoryAddress) {
+				executor.execute(new Runnable() {
+					@Override
+					public void run() {
+						callback.nextPacket(user, capLen, len, tvSec, tvUsec, memoryAddress);
+					}
+				});
+			}
+		}, user);
+		if (result == 0) {
+			return PcapCode.PCAP_OK;
+		}
+		return PcapCode.PCAP_ERROR;
+	}
+
+	@Override
+	public <T> PcapCode pcapLoop(final int cnt, final RawPcapHandler<T> callback, final T user, final ExecutorService executor)
+			throws PcapCloseException {
+		Validate.notIllegalArgument(executor != null, NULL_EXECUTOR_EXCEPTION);
+		int result = Jxnet.PcapLoop0(pcap, cnt, new RawPcapHandler<T>() {
+			@Override
+			public void nextPacket(final T user, final int capLen, final int len, final int tvSec, final long tvUsec,
+								   final long memoryAddress) {
+				executor.submit(new Runnable() {
+					@Override
+					public void run() {
+						callback.nextPacket(user, capLen, len, tvSec, tvUsec, memoryAddress);
 					}
 				});
 			}
@@ -182,8 +237,7 @@ public final class ApplicationContext implements Context {
 	@Override
 	public <T> PcapCode pcapDispatch(final int cnt, final PcapHandler<T> callback, final T user, final Executor executor)
 			throws PcapCloseException {
-		Validate.notIllegalArgument(executor != null,
-				new IllegalArgumentException("Executor should be not null."));
+		Validate.notIllegalArgument(executor != null, NULL_EXECUTOR_EXCEPTION);
 		int result = Jxnet.PcapDispatch(pcap, cnt, new PcapHandler<T>() {
 			@Override
 			public void nextPacket(final T user, final PcapPktHdr h, final ByteBuffer bytes) {
@@ -200,6 +254,31 @@ public final class ApplicationContext implements Context {
 		}
 		return PcapCode.PCAP_ERROR;
 	}
+
+    @Override
+    public <T> PcapCode pcapDispatch(int cnt, RawPcapHandler<T> callback, T user) throws PcapCloseException {
+        int result = Jxnet.PcapDispatch0(pcap, cnt, callback, user);
+        if (result == 0) {
+            return PcapCode.PCAP_OK;
+        }
+        return PcapCode.PCAP_ERROR;
+    }
+
+    @Override
+    public <T> PcapCode pcapDispatch(final int cnt, final RawPcapHandler<T> callback, final T user, final Executor executor)
+            throws PcapCloseException {
+        Validate.notIllegalArgument(executor != null, NULL_EXECUTOR_EXCEPTION);
+        int result = Jxnet.PcapDispatch0(pcap, cnt, new RawPcapHandler<T>() {
+            @Override
+            public void nextPacket(T user, int capLen, int len, int tvSec, long tvUsec, long memoryAddress) {
+                callback.nextPacket(user, capLen, len, tvSec, tvUsec, memoryAddress);
+            }
+        }, user);
+        if (result == 0) {
+            return PcapCode.PCAP_OK;
+        }
+        return PcapCode.PCAP_ERROR;
+    }
 
 	@Override
 	public PcapCode pcapDumpOpen(String fname) throws PcapCloseException {

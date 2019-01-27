@@ -18,6 +18,7 @@
 package com.ardikars.jxnet;
 
 import com.ardikars.common.annotation.Immutable;
+import com.ardikars.common.annotation.Incubating;
 import com.ardikars.common.logging.Logger;
 import com.ardikars.common.logging.LoggerFactory;
 import com.ardikars.common.util.Callback;
@@ -87,7 +88,7 @@ public final class Jxnet {
 	 * Callback argument already asyncronous.
 	 * @param pcap pcap instance.
 	 * @param cnt maximum iteration, -1 is infinite iteration.
-	 * @param callback callback funtion.
+	 * @param callback callback function.
 	 * @param user args
 	 * @param <T> args type.
 	 * @return PcapLoop() returns 0 if cnt is exhausted or if, when reading from a
@@ -99,6 +100,25 @@ public final class Jxnet {
 	 * @since 1.1.4
 	 */
 	public static native <T> int PcapLoop(Pcap pcap, int cnt, PcapHandler<T> callback, T user) throws PcapCloseException;
+
+	/**
+	 * Collect a group of packets.
+	 * Callback argument already asyncronous.
+	 * @param pcap pcap instance.
+	 * @param cnt maximum iteration, -1 is infinite iteration.
+	 * @param callback callback function.
+	 * @param user args
+	 * @param <T> args type.
+	 * @return PcapLoop() returns 0 if cnt is exhausted or if, when reading from a
+	 * @throws PcapCloseException pcap close exception.
+	 * savefile, no more packets are available. It returns -1 if an error
+	 * occurs or -2 if the loop terminated due to a call to PcapBreakLoop()
+	 * before any packets were processed.  It does not return when live packet
+	 * buffer timeouts occur; instead, it attempts to read more packets.
+	 * @since 1.5.4
+	 */
+	@Incubating
+	public static native <T> int PcapLoop0(Pcap pcap, int cnt, RawPcapHandler<T> callback, T user) throws PcapCloseException;
 
 	/**
 	 * Collect a group of packets.
@@ -123,6 +143,31 @@ public final class Jxnet {
 	 * @since 1.1.4
 	 */
 	public static native <T> int PcapDispatch(Pcap pcap, int cnt, PcapHandler<T> callback, T user) throws PcapCloseException;
+
+	/**
+	 * Collect a group of packets.
+	 * @param pcap pcap instance.
+	 * @param cnt maximum iteration, -1 to infinite.
+	 * @param callback callback function.
+	 * @param user arg.
+	 * @param <T> args type.
+	 * @return PcapDispatch() returns the number of packets processed on success;
+	 * @throws PcapCloseException pcap close exception.
+	 * this can be 0 if no packets were read from a live capture (if, for
+	 * example, they were discarded because they didn't pass the packet filter,
+	 * or if, on platforms that support a packet buffer timeout that
+	 * starts before any packets arrive, the timeout expires before any packets
+	 * arrive, or if the file descriptor for the capture device is in non-blocking
+	 * mode and no packets were available to be read) or if no more
+	 * packets are available in a savefile. It returns -1 if an error
+	 * occurs or -2 if the loop terminated due to a call to PcapBreakLoop()
+	 * before any packets were processed. If your application uses
+	 * PcapBreakLoop(), make sure that you explicitly check for -1 and -2,
+	 * rather than just checking for a return value less then 0.
+	 * @since 1.5.4
+	 */
+	@Incubating
+	public static native <T> int PcapDispatch0(Pcap pcap, int cnt, RawPcapHandler<T> callback, T user) throws PcapCloseException;
 
 	/**
 	 * Open a file to write packets.

@@ -219,3 +219,21 @@ void pcap_callback(u_char *user, const struct pcap_pkthdr *pkt_header, const u_c
 									 (*env)->NewDirectByteBuffer(env, (void *) pkt_data, (jint) pkt_header->caplen));
 	(*env)->DeleteLocalRef(env, pkt_hdr);
 }
+
+void pcap_callback0(u_char *user, const struct pcap_pkthdr *pkt_header, const u_char *pkt_data) {
+
+	pcap_user_data_t *user_data = (pcap_user_data_t *) user;
+	JNIEnv *env = user_data->env;
+
+	(*env)->CallNonvirtualVoidMethod(env,
+									 user_data->callback,
+									 user_data->PcapHandlerClass,
+									 user_data->PcapHandlerNextPacketMID,
+									 user_data->user,
+									 (jint) pkt_header->caplen,
+									 (jint) pkt_header->len,
+									 (jint) pkt_header->ts.tv_sec,
+									 (jlong) pkt_header->ts.tv_usec,
+									 (jlong) &(*pkt_data) + 1);
+
+}
