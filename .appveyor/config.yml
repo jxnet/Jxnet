@@ -44,7 +44,7 @@ build_script:
   - cmd: set PATH=C:\tools\mingw64\bin;C:\Program Files (x86)\NSIS\;%PATH%
   - cmd: gradlew.bat dependencyCheckAnalyze --info --no-daemon
   - cmd: gradlew.bat -p jxnet-native clean build
-  - cmd: gradlew.bat clean build jacocoTestReport coveralls --info --no-daemon
+  - cmd: gradlew.bat build jacocoTestReport coveralls --info --no-daemon
 
 #---------------------------------#
 #         notifications           #
