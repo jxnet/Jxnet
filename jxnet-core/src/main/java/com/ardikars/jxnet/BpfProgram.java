@@ -21,6 +21,7 @@ import com.ardikars.common.annotation.Mutable;
 import com.ardikars.common.util.Validate;
 import com.ardikars.jxnet.exception.NativeException;
 
+import java.io.IOException;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
@@ -85,10 +86,20 @@ public final class BpfProgram implements PointerHandler {
 
 	/**
 	 * Get Bpf Program pointer address.
+	 * Please use {@link BpfProgram#address()}
 	 * @return returns pointer address.
 	 */
 	@Override
 	public long getAddress() {
+		return address();
+	}
+
+	/**
+	 * Get Bpf Program pointer address.
+	 * @return returns pointer address.
+	 */
+	@Override
+	public long address() {
 		if (this.lock.readLock().tryLock()) {
 			try {
 				return this.address;
@@ -110,6 +121,13 @@ public final class BpfProgram implements PointerHandler {
 	 */
 	public boolean isClosed() {
 		return this.getAddress() == 0;
+	}
+
+	@Override
+	public void close() throws IOException {
+		if (!isClosed()) {
+			Jxnet.PcapFreeCode(this);
+		}
 	}
 
 	@Override

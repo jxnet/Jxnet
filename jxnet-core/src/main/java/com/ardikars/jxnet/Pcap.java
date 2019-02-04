@@ -24,6 +24,7 @@ import com.ardikars.common.util.Validate;
 import com.ardikars.jxnet.exception.NativeException;
 import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 
+import java.io.IOException;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
@@ -81,10 +82,21 @@ public final class Pcap implements PointerHandler {
 
 	/**
 	 * Getting pointer address.
+	 * Please use {@link Pcap#address()}.
+	 * @return returns pointer address.
+	 */
+	@Deprecated
+	@Override
+	public long getAddress() {
+		return address();
+	}
+
+	/**
+	 * Getting pointer address.
 	 * @return returns pointer address.
 	 */
 	@Override
-	public long getAddress() {
+	public long address() {
 		if (this.lock.readLock().tryLock()) {
 			try {
 				return this.address;
@@ -141,6 +153,13 @@ public final class Pcap implements PointerHandler {
 				.append("address=").append(this.getAddress())
 				.append('}')
 				.toString();
+	}
+
+	@Override
+	public void close() throws IOException {
+		if (!isClosed()) {
+			Jxnet.PcapClose(this);
+		}
 	}
 
 	/**

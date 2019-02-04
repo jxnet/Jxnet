@@ -128,9 +128,8 @@ allprojects {
 				csv.enabled false
 				xml.enabled true
 				html.enabled = true
-				html.destination file("${buildDir}/jacocoHtml")
 			}
-			enabled = false
+			enabled = true
 		}
 
 		/**
@@ -138,6 +137,10 @@ allprojects {
 		 */
 		tasks.coveralls {
 			dependsOn 'check'
+		}
+
+		coveralls {
+			jacocoReportPath "build/reports/jacoco/test/jacocoTestReport.xml"
 		}
 
 	} else if (project.name.equals("jxnet")) {
