@@ -21,6 +21,8 @@ import com.ardikars.common.annotation.Immutable;
 import com.ardikars.common.annotation.Incubating;
 import com.ardikars.common.logging.Logger;
 import com.ardikars.common.logging.LoggerFactory;
+import com.ardikars.common.net.Inet4Address;
+import com.ardikars.common.net.MacAddress;
 import com.ardikars.common.util.Callback;
 import com.ardikars.jxnet.exception.BpfProgramCloseException;
 import com.ardikars.jxnet.exception.DeviceNotFoundException;
@@ -30,6 +32,7 @@ import com.ardikars.jxnet.exception.PcapDumperCloseException;
 import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 import com.ardikars.jxnet.util.DefaultLibraryLoader;
 
+import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.List;
 
@@ -814,21 +817,24 @@ public final class Jxnet {
 	private static native void initIDs();
 
 	private static void initialize() {
-		try {
-			Class.forName("com.ardikars.jxnet.PcapIf");
-			Class.forName("com.ardikars.jxnet.PcapAddr");
-			Class.forName("com.ardikars.jxnet.SockAddr");
-			Class.forName("com.ardikars.jxnet.Pcap");
-			Class.forName("com.ardikars.jxnet.BpfProgram");
-			Class.forName("com.ardikars.common.net.MacAddress");
-			Class.forName("com.ardikars.common.net.Inet4Address");
-			Class.forName("java.io.File");
-			Class.forName("java.lang.StringBuilder");
-			Class.forName("java.util.List");
-			initIDs();
+		Class<?>[] classes = new Class<?>[] {
+				PcapIf.class, PcapAddr.class, SockAddr.class, Pcap.class, BpfProgram.class,
+				MacAddress.class, Inet4Address.class,
+				List.class, File.class, StringBuilder.class
+		};
+		boolean ok = true;
+		for (Class<?> clazz : classes) {
+			try {
+				Class.forName(clazz.getName());
+			} catch (ClassNotFoundException e) {
+				ok = false;
+			}
+		}
+		if (ok) {
 			LOGGER.debug("Load classes and initialize IDs.");
-		} catch (ClassNotFoundException e) {
-			loaded = false;
+			initIDs();
+			loaded = true;
+			LOGGER.debug("Jxnet native library loaded sucessfully.");
 		}
 	}
 
@@ -837,9 +843,7 @@ public final class Jxnet {
 			new DefaultLibraryLoader().load(new Callback<Void>() {
 				@Override
 				public void onSuccess(Void value) {
-					loaded = true;
 					initialize();
-					LOGGER.debug("Jxnet native library loaded sucessfully.");
 				}
 
 				@Override
