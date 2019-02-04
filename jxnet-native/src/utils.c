@@ -160,12 +160,6 @@ pcap_t *GetNotDeadPcap(JNIEnv *env, jobject jpcap) {
 	return JlongToPointer(pcap);
 }
 
-jobject SetFile(JNIEnv *env, FILE *file) {
-	jobject obj = NewObject(env, "com/ardikars/jxnet/File", "<init>", "()V");
-	(*env)->SetLongField(env, obj, FileAddressFID, PointerToJlong(file));
-	return obj;
-}
-
 jobject SetPcapDumper(JNIEnv *env, pcap_dumper_t *pcap_dumper) {
 	jobject obj = NewObject(env, "com/ardikars/jxnet/PcapDumper", "<init>", "()V");
 	(*env)->SetLongField(env, obj, PcapDumperAddressFID, PointerToJlong(pcap_dumper));

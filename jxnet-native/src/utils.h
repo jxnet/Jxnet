@@ -28,7 +28,6 @@
 #define PCAP_CLOSE_EXCEPTION "com/ardikars/jxnet/exception/PcapCloseException"
 #define BPF_PROGRAM_CLOSE_EXCEPTION "com/ardikars/jxnet/exception/BpfProgramCloseException"
 #define PCAP_DUMPER_CLOSE_EXCEPTION "com/ardikars/jxnet/exception/PcapDumperCloseException"
-#define FILE_CLOSE_EXCEPTION "com/ardikars/jxnet/exception/FileCloseException"
 #define PLATFORM_NOT_SUPPORTED_EXCEPTION "com/ardikars/jxnet/exception/PlatformNotSupportedException"
 #define OPERATION_NOT_SUPPORTED_EXCEPTION "com/ardikars/jxnet/exception/OperationNotSupportedException"
 #define ILLEGAL_STATE_EXCEPTION "java/lang/IllegalStateException"
@@ -70,13 +69,9 @@ jobject SetPcap(JNIEnv *env, pcap_t *pcap);
 
 jobject SetDeadPcap(JNIEnv *env, pcap_t *pcap);
 
-jobject SetFile(JNIEnv *env, FILE *file);
-
 pcap_t *GetPcap(JNIEnv *env, jobject jpcap);
 
 pcap_t *GetNotDeadPcap(JNIEnv *env, jobject jpcap);
-
-FILE *GetFile(JNIEnv *env, jobject jf);
 
 jobject SetPcapDumper(JNIEnv *env, pcap_dumper_t *pcap_dumper);
 

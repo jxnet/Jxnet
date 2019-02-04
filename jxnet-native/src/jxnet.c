@@ -956,27 +956,6 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxnet_Jxnet_PcapFreeCode
  * Method:    PcapDumpFile
  * Signature: (Lcom/ardikars/jxnet/PcapDumper;)Lcom/ardikars/jxnet/File;
  */
-JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapDumpFile
-		(JNIEnv *env, jclass jcls, jobject jpcap_dumper) {
-
-	if (CheckNotNull(env, jpcap_dumper, NULL) == NULL) return NULL;
-
-    pcap_dumper_t *pcap_dumper = GetPcapDumper(env, jpcap_dumper);
-
-	if (pcap_dumper == NULL) {
-		return NULL;
-	}
-
-	FILE *file = pcap_dump_file(pcap_dumper);
-
-	return SetFile(env, file);
-}
-
-/*
- * Class:     com_ardikars_jxnet_Jxnet
- * Method:    PcapDumpFile
- * Signature: (Lcom/ardikars/jxnet/PcapDumper;)Lcom/ardikars/jxnet/File;
- */
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapStats
 		(JNIEnv *env, jclass jcls, jobject jpcap, jobject jpcap_stat) {
 
@@ -1791,10 +1770,7 @@ JNIEXPORT void JNICALL Java_com_ardikars_jxnet_Jxnet_initIDs
     SetListIDs(env);
     SetPcapIfIDs(env);
     SetPcapAddrIDs(env);
-    SetFileIDs(env);
     SetSockAddrIDs(env);
     SetPcapIDs(env);
     SetBpfProgramIDs(env);
-    SetInet4AddressIDs(env);
-    SetMacAddressIDs(env);
   }

@@ -256,39 +256,6 @@ void SetPcapIDs(JNIEnv *env) {
 
 }
 
-jclass FileClass = NULL;
-jfieldID FileAddressFID = NULL;
-jmethodID FileGetAddressMID = NULL;
-
-void SetFileIDs(JNIEnv *env) {
-
-	if (FileClass != NULL) {
-		return; // Already cached
-	}
-
-	FileClass = (*env)->FindClass(env, "com/ardikars/jxnet/File");
-
-	if (FileClass == NULL) {
-		ThrowNew(env, CLASS_NOT_FOUND_EXCEPTION, "Unable to initialize class com.ardikars.jxnet.File");
-		return;
-	}
-
-	FileAddressFID = (*env)->GetFieldID(env, FileClass, "address", "J");
-
-	if (FileAddressFID == NULL) {
-		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field File.address:long");
-		return;
-	}
-
-	FileGetAddressMID = (*env)->GetMethodID(env, FileClass, "getAddress", "()J");
-
-	if (FileGetAddressMID == NULL) {
-		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method File.getAddress(long)");
-		return;
-	}
-
-}
-
 jclass PcapPktHdrClass = NULL;
 jfieldID PcapPktHdrCaplenFID = NULL;
 jfieldID PcapPktHdrLenFID = NULL;
@@ -494,47 +461,6 @@ void SetPcapStatIDs(JNIEnv *env) {
 
 }
 
-jclass Inet4AddressClass = NULL;
-jmethodID Inet4AddressValueOfMID = NULL;
-jmethodID Inet4AddressToIntMID = NULL;
-jfieldID Inet4AddressAddressFID = NULL;
-
-void SetInet4AddressIDs(JNIEnv *env) {
-
-	if (Inet4AddressClass != NULL) {
-		return; // Already cached
-	}
-
-	Inet4AddressClass = (*env)->FindClass(env, "com/ardikars/jxnet/Inet4Address");
-
-	if (Inet4AddressClass == NULL) {
-		ThrowNew(env, CLASS_NOT_FOUND_EXCEPTION, "Unable to initialize class com.ardikars.jxnet.Inet4Address");
-		return;
-	}
-
-	Inet4AddressValueOfMID = (*env)->GetStaticMethodID(env, Inet4AddressClass, "valueOf", "(I)Lcom/ardikars/jxnet/Inet4Address;");
-
-	if (Inet4AddressValueOfMID == NULL) {
-		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method Inet4Address.valueOf(int)");
-		return;
-	}
-
-	Inet4AddressToIntMID = (*env)->GetMethodID(env, Inet4AddressClass, "toInt", "()I");
-
-	if (Inet4AddressToIntMID == NULL) {
-		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method Inet4Address.toInt()");
-		return;
-	}
-
-	Inet4AddressAddressFID = (*env)->GetFieldID(env, Inet4AddressClass, "address", "[B");
-
-	if (Inet4AddressAddressFID == NULL) {
-		ThrowNew(env, NO_SUCH_FIELD_EXCEPTION, "Unable to initialize field Inet4Address.address");
-		return;
-	}
-
-}
-
 jclass PcapDirectionClass = NULL;
 jmethodID PcapDirectionNameMID = NULL;
 
@@ -555,31 +481,6 @@ void SetPcapDirectionIDs(JNIEnv *env) {
 
 	if (PcapDirectionNameMID == NULL) {
 		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method PcapDirection.name()");
-		return;
-	}
-
-}
-
-jclass MacAddressClass = NULL;
-jmethodID MacAddressValueOfMID = NULL;
-
-void SetMacAddressIDs(JNIEnv *env) {
-
-	if (MacAddressClass != NULL) {
-		return; // Already cached
-	}
-
-	MacAddressClass = (*env)->FindClass(env, "com/ardikars/jxnet/MacAddress");
-
-	if (MacAddressClass == NULL) {
-		ThrowNew(env, CLASS_NOT_FOUND_EXCEPTION, "Unable to initialize class com.ardikars.jxnet.MacAddress");
-		return;
-	}
-
-	MacAddressValueOfMID = (*env)->GetStaticMethodID(env, MacAddressClass, "valueOf", "([B)Lcom/ardikars/jxnet/MacAddress;");
-
-	if (MacAddressValueOfMID == NULL) {
-		ThrowNew(env, NO_SUCH_METHOD_EXCEPTION, "Unable to initialize method MacAddress.valueOf(byte[])");
 		return;
 	}
 

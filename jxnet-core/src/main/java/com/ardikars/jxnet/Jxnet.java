@@ -21,8 +21,6 @@ import com.ardikars.common.annotation.Immutable;
 import com.ardikars.common.annotation.Incubating;
 import com.ardikars.common.logging.Logger;
 import com.ardikars.common.logging.LoggerFactory;
-import com.ardikars.common.net.Inet4Address;
-import com.ardikars.common.net.MacAddress;
 import com.ardikars.common.util.Callback;
 import com.ardikars.jxnet.exception.BpfProgramCloseException;
 import com.ardikars.jxnet.exception.DeviceNotFoundException;
@@ -32,7 +30,6 @@ import com.ardikars.jxnet.exception.PcapDumperCloseException;
 import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 import com.ardikars.jxnet.util.DefaultLibraryLoader;
 
-import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.List;
 
@@ -819,8 +816,7 @@ public final class Jxnet {
 	private static void initialize() {
 		Class<?>[] classes = new Class<?>[] {
 				PcapIf.class, PcapAddr.class, SockAddr.class, Pcap.class, BpfProgram.class,
-				MacAddress.class, Inet4Address.class,
-				List.class, File.class, StringBuilder.class
+				List.class, StringBuilder.class
 		};
 		boolean ok = true;
 		for (Class<?> clazz : classes) {
