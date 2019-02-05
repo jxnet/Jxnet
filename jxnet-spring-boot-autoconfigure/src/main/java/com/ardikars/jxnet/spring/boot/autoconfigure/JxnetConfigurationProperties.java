@@ -129,6 +129,11 @@ public class JxnetConfigurationProperties {
         if (filter == null || filter.isEmpty()) {
             filter = null;
         }
+        jvm();
+        log();
+    }
+
+    private void  jvm() {
         try {
             jvm = Jvms.getJvm();
             if (numberOfThread == null) {
@@ -142,6 +147,9 @@ public class JxnetConfigurationProperties {
             jvm = null;
             LOGGER.warn(e.getMessage());
         }
+    }
+
+    private void log() {
         LOGGER.debug("Source                       : {}", source);
         LOGGER.debug("Snapshot length              : {}", snapshot);
         LOGGER.debug("Promiscuous                  : {}", promiscuous);
