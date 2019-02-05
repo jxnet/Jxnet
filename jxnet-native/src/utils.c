@@ -229,6 +229,6 @@ void pcap_callback0(u_char *user, const struct pcap_pkthdr *pkt_header, const u_
 									 (jint) pkt_header->len,
 									 (jint) pkt_header->ts.tv_sec,
 									 (jlong) pkt_header->ts.tv_usec,
-									 (jlong) &(*pkt_data) + 1);
+									 (jlong) &(*pkt_data));
 
 }
