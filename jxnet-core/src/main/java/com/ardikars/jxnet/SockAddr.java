@@ -40,7 +40,15 @@ public final class SockAddr implements Cloneable {
     private volatile byte[] data = new byte[0];
 
     protected SockAddr() {
-        //
+        this((short) 0, new byte[] {});
+    }
+
+    protected SockAddr(short saFamily, byte[] data) {
+        if (data == null) {
+            data = new byte[0];
+        }
+        this.sa_family = saFamily;
+        this.data = Arrays.copyOf(data, data.length);
     }
 
     /**
@@ -56,12 +64,7 @@ public final class SockAddr implements Cloneable {
      * @return returns bytes address.
      */
     public byte[] getData() {
-        byte[] data;
-        if (this.data != null) {
-            data = new byte[this.data.length];
-        } else {
-            data = new byte[0];
-        }
+        byte[] data = new byte[this.data.length];
         if (data.length == 0) {
             Family family = getSaFamily();
             if (family == Family.AF_INET6) {

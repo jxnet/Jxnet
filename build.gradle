@@ -136,11 +136,15 @@ allprojects {
 		 * Upload converage report
 		 */
 		tasks.coveralls {
-			dependsOn 'check'
+			if (project.name.equals("jxnet-core")) {
+				dependsOn 'check'
+			}
 		}
 
 		coveralls {
-			jacocoReportPath "build/reports/jacoco/test/jacocoTestReport.xml"
+			if (project.name.equals("jxnet-core")) {
+				jacocoReportPath "build/reports/jacoco/test/jacocoTestReport.xml"
+			}
 		}
 
 	} else if (project.name.equals("jxnet")) {

@@ -267,6 +267,7 @@ public class JxnetTest {
                 } else {
                     logger.info(addr.toString());
                 }
+                System.out.println("Family                 = " + addr.getAddr().getSaFamily().toString());
             }
             System.out.println("================================================\n\n");
         }
@@ -289,6 +290,9 @@ public class JxnetTest {
             return;
         }
         PcapStat stat = new PcapStat();
+        System.out.println("Droped by kernel    : " + stat.getPsDrop());
+        System.out.println("Droped by interface : " + stat.getPsIfdrop());
+        System.out.println("Recieved            : " + stat.getPsRecv());
         if ((resultCode = PcapStats(pcap, stat)) != OK) {
             logger.warning("PcapLoopAndPcapStats:PcapStats(): " + PcapStrError(resultCode));
             return;

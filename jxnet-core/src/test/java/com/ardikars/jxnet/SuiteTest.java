@@ -24,7 +24,13 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         JxnetTest.class,
-        FreakTest.class
+        FreakTest.class,
+        ImmediateModeTest.class,
+        PcapTimeStampPrecisionTest.class,
+        PromiscuousModeTest.class,
+        RadioFrequencyMonitorModeTest.class,
+        SockAddrTest.class,
+        PcapStatTest.class
 })
 public class SuiteTest {
 

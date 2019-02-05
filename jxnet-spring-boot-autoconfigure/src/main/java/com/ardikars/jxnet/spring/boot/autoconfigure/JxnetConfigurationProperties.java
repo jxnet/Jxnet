@@ -87,6 +87,11 @@ public class JxnetConfigurationProperties {
      */
     @SuppressFBWarnings(value = "UR_UNINIT_READ", justification = "Already handled by spring property value")
     public JxnetConfigurationProperties() {
+        init();
+        log();
+    }
+
+    private void init() {
         if (pcapType == null) {
             pcapType = Pcap.PcapType.LIVE;
         }
@@ -130,10 +135,9 @@ public class JxnetConfigurationProperties {
             filter = null;
         }
         jvm();
-        log();
     }
 
-    private void  jvm() {
+    private void jvm() {
         try {
             jvm = Jvms.getJvm();
             if (numberOfThread == null) {

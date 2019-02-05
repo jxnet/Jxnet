@@ -34,6 +34,16 @@ public final class PcapStat implements Cloneable {
 	
 	private volatile long ps_ifdrop;
 
+	protected PcapStat() {
+		this(0L, 0L, 0L);
+	}
+
+	protected PcapStat(long psRecv, long psDrop, long psIfdrop) {
+		this.ps_recv = psRecv;
+		this.ps_drop = psDrop;
+		this.ps_ifdrop = psIfdrop;
+	}
+
 	/**
 	 * Returns recieved packets.
 	 * @return returns number of packets received;
