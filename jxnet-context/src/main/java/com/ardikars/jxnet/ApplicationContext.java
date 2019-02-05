@@ -24,6 +24,7 @@ import com.ardikars.jxnet.exception.PcapCloseException;
 import com.ardikars.jxnet.exception.PcapDumperCloseException;
 import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -257,7 +258,7 @@ public final class ApplicationContext implements Context {
 	}
 
 	@Override
-	public void close() throws Exception {
+	public void close() throws IOException {
 		ctx.close();
 	}
 

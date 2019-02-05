@@ -48,4 +48,29 @@ public final class JxnetObjectName {
     public static final String PCAP_BUILDER_BEAN_NAME = "com.ardikras.jxnet.pcapBuilder";
     public static final String JVM_BEAN_NAME = "com.ardikras.jxnet.jvm";
 
+    private final String prefix;
+    private final String separator;
+
+    public JxnetObjectName() {
+        this("com.ardikars.jxnet");
+    }
+
+    public JxnetObjectName(String prefix) {
+        this(prefix, ".");
+    }
+
+    public JxnetObjectName(String prefix, String separator) {
+        this.prefix = prefix;
+        this.separator = separator;
+    }
+
+    /**
+     * Generate object name (prefix + separator + name).
+     * @param name object name.
+     * @return returns object name.
+     */
+    public String name(String name) {
+        return prefix.concat(separator).concat(name);
+    }
+
 }

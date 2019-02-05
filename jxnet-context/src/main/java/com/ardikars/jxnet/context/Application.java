@@ -38,6 +38,27 @@ public final class Application {
     }
 
     /**
+     * Get pcap context.
+     * @return returns pcap {@link Context}.
+     */
+    public Context getContext() {
+        return context;
+    }
+
+    /**
+     * Get application context.
+     * @return returns {@link Application}.
+     * @throws IllegalStateException no application context.
+     *      To create application context please use {@link Application#run(String, String, String, Builder)}.
+     */
+    public static Application getInstance() throws IllegalStateException {
+        if (instance.context == null) {
+            throw new IllegalStateException("No application context.");
+        }
+        return instance;
+    }
+
+    /**
      * Bootstraping application.
      * @param aplicationName application name.
      * @param applicationDisplayName application display name.

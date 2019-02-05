@@ -40,6 +40,7 @@ import com.ardikars.jxnet.exception.PcapCloseException;
 import com.ardikars.jxnet.exception.PcapDumperCloseException;
 import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -573,7 +574,7 @@ public final class ApplicationContext implements Context {
 	}
 
 	@Override
-	public void close() throws Exception {
+	public void close() throws IOException {
 		LOGGER.debug("Shuting down jxnet application context.");
 		if (LOCK.readLock().tryLock() && LOCK.writeLock().tryLock()) {
 			if (pcap != null && !pcap.isClosed()) {
