@@ -68,7 +68,7 @@ public enum PcapCode {
 	 * @param statusCode status code.
 	 * @return returns {@link PcapCode} object.
 	 */
-	public PcapCode fromStatusCode(int statusCode) {
+	public static PcapCode fromStatusCode(int statusCode) {
 		for (PcapCode pcapCode : VALUES) {
 			if (pcapCode.value == statusCode) {
 				return pcapCode;

@@ -28,23 +28,19 @@ public class OperationNotSupportedException extends RuntimeException {
     private static final long serialVersionUID = 4918064360828376142L;
 
     public OperationNotSupportedException() {
-        super();
+        this("");
     }
 
     public OperationNotSupportedException(final String s) {
-        super(s);
+        this(s, new RuntimeException(s));
+    }
+
+    public OperationNotSupportedException(final Throwable throwable) {
+        this(throwable.getMessage(), throwable);
     }
 
     public OperationNotSupportedException(final String s, final Throwable throwable) {
         super(s, throwable);
-    }
-
-    public OperationNotSupportedException(final Throwable throwable) {
-        super(throwable);
-    }
-
-    protected OperationNotSupportedException(final String s, final Throwable throwable, final boolean b, final boolean b1) {
-        super(s, throwable, b, b1);
     }
 
 }

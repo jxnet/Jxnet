@@ -56,16 +56,24 @@ public final class PcapIf implements Cloneable {
 	
 	private volatile int flags;
 
-	private PcapIf() {
+	protected PcapIf() {
 		//
+	}
+
+	protected PcapIf(String name, String description, List<PcapAddr> addresses, int flags) {
+		this.name = name;
+		this.description = description;
+		this.addresses = addresses;
+		this.flags = flags;
 	}
 
 	/**
 	 * This method will throws {@code OperationNotSupportedException}.
-	 * See {@code Jxnet.PcapFinaAllDevs}.
+	 * See {@link Jxnet#PcapFindAllDevs(List, StringBuilder)}.
 	 * @return nothing.
+	 * @throws OperationNotSupportedException throws {@code OperationNotSupportedException}.
 	 */
-	public static PcapIf newInstance() {
+	public static PcapIf newInstance() throws OperationNotSupportedException {
 		throw new OperationNotSupportedException("Cannot instantiated directly, please use Jxnet.PcapFindAllDev().");
 	}
 

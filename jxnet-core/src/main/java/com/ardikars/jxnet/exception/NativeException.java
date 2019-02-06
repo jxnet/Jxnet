@@ -28,19 +28,19 @@ public class NativeException extends RuntimeException {
 	private static final long serialVersionUID = -3993889826336916332L;
 
 	public NativeException() {
-		super();
+		this("");
 	}
 
 	public NativeException(final String message) {
-		super(message);
+		this(message, new RuntimeException(message));
+	}
+
+	public NativeException(final Throwable cause) {
+		this(cause.getMessage(), cause);
 	}
 
 	public NativeException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
-	public NativeException(final Throwable cause) {
-		super(cause);
-	}
-	
 }

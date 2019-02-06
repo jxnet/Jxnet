@@ -17,6 +17,7 @@
 
 package com.ardikars.jxnet;
 
+import com.ardikars.jxnet.exception.ExceptionTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -30,7 +31,11 @@ import org.junit.runners.Suite;
         PromiscuousModeTest.class,
         RadioFrequencyMonitorModeTest.class,
         SockAddrTest.class,
-        PcapStatTest.class
+        PcapStatTest.class,
+        PcapPktHdrTest.class,
+        ExceptionTest.class,
+        PcapCodeTest.class,
+        DatalinkTypeTest.class
 })
 public class SuiteTest {
 

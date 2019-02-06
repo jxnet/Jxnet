@@ -31,19 +31,19 @@ public class UnknownNetmaskException extends RuntimeException {
     private static final long serialVersionUID = -3436588540149037097L;
 
     public UnknownNetmaskException() {
-        super();
+        this("");
     }
 
     public UnknownNetmaskException(final String message) {
-        super(message);
+        this(message, new RuntimeException(message));
+    }
+
+    public UnknownNetmaskException(final Throwable cause) {
+        this(cause.getMessage(), cause);
     }
 
     public UnknownNetmaskException(final String message, final Throwable cause) {
         super(message, cause);
-    }
-
-    public UnknownNetmaskException(final Throwable cause) {
-        super(cause);
     }
 
 }

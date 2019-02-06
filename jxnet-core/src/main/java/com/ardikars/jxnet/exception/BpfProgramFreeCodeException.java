@@ -28,19 +28,19 @@ public class BpfProgramFreeCodeException extends RuntimeException {
     private static final long serialVersionUID = 8585240545825444724L;
 
     public BpfProgramFreeCodeException() {
-        super();
+        this("");
     }
 
     public BpfProgramFreeCodeException(final String message) {
-        super(message);
+        this(message, new RuntimeException(message));
+    }
+
+    public BpfProgramFreeCodeException(final Throwable cause) {
+        this(cause.getMessage(), cause);
     }
 
     public BpfProgramFreeCodeException(final String message, final Throwable cause) {
         super(message, cause);
-    }
-
-    public BpfProgramFreeCodeException(final Throwable cause) {
-        super(cause);
     }
 
 }

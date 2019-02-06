@@ -18,6 +18,7 @@
 package com.ardikars.jxnet;
 
 import com.ardikars.common.annotation.Mutable;
+import com.ardikars.jxnet.exception.OperationNotSupportedException;
 
 /**
  * Class that keeps statistical values on an interface.
@@ -42,6 +43,15 @@ public final class PcapStat implements Cloneable {
 		this.ps_recv = psRecv;
 		this.ps_drop = psDrop;
 		this.ps_ifdrop = psIfdrop;
+	}
+
+	/**
+	 * This method will throws {@code OperationNotSupportedException}.
+	 * @return nothing.
+	 * @throws OperationNotSupportedException throws {@code OperationNotSupportedException}.
+	 */
+	public static PcapStat newInstance() throws OperationNotSupportedException {
+		throw new OperationNotSupportedException("Cannot instantiated directly.");
 	}
 
 	/**

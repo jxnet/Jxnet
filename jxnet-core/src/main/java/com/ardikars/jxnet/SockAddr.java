@@ -21,9 +21,11 @@ import com.ardikars.common.annotation.Mutable;
 import com.ardikars.common.net.Inet4Address;
 import com.ardikars.common.net.Inet6Address;
 import com.ardikars.common.util.NamedNumber;
+import com.ardikars.jxnet.exception.OperationNotSupportedException;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,11 +46,22 @@ public final class SockAddr implements Cloneable {
     }
 
     protected SockAddr(short saFamily, byte[] data) {
-        if (data == null) {
-            data = new byte[0];
-        }
         this.sa_family = saFamily;
-        this.data = Arrays.copyOf(data, data.length);
+        if (data == null) {
+            this.data = new byte[0];
+        } else {
+            this.data = Arrays.copyOf(data, data.length);
+        }
+    }
+
+    /**
+     * This method will throws {@code OperationNotSupportedException}.
+     * See {@link Jxnet#PcapFindAllDevs(List, StringBuilder)}.
+     * @return nothing.
+     * @throws OperationNotSupportedException throws {@code OperationNotSupportedException}.
+     */
+    public static SockAddr newInstance() throws OperationNotSupportedException {
+        throw new OperationNotSupportedException("Cannot instantiated directly.");
     }
 
     /**
@@ -64,8 +77,7 @@ public final class SockAddr implements Cloneable {
      * @return returns bytes address.
      */
     public byte[] getData() {
-        byte[] data = new byte[this.data.length];
-        if (data.length == 0) {
+        if (this.data.length == 0) {
             Family family = getSaFamily();
             if (family == Family.AF_INET6) {
                 this.data = new byte[Inet6Address.IPV6_ADDRESS_LENGTH];
@@ -73,6 +85,7 @@ public final class SockAddr implements Cloneable {
                 this.data = new byte[Inet4Address.IPV4_ADDRESS_LENGTH];
             }
         }
+        byte[] data = new byte[this.data.length];
         System.arraycopy(this.data, 0, data, 0, data.length);
         return data;
     }
@@ -133,9 +146,6 @@ public final class SockAddr implements Cloneable {
 
         public static final Family UNKNOWN = new Family((short) -1, "Unknown");
 
-        private short value;
-        private String description;
-
         public Family(Short value, String name) {
             super(value, name);
         }
@@ -164,8 +174,8 @@ public final class SockAddr implements Cloneable {
         @Override
         public String toString() {
             return new StringBuilder("Family{")
-                    .append("value=").append(value)
-                    .append(", description='").append(description).append('\'')
+                    .append("value=").append(super.getValue())
+                    .append(", description='").append(super.getName()).append('\'')
                     .append('}').toString();
         }
 

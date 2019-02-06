@@ -61,6 +61,15 @@ public class DataLinkType extends NamedNumber<Short, DataLinkType> {
      * @param value value.
      * @return returns datalink type.
      */
+    public static DataLinkType fromValue(short value) {
+       return valueOf(value);
+    }
+
+    /**
+     * Get datalink type from value.
+     * @param value value.
+     * @return returns datalink type.
+     */
     public static DataLinkType valueOf(short value) {
         for (Map.Entry<DataLinkType, Short> entry : registry.entrySet()) {
             if (entry.getValue() == value) {

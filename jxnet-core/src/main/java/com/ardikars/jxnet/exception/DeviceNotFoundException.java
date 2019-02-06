@@ -28,19 +28,19 @@ public class DeviceNotFoundException extends RuntimeException {
 	private static final long serialVersionUID = -7426666725353676994L;
 
 	public DeviceNotFoundException() {
-		super();
+		this("");
 	}
 
 	public DeviceNotFoundException(final String message) {
-		super(message);
+		this(message, new RuntimeException(message));
+	}
+
+	public DeviceNotFoundException(final Throwable cause) {
+		this(cause.getMessage(), cause);
 	}
 
 	public DeviceNotFoundException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
-	public DeviceNotFoundException(final Throwable cause) {
-		super(cause);
-	}
-	
 }

@@ -89,6 +89,7 @@ public final class BpfProgram implements PointerHandler {
 	 * Please use {@link BpfProgram#address()}
 	 * @return returns pointer address.
 	 */
+	@Deprecated
 	@Override
 	public long getAddress() {
 		return address();

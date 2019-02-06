@@ -28,19 +28,19 @@ public class PcapCloseException extends RuntimeException {
 	private static final long serialVersionUID = 8393262940022738877L;
 
 	public PcapCloseException() {
-		super();
+		this("");
 	}
 	
 	public PcapCloseException(final String message) {
-		super(message);
+		this(message, new RuntimeException(message));
 	}
-	
+
+	public PcapCloseException(final Throwable cause) {
+		this(cause.getMessage(), cause);
+	}
+
 	public PcapCloseException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
-	
-	public PcapCloseException(final Throwable cause) {
-		super(cause);
-	}
-	
+
 }

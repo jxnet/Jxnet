@@ -87,17 +87,25 @@ public class JxnetConfigurationProperties {
      */
     @SuppressFBWarnings(value = "UR_UNINIT_READ", justification = "Already handled by spring property value")
     public JxnetConfigurationProperties() {
-        init();
-        log();
-    }
-
-    private void init() {
         if (pcapType == null) {
             pcapType = Pcap.PcapType.LIVE;
         }
         if (snapshot == null || snapshot <= 0) {
             snapshot = 65535;
         }
+        if (promiscuous == null) {
+            promiscuous = PromiscuousMode.PROMISCUOUS;
+        }
+        if (timeout == null || timeout <= 0) {
+            timeout = 2000;
+        }
+        pcap();
+        bpf();
+        jvm();
+        log();
+    }
+
+    private void pcap() {
         if (timestampType == null) {
             timestampType = PcapTimestampType.HOST;
         }
@@ -106,12 +114,6 @@ public class JxnetConfigurationProperties {
         }
         if (datalink == null) {
             datalink = (int) DataLinkType.EN10MB.getValue();
-        }
-        if (promiscuous == null) {
-            promiscuous = PromiscuousMode.PROMISCUOUS;
-        }
-        if (timeout == null || timeout <= 0) {
-            timeout = 2000;
         }
         if (immediate == null) {
             immediate = ImmediateMode.IMMEDIATE;
@@ -128,13 +130,15 @@ public class JxnetConfigurationProperties {
         if (file == null) {
             file = null;
         }
+    }
+
+    private void bpf() {
         if (bpfCompileMode == null) {
             bpfCompileMode = BpfProgram.BpfCompileMode.OPTIMIZE;
         }
         if (filter == null || filter.isEmpty()) {
             filter = null;
         }
-        jvm();
     }
 
     private void jvm() {

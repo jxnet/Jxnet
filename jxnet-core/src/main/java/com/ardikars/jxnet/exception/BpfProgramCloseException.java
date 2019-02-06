@@ -28,19 +28,19 @@ public class BpfProgramCloseException extends RuntimeException {
 	private static final long serialVersionUID = 981862853161292421L;
 
 	public BpfProgramCloseException() {
-		super();
+		this("");
 	}
 	
 	public BpfProgramCloseException(final String message) {
-		super(message);
+		this(message, new RuntimeException(message));
+	}
+
+	public BpfProgramCloseException(final Throwable cause) {
+		this(cause.getMessage(), cause);
 	}
 	
 	public BpfProgramCloseException(final String message, final Throwable cause) {
 		super(message, cause);
-	}
-	
-	public BpfProgramCloseException(final Throwable cause) {
-		super(cause);
 	}
 	
 }

@@ -28,19 +28,19 @@ public class PcapDumperCloseException extends RuntimeException {
 	private static final long serialVersionUID = -3728289207910510051L;
 
 	public PcapDumperCloseException() {
-		super();
+		this("");
 	}
 	
 	public PcapDumperCloseException(final String message) {
-		super(message);
+		this(message, new RuntimeException(message));
 	}
-	
+
+	public PcapDumperCloseException(final Throwable cause) {
+		this(cause.getMessage(), cause);
+	}
+
 	public PcapDumperCloseException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
-	
-	public PcapDumperCloseException(final Throwable cause) {
-		super(cause);
-	}
-	
+
 }

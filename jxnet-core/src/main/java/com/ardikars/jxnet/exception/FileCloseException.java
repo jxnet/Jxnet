@@ -28,19 +28,19 @@ public class FileCloseException extends RuntimeException {
     private static final long serialVersionUID = -6594191206649507159L;
 
     public FileCloseException() {
-        super();
+        this("");
     }
 
     public FileCloseException(final String message) {
-        super(message);
+        this(message, new RuntimeException(message));
+    }
+
+    public FileCloseException(final Throwable cause) {
+        this(cause.getMessage(), cause);
     }
 
     public FileCloseException(final String message, final Throwable cause) {
         super(message, cause);
-    }
-
-    public FileCloseException(final Throwable cause) {
-        super(cause);
     }
 
 }

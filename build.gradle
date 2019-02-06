@@ -129,7 +129,11 @@ allprojects {
 				xml.enabled true
 				html.enabled = true
 			}
-			enabled = true
+			if (project.name.equals("jxnet-core")) {
+				enabled = true
+			} else {
+				enabled = false
+			}
 		}
 
 		/**

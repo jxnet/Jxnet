@@ -28,19 +28,20 @@ public class PlatformNotSupportedException extends RuntimeException {
     private static final long serialVersionUID = -5714154798477963289L;
 
     public PlatformNotSupportedException() {
-        super();
+        this("");
     }
 
     public PlatformNotSupportedException(final String message) {
-        super(message);
+        this(message, new RuntimeException(message));
+    }
+
+    public PlatformNotSupportedException(final Throwable cause) {
+        this(cause.getMessage(), cause);
     }
 
     public PlatformNotSupportedException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
-    public PlatformNotSupportedException(final Throwable cause) {
-        super(cause);
-    }
-
 }
+

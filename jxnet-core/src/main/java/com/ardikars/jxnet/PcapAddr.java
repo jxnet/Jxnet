@@ -20,6 +20,8 @@ package com.ardikars.jxnet;
 import com.ardikars.common.annotation.Mutable;
 import com.ardikars.jxnet.exception.OperationNotSupportedException;
 
+import java.util.List;
+
 /**
  * Representation of an interface address, used by Jxnet.PcapFindAllDevs().
  *
@@ -37,16 +39,24 @@ public final class PcapAddr implements Cloneable {
 	
 	private volatile SockAddr dstaddr = new SockAddr();
 
-	private PcapAddr() {
-		//
+	protected PcapAddr() {
+		this(new SockAddr(), new SockAddr(), new SockAddr(), new SockAddr());
+	}
+
+	protected PcapAddr(SockAddr addr, SockAddr netmask, SockAddr broadaddr, SockAddr dstaddr) {
+		this.addr = addr;
+		this.netmask = netmask;
+		this.broadaddr = broadaddr;
+		this.dstaddr = dstaddr;
 	}
 
 	/**
 	 * This method will throws {@code OperationNotSupportedException}.
-	 * See {@code Jxnet.PcapFinaAllDevs}.
+	 * See {@link Jxnet#PcapFindAllDevs(List, StringBuilder)}.
 	 * @return nothing.
+	 * @throws OperationNotSupportedException throws {@code OperationNotSupportedException}.
 	 */
-	public static PcapAddr newInstance() {
+	public static PcapAddr newInstance() throws OperationNotSupportedException {
 		throw new OperationNotSupportedException("Cannot instantiated directly, please use Jxnet.PcapFindAllDev().");
 	}
 
@@ -57,11 +67,7 @@ public final class PcapAddr implements Cloneable {
 	public SockAddr getAddr() {
 		SockAddr sockAddr = null;
 		if (this.addr != null) {
-			try {
-				sockAddr = (SockAddr) this.addr.clone();
-			} catch (CloneNotSupportedException e) {
-				sockAddr = null;
-			}
+			sockAddr = new SockAddr(this.addr.getSaFamily().getValue(), this.addr.getData());
 		}
 		return sockAddr;
 	}
@@ -73,11 +79,7 @@ public final class PcapAddr implements Cloneable {
 	public SockAddr getNetmask() {
 		SockAddr sockAddr = null;
 		if (this.netmask != null) {
-			try {
-				sockAddr = (SockAddr) this.netmask.clone();
-			} catch (CloneNotSupportedException e) {
-				sockAddr = null;
-			}
+			sockAddr = new SockAddr(this.netmask.getSaFamily().getValue(), this.netmask.getData());
 		}
 		return sockAddr;
 	}
@@ -89,11 +91,7 @@ public final class PcapAddr implements Cloneable {
 	public SockAddr getBroadAddr() {
 		SockAddr sockAddr = null;
 		if (this.broadaddr != null) {
-			try {
-				sockAddr = (SockAddr) this.broadaddr.clone();
-			} catch (CloneNotSupportedException e) {
-				sockAddr = null;
-			}
+			sockAddr = new SockAddr(this.broadaddr.getSaFamily().getValue(), this.broadaddr.getData());
 		}
 		return sockAddr;
 	}
@@ -105,11 +103,7 @@ public final class PcapAddr implements Cloneable {
 	public SockAddr getDstAddr() {
 		SockAddr sockAddr = null;
 		if (this.dstaddr != null) {
-			try {
-				sockAddr = (SockAddr) this.dstaddr.clone();
-			} catch (CloneNotSupportedException e) {
-				sockAddr = null;
-			}
+			sockAddr = new SockAddr(this.dstaddr.getSaFamily().getValue(), this.dstaddr.getData());
 		}
 		return sockAddr;
 	}
@@ -149,7 +143,7 @@ public final class PcapAddr implements Cloneable {
 
 	@Override
 	public PcapAddr clone() throws CloneNotSupportedException {
-		return  (PcapAddr) super.clone();
+		return (PcapAddr) super.clone();
 	}
 
 	@Override
