@@ -1187,14 +1187,25 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetRfMon
  */
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetImmediateMode
 		(JNIEnv *env, jclass jclazz, jobject jpcap, jint jimmediate) {
-
-#if defined(WIN32)
-	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
-	return -1;
-#else
-
+		
 	if (!CheckArgument(env, (jimmediate == 0 || jimmediate == 1), NULL)) return -1;
 
+#if defined(WIN32)
+	/*
+	 * pcap_setmintocopy() changes the minimum amount of data in the kernel buffer that causes
+	 * a read from the application to return (unless the timeout expires). If the value of size is large,
+	 * the kernel is forced to wait the arrival of several packets before copying the data to the user.
+	 * This guarantees a low number of system calls, i.e. low processor usage, and is a good setting
+	 * for applications like packet-sniffers and protocol analyzers. Vice versa, in presence of
+	 * a small value for this variable, the kernel will copy the packets as soon as the application is ready to receive them.
+	 * This is useful for real time applications that need the best responsiveness from the kernel. pcap_open_live()
+	 * sets a default mintocopy value of 16000 bytes. 
+	 */
+	if (jimmediate == 1) {
+		return pcap_setmintocopy(pt, 0);
+	}
+	return 0;
+#else
 	pcap_t *pcap = GetPcap(env, jpcap);
 
 	if (pcap == NULL) {
