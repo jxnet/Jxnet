@@ -1189,7 +1189,10 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetImmediateMode
 		(JNIEnv *env, jclass jclazz, jobject jpcap, jint jimmediate) {
 		
 	if (!CheckArgument(env, (jimmediate == 0 || jimmediate == 1), NULL)) return -1;
-
+	pcap_t *pcap = GetPcap(env, jpcap);
+	if (pcap == NULL) {
+	    return -1;
+	}
 #if defined(WIN32)
 	/*
 	 * pcap_setmintocopy() changes the minimum amount of data in the kernel buffer that causes
@@ -1202,16 +1205,10 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetImmediateMode
 	 * sets a default mintocopy value of 16000 bytes. 
 	 */
 	if (jimmediate == 1) {
-		return pcap_setmintocopy(pt, 0);
+		return pcap_setmintocopy(pcap, 0);
 	}
-	return 0;
+	return 0; // sets to a default mintocopy value (16000 bytes).
 #else
-	pcap_t *pcap = GetPcap(env, jpcap);
-
-	if (pcap == NULL) {
-	    return -1;
-	}
-
 	return pcap_set_immediate_mode(pcap, jimmediate);
 #endif
 	return -1;
