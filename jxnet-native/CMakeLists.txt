@@ -1,6 +1,6 @@
 
  ##
- # Copyright (C) 2015-2018 Jxnet
+ # Copyright (C) 2015-2019 Jxnet
  ##
 
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
@@ -9,12 +9,18 @@ project(jni)
 
 set(CMAKE_C_STANDARD 99)
 
+# Remove warnings for cygwin
+set(CMAKE_LEGACY_CYGWIN_WIN32 0) 
+
+message (STATUS "Start configuring project...")
+
 if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" OR
     "${CMAKE_C_COMPILER_ID}" STREQUAL "Clang")
-    message (STATUS "GCC OR CLANG")
+    message (STATUS "C COMPILER ID = GNU OR Clang")
     set(warnings "-Wall -Wextra -Werror")
 elseif ("${CMAKE_C_COMPILER_ID}" STREQUAL "MSVC")
     set(warnings "/W4 /WX /EHsc")
+	message (STATUS "C COMPILER ID = MSVC")
 endif()
 
 if (NOT CONFIGURED_ONCE)
@@ -24,23 +30,51 @@ if (NOT CONFIGURED_ONCE)
         CACHE STRING "Flags used by the compiler during all build types." FORCE)
 endif()
 
+# Set source files for jxnet
 set(SOURCE_FILES src/bpf.c src/jxnet.c src/preconditions.c src/utils.h src/ids.c src/preconditions.h src/ids.h src/utils.c)
+
+# Set source file for test
 set(SOURCE_APPLICATION_FILES src/main.c)
 
-find_package(JNI REQUIRED)
+# Set libpcap library path
+set(CMAKE_FIND_LIBRARY_PREFIXES "lib" "")
+if (WIN32 OR MSYS)
+	set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib" ".a" ".dll")
+	set(CMAKE_LIBRARY_PATH "${CMAKE_LIBRARY_PATH}" "${CMAKE_CURRENT_SOURCE_DIR}/lib/x64")
+else ()
+	set(CMAKE_FIND_LIBRARY_SUFFIXES ".la" ".a" ".so")
+	set(CMAKE_LIBRARY_PATH "${CMAKE_LIBRARY_PATH}" "${CMAKE_CURRENT_SOURCE_DIR}/lib")
+endif()
 
-if (JNI_FOUND)
-    message (STATUS "JNI_INCLUDE_DIRS=${JNI_INCLUDE_DIRS}")
-    message (STATUS "JNI_LIBRARIES=${JNI_LIBRARIES}")
+# Use internal JNI include files instead of JDK
+#find_package(JNI REQUIRED)
+#if (JNI_FOUND)
+#    message (STATUS "JNI_INCLUDE_DIRS=${JNI_INCLUDE_DIRS}")
+#    message (STATUS "JNI_LIBRARIES=${JNI_LIBRARIES}")
+#endif()
+if (WIN32 OR MSYS)
+	set(JNI_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/jni" "${CMAKE_CURRENT_SOURCE_DIR}/jni/win32")
+elseif (LINUX)
+	set(JNI_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/jni" "${CMAKE_CURRENT_SOURCE_DIR}/jni/linux")
+else ()
+	set(JNI_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/jni" "${CMAKE_CURRENT_SOURCE_DIR}/jni/darwin")
 endif()
 
 set(CMAKE_C_FLAGS "-Wno-unused-variable")
 
+message (STATUS "Start building project...")
+message (STATUS "SOURCE_FILES                = ${SOURCE_FILES}")
+message (STATUS "CURRENT_SOURCE_DIR          = ${CMAKE_CURRENT_SOURCE_DIR}")
+message (STATUS "JNI_INCLUDE_DIRS            = ${JNI_INCLUDE_DIRS}")
+message (STATUS "CMAKE_LIBRARY_PATH          = ${CMAKE_LIBRARY_PATH}")
+message (STATUS "CMAKE_FIND_LIBRARY_PREFIXES = ${CMAKE_FIND_LIBRARY_PREFIXES}")
+message (STATUS "CMAKE_FIND_LIBRARY_SUFFIXES = ${CMAKE_FIND_LIBRARY_SUFFIXES}")
+
 add_library(jxnet SHARED ${SOURCE_FILES})
 add_executable(application ${SOURCE_APPLICATION_FILES})
 
-if (WIN32)
-	message (STATUS "PLATFORM: WIN32")
+if (WIN32 OR MSYS)
+	add_definitions(-DWIN32 -DWIN64 -D__MINGW32__ -D__MINGW64__ -D_WIN32 -D_WIN64)
 	LINK_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/lib/x64)
 	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/include/jxnet ${JNI_INCLUDE_DIRS})
 	find_library(WPCAP_LIB wpcap)
