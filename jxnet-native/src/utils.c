@@ -23,7 +23,7 @@
 
 #include <sys/time.h>
 
-#if defined(WIN32) || defined(__CYGWIN__)
+#if defined(WIN32) || defined(WIN64)
 #include <winsock2.h>
 #include <Ws2tcpip.h>
 #include <iphlpapi.h>
@@ -51,7 +51,7 @@ void ThrowNew(JNIEnv *env, const char *class_name, const char *message) {
 
 jlong PointerToJlong(void *pointer) {
 	jlong address = 0;
-#if defined(WIN32)
+#if defined(WIN32) || defined(WIN64)
 	address = (UINT_PTR) pointer;
 #else
 	address = (intptr_t) pointer;
@@ -61,7 +61,7 @@ jlong PointerToJlong(void *pointer) {
 
 void *JlongToPointer(jlong address) {
 	void *pointer = NULL;
-#if defined(WIN32)
+#if defined(WIN32) || defined(WIN64)
 	pointer = (void *) ((UINT_PTR) address);
 #else
 	pointer = (void *) ((intptr_t) address);

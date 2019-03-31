@@ -16,7 +16,7 @@
  */
 
 #include "../include/jxnet/com_ardikars_jxnet_Jxnet.h"
-#ifndef WIN32
+#if !defined(WIN32) && !defined(_WIN64)
 #include "../include/jxnet/pcap/pcap-int.h"
 #else
 #include "../include/pcap-int.h"
@@ -31,7 +31,7 @@
 #include "utils.h"
 #include "preconditions.h"
 
-#ifndef WIN32
+#if !defined(WIN32) && !defined(_WIN64)
 #include <sys/socket.h>
 #endif
 
@@ -675,7 +675,7 @@ JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_Jxnet_PcapLookupDev
 		SetStringBuilder(env, jerrbuf, errbuf);
 	}
 
-#if defined(WIN32)
+#if defined(WIN32) || defined(_WIN64)
 	int size=WideCharToMultiByte(0, 0, (const WCHAR*) r, -1, NULL, 0, NULL, NULL);
 	char device[size + 1];
 	WideCharToMultiByte(0, 0, (const WCHAR*) r, -1, device, size, NULL, NULL);
@@ -1193,7 +1193,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetImmediateMode
 	if (pcap == NULL) {
 	    return -1;
 	}
-#if defined(WIN32)
+#if defined(WIN32) || defined(_WIN64)
 	/*
 	 * pcap_setmintocopy() changes the minimum amount of data in the kernel buffer that causes
 	 * a read from the application to return (unless the timeout expires). If the value of size is large,
@@ -1241,7 +1241,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapActivate
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetDirection
 		(JNIEnv *env, jclass jclazz, jobject jpcap, jobject jdirection) {
 
-#if defined(WIN32)
+#if defined(WIN32) || defined(_WIN64)
 	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
 	return -1;
 #else
@@ -1285,7 +1285,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetDirection
  */
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetTStampPrecision
 		(JNIEnv *env, jclass jclazz, jobject jpcap, jint jtstamp_precision) {
-#if defined(WIN32)
+#if defined(WIN32) || defined(_WIN64)
 	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
 	return -1;
 #else
@@ -1308,7 +1308,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetTStampPrecision
  */
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetTStampType
 		(JNIEnv *env, jclass jclazz, jobject jpcap, jint jtype) {
-#if defined(WIN32)
+#if defined(WIN32) || defined(_WIN64)
 	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
 	return -1;
 #else
@@ -1331,7 +1331,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapSetTStampType
  */
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapGetTStampPrecision
 		(JNIEnv *env, jclass jclazz, jobject jpcap) {
-#if defined(WIN32)
+#if defined(WIN32) || defined(_WIN64)
 	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
 	return -1;
 #else
@@ -1355,7 +1355,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapGetTStampPrecision
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapListDataLinks
 		(JNIEnv *env, jclass jclazz, jobject jpcap, jobject jdtl_buffer) {
 
-#if defined(WIN32)
+#if defined(WIN32) || defined(_WIN64)
 	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
 	return -1;
 #else
@@ -1390,7 +1390,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapListDataLinks
  */
 JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapListTStampTypes
 		(JNIEnv *env, jclass jclazz, jobject jpcap, jobject jtstamp_typesp) {
-#if defined(WIN32)
+#if defined(WIN32) || defined(_WIN64)
 	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
 	return -1;
 #else
@@ -1427,7 +1427,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapTStampTypeNameToVal
 		(JNIEnv *env, jclass jclazz, jstring jname) {
 
 	if (CheckNotNull(env, jname, NULL) == NULL) return -1;
-#if defined(WIN32)
+#if defined(WIN32) || defined(_WIN64)
 	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
 	return -1;
 #else
@@ -1450,7 +1450,7 @@ JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_Jxnet_PcapTStampTypeValToName
 		(JNIEnv *env, jclass jclazz, jint jtstamp_type) {
 
 	if (!CheckArgument(env, (jtstamp_type > -1), NULL)) return NULL;
-#if defined(WIN32)
+#if defined(WIN32) || defined(_WIN64)
 	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
 	return NULL;
 #else
@@ -1468,7 +1468,7 @@ JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_Jxnet_PcapTStampTypeValToDescr
 		(JNIEnv *env, jclass jclazz, jint jtstamp_type) {
 
 	if (!CheckArgument(env, (jtstamp_type > -1), NULL)) return NULL;
-#if defined(WIN32)
+#if defined(WIN32) || defined(_WIN64)
 	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
 	return NULL;
 #else
@@ -1484,7 +1484,7 @@ JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_Jxnet_PcapTStampTypeValToDescr
  */
 JNIEXPORT jstring JNICALL Java_com_ardikars_jxnet_Jxnet_PcapStatusToStr
 		(JNIEnv *env, jclass jclazz, jint jerrnum) {
-#if defined(WIN32)
+#if defined(WIN32) || defined(_WIN64)
 	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
 	return NULL;
 #else
@@ -1504,7 +1504,7 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapOpenDeadWithTStampPr
 	if (!CheckArgument(env, (jlinktype > -1), NULL)) return NULL;
 	if (!CheckArgument(env, (jsnaplen > 0 && jsnaplen <= MAXIMUM_SNAPLEN), NULL)) return NULL;
 	if (!CheckArgument(env, (jprecision >= 0 || jprecision <= 1), NULL)) return NULL;
-#if defined(WIN32)
+#if defined(WIN32) || defined(_WIN64)
 	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
 	return NULL;
 #else
@@ -1555,7 +1555,7 @@ JNIEXPORT jobject JNICALL Java_com_ardikars_jxnet_Jxnet_PcapOpenOfflineWithTStam
 	if (!CheckArgument(env, (jtstamp_precision >= 0 || jtstamp_precision <= 1), NULL)) return NULL;
 	if (CheckNotNull(env, jerrbuf, NULL) == NULL) return NULL;
 
-#if defined(WIN32)
+#if defined(WIN32) || defined(_WIN64)
 	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
 	return NULL;
 #else
@@ -1587,7 +1587,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapInject
 	if (CheckNotNull(env, jbuf, NULL) == NULL) return -1;
 	if (!CheckArgument(env, (jsize > 0), NULL)) return -1;
 
-#if defined(WIN32)
+#if defined(WIN32) || defined(_WIN64)
 	ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, NULL);
 	return -1;
 #else
@@ -1710,7 +1710,7 @@ JNIEXPORT jint JNICALL Java_com_ardikars_jxnet_Jxnet_PcapCheckActivated
  */
 JNIEXPORT jbyteArray JNICALL Java_com_ardikars_jxnet_Jxnet_FindHardwareAddress
   (JNIEnv *env, jclass jclazz, jstring jnic_name) {
-#ifndef WIN32
+#if !defined(WIN32) && !defined(_WIN64)
     ThrowNew(env, PLATFORM_NOT_SUPPORTED_EXCEPTION, "FindHardwareAddress() only supported on windows.");
     return NULL;
 #else
