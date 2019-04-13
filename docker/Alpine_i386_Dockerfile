@@ -1,0 +1,13 @@
+
+FROM i386/alpine:3.5
+MAINTAINER ardikars
+USER root
+
+RUN apk update
+RUN apk fetch openjdk8
+RUN apk --no-cache add openjdk8
+RUN apk --no-cache add gcc
+RUN apk --no-cache add bison
+RUN apk --no-cache add flex
+RUN apk --no-cache add git
+RUN apk --no-cache add bash

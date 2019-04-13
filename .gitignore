@@ -3,6 +3,10 @@ a.out
 *~
 *swp
 *.o
+*.a
+*.so
+*.so.a
+*.dylib
 *.status
 *.deb
 *.rpm
@@ -21,6 +25,9 @@ a.out
 *.bz2
 *.zip
 *.rar
+*.3pcap
+*.manmisc
+*.bottom
 /.classpath
 /.project
 /.settings
@@ -108,8 +115,6 @@ a.out
 /jxnet-native/.idea
 /jxnet-native/test
 /jxnet-native/build
-/jxnet-native/libjxnet.so
-/jxnet-native/libjxnet.so.a
 /jxnet-native/jxnet.dll
 /jxnet-native/CMakeFiles
 /jxnet-native/CMakeCache.txt
