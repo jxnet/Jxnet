@@ -1,11 +1,12 @@
 
  ##
  # Copyright (C) 2015-2019 Jxnet
+ # Author: Ardika Rommy Sanjaya <contact@ardikars.com>
  ##
 
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
-project(jni)
+project(jxnet)
 
 set(CMAKE_C_STANDARD 99)
 
@@ -38,12 +39,16 @@ set(SOURCE_APPLICATION_FILES src/main.c)
 
 # Set libpcap library path
 set(CMAKE_FIND_LIBRARY_PREFIXES "lib" "")
-if (WIN32 OR MSYS)
+if (WIN32 OR MSYS OR MSVC OR MINGW)
 	set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib" ".a" ".dll")
-	set(CMAKE_LIBRARY_PATH "${CMAKE_LIBRARY_PATH}" "${CMAKE_CURRENT_SOURCE_DIR}/lib/x64")
+	set(CMAKE_LIBRARY_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib/x64" "${CMAKE_LIBRARY_PATH}")
+elseif (APPLE)
+	set(CMAKE_MACOSX_RPATH 1)
+	set(CMAKE_FIND_LIBRARY_SUFFIXES ".la" ".a" ".so" ".dylib")
+	set(CMAKE_LIBRARY_PATH "${CMAKE_CURRENT_SOURCE_DIR}/libpcap" "${CMAKE_LIBRARY_PATH}")
 else ()
 	set(CMAKE_FIND_LIBRARY_SUFFIXES ".la" ".a" ".so")
-	set(CMAKE_LIBRARY_PATH "${CMAKE_LIBRARY_PATH}" "${CMAKE_CURRENT_SOURCE_DIR}/lib")
+	set(CMAKE_LIBRARY_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib" "${CMAKE_LIBRARY_PATH}")
 endif()
 
 # Use internal JNI include files instead of JDK
@@ -73,7 +78,7 @@ message (STATUS "CMAKE_FIND_LIBRARY_SUFFIXES = ${CMAKE_FIND_LIBRARY_SUFFIXES}")
 add_library(jxnet SHARED ${SOURCE_FILES})
 add_executable(application ${SOURCE_APPLICATION_FILES})
 
-if (WIN32 OR MSYS)
+if (WIN32 OR MSYS OR MSVC OR MINGW)
 	add_definitions(-DWIN32 -DWIN64 -D__MINGW32__ -D__MINGW64__ -D_WIN32 -D_WIN64)
 	LINK_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/lib/x64)
 	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/include/jxnet ${JNI_INCLUDE_DIRS})

@@ -29,7 +29,6 @@
 #define BPF_PROGRAM_CLOSE_EXCEPTION "com/ardikars/jxnet/exception/BpfProgramCloseException"
 #define PCAP_DUMPER_CLOSE_EXCEPTION "com/ardikars/jxnet/exception/PcapDumperCloseException"
 #define PLATFORM_NOT_SUPPORTED_EXCEPTION "com/ardikars/jxnet/exception/PlatformNotSupportedException"
-#define OPERATION_NOT_SUPPORTED_EXCEPTION "com/ardikars/jxnet/exception/OperationNotSupportedException"
 #define ILLEGAL_STATE_EXCEPTION "java/lang/IllegalStateException"
 #define ILLEGAL_ARGUMENT_EXCEPTION "java/lang/IllegalArgumentException"
 
