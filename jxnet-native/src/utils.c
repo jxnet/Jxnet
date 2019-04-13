@@ -85,21 +85,24 @@ jobject NewObject(JNIEnv *env, const char *class_name, const char *name, const c
 }
 
 jbyteArray NewByteAddr(JNIEnv *env, struct sockaddr *addr) {
-	if (addr==NULL) {
+    jbyteArray address = NULL;
+    if (addr == NULL) {
+        address = (*env)->NewByteArray(env, 0);
+        (*env)->SetByteArrayRegion(env, address, 0, 16, 0);
 		return NULL;
 	}
-	jbyteArray address = NULL;
 	switch(addr->sa_family){
 		case AF_INET:
 			address = (*env)->NewByteArray(env, 4);
 			(*env)->SetByteArrayRegion(env, address, 0, 4, (jbyte *) & ((struct sockaddr_in *) addr)->sin_addr);
 			break;
 		case AF_INET6:
-			address=(*env)->NewByteArray(env,16);
+			address = (*env)->NewByteArray(env,16);
 			(*env)->SetByteArrayRegion(env, address, 0, 16, (jbyte *) & ((struct sockaddr_in6 *) addr)->sin6_addr);
 			break;
 		default:
-			return NULL;
+            address = (*env)->NewByteArray(env, 0);
+            (*env)->SetByteArrayRegion(env, address, 0, 16, 0);
 			break;
 	}
 	return address;
