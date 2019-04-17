@@ -149,7 +149,7 @@ model {
     repositories {
         libs(PrebuiltLibraries) {
             jdk {
-                headers.srcDirs "${javaHome}/include", "${javaHome}/include/linux", "${javaHome}/include/win32", "${javaHome}/include/darwin"
+                headers.srcDirs "${javaHome}/include/linux", "${javaHome}/include/win32", "${javaHome}/include/darwin"
             }
         }
     }
