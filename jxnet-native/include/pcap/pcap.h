@@ -337,6 +337,19 @@ int	pcap_is_swapped(pcap_t *);
 int	pcap_major_version(pcap_t *);
 int	pcap_minor_version(pcap_t *);
 
+// fix implicit declaration
+pcap_t	*pcap_open_dead_with_tstamp_precision(int, int, u_int);
+pcap_t	*pcap_open_offline_with_tstamp_precision(const char *, u_int, char *);
+int	pcap_list_tstamp_types(pcap_t *, int **);
+void pcap_free_tstamp_types(int *);
+int	pcap_tstamp_type_name_to_val(const char *);
+const char *pcap_tstamp_type_val_to_name(int);
+const char *pcap_tstamp_type_val_to_description(int);
+int	pcap_set_immediate_mode(pcap_t *, int);
+int	pcap_set_tstamp_precision(pcap_t *, int);
+int	pcap_set_tstamp_type(pcap_t *, int);
+int	pcap_get_tstamp_precision(pcap_t *);
+
 /* XXX */
 FILE	*pcap_file(pcap_t *);
 int	pcap_fileno(pcap_t *);
