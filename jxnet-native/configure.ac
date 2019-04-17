@@ -49,7 +49,7 @@ fi
 
 AS_CASE([$host_os],
 	[cygwin*|mingw*|msys*], [
-		CFLAGS="$CFLAGS -I$(pwd)/include "
+		CFLAGS="$CFLAGS -I$(pwd)/include -I$(pwd)/include/jxnet "
 		LDFLAGS+="--disable-rpath "
 		AS_CASE([$host_cpu],
 			[amd64|x86_64], [
@@ -67,6 +67,7 @@ AS_CASE([$host_os],
 		LDFLAGS+="-lwpcap -liphlpapi "
 	],
 	[*], [
+	    CFLAGS="$CFLAGS -I$(pwd)/include -I$(pwd)/include/jxnet "
         LDFLAGS+="-L$(pwd)/libpcap "
 		AC_CHECK_LIB([pcap], [main], [LDFLAGS+="-lpcap "], [
 			AC_MSG_ERROR(["Cannot find -lpcap."])
