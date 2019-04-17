@@ -1,0 +1,40 @@
+
+# centos 7 base os
+FROM centos:7
+
+# need root permission to install some development tools
+USER root
+
+# install required tool to build libpcap and jxnet native libarary
+RUN yum install gcc \
+        g++ \
+        cmake \
+        bison \
+        flex \
+        git \
+        bash
+
+# clean cache
+RUN yum clean all
+
+# add Jxnet project into image
+RUN mkdir -p ~/project/
+RUN git clone https://github.com/jxnet/Jxnet ~/project/Jxnet
+
+# checkout into jni branch as default
+RUN cd ~/project/Jxnet && \
+        git checkout jni
+
+# build and install libpcap
+RUN cd ~/project/Jxnet/jxnet-native/libpcap && \
+        ./configure && \
+        make && \
+        make install
+
+# build jxnet native library
+RUN cd ~/project/Jxnet/jxnet-native/ && \
+        mkdir -p build && \
+        cd build && \
+        cmake ../ && \
+        make && \
+        make install
