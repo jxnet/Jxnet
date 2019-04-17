@@ -1,0 +1,44 @@
+
+# debian jessie (8) base os
+FROM debian:jessie
+
+# need root permission to install some development tools
+USER root
+
+# remove libpcap/libpcap-dev if it already installed
+RUN apt-get remove -y --purge libpcap*
+RUN apt-get autoremove -y
+
+# update local list of software from official reposioty
+RUN apt-get update
+
+# install required tool to build libpcap and jxnet native libarary
+RUN apt-get -y install gcc \
+        g++ \
+        cmake \
+        bison \
+        flex \
+        git \
+        bash
+
+# add Jxnet project into image
+RUN mkdir -p ~/project/
+RUN git clone https://github.com/jxnet/Jxnet ~/project/Jxnet
+
+# checkout into jni branch as default
+RUN cd ~/project/Jxnet && \
+        git checkout jni
+
+# build and install libpcap
+RUN cd ~/project/Jxnet/jxnet-native/libpcap && \
+        ./configure && \
+        make && \
+        make install
+
+# build jxnet native library
+RUN cd ~/project/Jxnet/jxnet-native/ && \
+        mkdir -p build && \
+        cd build && \
+        cmake ../ && \
+        make && \
+        make install
