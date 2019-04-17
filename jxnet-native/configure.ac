@@ -49,15 +49,15 @@ fi
 
 AS_CASE([$host_os],
 	[cygwin*|mingw*|msys*], [
-		CFLAGS="$CFLAGS -I../include "
+		CFLAGS="$CFLAGS -I$(pwd)/include "
 		LDFLAGS+="--disable-rpath "
 		AS_CASE([$host_cpu],
 			[amd64|x86_64], [
-				LDFLAGS+="-L../lib/x64 "
+				LDFLAGS+="-L$(pwd)/lib/x64 "
 				CFLAGS+="-Wl,--export-all-symbols -Wl,--add-stdcall-alias -m64 "
 			],
 			[i?86|x86], [
-				LDFLAGS+="-L../lib "
+				LDFLAGS+="-L$(pwd)/lib "
 				CFLAGS+="-Wl,--export-all-symbols -Wl,--add-stdcall-alias -m32 "
 			],
 			[*], [
@@ -67,7 +67,7 @@ AS_CASE([$host_os],
 		LDFLAGS+="-lwpcap -liphlpapi "
 	],
 	[*], [
-        LDFLAGS+="-L../libpcap "
+        LDFLAGS+="-L$(pwd)/libpcap "
 		AC_CHECK_LIB([pcap], [main], [LDFLAGS+="-lpcap "], [
 			AC_MSG_ERROR(["Cannot find -lpcap."])
 		])
