@@ -1,7 +1,8 @@
 #!/bin/sh
 
  ##
- # Copyright (C) 2015-2018 Jxnet
+ # Copyright (C) 2015-2019 Jxnet
+ # Author: Ardika Rommy Sanjaya <contact@ardikars.com>
  ##
 
 #autoreconf --verbose --force --install --warning=all -I m4

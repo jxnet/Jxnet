@@ -1,6 +1,7 @@
 
  ##
- # Copyright (C) 2015-2018 Jxnet
+ # Copyright (C) 2015-2019 Jxnet
+ # Author: Ardika Rommy Sanjaya
  ##
 
 #noinst_LIBRARIES = libjxnet.a
@@ -13,7 +14,7 @@ libjxnet_la_SOURCES = \
 	preconditions.c \
 	bpf.c \
 	jxnet.c \
-	utils.c \
+	utils.c
 
 libjxnet_la_LDFLAGS = -avoid-version -no-undefined
 
