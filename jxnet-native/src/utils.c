@@ -40,11 +40,6 @@ void SetContextIDs(JNIEnv *env) {
     SetByteBufferIDs(env);
 }
 
-void swap_order_uint32(uint32_t *value) {
-	*value = ((*value << 8) & 0xFF00FF00 ) | ((*value >> 8) & 0xFF00FF);
-	*value = (*value << 16) | (*value >> 16);
-}
-
 void ThrowNew(JNIEnv *env, const char *class_name, const char *message) {
 	(*env)->ThrowNew(env, (*env)->FindClass(env, class_name), message);
 }

@@ -29,7 +29,6 @@
 #define BPF_PROGRAM_CLOSE_EXCEPTION "com/ardikars/jxnet/exception/BpfProgramCloseException"
 #define PCAP_DUMPER_CLOSE_EXCEPTION "com/ardikars/jxnet/exception/PcapDumperCloseException"
 #define PLATFORM_NOT_SUPPORTED_EXCEPTION "com/ardikars/jxnet/exception/PlatformNotSupportedException"
-#define ILLEGAL_STATE_EXCEPTION "java/lang/IllegalStateException"
 #define ILLEGAL_ARGUMENT_EXCEPTION "java/lang/IllegalArgumentException"
 
 typedef struct pcap_user_data_t {
@@ -39,16 +38,6 @@ typedef struct pcap_user_data_t {
     jclass PcapHandlerClass;
     jmethodID PcapHandlerNextPacketMID;
 } pcap_user_data_t;
-
-typedef struct arp_user_data_t {
-    JNIEnv *env;
-    jobject callback;
-    jobject user;
-    jclass ArpHandlerClass;
-    jmethodID ArpHandlerNextArpEntryMID;
-} arp_user_data_t;
-
-void swap_order_uint32(uint32_t *value);
 
 jlong PointerToJlong(void *pointer);
 
