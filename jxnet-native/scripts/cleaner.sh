@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rm .project \
+rm -rf .project \
 	aclocal.m4 \
 	compile \
 	config.guess \

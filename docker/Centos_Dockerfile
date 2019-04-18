@@ -5,14 +5,24 @@ FROM centos:7
 # need root permission to install some development tools
 USER root
 
-# install required tool to build libpcap and jxnet native libarary
-RUN yum install gcc \
-        g++ \
-        cmake \
-        bison \
-        flex \
-        git \
-        bash
+# install required tools
+RUN yum -y install bash \
+        gcc \
+        gcc-c++ \
+        make \
+        git
+
+# required to build libpcap
+RUN yum -y install bison \
+        flex
+
+# install autotools
+RUN yum -y install automake \
+        autoconf \
+        libtool
+
+# install cmake
+RUN yum -y install cmake
 
 # clean cache
 RUN yum clean all
@@ -28,13 +38,20 @@ RUN cd ~/project/Jxnet && \
 # build and install libpcap
 RUN cd ~/project/Jxnet/jxnet-native/libpcap && \
         ./configure && \
-        make && \
-        make install
+        make
 
-# build jxnet native library
+# build jxnet native library with cmake
 RUN cd ~/project/Jxnet/jxnet-native/ && \
         mkdir -p build && \
         cd build && \
         cmake ../ && \
+        make && \
+        make install
+
+# build jxnet native library with autotools
+RUN cd ~/project/Jxnet/jxnet-native/ && \
+        export JAVA_HOME=$(pwd) && \
+        ./bootstrap.sh && \
+        ./configure && \
         make && \
         make install
