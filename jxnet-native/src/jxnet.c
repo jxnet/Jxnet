@@ -19,7 +19,7 @@
 #if !defined(WIN32) && !defined(_WIN64)
 #include "../include/jxnet/pcap/pcap-int.h"
 #else
-#include "../include/pcap-int.h"
+#include "../include/jxnet/pcap/pcap-int.h"
 #include <winsock2.h>
 #include <iphlpapi.h>
 #endif

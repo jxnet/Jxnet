@@ -2,6 +2,11 @@
  * Copyright (c) 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997
  *	The Regents of the University of California.  All rights reserved.
  *
+ * This code is derived from the Stanford/CMU enet packet filter,
+ * (net/enet.c) distributed as part of 4.3BSD, and code contributed
+ * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence
+ * Berkeley Laboratory.
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -31,14 +36,19 @@
  * SUCH DAMAGE.
  */
 
-#ifndef lib_pcap_vlan_h
-#define lib_pcap_vlan_h
+#ifndef lib_pcap_can_socketcan_h
+#define lib_pcap_can_socketcan_h
 
-struct vlan_tag {
-	u_int16_t	vlan_tpid;		/* ETH_P_8021Q */
-	u_int16_t	vlan_tci;		/* VLAN TCI */
-};
-
-#define VLAN_TAG_LEN	4
+/*
+ * SocketCAN header, as per Documentation/networking/can.txt in the
+ * Linux source.
+ */
+typedef struct {
+	u_int32_t can_id;
+	u_int8_t payload_length;
+	u_int8_t pad;
+	u_int8_t reserved1;
+	u_int8_t reserved2;
+} pcap_can_socketcan_hdr;
 
 #endif
