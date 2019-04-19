@@ -45,7 +45,7 @@
     <rule ref="rulesets/java/strictexception.xml/AvoidThrowingRawExceptionTypes"/>
     <!--<rule ref="rulesets/ecmascript/basic.xml/AvoidTrailingComma"/>-->
     <rule ref="rulesets/java/basic.xml/AvoidUsingHardCodedIP"/>
-    <rule ref="rulesets/java/controversial.xml/AvoidUsingNativeCode"/>
+    <!--<rule ref="rulesets/java/controversial.xml/AvoidUsingNativeCode"/>-->
     <rule ref="rulesets/java/basic.xml/AvoidUsingOctalValues"/>
     <!--<rule ref="rulesets/java/controversial.xml/AvoidUsingShortType"/>-->
     <!--<rule ref="rulesets/java/controversial.xml/AvoidUsingVolatile"/>-->

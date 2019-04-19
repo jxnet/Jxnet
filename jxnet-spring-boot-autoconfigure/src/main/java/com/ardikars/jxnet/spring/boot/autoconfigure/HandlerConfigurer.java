@@ -61,12 +61,25 @@ public class HandlerConfigurer<T, V> {
      * @return returns {@link Packet}.
      */
     public Packet decode(ByteBuffer bytes) {
-        ByteBuf buffer = Unpooled.wrappedBuffer(bytes);
+        return processPacket(Unpooled.wrappedBuffer(bytes));
+    }
+
+    /**
+     * Decode buffer.
+     * @param address memory address.
+     * @param length length.
+     * @return returns {@link Packet}.
+     */
+    public Packet decodeRawBuffer(long address, int length) {
+        return processPacket(Unpooled.wrappedBuffer(address, length, false));
+    }
+
+    private Packet processPacket(ByteBuf buf) {
         Packet packet;
         if (dataLinkType.getValue() == 1) {
-            packet = Ethernet.newPacket(buffer);
+            packet = Ethernet.newPacket(buf);
         } else {
-            packet = UnknownPacket.newPacket(buffer);
+            packet = UnknownPacket.newPacket(buf);
         }
         return packet;
     }
