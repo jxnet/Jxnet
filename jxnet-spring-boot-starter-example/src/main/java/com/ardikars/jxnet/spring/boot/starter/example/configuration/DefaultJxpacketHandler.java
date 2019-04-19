@@ -21,6 +21,7 @@ import com.ardikars.common.tuple.Pair;
 import com.ardikars.jxnet.PcapPktHdr;
 import com.ardikars.jxnet.spring.boot.autoconfigure.JxpacketHandler;
 import com.ardikars.jxnet.spring.boot.autoconfigure.annotation.EnablePacket;
+import com.ardikars.jxnet.spring.boot.autoconfigure.constant.PacketHandlerType;
 import com.ardikars.jxpacket.common.Packet;
 import java.util.Iterator;
 import java.util.concurrent.ExecutionException;
@@ -35,7 +36,7 @@ import org.springframework.context.annotation.Configuration;
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
  * @since 1.4.9
  */
-@EnablePacket
+@EnablePacket(packetHandlerType = PacketHandlerType.JXPACKET_RAW)
 @Configuration
 public class DefaultJxpacketHandler implements JxpacketHandler<String> {
 
