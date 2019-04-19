@@ -80,37 +80,36 @@ jobject NewObject(JNIEnv *env, const char *class_name, const char *name, const c
 }
 
 jbyteArray NewByteAddr(JNIEnv *env, struct sockaddr *addr) {
-    jbyteArray address = NULL;
     if (addr == NULL) {
-        address = (*env)->NewByteArray(env, 0);
-        (*env)->SetByteArrayRegion(env, address, 0, 16, 0);
-		return NULL;
-	}
-	switch(addr->sa_family){
-		case AF_INET:
-			address = (*env)->NewByteArray(env, 4);
-			(*env)->SetByteArrayRegion(env, address, 0, 4, (jbyte *) & ((struct sockaddr_in *) addr)->sin_addr);
-			break;
-		case AF_INET6:
-			address = (*env)->NewByteArray(env,16);
-			(*env)->SetByteArrayRegion(env, address, 0, 16, (jbyte *) & ((struct sockaddr_in6 *) addr)->sin6_addr);
-			break;
-		default:
-            address = (*env)->NewByteArray(env, 0);
-            (*env)->SetByteArrayRegion(env, address, 0, 16, 0);
-			break;
-	}
-	return address;
+        return (*env)->NewByteArray(env, 0);
+    }
+    jbyteArray address = NULL;
+    switch(addr->sa_family){
+        case AF_INET:
+            address = (*env)->NewByteArray(env, 4);
+            (*env)->SetByteArrayRegion(env, address, 0, 4, (jbyte *) & ((struct sockaddr_in *) addr)->sin_addr);
+            break;
+        case AF_INET6:
+            address = (*env)->NewByteArray(env, 16);
+            (*env)->SetByteArrayRegion(env, address, 0, 16, (jbyte *) & ((struct sockaddr_in6 *) addr)->sin6_addr);
+            break;
+        default:
+            address = (*env)->NewByteArray(env, sizeof(addr->sa_data));
+            (*env)->SetByteArrayRegion(env, address, 0, sizeof(addr->sa_data), (jbyte *) & addr->sa_data);
+    }
+    return address;
 }
 
 jobject NewSockAddr(JNIEnv *env, struct sockaddr *addr) {
-	jobject sockaddr = NewObject(env, "com/ardikars/jxnet/SockAddr", "<init>", "()V");
-	if (addr == NULL) {
-		return sockaddr;
-	}
-	(*env)->SetShortField(env, sockaddr, SockAddrSaFamilyFID, (jshort) addr->sa_family);
-	(*env)->SetObjectField(env, sockaddr, SockAddrDataFID, NewByteAddr(env, addr));
-	return sockaddr;
+    jobject sockaddr = NewObject(env, "com/ardikars/jxnet/SockAddr", "<init>", "()V");
+    if (addr == NULL) {
+        (*env)->SetShortField(env, sockaddr, SockAddrSaFamilyFID, (jshort) 0);
+        (*env)->SetObjectField(env, sockaddr, SockAddrDataFID, NewByteAddr(env, NULL));
+    } else {
+        (*env)->SetShortField(env, sockaddr, SockAddrSaFamilyFID, (jshort) addr->sa_family);
+        (*env)->SetObjectField(env, sockaddr, SockAddrDataFID, NewByteAddr(env, addr));
+    }
+    return sockaddr;
 }
 
 jobject SetPcap(JNIEnv *env, pcap_t *pcap) {
