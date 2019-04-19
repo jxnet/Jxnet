@@ -106,6 +106,7 @@ extern "C" {
  * We don't enforce this in pcap_set_snaplen(), but we use it internally.
  */
 #define MAXIMUM_SNAPLEN		262144
+#define UNUSED(x) (void)(x)
 
 struct pcap_opt {
 	char	*device;

@@ -16,14 +16,13 @@ model {
             if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
                 target("x64") {
                     cCompiler.withArguments { args ->
-                        args << "-I${rootDir}/jxnet-native/include"
-                        args << "-I${rootDir}/jxnet-native/include/jxnet"
+                        args << "-I${rootDir}/jxnet-native/WpdPack/Include"
                         args << "-m64"
                     }
                     linker.withArguments { args ->
                         args << "-Wl,--export-all-symbols"
                         args << "-Wl,--add-stdcall-alias"
-                        args << "-L${rootDir}/jxnet-native/lib/x64"
+                        args << "-L${rootDir}/jxnet-native/WpdPack/Lib/x64"
                         args << "-lwpcap"
                         args << "-liphlpapi"
                         args << "-m64"
@@ -31,14 +30,13 @@ model {
                 }
                 target("x86") {
                     cCompiler.withArguments { args ->
-                        args << "-I${rootDir}/jxnet-native/include"
-                        args << "-I${rootDir}/jxnet-native/include/jxnet"
+                        args << "-I${rootDir}/jxnet-native/WpdPack/Include"
                         args << "-m32"
                     }
                     linker.withArguments { args ->
                         args << "-Wl,--export-all-symbols"
                         args << "-Wl,--add-stdcall-alias"
-                        args << "-L${rootDir}/jxnet-native/lib"
+                        args << "-L${rootDir}/jxnet-native/WpdPack/Lib"
                         args << "-lwpcap"
                         args << "-liphlpapi"
                         args << "-m32"
@@ -56,14 +54,13 @@ model {
             if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
                 target("x64") {
                     cCompiler.withArguments { args ->
-                        args << "-I${rootDir}/jxnet-native/include"
-                        args << "-I${rootDir}/jxnet-native/include/jxnet"
+                        args << "-I${rootDir}/jxnet-native/WpdPack/Include"
                         args << "-m64"
                     }
                     linker.withArguments { args ->
                         args << "-Wl,--export-all-symbols"
                         args << "-Wl,--add-stdcall-alias"
-                        args << "-L${rootDir}/jxnet-native/lib/x64"
+                        args << "-L${rootDir}/jxnet-native/WpdPack/Lib/x64"
                         args << "-lwpcap"
                         args << "-liphlpapi"
                         args << "-m64"
@@ -71,14 +68,13 @@ model {
                 }
                 target("x86") {
                     cCompiler.withArguments { args ->
-                        args << "-I${rootDir}/jxnet-native/include"
-                        args << "-I${rootDir}/jxnet-native/include/jxnet"
+                        args << "-I${rootDir}/jxnet-native/WpdPack/Include"
                         args << "-m32"
                     }
                     linker.withArguments { args ->
                         args << "-Wl,--export-all-symbols"
                         args << "-Wl,--add-stdcall-alias"
-                        args << "-L${rootDir}/jxnet-native/lib"
+                        args << "-L${rootDir}/jxnet-native/WpdPack/Lib"
                         args << "-lwpcap"
                         args << "-liphlpapi"
                         args << "-m32"
@@ -149,7 +145,7 @@ model {
     repositories {
         libs(PrebuiltLibraries) {
             jdk {
-                headers.srcDirs "${javaHome}/include/linux", "${javaHome}/include/win32", "${javaHome}/include/darwin"
+                headers.srcDirs "${javaHome}/include", "${javaHome}/include/linux", "${javaHome}/include/win32", "${javaHome}/include/darwin"
             }
         }
     }

@@ -47,8 +47,6 @@ else
 	done
 fi
 
-CFLAGS="$CFLAGS -I$(pwd)/include -I$(pwd)/include/jxnet "
-
 AS_CASE([$host_os],
 	[cygwin*|mingw*|msys*], [
 	    CFLAGS="$CFLAGS -I$(pwd)/WpdPack/Include "
