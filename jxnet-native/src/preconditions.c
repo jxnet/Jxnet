@@ -28,14 +28,6 @@ int CheckArgument(JNIEnv *env, int expression, const char *error_message) {
     return expression;
 }
 
-int CheckState(JNIEnv *env, int expression, const char *error_message) {
-    if (!expression) {
-        ThrowNew(env, ILLEGAL_STATE_EXCEPTION, error_message);
-        return !expression;
-    }
-    return expression;
-}
-
 jobject CheckNotNull(JNIEnv *env, jobject jobj, const char *error_message) {
     if (jobj == NULL) {
         ThrowNew(env, NULL_PTR_EXCEPTION, error_message);

@@ -23,7 +23,7 @@
 
 #include <sys/time.h>
 
-#if defined(WIN32) || defined(__CYGWIN__)
+#if defined(WIN32) || defined(WIN64)
 #include <winsock2.h>
 #include <Ws2tcpip.h>
 #include <iphlpapi.h>
@@ -40,18 +40,13 @@ void SetContextIDs(JNIEnv *env) {
     SetByteBufferIDs(env);
 }
 
-void swap_order_uint32(uint32_t *value) {
-	*value = ((*value << 8) & 0xFF00FF00 ) | ((*value >> 8) & 0xFF00FF);
-	*value = (*value << 16) | (*value >> 16);
-}
-
 void ThrowNew(JNIEnv *env, const char *class_name, const char *message) {
 	(*env)->ThrowNew(env, (*env)->FindClass(env, class_name), message);
 }
 
 jlong PointerToJlong(void *pointer) {
 	jlong address = 0;
-#if defined(WIN32)
+#if defined(WIN32) || defined(WIN64)
 	address = (UINT_PTR) pointer;
 #else
 	address = (intptr_t) pointer;
@@ -61,7 +56,7 @@ jlong PointerToJlong(void *pointer) {
 
 void *JlongToPointer(jlong address) {
 	void *pointer = NULL;
-#if defined(WIN32)
+#if defined(WIN32) || defined(WIN64)
 	pointer = (void *) ((UINT_PTR) address);
 #else
 	pointer = (void *) ((intptr_t) address);
@@ -85,34 +80,36 @@ jobject NewObject(JNIEnv *env, const char *class_name, const char *name, const c
 }
 
 jbyteArray NewByteAddr(JNIEnv *env, struct sockaddr *addr) {
-	if (addr==NULL) {
-		return NULL;
-	}
-	jbyteArray address = NULL;
-	switch(addr->sa_family){
-		case AF_INET:
-			address = (*env)->NewByteArray(env, 4);
-			(*env)->SetByteArrayRegion(env, address, 0, 4, (jbyte *) & ((struct sockaddr_in *) addr)->sin_addr);
-			break;
-		case AF_INET6:
-			address=(*env)->NewByteArray(env,16);
-			(*env)->SetByteArrayRegion(env, address, 0, 16, (jbyte *) & ((struct sockaddr_in6 *) addr)->sin6_addr);
-			break;
-		default:
-			return NULL;
-			break;
-	}
-	return address;
+    if (addr == NULL) {
+        return (*env)->NewByteArray(env, 0);
+    }
+    jbyteArray address = NULL;
+    switch(addr->sa_family){
+        case AF_INET:
+            address = (*env)->NewByteArray(env, 4);
+            (*env)->SetByteArrayRegion(env, address, 0, 4, (jbyte *) & ((struct sockaddr_in *) addr)->sin_addr);
+            break;
+        case AF_INET6:
+            address = (*env)->NewByteArray(env, 16);
+            (*env)->SetByteArrayRegion(env, address, 0, 16, (jbyte *) & ((struct sockaddr_in6 *) addr)->sin6_addr);
+            break;
+        default:
+            address = (*env)->NewByteArray(env, sizeof(addr->sa_data));
+            (*env)->SetByteArrayRegion(env, address, 0, sizeof(addr->sa_data), (jbyte *) & addr->sa_data);
+    }
+    return address;
 }
 
 jobject NewSockAddr(JNIEnv *env, struct sockaddr *addr) {
-	jobject sockaddr = NewObject(env, "com/ardikars/jxnet/SockAddr", "<init>", "()V");
-	if (addr == NULL) {
-		return sockaddr;
-	}
-	(*env)->SetShortField(env, sockaddr, SockAddrSaFamilyFID, (jshort) addr->sa_family);
-	(*env)->SetObjectField(env, sockaddr, SockAddrDataFID, NewByteAddr(env, addr));
-	return sockaddr;
+    jobject sockaddr = NewObject(env, "com/ardikars/jxnet/SockAddr", "<init>", "()V");
+    if (addr == NULL) {
+        (*env)->SetShortField(env, sockaddr, SockAddrSaFamilyFID, (jshort) 0);
+        (*env)->SetObjectField(env, sockaddr, SockAddrDataFID, NewByteAddr(env, NULL));
+    } else {
+        (*env)->SetShortField(env, sockaddr, SockAddrSaFamilyFID, (jshort) addr->sa_family);
+        (*env)->SetObjectField(env, sockaddr, SockAddrDataFID, NewByteAddr(env, addr));
+    }
+    return sockaddr;
 }
 
 jobject SetPcap(JNIEnv *env, pcap_t *pcap) {
@@ -229,6 +226,6 @@ void pcap_callback0(u_char *user, const struct pcap_pkthdr *pkt_header, const u_
 									 (jint) pkt_header->len,
 									 (jint) pkt_header->ts.tv_sec,
 									 (jlong) pkt_header->ts.tv_usec,
-									 (jlong) &(*pkt_data));
+									 PointerToJlong((void*) pkt_data));
 
 }

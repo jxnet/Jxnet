@@ -65,6 +65,9 @@ public class JxpacketConfigurationSelector implements ImportSelector {
             case JXPACKET_ASYNC:
                 LOGGER.debug("Applying jxpacket async handler configuration.");
                 return new String[] {"com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket.JxpacketAsyncHandlerConfiguration"};
+            case JXPACKET_RAW:
+                LOGGER.debug("Applying jxpacket raw handler configuration.");
+                return new String[] {"com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket.JxpacketRawHandlerConfiguration"};
             default:
                 LOGGER.debug("Applying jxpacket handler configuration.");
                 return new String[] {"com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket.JxpacketHandlerConfiguration"};
