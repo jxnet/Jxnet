@@ -1,12 +1,13 @@
 
  ##
- # Copyright (C) 2015-2018 Jxnet
+ # Copyright (C) 2015-2019 Jxnet
+ # Author: Ardika Rommy Sanjaya <contact@ardikars.com>
  ##
 
 AC_PREREQ(2.69)
 LT_PREREQ(2.4.2)
 
-AC_INIT([jxnet], [1.1.0], [contact@ardikars.com], [jxnet], [http://ardikars.com])
+AC_INIT([jxnet], [m4_esyscmd_s([cat ../VERSION])], [contact@ardikars.com], [jxnet], [http://ardikars.com])
 AM_INIT_AUTOMAKE([])
 LT_INIT([shared static win32-dll])
 AC_PROG_LIBTOOL(libtool)
@@ -31,6 +32,9 @@ if test "x$JAVA_HOME" != x; then
 		[freebsd*], [
             CFLAGS="$CFLAGS -I$JAVA_HOME/include -I$JAVA_HOME/include/freebsd "
         ],
+        [darwin*], [
+            CFLAGS="$CFLAGS -I$JAVA_HOME/include -I$JAVA_HOME/include/darwin "
+        ],
 		[*], [
 			AC_MSG_ERROR(["Platform is not supported."])
 		]
@@ -45,15 +49,15 @@ fi
 
 AS_CASE([$host_os],
 	[cygwin*|mingw*|msys*], [
-		CFLAGS="$CFLAGS -I../include "
+	    CFLAGS="$CFLAGS -I$(pwd)/WpdPack/Include "
 		LDFLAGS+="--disable-rpath "
 		AS_CASE([$host_cpu],
 			[amd64|x86_64], [
-				LDFLAGS+="-L../lib/x64 "
+				LDFLAGS+="-L$(pwd)/WpdPack/Lib/x64 "
 				CFLAGS+="-Wl,--export-all-symbols -Wl,--add-stdcall-alias -m64 "
 			],
 			[i?86|x86], [
-				LDFLAGS+="-L../lib "
+				LDFLAGS+="-L$(pwd)/WpdPack/Lib/x64 "
 				CFLAGS+="-Wl,--export-all-symbols -Wl,--add-stdcall-alias -m32 "
 			],
 			[*], [
@@ -63,6 +67,8 @@ AS_CASE([$host_os],
 		LDFLAGS+="-lwpcap -liphlpapi "
 	],
 	[*], [
+        CFLAGS="$CFLAGS -I$(pwd)/libpcap "
+        LDFLAGS+="-L$(pwd)/libpcap "
 		AC_CHECK_LIB([pcap], [main], [LDFLAGS+="-lpcap "], [
 			AC_MSG_ERROR(["Cannot find -lpcap."])
 		])
@@ -83,4 +89,3 @@ AC_CONFIG_FILES([Makefile src/Makefile])
 #AC_TYPE_SIZE_T
 
 AC_OUTPUT
-

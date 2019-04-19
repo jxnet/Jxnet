@@ -46,11 +46,22 @@ public class DefaultLibraryLoader implements Loader<Void> {
 
     private final InternalNativeLibrary nativeLibrary = new InternalNativeLibrary();
 
+    private static final boolean USE_SYSTEM_LIBRARY;
+
     /**
      * Perform load native library.
      */
     @Override
     public void load(final Callback<Void> callback) {
+        if (USE_SYSTEM_LIBRARY) {
+            try {
+                System.loadLibrary("jxnet");
+                callback.onSuccess(null);
+                return;
+            } catch (Exception e) {
+                // use internal library
+            }
+        }
         switch (Platforms.getName()) {
             case LINUX:
                 if (Platforms.is64Bit()) {
@@ -96,6 +107,19 @@ public class DefaultLibraryLoader implements Loader<Void> {
                 callback.onFailure(throwable);
             }
         });
+    }
+
+    static {
+        boolean isUseSystemLibrary;
+        String useSystemLibrary = System.getProperty("jxnet.system.library", "false");
+        if ("yes".equalsIgnoreCase(useSystemLibrary)
+                || "true".equalsIgnoreCase(useSystemLibrary)
+                || "1".equalsIgnoreCase(useSystemLibrary)) {
+            isUseSystemLibrary = true;
+        } else {
+            isUseSystemLibrary = false;
+        }
+        USE_SYSTEM_LIBRARY = isUseSystemLibrary;
     }
 
 }

@@ -1,0 +1,26 @@
+
+# alpine 3.5 base os
+FROM alpine:3.5
+
+# need root permission to install some development tools
+USER root
+
+# install required tools
+RUN apk --no-cache add linux-headers \
+        bash \
+        gcc \
+        g++ \
+        make \
+        git
+
+# required to build libpcap
+RUN apk --no-cache add bison \
+        flex
+
+# install autotools
+RUN apk --no-cache add automake \
+        autoconf \
+        libtool
+
+# install cmake
+RUN apk --no-cache add cmake
