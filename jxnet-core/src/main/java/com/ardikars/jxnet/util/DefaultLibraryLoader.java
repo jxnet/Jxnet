@@ -53,6 +53,25 @@ public class DefaultLibraryLoader implements Loader<Void> {
      */
     @Override
     public void load(final Callback<Void> callback) {
+        doLoad(callback);
+    }
+
+    /**
+     * Loadd classes then perform load native library.
+     */
+    @Override
+    public void load(Callback<Void> callback, Class[] loadClasses) {
+        for (Class clazzes : loadClasses) {
+            try {
+                Class.forName(clazzes.getName());
+                doLoad(callback);
+            } catch (ClassNotFoundException e) {
+                callback.onFailure(e);
+            }
+        }
+    }
+
+    private void doLoad(final Callback<Void> callback) {
         if (USE_SYSTEM_LIBRARY) {
             try {
                 System.loadLibrary("jxnet");

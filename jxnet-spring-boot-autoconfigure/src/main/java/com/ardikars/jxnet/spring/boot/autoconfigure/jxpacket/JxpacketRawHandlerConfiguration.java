@@ -21,13 +21,13 @@ import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectN
 
 import com.ardikars.common.logging.Logger;
 import com.ardikars.common.logging.LoggerFactory;
+import com.ardikars.common.memory.Memory;
 import com.ardikars.common.tuple.Pair;
 import com.ardikars.common.tuple.Tuple;
 import com.ardikars.jxnet.PcapPktHdr;
 import com.ardikars.jxnet.RawPcapHandler;
 import com.ardikars.jxnet.spring.boot.autoconfigure.HandlerConfigurer;
 import com.ardikars.jxpacket.common.Packet;
-import io.netty.buffer.ByteBuf;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -40,7 +40,7 @@ import org.springframework.context.annotation.Configuration;
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
  * @since 1.4.9
  */
-@ConditionalOnClass({Packet.class, ByteBuf.class})
+@ConditionalOnClass({Packet.class, Memory.class})
 @Configuration(JXPACKET_RAW_HANDLER_CONFIGURATION_BEAN_NAME)
 public class JxpacketRawHandlerConfiguration<T> extends HandlerConfigurer<T, Future<Pair<PcapPktHdr, Packet>>> implements RawPcapHandler<T> {
 

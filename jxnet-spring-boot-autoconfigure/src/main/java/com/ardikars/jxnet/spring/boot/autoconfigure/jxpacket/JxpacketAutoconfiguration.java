@@ -24,6 +24,8 @@ import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectN
 
 import com.ardikars.common.logging.Logger;
 import com.ardikars.common.logging.LoggerFactory;
+import com.ardikars.common.memory.Memories;
+import com.ardikars.common.memory.Memory;
 import com.ardikars.common.tuple.Pair;
 import com.ardikars.common.tuple.Tuple;
 import com.ardikars.jxnet.DataLinkType;
@@ -48,8 +50,6 @@ import com.ardikars.jxpacket.core.ip.ip6.HopByHopOptions;
 import com.ardikars.jxpacket.core.ip.ip6.Routing;
 import com.ardikars.jxpacket.core.tcp.Tcp;
 import com.ardikars.jxpacket.core.udp.Udp;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
 import java.nio.ByteBuffer;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -138,8 +138,8 @@ public class JxpacketAutoconfiguration implements JxpacketContext {
                 while (bytes == null) {
                     bytes = context.pcapNext(pktHdr);
                 }
-                ByteBuf buffer = ByteBufAllocator.DEFAULT.directBuffer(bytes.capacity());
-                buffer.setBytes(0, bytes);
+                Memory buffer = Memories.allocator().allocate(bytes.capacity());
+                buffer.setBytes(0, Memories.wrap(bytes, false));
                 Packet packet;
                 if (rawDataLinkType == 1) {
                     packet = Ethernet.newPacket(buffer);

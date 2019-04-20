@@ -41,6 +41,6 @@ public @interface EnablePacket {
      * Packet handler type.
      * @return a {@link PacketHandlerType} object.
      */
-    PacketHandlerType packetHandlerType() default PacketHandlerType.JXPACKET;
+    PacketHandlerType packetHandlerType() default PacketHandlerType.JXPACKET_RAW;
 
 }

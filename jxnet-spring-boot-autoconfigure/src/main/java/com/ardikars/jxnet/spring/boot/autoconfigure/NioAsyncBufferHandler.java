@@ -19,8 +19,8 @@ package com.ardikars.jxnet.spring.boot.autoconfigure;
 
 import com.ardikars.common.tuple.Pair;
 import com.ardikars.jxnet.PcapPktHdr;
-import io.netty.buffer.ByteBuf;
 
+import java.nio.ByteBuffer;
 import java.util.concurrent.Future;
 
 /**
@@ -29,6 +29,6 @@ import java.util.concurrent.Future;
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
  * @since 1.5.4
  */
-public interface NioAsyncBufferHandler<T> extends Handler<T, Future<Pair<PcapPktHdr, ByteBuf>>> {
+public interface NioAsyncBufferHandler<T> extends Handler<T, Future<Pair<PcapPktHdr, ByteBuffer>>> {
 
 }

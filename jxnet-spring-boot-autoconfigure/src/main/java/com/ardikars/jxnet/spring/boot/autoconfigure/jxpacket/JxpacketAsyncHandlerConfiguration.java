@@ -21,19 +21,19 @@ import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectN
 
 import com.ardikars.common.logging.Logger;
 import com.ardikars.common.logging.LoggerFactory;
+import com.ardikars.common.memory.Memory;
 import com.ardikars.common.tuple.Pair;
 import com.ardikars.common.tuple.Tuple;
 import com.ardikars.jxnet.PcapHandler;
 import com.ardikars.jxnet.PcapPktHdr;
 import com.ardikars.jxnet.spring.boot.autoconfigure.HandlerConfigurer;
 import com.ardikars.jxpacket.common.Packet;
-import io.netty.buffer.ByteBuf;
 import java.nio.ByteBuffer;
 import java.util.concurrent.ExecutionException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Configuration;
 
-@ConditionalOnClass({Packet.class, ByteBuf.class})
+@ConditionalOnClass({Packet.class, Memory.class})
 @Configuration(JXPACKET_ASYNC_HANDLER_CONFIGURATION_BEAN_NAME)
 public class JxpacketAsyncHandlerConfiguration<T> extends HandlerConfigurer<T, Pair<PcapPktHdr, Packet>> implements PcapHandler<T> {
 

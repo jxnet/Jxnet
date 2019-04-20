@@ -18,14 +18,14 @@
 package com.ardikars.jxnet.spring.boot.autoconfigure;
 
 import com.ardikars.common.annotation.Incubating;
+import com.ardikars.common.memory.Memories;
+import com.ardikars.common.memory.Memory;
 import com.ardikars.jxnet.DataLinkType;
 import com.ardikars.jxnet.context.Context;
 import com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName;
 import com.ardikars.jxpacket.common.Packet;
 import com.ardikars.jxpacket.common.UnknownPacket;
 import com.ardikars.jxpacket.core.ethernet.Ethernet;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import java.nio.ByteBuffer;
 import java.util.concurrent.ExecutorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +61,7 @@ public class HandlerConfigurer<T, V> {
      * @return returns {@link Packet}.
      */
     public Packet decode(ByteBuffer bytes) {
-        return processPacket(Unpooled.wrappedBuffer(bytes));
+        return processPacket(Memories.wrap(bytes, false));
     }
 
     /**
@@ -71,11 +71,12 @@ public class HandlerConfigurer<T, V> {
      * @return returns {@link Packet}.
      */
     public Packet decodeRawBuffer(long address, int length) {
-        return processPacket(Unpooled.wrappedBuffer(address, length, false));
+        return processPacket(Memories.wrap(address, length));
     }
 
-    private Packet processPacket(ByteBuf buf) {
+    private Packet processPacket(Memory buf) {
         Packet packet;
+        buf.writerIndex(buf.capacity());
         if (dataLinkType.getValue() == 1) {
             packet = Ethernet.newPacket(buf);
         } else {

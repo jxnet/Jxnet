@@ -44,18 +44,6 @@ public class JxpacketConfigurationSelector implements ImportSelector {
         }
         PacketHandlerType type = attributes.getEnum("packetHandlerType");
         switch (type) {
-            case NETTY_BUFFER:
-                LOGGER.debug("Applying netty buffer handler configuration.");
-                return new String[] {"com.ardikars.jxnet.spring.boot.autoconfigure.netty.NettyBufferHandlerConfiguration"};
-            case NETTY_BUFFER_ASYNC:
-                LOGGER.debug("Applying netty buffer async handler configuration.");
-                return new String[] {"com.ardikars.jxnet.spring.boot.autoconfigure.netty.NettyBufferAsyncHandlerConfiguration"};
-            case NETTY_RAW_BUFFER:
-                LOGGER.debug("Applying netty raw buffer handler configuration.");
-                return new String[] {"com.ardikars.jxnet.spring.boot.autoconfigure.netty.NettyRawBufferHandlerConfiguration"};
-            case NETTY_RAW_BUFFER_ASYNC:
-                LOGGER.debug("Applying netty raw buffer async handler configuration.");
-                return new String[] {"com.ardikars.jxnet.spring.boot.autoconfigure.netty.NettyRawBufferAsyncHandlerConfiguration"};
             case NIO_BUFFER:
                 LOGGER.debug("Applying nio buffer handler configuration.");
                 return new String[] {"com.ardikars.jxnet.spring.boot.autoconfigure.nio.NioBufferHandlerConfiguration"};

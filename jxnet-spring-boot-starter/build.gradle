@@ -9,7 +9,6 @@ dependencyManagement {
     imports {
         mavenBom("org.springframework.boot:spring-boot-dependencies:${SPRING_BOOT_VERSION}")
         mavenBom("com.ardikars.jxpacket:jxpacket:${JXPACKET_VERSION}")
-        mavenBom("io.netty:netty-bom:${NETTY_VERSION}")
     }
 }
 
@@ -19,8 +18,7 @@ dependencies {
     compile ("com.ardikars.common:common-tuple:${COMMON_VERSION}")
     compile ("com.ardikars.common:common-util:${COMMON_VERSION}")
     compile ("com.ardikars.common:common-net:${COMMON_VERSION}")
-    compile ("io.netty:netty-common:${NETTY_VERSION}")
-    compile ("io.netty:netty-buffer:${NETTY_VERSION}")
+    compile ("com.ardikars.common:common-memory:${COMMON_VERSION}")
     compile ("com.ardikars.jxpacket:jxpacket-common:${JXPACKET_VERSION}")
     compile ("com.ardikars.jxpacket:jxpacket-core:${JXPACKET_VERSION}")
     compile ("org.springframework.boot:spring-boot-autoconfigure:${SPRING_BOOT_VERSION}")
