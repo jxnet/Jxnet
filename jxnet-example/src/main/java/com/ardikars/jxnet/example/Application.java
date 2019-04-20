@@ -20,8 +20,13 @@ package com.ardikars.jxnet.example;
 import static com.ardikars.jxnet.Jxnet.OK;
 import static com.ardikars.jxnet.Jxnet.PcapFindAllDevs;
 
+import com.ardikars.common.memory.Memories;
+import com.ardikars.common.memory.Memory;
 import com.ardikars.common.net.Inet4Address;
 import com.ardikars.common.net.MacAddress;
+import com.ardikars.common.tuple.Pair;
+import com.ardikars.common.tuple.Tuple;
+import com.ardikars.common.util.CommonConsumer;
 import com.ardikars.common.util.Hexs;
 import com.ardikars.common.util.Platforms;
 import com.ardikars.jxnet.DataLinkType;
@@ -36,14 +41,37 @@ import com.ardikars.jxnet.PcapTimestampPrecision;
 import com.ardikars.jxnet.PcapTimestampType;
 import com.ardikars.jxnet.PromiscuousMode;
 import com.ardikars.jxnet.RadioFrequencyMonitorMode;
+import com.ardikars.jxnet.RawPcapHandler;
 import com.ardikars.jxnet.SockAddr;
 import com.ardikars.jxnet.context.Context;
 import com.ardikars.jxnet.exception.DeviceNotFoundException;
 import com.ardikars.jxnet.exception.PlatformNotSupportedException;
+import com.ardikars.jxpacket.common.AbstractPacket;
+import com.ardikars.jxpacket.common.Packet;
+import com.ardikars.jxpacket.common.UnknownPacket;
+import com.ardikars.jxpacket.common.layer.DataLinkLayer;
+import com.ardikars.jxpacket.common.layer.NetworkLayer;
+import com.ardikars.jxpacket.common.layer.TransportLayer;
+import com.ardikars.jxpacket.common.util.PacketIterator;
+import com.ardikars.jxpacket.core.arp.Arp;
+import com.ardikars.jxpacket.core.ethernet.Ethernet;
+import com.ardikars.jxpacket.core.ethernet.Vlan;
+import com.ardikars.jxpacket.core.icmp.Icmp4;
+import com.ardikars.jxpacket.core.icmp.Icmp6;
+import com.ardikars.jxpacket.core.ip.Ip4;
+import com.ardikars.jxpacket.core.ip.Ip6;
+import com.ardikars.jxpacket.core.ip.ip6.Authentication;
+import com.ardikars.jxpacket.core.ip.ip6.DestinationOptions;
+import com.ardikars.jxpacket.core.ip.ip6.Fragment;
+import com.ardikars.jxpacket.core.ip.ip6.HopByHopOptions;
+import com.ardikars.jxpacket.core.ip.ip6.Routing;
+import com.ardikars.jxpacket.core.tcp.Tcp;
+import com.ardikars.jxpacket.core.udp.Udp;
 
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -72,6 +100,9 @@ public class Application {
     public static final int MAX_PACKET = -1;
 
 	public static final int WAIT_TIME_FOR_THREAD_TERMINATION = 10000;
+
+    private static final String PRETTY_FOOTER = "+---------------------------------------------------"
+            + "--------------------------------------------------+";
 
     /**
      * Main method.
@@ -128,19 +159,27 @@ public class Application {
                     pool.shutdownNow();
                 }
             });
-            context.pcapLoop(MAX_PACKET, new PcapHandler<String>() {
+
+            final int linktype = context.pcapDataLink().getValue();
+
+            context.pcapLoop(MAX_PACKET, new RawPcapHandler<String>() {
+
                 @Override
-                public void nextPacket(String user, PcapPktHdr pktHdr, ByteBuffer buffer) {
-                    byte[] bytes = new byte[buffer.capacity()];
-                    buffer.get(bytes, 0, bytes.length);
-                    String hexDump = Hexs.toPrettyHexDump(bytes);
-                    LOGGER.info("User argument : " + user);
-                    LOGGER.info("Packet header : " + pktHdr);
-                    LOGGER.info("Packet buffer : \n" + hexDump);
+                public void nextPacket(String user, int capLen, int len, int tvSec, long tvUsec, long memoryAddress) {
+                    Memory buffer = Memories.wrap(memoryAddress, len);
+                    buffer.writerIndex(buffer.capacity());
+                    Packet packet;
+                    if (linktype == 1) {
+                        packet = Ethernet.newPacket(buffer);
+                    } else {
+                        packet = UnknownPacket.newPacket(buffer);
+                    }
+                    print(Tuple.of(PcapPktHdr.newInstance(capLen, len, tvSec, tvUsec), packet));
                 }
+
             }, "Jxnet!", pool);
-			pool.shutdown();
-			pool.awaitTermination(WAIT_TIME_FOR_THREAD_TERMINATION, TimeUnit.MICROSECONDS);
+            pool.shutdown();
+            pool.awaitTermination(WAIT_TIME_FOR_THREAD_TERMINATION, TimeUnit.MICROSECONDS);
         } catch (DeviceNotFoundException e) {
             LOGGER.warning(e.getMessage());
         }
@@ -178,6 +217,35 @@ public class Application {
             }
         }
         throw new DeviceNotFoundException("No device connected to the network.");
+    }
+
+    private static void print(Pair<PcapPktHdr, Packet> packet) {
+        Iterator<Packet> iterator = packet.getRight().iterator();
+        LOGGER.info("Pcap packet header : " + packet.getLeft());
+        LOGGER.info("Packet header      : ");
+        while (iterator.hasNext()) {
+            LOGGER.info(iterator.next().toString());
+        }
+        LOGGER.info(PRETTY_FOOTER);
+    }
+
+    static {
+        DataLinkLayer.register(DataLinkLayer.EN10MB, new Ethernet.Builder());
+        NetworkLayer.register(NetworkLayer.ARP, new Arp.Builder());
+        NetworkLayer.register(NetworkLayer.IPV4, new Ip4.Builder());
+        NetworkLayer.register(NetworkLayer.IPV6, new Ip6.Builder());
+        NetworkLayer.register(NetworkLayer.DOT1Q_VLAN_TAGGED_FRAMES, new Vlan.Builder());
+        NetworkLayer.register(NetworkLayer.IEEE_802_1_AD, new Vlan.Builder());
+        TransportLayer.register(TransportLayer.TCP, new Tcp.Builder());
+        TransportLayer.register(TransportLayer.UDP, new Udp.Builder());
+        TransportLayer.register(TransportLayer.ICMP, new Icmp4.Builder());
+        TransportLayer.register(TransportLayer.IPV6, new Ip6.Builder());
+        TransportLayer.register(TransportLayer.IPV6_ICMP, new Icmp6.Builder());
+        TransportLayer.register(TransportLayer.IPV6_AH, new Authentication.Builder());
+        TransportLayer.register(TransportLayer.IPV6_DSTOPT, new DestinationOptions.Builder());
+        TransportLayer.register(TransportLayer.IPV6_ROUTING, new Routing.Builder());
+        TransportLayer.register(TransportLayer.IPV6_FRAGMENT, new Fragment.Builder());
+        TransportLayer.register(TransportLayer.IPV6_HOPOPT, new HopByHopOptions.Builder());
     }
 
 }

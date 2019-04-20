@@ -57,17 +57,21 @@ public class DefaultLibraryLoader implements Loader<Void> {
     }
 
     /**
-     * Loadd classes then perform load native library.
+     * Load classes then perform load native library.
      */
     @Override
     public void load(Callback<Void> callback, Class[] loadClasses) {
+        boolean doNotLoad = false;
         for (Class clazzes : loadClasses) {
             try {
                 Class.forName(clazzes.getName());
-                doLoad(callback);
             } catch (ClassNotFoundException e) {
                 callback.onFailure(e);
+                doNotLoad = true;
             }
+        }
+        if (!doNotLoad) {
+            doLoad(callback);
         }
     }
 

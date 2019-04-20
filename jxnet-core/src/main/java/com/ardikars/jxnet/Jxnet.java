@@ -813,39 +813,24 @@ public final class Jxnet {
 	 */
 	private static native void initIDs();
 
-	private static void initialize() {
-		Class<?>[] classes = new Class<?>[] {
-				PcapIf.class, PcapAddr.class, SockAddr.class, Pcap.class, BpfProgram.class,
-				List.class, StringBuilder.class
-		};
-		boolean ok = true;
-		for (Class<?> clazz : classes) {
-			try {
-				Class.forName(clazz.getName());
-			} catch (ClassNotFoundException e) {
-				ok = false;
-			}
-		}
-		if (ok) {
-			LOGGER.debug("Load classes and initialize IDs.");
-			initIDs();
-			loaded = true;
-			LOGGER.debug("Jxnet native library loaded sucessfully.");
-		}
-	}
-
 	static {
 		if (!loaded) {
 			new DefaultLibraryLoader().load(new Callback<Void>() {
+
 				@Override
 				public void onSuccess(Void value) {
-					initialize();
+					initIDs();
+					loaded = true;
 				}
 
 				@Override
 				public void onFailure(Throwable throwable) {
 					LOGGER.error("Jxnet Native library failed to load load: {}.", throwable);
 				}
+
+			}, new Class<?>[] {
+					PcapIf.class, PcapAddr.class, SockAddr.class, Pcap.class, BpfProgram.class,
+					List.class, StringBuilder.class
 			});
 		}
 	}
