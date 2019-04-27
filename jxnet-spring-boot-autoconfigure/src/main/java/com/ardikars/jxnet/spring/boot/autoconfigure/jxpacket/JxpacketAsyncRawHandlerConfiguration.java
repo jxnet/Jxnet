@@ -15,49 +15,50 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ardikars.jxnet.spring.boot.autoconfigure.nio;
-
-import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.NIO_BUFFER_HANDLER_CONFIGURATION_BEAN_NAME;
+package com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket;
 
 import com.ardikars.common.logging.Logger;
 import com.ardikars.common.logging.LoggerFactory;
+import com.ardikars.common.memory.Memory;
 import com.ardikars.common.tuple.Pair;
 import com.ardikars.common.tuple.Tuple;
-import com.ardikars.jxnet.PcapHandler;
 import com.ardikars.jxnet.PcapPktHdr;
+import com.ardikars.jxnet.RawPcapHandler;
 import com.ardikars.jxnet.spring.boot.autoconfigure.HandlerConfigurer;
 import com.ardikars.jxpacket.common.Packet;
-import java.nio.ByteBuffer;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.concurrent.ExecutionException;
+
+import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.JXPACKET_ASYNC_RAW_HANDLER_CONFIGURATION_BEAN_NAME;
+
 /**
- * NIO buffer handler.
+ * Jxpacket handler.
  *
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
  * @since 1.4.9
  */
-@ConditionalOnClass(Packet.class)
-@Configuration(NIO_BUFFER_HANDLER_CONFIGURATION_BEAN_NAME)
-public class NioBufferHandlerConfiguration<T> extends HandlerConfigurer<T, Future<Pair<PcapPktHdr, ByteBuffer>>> implements PcapHandler<T> {
+@ConditionalOnClass({Packet.class, Memory.class})
+@Configuration(JXPACKET_ASYNC_RAW_HANDLER_CONFIGURATION_BEAN_NAME)
+public class JxpacketAsyncRawHandlerConfiguration<T> extends HandlerConfigurer<T, Pair<PcapPktHdr, Packet>> implements RawPcapHandler<T> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(NioBufferHandlerConfiguration.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JxpacketAsyncRawHandlerConfiguration.class);
 
     @Override
-    public void nextPacket(final T user, final PcapPktHdr h, final ByteBuffer bytes) {
-        Future<Pair<PcapPktHdr, ByteBuffer>> packet = executorService.submit(new Callable<Pair<PcapPktHdr, ByteBuffer>>() {
+    public void nextPacket(final T user, final int capLen, final int len, final int tvSec, final long tvUsec, final long memoryAddress) {
+        executorService.execute(new Runnable() {
             @Override
-            public Pair<PcapPktHdr, ByteBuffer> call() throws Exception {
-                return Tuple.of(h, bytes);
+            public void run() {
+                try {
+                    getHandler().next(user, Tuple.of(PcapPktHdr.newInstance(capLen, len, tvSec, tvUsec), decodeRawBuffer(memoryAddress, len)));
+                } catch (ExecutionException e) {
+                    LOGGER.warn(e);
+                } catch (InterruptedException e) {
+                    LOGGER.warn(e);
+                }
             }
         });
-        try {
-            getHandler().next(user, packet);
-        } catch (Exception e) {
-            LOGGER.warn(e.getMessage());
-        }
     }
 
 }

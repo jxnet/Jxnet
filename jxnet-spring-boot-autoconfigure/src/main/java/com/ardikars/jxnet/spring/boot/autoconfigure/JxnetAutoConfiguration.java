@@ -57,6 +57,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.ardikars.jxnet.spring.boot.autoconfigure.memory.MemoryConfigurationProperties;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
@@ -75,7 +76,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration(JXNET_AUTO_CONFIGURATION_BEAN_NAME)
 @ConditionalOnClass({Jxnet.class, Context.class})
 @AutoConfigureOrder
-@EnableConfigurationProperties(JxnetConfigurationProperties.class)
+@EnableConfigurationProperties({JxnetConfigurationProperties.class, MemoryConfigurationProperties.class})
 public class JxnetAutoConfiguration {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JxnetAutoConfiguration.class);

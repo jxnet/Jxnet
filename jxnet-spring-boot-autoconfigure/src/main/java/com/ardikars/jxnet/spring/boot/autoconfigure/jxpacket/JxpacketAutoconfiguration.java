@@ -31,6 +31,7 @@ import com.ardikars.common.tuple.Tuple;
 import com.ardikars.jxnet.DataLinkType;
 import com.ardikars.jxnet.PcapPktHdr;
 import com.ardikars.jxnet.context.Context;
+import com.ardikars.jxnet.spring.boot.autoconfigure.memory.MemoryConfigurationProperties;
 import com.ardikars.jxpacket.common.Packet;
 import com.ardikars.jxpacket.common.UnknownPacket;
 import com.ardikars.jxpacket.common.layer.DataLinkLayer;
@@ -76,6 +77,7 @@ public class JxpacketAutoconfiguration implements JxpacketContext {
     private static final Logger LOGGER = LoggerFactory.getLogger(JxpacketAutoconfiguration.class);
 
     private final Boolean autoRegister;
+    private final Boolean checkBounds;
 
     private final Context context;
     private final ExecutorService executorService;
@@ -89,13 +91,16 @@ public class JxpacketAutoconfiguration implements JxpacketContext {
      * @param context application context.
      * @param executorService thread pool.
      * @param dataLinkType datalink type.
-     * @param properties jxpacket configuration properties.
+     * @param jxpacketProperties jxpacket configuration properties.
+     * @param memoryProperties memory configuration properties.
      */
     public JxpacketAutoconfiguration(@Qualifier(CONTEXT_BEAN_NAME) Context context,
                                      @Qualifier(EXECUTOR_SERVICE_BEAN_NAME) ExecutorService executorService,
                                      @Qualifier(DATALINK_TYPE_BEAN_NAME) DataLinkType dataLinkType,
-                                     JxpacketConfigurationProperties properties) {
-        this.autoRegister = properties.getAutoRegister();
+                                     JxpacketConfigurationProperties jxpacketProperties,
+                                     MemoryConfigurationProperties memoryProperties) {
+        this.autoRegister = jxpacketProperties.getAutoRegister();
+        this.checkBounds = memoryProperties.getCheckBounds();
         register();
         this.context = context;
         this.executorService = executorService;
@@ -138,8 +143,7 @@ public class JxpacketAutoconfiguration implements JxpacketContext {
                 while (bytes == null) {
                     bytes = context.pcapNext(pktHdr);
                 }
-                Memory buffer = Memories.allocator().allocate(bytes.capacity());
-                buffer.setBytes(0, Memories.wrap(bytes, false));
+                Memory buffer = Memories.wrap(bytes, checkBounds);
                 Packet packet;
                 if (rawDataLinkType == 1) {
                     packet = Ethernet.newPacket(buffer);
