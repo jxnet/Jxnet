@@ -95,6 +95,12 @@
       "type": "java.lang.Boolean",
       "description": "Register all supported packet by Jxpacket.",
       "defaultValue": false
+    },
+    {
+      "name": "jxnet.memory.checkBounds",
+      "type": "java.lang.Boolean",
+      "description": "Check memory bounds.",
+      "defaultValue": false
     }
   ]
 }

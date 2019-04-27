@@ -23,6 +23,7 @@ import com.ardikars.common.memory.Memory;
 import com.ardikars.jxnet.DataLinkType;
 import com.ardikars.jxnet.context.Context;
 import com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName;
+import com.ardikars.jxnet.spring.boot.autoconfigure.memory.MemoryConfigurationProperties;
 import com.ardikars.jxpacket.common.Packet;
 import com.ardikars.jxpacket.common.UnknownPacket;
 import com.ardikars.jxpacket.core.ethernet.Ethernet;
@@ -55,13 +56,16 @@ public class HandlerConfigurer<T, V> {
     @Autowired
     private Handler<T, V> handler;
 
+    @Autowired
+    private MemoryConfigurationProperties memoryProperties;
+
     /**
      * Decode buffer.
      * @param bytes direct byte buffer.
      * @return returns {@link Packet}.
      */
     public Packet decode(ByteBuffer bytes) {
-        return processPacket(Memories.wrap(bytes, false));
+        return processPacket(Memories.wrap(bytes, memoryProperties.getCheckBounds()));
     }
 
     /**
@@ -71,7 +75,7 @@ public class HandlerConfigurer<T, V> {
      * @return returns {@link Packet}.
      */
     public Packet decodeRawBuffer(long address, int length) {
-        return processPacket(Memories.wrap(address, length));
+        return processPacket(Memories.wrap(address, length, memoryProperties.getCheckBounds()));
     }
 
     private Packet processPacket(Memory buf) {

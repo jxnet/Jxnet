@@ -50,6 +50,8 @@ import com.ardikars.jxnet.exception.DeviceNotFoundException;
 import com.ardikars.jxnet.exception.NativeException;
 import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 import com.ardikars.jxnet.exception.UnknownNetmaskException;
+import com.ardikars.jxnet.spring.boot.autoconfigure.memory.MemoryConfigurationProperties;
+
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -75,7 +77,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration(JXNET_AUTO_CONFIGURATION_BEAN_NAME)
 @ConditionalOnClass({Jxnet.class, Context.class})
 @AutoConfigureOrder
-@EnableConfigurationProperties(JxnetConfigurationProperties.class)
+@EnableConfigurationProperties({JxnetConfigurationProperties.class, MemoryConfigurationProperties.class})
 public class JxnetAutoConfiguration {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JxnetAutoConfiguration.class);

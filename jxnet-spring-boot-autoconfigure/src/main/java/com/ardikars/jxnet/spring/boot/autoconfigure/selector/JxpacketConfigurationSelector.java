@@ -44,21 +44,17 @@ public class JxpacketConfigurationSelector implements ImportSelector {
         }
         PacketHandlerType type = attributes.getEnum("packetHandlerType");
         switch (type) {
-            case NIO_BUFFER:
-                LOGGER.debug("Applying nio buffer handler configuration.");
-                return new String[] {"com.ardikars.jxnet.spring.boot.autoconfigure.nio.NioBufferHandlerConfiguration"};
-            case NIO_BUFFER_ASYNC:
-                LOGGER.debug("Applying nio buffer async handler configuration.");
-                return new String[] {"com.ardikars.jxnet.spring.boot.autoconfigure.nio.NioBufferAsyncHandlerConfiguration"};
             case JXPACKET_ASYNC:
                 LOGGER.debug("Applying jxpacket async handler configuration.");
                 return new String[] {"com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket.JxpacketAsyncHandlerConfiguration"};
-            case JXPACKET_RAW:
-                LOGGER.debug("Applying jxpacket raw handler configuration.");
-                return new String[] {"com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket.JxpacketRawHandlerConfiguration"};
-            default:
+            case JXPACKET:
                 LOGGER.debug("Applying jxpacket handler configuration.");
                 return new String[] {"com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket.JxpacketHandlerConfiguration"};
+            case JXPACKET_RAW_ASYNC:
+                return new String[] {"com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket.JxpacketAsyncRawHandlerConfiguration"};
+            default:
+                LOGGER.debug("Applying raw jxpacket handler configuration.");
+                return new String[] {"com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket.JxpacketRawHandlerConfiguration"};
         }
     }
 

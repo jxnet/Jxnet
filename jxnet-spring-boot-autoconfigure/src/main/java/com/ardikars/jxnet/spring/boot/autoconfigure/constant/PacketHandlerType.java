@@ -25,6 +25,6 @@ package com.ardikars.jxnet.spring.boot.autoconfigure.constant;
  */
 public enum PacketHandlerType {
 
-    JXPACKET, JXPACKET_ASYNC, JXPACKET_RAW, NIO_BUFFER, NIO_BUFFER_ASYNC
+    JXPACKET, JXPACKET_ASYNC, JXPACKET_RAW, JXPACKET_RAW_ASYNC;
 
 }
