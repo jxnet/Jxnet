@@ -6,15 +6,15 @@
 description = 'Jxnet example application.'
 
 dependencies {
-    implementation ("com.ardikars.common:common-annotation")
-    implementation ("com.ardikars.common:common-util")
-    implementation ("com.ardikars.common:common-net")
-    implementation ("com.ardikars.common:common-tuple")
-    implementation ("com.ardikars.common:common-memory")
-    implementation ("com.ardikars.jxpacket:jxpacket-common:1.2.3.RC")
-    implementation ("com.ardikars.jxpacket:jxpacket-core:1.2.3.RC")
-    implementation project (":jxnet-core")
-    implementation project (":jxnet-context")
+    compile ("com.ardikars.common:common-annotation")
+    compile ("com.ardikars.common:common-util")
+    compile ("com.ardikars.common:common-net")
+    compile ("com.ardikars.common:common-tuple")
+    compile ("com.ardikars.common:common-memory")
+    compile ("com.ardikars.jxpacket:jxpacket-common:1.2.3.RC")
+    compile ("com.ardikars.jxpacket:jxpacket-core:1.2.3.RC")
+    compile project (":jxnet-core")
+    compile project (":jxnet-context")
     testImplementation ("junit:junit:${JUNIT_VERSION}")
     testImplementation ("org.mockito:mockito-core:${MOCKITO_VERSION}")
 }

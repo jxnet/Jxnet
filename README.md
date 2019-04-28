@@ -32,7 +32,7 @@ Getting Started
     - Linux (x86/x86_64)
     - Mac OS
   - ##### Java Version
-    - Java 8 (or newer)
+    - Java 6 (java 8 required if you are using spring-boot)
   - ##### Dependecies
     - Windows
       - Winpcap or Npcap

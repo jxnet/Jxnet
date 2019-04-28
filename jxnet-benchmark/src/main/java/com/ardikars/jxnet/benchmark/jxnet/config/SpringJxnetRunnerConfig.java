@@ -31,7 +31,7 @@ import org.springframework.context.annotation.Configuration;
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
  */
 @Configuration("springJxnetRunnerConfig")
-@EnablePacket(packetHandlerType = PacketHandlerType.JXPACKET)
+@EnablePacket(packetHandlerType = PacketHandlerType.JXPACKET_RAW)
 public class SpringJxnetRunnerConfig implements JxpacketHandler<String> {
 
     @Override

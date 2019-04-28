@@ -19,8 +19,6 @@ package com.ardikars.jxnet.spring.boot.autoconfigure;
 
 import com.ardikars.common.logging.Logger;
 import com.ardikars.common.logging.LoggerFactory;
-import com.ardikars.common.util.management.Jvm;
-import com.ardikars.common.util.management.Jvms;
 import com.ardikars.jxnet.BpfProgram;
 import com.ardikars.jxnet.DataLinkType;
 import com.ardikars.jxnet.ImmediateMode;
@@ -80,8 +78,6 @@ public class JxnetConfigurationProperties {
 
     private Integer numberOfThread;
 
-    private Jvm jvm;
-
     /**
      * Initialize properties.
      */
@@ -101,7 +97,9 @@ public class JxnetConfigurationProperties {
         }
         pcap();
         bpf();
-        jvm();
+        if (numberOfThread == null) {
+            numberOfThread = Runtime.getRuntime().availableProcessors();
+        }
         log();
     }
 
@@ -138,22 +136,6 @@ public class JxnetConfigurationProperties {
         }
         if (filter == null || filter.isEmpty()) {
             filter = null;
-        }
-    }
-
-    private void jvm() {
-        try {
-            jvm = Jvms.getJvm();
-            if (numberOfThread == null) {
-                if (jvm.hasJvm()) {
-                    numberOfThread = jvm.getAvailableProcessors();
-                } else {
-                    numberOfThread = 0;
-                }
-            }
-        } catch (Exception e) {
-            jvm = null;
-            LOGGER.warn(e.getMessage());
         }
     }
 
@@ -302,10 +284,6 @@ public class JxnetConfigurationProperties {
 
     public void setNumberOfThread(Integer numberOfThread) {
         this.numberOfThread = numberOfThread;
-    }
-
-    public Jvm getJvm() {
-        return jvm;
     }
 
 }

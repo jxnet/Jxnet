@@ -24,7 +24,6 @@ import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectN
 import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.DATALINK_TYPE_BEAN_NAME;
 import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.ERRBUF_BEAN_NAME;
 import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.EXECUTOR_SERVICE_BEAN_NAME;
-import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.JVM_BEAN_NAME;
 import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.JXNET_AUTO_CONFIGURATION_BEAN_NAME;
 import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.MAC_ADDRESS_BEAN_NAME;
 import static com.ardikars.jxnet.spring.boot.autoconfigure.constant.JxnetObjectName.NETMASK_BEAN_NAME;
@@ -36,7 +35,6 @@ import com.ardikars.common.logging.LoggerFactory;
 import com.ardikars.common.net.Inet4Address;
 import com.ardikars.common.net.MacAddress;
 import com.ardikars.common.util.Platforms;
-import com.ardikars.common.util.management.Jvm;
 import com.ardikars.jxnet.DataLinkType;
 import com.ardikars.jxnet.Jxnet;
 import com.ardikars.jxnet.Pcap;
@@ -341,15 +339,6 @@ public class JxnetAutoConfiguration {
             }
         }
         return context;
-    }
-
-    /**
-     * Get {@link Jvm}.
-     * @return returns {@link Jvm}.
-     */
-    @Bean(JVM_BEAN_NAME)
-    public Jvm jvm() {
-        return properties.getJvm();
     }
 
 }

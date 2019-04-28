@@ -42,7 +42,6 @@ public final class JxnetObjectName {
     public static final String JXPACKET_ASYNC_RAW_HANDLER_CONFIGURATION_BEAN_NAME = "com.ardikras.jxnet.jxpacketAsyncRawHandlerConfiguration";
     public static final String JXPACKET_ASYNC_HANDLER_CONFIGURATION_BEAN_NAME = "com.ardikras.jxnet.jxpacketAsyncHandlerConfiguration";
     public static final String PCAP_BUILDER_BEAN_NAME = "com.ardikras.jxnet.pcapBuilder";
-    public static final String JVM_BEAN_NAME = "com.ardikras.jxnet.jvm";
 
     private final String prefix;
     private final String separator;
