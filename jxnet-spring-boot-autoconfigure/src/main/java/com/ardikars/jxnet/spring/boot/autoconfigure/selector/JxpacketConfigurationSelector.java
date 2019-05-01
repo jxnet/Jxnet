@@ -44,6 +44,9 @@ public class JxpacketConfigurationSelector implements ImportSelector {
         }
         PacketHandlerType type = attributes.getEnum("packetHandlerType");
         switch (type) {
+            case JXPACKET_JSON:
+                LOGGER.debug("Applying jxpacket json handler configuration.");
+                return new String[] {"com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket.JxpacketJsonHandlerConfiguration"};
             case JXPACKET_ASYNC:
                 LOGGER.debug("Applying jxpacket async handler configuration.");
                 return new String[] {"com.ardikars.jxnet.spring.boot.autoconfigure.jxpacket.JxpacketAsyncHandlerConfiguration"};

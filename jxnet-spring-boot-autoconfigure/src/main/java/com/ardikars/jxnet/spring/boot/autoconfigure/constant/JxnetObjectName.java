@@ -38,6 +38,7 @@ public final class JxnetObjectName {
     public static final String JXPACKET_AUTO_CONFIGURATION_BEAN_NAME = "com.ardikras.jxnet.jxpacketAutoconfiguration";
     public static final String JXNET_AUTO_CONFIGURATION_BEAN_NAME = "com.ardikras.jxnet.jxnetAutoConfiguration";
     public static final String JXPACKET_HANDLER_CONFIGURATION_BEAN_NAME = "com.ardikras.jxnet.jxpacketHandlerConfiguration";
+    public static final String JXPACKET_JSON_HANDLER_CONFIGURATION_BEAN_NAME = "com.ardikras.jxnet.jxpacketJsonHandlerConfiguration";
     public static final String JXPACKET_RAW_HANDLER_CONFIGURATION_BEAN_NAME = "com.ardikras.jxnet.jxpacketRawHandlerConfiguration";
     public static final String JXPACKET_ASYNC_RAW_HANDLER_CONFIGURATION_BEAN_NAME = "com.ardikras.jxnet.jxpacketAsyncRawHandlerConfiguration";
     public static final String JXPACKET_ASYNC_HANDLER_CONFIGURATION_BEAN_NAME = "com.ardikras.jxnet.jxpacketAsyncHandlerConfiguration";

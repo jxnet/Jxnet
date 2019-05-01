@@ -21,6 +21,8 @@ dependencies {
     compile ("com.ardikars.common:common-memory")
     compile ("org.springframework.boot:spring-boot-autoconfigure")
     compile ("org.springframework.boot:spring-boot-configuration-processor")
+    compileOnly ("com.fasterxml.jackson.core:jackson-core")
+    compileOnly ("com.fasterxml.jackson.core:jackson-databind")
     compile ("com.ardikars.jxpacket:jxpacket-common")
     compile ("com.ardikars.jxpacket:jxpacket-core")
     compile project (":jxnet-core")
