@@ -42,9 +42,8 @@ install:
 build_script:
   - cmd: echo "githubToken=$GITHUB_TOKEN" >> gradle.properties
   - cmd: set PATH=C:\tools\mingw64\bin;C:\Program Files (x86)\NSIS\;%PATH%
-  - cmd: gradlew.bat dependencyCheckAnalyze
   - cmd: gradlew.bat -p jxnet-native clean build -q
-  - cmd: gradlew.bat build jacocoTestReport coveralls -q
+  - cmd: gradlew.bat jacocoTestReport
 
 #---------------------------------#
 #         notifications           #

@@ -2,12 +2,32 @@
 version: 2
 
 jobs:
+  build:
+    working_directory: ~/Jxnet
+    docker:
+      - image: 'circleci/openjdk:8-jdk'
+    environment:
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
+    steps:
+      - checkout
+      - run: 'export TERM=xterm-color'
+      - run: 'sudo apt-get update'
+      - run: 'sudo apt-get -y install bash gcc g++ make git bison flex automake autoconf libtool cmake'
+      - run: 'cd jxnet-native/libpcap && ./configure && make && cd ../..'
+      - run: 'cd jxnet-native && export JAVA_HOME=$(pwd) && ./bootstrap.sh && ./configure && make && sudo make install && cd ..'
+      - run: 'cd jxnet-native && mkdir build && cd build && cmake .. && make && sudo make install && cd ..'
+      - run: 'cd jxnet-native/libpcap && sudo make install && cd ../..'
+      - run: './gradlew build -x test'
+      - save_cache:
+          key: gradle
+          paths:
+            - "~/.gradle"
   deploy:
     working_directory: ~/Jxnet
     docker:
       - image: 'circleci/openjdk:8-jdk'
     environment:
-      # Customize the JVM maximum heap limit
       JVM_OPTS: -Xmx3200m
       TERM: dumb
     steps:
@@ -23,7 +43,6 @@ jobs:
       - run: 'echo "signing.password=$SIGNING_PASS" >> gradle.properties'
       - run: 'echo "signing.secretKeyRingFile=/tmp/secring.gpg" >> gradle.properties'
       - run: 'gpg --batch --yes --passphrase=$SIGN_KEY --output /tmp/secring.gpg --decrypt --cipher-algo AES256 ./gradle/resources/gpg/secring.gpg.enc'
-#      - run: './gradlew dependencyCheckAnalyze --no-daemon -q'
       - run: './gradlew clean build install bintrayUpload dist github -x test --no-daemon -q'
       - save_cache:
           key: gradle
@@ -39,3 +58,8 @@ workflows:
             branches:
               only:
                 - v1
+      - build:
+          filters:
+            branches:
+              only:
+                - master
