@@ -1,14 +1,24 @@
+language: c
 
-language: java
+os:
+  - linux
+  - osx
 
-jdk:
-  - openjdk8
+compiler:
+  - gcc
+  - clang
+
+addons:
+  apt:
+    packages:
+      - bash
 
 before_install:
-  - sudo apt-get update
-  - sudo apt-get install -y libpcap-dev libpcap0.8 gcc
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update && sudo apt-get install -y gcc g++ clang make bison flex automake autoconf libtool cmake; fi
+  #- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update && brew install gcc make bison flex autoconf libtool; fi
 
 script:
-  - echo "githubToken=$GITHUB_TOKEN" >> gradle.properties
-  - ./gradlew -p jxnet-native clean build -q
-  - sudo ./gradlew jacocoTestReport coveralls
+  - cd jxnet-native/libpcap && ./configure && make && cd ../..
+  - cd jxnet-native && export JAVA_HOME=$(pwd) && ./bootstrap.sh && ./configure && make && sudo make install && cd ..
+  - cd jxnet-native && mkdir build && cd build && cmake .. && make && sudo make install && cd ../..
+  - cd jxnet-native/libpcap && sudo make install && cd ../..

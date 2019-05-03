@@ -16,7 +16,7 @@ jobs:
       - run: 'sudo apt-get -y install bash gcc g++ make git bison flex automake autoconf libtool cmake'
       - run: 'cd jxnet-native/libpcap && ./configure && make && cd ../..'
       - run: 'cd jxnet-native && export JAVA_HOME=$(pwd) && ./bootstrap.sh && ./configure && make && sudo make install && cd ..'
-      - run: 'cd jxnet-native && mkdir build && cd build && cmake .. && make && sudo make install && cd ..'
+      - run: 'cd jxnet-native && mkdir build && cd build && cmake .. && make && sudo make install && cd ../..'
       - run: 'cd jxnet-native/libpcap && sudo make install && cd ../..'
       - run: './gradlew build -x test'
       - save_cache:

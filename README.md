@@ -6,8 +6,9 @@ Jxnet is a Java library for capturing and sending custom network packet buffers 
 Jxnet wraps a native packet capture library (libpcap/npcap) via JNI (Java Native Interface).
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4d6ca7f3d9214098b1436990ac76a6cd)](https://www.codacy.com/project/jxnet/Jxnet/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jxnet/Jxnet&amp;utm_campaign=Badge_Grade_Dashboard)
-[![Build status](https://ci.appveyor.com/api/projects/status/ev4t6t1ssacwj18j?svg=true)](https://ci.appveyor.com/project/jxnet/jxnet)
 [![CircleCI](https://circleci.com/gh/jxnet/Jxnet.svg?style=svg)](https://circleci.com/gh/jxnet/Jxnet)
+[![Build status](https://ci.appveyor.com/api/projects/status/ev4t6t1ssacwj18j?svg=true)](https://ci.appveyor.com/project/jxnet/jxnet)
+[![Build Status](https://travis-ci.org/jxnet/Jxnet.svg?branch=master)](https://travis-ci.org/jxnet/Jxnet)
 [![Coverage Status](https://coveralls.io/repos/github/jxnet/Jxnet/badge.svg?branch=)](https://coveralls.io/github/jxnet/Jxnet?branch=)
 
 [ ![Download](https://api.bintray.com/packages/ardikars/maven/com.ardikars.jxnet/images/download.svg?version=1.5.4.RELEASE) ](https://bintray.com/ardikars/maven/com.ardikars.jxnet/1.5.4.RELEASE/link)
