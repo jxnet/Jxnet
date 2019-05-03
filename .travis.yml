@@ -1,24 +1,165 @@
-language: c
 
-os:
-  - linux
-  - osx
+languange: c
 
-compiler:
-  - gcc
-  - clang
+matrix:
+  include:
+    # GCC on linux
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-4.9
+      env:
+        - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
 
-addons:
-  apt:
-    packages:
-      - bash
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+      env:
+        - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
 
-before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update && sudo apt-get install -y gcc g++ clang make bison flex automake autoconf libtool cmake; fi
-  #- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update && brew install gcc make bison flex autoconf libtool; fi
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-6
+      env:
+        - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
 
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+      env:
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+
+    # GCC on Darwin
+    - os: osx
+      osx_image: xcode8
+      env:
+        - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
+
+    - os: osx
+      osx_image: xcode8
+      env:
+        - MATRIX_EVAL="brew install gcc5 && CC=gcc-5 && CXX=g++-5"
+
+    - os: osx
+      osx_image: xcode8
+      env:
+        - MATRIX_EVAL="brew install gcc6 && CC=gcc-6 && CXX=g++-6"
+
+    - os: osx
+      osx_image: xcode8
+      env:
+        - MATRIX_EVAL="brew install gcc && CC=gcc-7 && CXX=g++-7"
+
+    # Clang on Linux
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.6
+          packages:
+            - clang-3.6
+      env:
+        - MATRIX_EVAL="CC=clang-3.6 && CXX=clang++-3.6"
+
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.7
+          packages:
+            - clang-3.7
+      env:
+        - MATRIX_EVAL="CC=clang-3.7 && CXX=clang++-3.7"
+
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.8
+          packages:
+            - clang-3.8
+      env:
+        - MATRIX_EVAL="CC=clang-3.8 && CXX=clang++-3.8"
+
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-trusty-3.9
+          packages:
+            - clang-3.9
+      env:
+        - MATRIX_EVAL="CC=clang-3.9 && CXX=clang++-3.9"
+
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-trusty-4.0
+          packages:
+            - clang-4.0
+      env:
+        - MATRIX_EVAL="CC=clang-4.0 && CXX=clang++-4.0"
+
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-trusty-5.0
+          packages:
+            - clang-5.0
+      env:
+        - MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
+
+    # Clang on Darwin
+    - os: osx
+      osx_image: xcode10.1
+      env:
+        - MATRIX_EVAL="CC=clang && CXX=clang++"
+    - os: osx
+      osx_image: xcode9.4
+      env:
+        - MATRIX_EVAL="CC=clang && CXX=clang++"
+
+# Install dependencies
+install:
+  - echo "Installing dependencies..."
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; $MATRIX_EVAL ; fi
+  - echo "Done."
+
+# Build
+before_script:
+  - echo "Building..."
+  - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then cd jxnet-native/libpcap && ./configure && make && cd ../..; fi
+  - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then cd jxnet-native && export JAVA_HOME=$(pwd) && ./bootstrap.sh && ./configure && make && sudo make install && cd ..; fi
+  - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then cd jxnet-native && mkdir build && cd build && cmake .. && make && sudo make install && cd ../..; fi
+  - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then cd jxnet-native/libpcap && sudo make install && cd ../..; fi
+  - echo "Done."
+
+# Test
 script:
-  - cd jxnet-native/libpcap && ./configure && make && cd ../..
-  - cd jxnet-native && export JAVA_HOME=$(pwd) && ./bootstrap.sh && ./configure && make && sudo make install && cd ..
-  - cd jxnet-native && mkdir build && cd build && cmake .. && make && sudo make install && cd ../..
-  - cd jxnet-native/libpcap && sudo make install && cd ../..
+  - echo "Testing..."
+  - echo "Done."
+
+# Publish test result
+after_success:
+  - echo "Publishing test result..."
+  - echo "Done."

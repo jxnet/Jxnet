@@ -39,7 +39,7 @@ packets from a ``savefile''.
 To open a handle for a live capture, given the name of the network or
 other interface on which the capture should be done, call
 .BR pcap_create (),
-set the appropriate neighborDiscoveryOptions on the handle, and then activate it with
+set the appropriate options on the handle, and then activate it with
 .BR pcap_activate ().
 .PP
 To obtain a list of devices that can be opened for a live capture, call
@@ -81,7 +81,7 @@ stream or ``savefile''.
 To close a handle, use
 .BR pcap_close ().
 .PP
-The neighborDiscoveryOptions that can be set on a capture handle include
+The options that can be set on a capture handle include
 .IP "snapshot length"
 If, when capturing, you capture the entire contents of the packet, that
 requires more CPU time to copy the packet to your application, more disk

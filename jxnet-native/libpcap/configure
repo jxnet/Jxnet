@@ -359,7 +359,7 @@ $as_echo X"$as_dir" |
 
 # as_fn_executable_p FILE
 # -----------------------
-# test.Test if FILE is an executable regular file.
+# Test if FILE is an executable regular file.
 as_fn_executable_p ()
 {
   test -f "$1" && test -x "$1"
@@ -764,12 +764,12 @@ CPPFLAGS
 CPP'
 
 
-# Initialize some variables set by neighborDiscoveryOptions.
+# Initialize some variables set by options.
 ac_init_help=
 ac_init_version=false
 ac_unrecognized_opts=
 ac_unrecognized_sep=
-# The variables have the same names as the neighborDiscoveryOptions, with
+# The variables have the same names as the options, with
 # dashes changed to underlines.
 cache_file=/dev/null
 exec_prefix=NONE
@@ -786,7 +786,7 @@ verbose=
 x_includes=NONE
 x_libraries=NONE
 
-# Installation directory neighborDiscoveryOptions.
+# Installation directory options.
 # These are left unexpanded so users can "make install exec_prefix=/foo"
 # and all the variables that are supposed to be based on exec_prefix
 # by default will actually change.
@@ -829,7 +829,7 @@ do
   *)    ac_optarg=yes ;;
   esac
 
-  # Accept the important Cygnus configure neighborDiscoveryOptions, so we can diagnose typos.
+  # Accept the important Cygnus configure options, so we can diagnose typos.
 
   case $ac_dashdash$ac_option in
   --)
@@ -1180,8 +1180,8 @@ fi
 if test -n "$ac_unrecognized_opts"; then
   case $enable_option_checking in
     no) ;;
-    fatal) as_fn_error $? "unrecognized neighborDiscoveryOptions: $ac_unrecognized_opts" ;;
-    *)     $as_echo "$as_me: WARNING: unrecognized neighborDiscoveryOptions: $ac_unrecognized_opts" >&2 ;;
+    fatal) as_fn_error $? "unrecognized options: $ac_unrecognized_opts" ;;
+    *)     $as_echo "$as_me: WARNING: unrecognized options: $ac_unrecognized_opts" >&2 ;;
   esac
 fi
 
@@ -1299,7 +1299,7 @@ done
 # Report the --help message.
 #
 if test "$ac_init_help" = "long"; then
-  # Omit some internal or obsolete neighborDiscoveryOptions to make the list less imposing.
+  # Omit some internal or obsolete options to make the list less imposing.
   # This message is too long to be a string in the A/UX 3.1 sh.
   cat <<_ACEOF
 \`configure' configures this package to adapt to many kinds of systems.
@@ -1309,11 +1309,11 @@ Usage: $0 [OPTION]... [VAR=VALUE]...
 To assign environment variables (e.g., CC, CFLAGS...), specify them as
 VAR=VALUE.  See below for descriptions of some of the useful variables.
 
-Defaults for the neighborDiscoveryOptions are specified in brackets.
+Defaults for the options are specified in brackets.
 
 Configuration:
   -h, --help              display this help and exit
-      --help=short        display neighborDiscoveryOptions specific to this package
+      --help=short        display options specific to this package
       --help=recursive    display the short help of all the included packages
   -V, --version           display version information and exit
   -q, --quiet, --silent   do not print \`checking ...' messages
@@ -1333,7 +1333,7 @@ By default, \`make install' will install all the files in
 an installation prefix other than \`$ac_default_prefix' using \`--prefix',
 for instance \`--prefix=\$HOME'.
 
-For better control, use the neighborDiscoveryOptions below.
+For better control, use the options below.
 
 Fine tuning of the installation directories:
   --bindir=DIR            user executables [EPREFIX/bin]
@@ -1371,7 +1371,7 @@ if test -n "$ac_init_help"; then
   cat <<\_ACEOF
 
 Optional Features:
-  --disable-option-checking  ignore unrecognized --enable/--with neighborDiscoveryOptions
+  --disable-option-checking  ignore unrecognized --enable/--with options
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
   --disable-largefile     omit support for large files
@@ -3451,13 +3451,13 @@ $as_echo "#define const /**/" >>confdefs.h
 	    #
 	    # On platforms where we build a shared library:
 	    #
-	    #	add neighborDiscoveryOptions to generate position-independent code,
+	    #	add options to generate position-independent code,
 	    #	if necessary (it's the default in AIX and Darwin/OS X);
 	    #
 	    #	define option to set the soname of the shared library,
 	    #	if the OS supports that;
 	    #
-	    #	add neighborDiscoveryOptions to specify, at link time, a directory to
+	    #	add options to specify, at link time, a directory to
 	    #	add to the run-time search path, if that's necessary.
 	    #
 	    V_SHLIB_CMD="\$(CC)"
@@ -3526,13 +3526,13 @@ $as_echo "#define const /**/" >>confdefs.h
 	    # Set the appropriate compiler flags and, on platforms
 	    # where we build a shared library:
 	    #
-	    #	add neighborDiscoveryOptions to generate position-independent code,
+	    #	add options to generate position-independent code,
 	    #	if necessary (it's the default in Darwin/OS X);
 	    #
 	    #	if we generate ".so" shared libraries, define the
-	    #	appropriate neighborDiscoveryOptions for building the shared library;
+	    #	appropriate options for building the shared library;
 	    #
-	    #	add neighborDiscoveryOptions to specify, at link time, a directory to
+	    #	add options to specify, at link time, a directory to
 	    #	add to the run-time search path, if that's necessary.
 	    #
 	    # Note: spaces after V_SONAME_OPT are significant; on
@@ -4316,8 +4316,8 @@ fi
 
 if test "$enable_largefile" != no; then
 
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for special C compiler neighborDiscoveryOptions needed for large files" >&5
-$as_echo_n "checking for special C compiler neighborDiscoveryOptions needed for large files... " >&6; }
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for special C compiler options needed for large files" >&5
+$as_echo_n "checking for special C compiler options needed for large files... " >&6; }
 if ${ac_cv_sys_largefile_CC+:} false; then :
   $as_echo_n "(cached) " >&6
 else
@@ -6437,7 +6437,7 @@ $as_echo "no" >&6; }
 	if test "$V_PCAP" = dag; then
 		# User requested "dag" capture type but the DAG API wasn't
 		# found.
-		as_fn_error $? "Specifying the capture type as \"dag\" requires the DAG API to be present; use the --with-dag neighborDiscoveryOptions to specify the location. (Try \"./configure --help\" for more information.)" "$LINENO" 5
+		as_fn_error $? "Specifying the capture type as \"dag\" requires the DAG API to be present; use the --with-dag options to specify the location. (Try \"./configure --help\" for more information.)" "$LINENO" 5
 	fi
 else
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
@@ -9075,7 +9075,7 @@ fi
 
 # as_fn_executable_p FILE
 # -----------------------
-# test.Test if FILE is an executable regular file.
+# Test if FILE is an executable regular file.
 as_fn_executable_p ()
 {
   test -f "$1" && test -x "$1"
@@ -9100,7 +9100,7 @@ test $as_write_fail = 0 && chmod +x $CONFIG_STATUS || ac_write_fail=1
 cat >>$CONFIG_STATUS <<\_ACEOF || ac_write_fail=1
 # Save the log message, to keep $0 and so on meaningful, and to
 # report actual input values of CONFIG_FILES etc. instead of their
-# values after neighborDiscoveryOptions handling.
+# values after options handling.
 ac_log="
 This file was extended by $as_me, which was
 generated by GNU Autoconf 2.69.  Invocation command line was
@@ -9170,7 +9170,7 @@ ac_cs_config="`$as_echo "$ac_configure_args" | sed 's/^ //; s/[\\""\`\$]/\\\\&/g
 ac_cs_version="\\
 config.status
 configured by $0, generated by GNU Autoconf 2.69,
-  with neighborDiscoveryOptions \\"\$ac_cs_config\\"
+  with options \\"\$ac_cs_config\\"
 
 Copyright (C) 2012 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
@@ -9206,7 +9206,7 @@ do
   esac
 
   case $ac_option in
-  # Handling of the neighborDiscoveryOptions.
+  # Handling of the options.
   -recheck | --recheck | --rechec | --reche | --rech | --rec | --re | --r)
     ac_cs_recheck=: ;;
   --version | --versio | --versi | --vers | --ver | --ve | --v | -V )
@@ -9907,8 +9907,8 @@ if test "$no_create" != yes; then
   $ac_cs_success || as_fn_exit 1
 fi
 if test -n "$ac_unrecognized_opts" && test "$enable_option_checking" != no; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: unrecognized neighborDiscoveryOptions: $ac_unrecognized_opts" >&5
-$as_echo "$as_me: WARNING: unrecognized neighborDiscoveryOptions: $ac_unrecognized_opts" >&2;}
+  { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: unrecognized options: $ac_unrecognized_opts" >&5
+$as_echo "$as_me: WARNING: unrecognized options: $ac_unrecognized_opts" >&2;}
 fi
 
 exit 0

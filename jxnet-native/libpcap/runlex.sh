@@ -30,7 +30,7 @@ fi
 
 #
 # Process the flags.  We don't use getopt because we don't want to
-# embed complete knowledge of what neighborDiscoveryOptions are supported by Lex/Flex.
+# embed complete knowledge of what options are supported by Lex/Flex.
 #
 flags=""
 outfile=lex.yy.c
@@ -73,9 +73,9 @@ then
 	have_flex=yes
 
 	#
-	# Does it support the --noFUNCTION neighborDiscoveryOptions?  If so, we pass
+	# Does it support the --noFUNCTION options?  If so, we pass
 	# --nounput, as at least some versions that support those
-	# neighborDiscoveryOptions don't support disabling yyunput by defining
+	# options don't support disabling yyunput by defining
 	# YY_NO_UNPUT.
 	#
 	if flex --help | egrep noFUNCTION >/dev/null
@@ -88,7 +88,7 @@ then
 		# it'll generate some unused functions anyway - and there
 		# won't be any header file declaring them, so there'll be
 		# defined-but-not-declared warnings.  Therefore, we use
-		# --noFUNCTION neighborDiscoveryOptions to suppress generating those
+		# --noFUNCTION options to suppress generating those
 		# functions.
 		#
 		if flex --help | egrep reentrant >/dev/null

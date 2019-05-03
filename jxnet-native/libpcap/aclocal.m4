@@ -379,7 +379,7 @@ AC_DEFUN(AC_LBL_CHECK_DEPENDENCY_GENERATION_OPT,
     ])
 
 dnl
-dnl Determine what neighborDiscoveryOptions are needed to build a shared library
+dnl Determine what options are needed to build a shared library
 dnl
 dnl usage:
 dnl
@@ -399,13 +399,13 @@ AC_DEFUN(AC_LBL_SHLIBS_INIT,
 	    #
 	    # On platforms where we build a shared library:
 	    #
-	    #	add neighborDiscoveryOptions to generate position-independent code,
+	    #	add options to generate position-independent code,
 	    #	if necessary (it's the default in AIX and Darwin/OS X);
 	    #
 	    #	define option to set the soname of the shared library,
 	    #	if the OS supports that;
 	    #
-	    #	add neighborDiscoveryOptions to specify, at link time, a directory to
+	    #	add options to specify, at link time, a directory to
 	    #	add to the run-time search path, if that's necessary.
 	    #
 	    V_SHLIB_CMD="\$(CC)"
@@ -474,13 +474,13 @@ AC_DEFUN(AC_LBL_SHLIBS_INIT,
 	    # Set the appropriate compiler flags and, on platforms
 	    # where we build a shared library:
 	    #
-	    #	add neighborDiscoveryOptions to generate position-independent code,
+	    #	add options to generate position-independent code,
 	    #	if necessary (it's the default in Darwin/OS X);
 	    #
 	    #	if we generate ".so" shared libraries, define the
-	    #	appropriate neighborDiscoveryOptions for building the shared library;
+	    #	appropriate options for building the shared library;
 	    #
-	    #	add neighborDiscoveryOptions to specify, at link time, a directory to
+	    #	add options to specify, at link time, a directory to
 	    #	add to the run-time search path, if that's necessary.
 	    #
 	    # Note: spaces after V_SONAME_OPT are significant; on
@@ -638,7 +638,7 @@ dnl
 dnl If we're using flex and bison, pass -P to flex and -p to bison
 dnl to define a prefix string for the lexer and parser
 dnl
-dnl If we're not using flex and bison, don't pass those neighborDiscoveryOptions
+dnl If we're not using flex and bison, don't pass those options
 dnl (as they might not work - although if "lex" is a wrapper for
 dnl Flex and "yacc" is a wrapper for Bison, they will work), and
 dnl define NEED_YYPARSE_WRAPPER (we *CANNOT* use YYBISON to check
@@ -1112,7 +1112,7 @@ AC_DEFUN(AC_LBL_LIBRARY_NET, [
     ])
 
 dnl
-dnl test.Test for __attribute__
+dnl Test for __attribute__
 dnl
 
 AC_DEFUN(AC_C___ATTRIBUTE__, [
@@ -1151,7 +1151,7 @@ AC_MSG_RESULT($ac_cv___attribute__)
 ])
 
 dnl
-dnl test.Test whether __attribute__((unused)) can be used without warnings
+dnl Test whether __attribute__((unused)) can be used without warnings
 dnl
 
 AC_DEFUN(AC_C___ATTRIBUTE___UNUSED, [
@@ -1183,7 +1183,7 @@ AC_MSG_RESULT($ac_cv___attribute___unused)
 ])
 
 dnl
-dnl test.Test whether __attribute__((format)) can be used without warnings
+dnl Test whether __attribute__((format)) can be used without warnings
 dnl
 
 AC_DEFUN(AC_C___ATTRIBUTE___FORMAT, [

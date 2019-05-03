@@ -26,7 +26,7 @@ incorrectly specified or the Septel software was not built before configuring
 libpcap.
 
 See also the libpcap INSTALL.txt file for further libpcap configuration
-neighborDiscoveryOptions.
+options.
 
 Building libpcap at this stage will include support for both the native
 packet capture stream and for capturing from Septel cards.  To build

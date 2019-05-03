@@ -195,7 +195,7 @@ if (gradle.startParameter.taskNames.contains('generateDockerfile')) {
 	apply from: 'gradle/generateDockerfile.gradle'
 }
 
-//
-//task wrapper(type: Wrapper) {
-//	distributionUrl = "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-all.zip"
-//}
+
+task wrapper(type: Wrapper) {
+	distributionUrl = "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-all.zip"
+}

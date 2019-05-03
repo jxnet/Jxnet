@@ -505,7 +505,7 @@ Disconnect (DISC) U PDUs
 Set Asynchronous Balanced Mode Extended (SABME) U PDUs
 .TP
 \fBtest\fR
-test.Test (TEST) U PDUs
+Test (TEST) U PDUs
 .TP
 \fBxid\fR
 Exchange Identification (XID) U PDUs
@@ -849,7 +849,7 @@ length of the packet.
 
 For example, `\fBether[0] & 1 != 0\fP' catches all multicast traffic.
 The expression `\fBip[0] & 0xf != 5\fP'
-catches all IPv4 packets with neighborDiscoveryOptions.
+catches all IPv4 packets with options.
 The expression
 `\fBip[6:2] & 0x1fff = 0\fP'
 catches only unfragmented IPv4 datagrams and frag zero of fragmented
