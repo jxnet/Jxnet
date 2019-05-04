@@ -139,19 +139,26 @@ matrix:
       env:
         - MATRIX_EVAL="CC=clang && CXX=clang++"
 
+    # Java 10 on Darwin
+    - os: osx
+      sudo: true
+      osx_image: xcode6.4
+      env:
+        - MATRIX_EVAL="JAVA_TEST"
+
 # Install dependencies
 install:
   - echo "Installing dependencies..."
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; $MATRIX_EVAL ; fi
   - echo "Done."
 
 # Build
 before_script:
   - echo "Building..."
-  - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then cd jxnet-native/libpcap && ./configure && make && cd ../..; fi
-  - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then cd jxnet-native && export JAVA_HOME=$(pwd) && ./bootstrap.sh && ./configure && make && sudo make install && cd ..; fi
-  - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then cd jxnet-native && mkdir build && cd build && cmake .. && make && sudo make install && cd ../..; fi
-  - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then cd jxnet-native/libpcap && sudo make install && cd ../..; fi
+  - if [ "$TRAVIS_OS_NAME" != "windows" ] && [ "$MATRIX_EVAL" != "JAVA_TEST" ]; then cd jxnet-native/libpcap && ./configure && make && cd ../..; fi
+  - if [ "$TRAVIS_OS_NAME" != "windows" ] && [ "$MATRIX_EVAL" != "JAVA_TEST" ]; then cd jxnet-native && export JAVA_HOME=$(pwd) && ./bootstrap.sh && ./configure && make && sudo make install && cd ..; fi
+  - if [ "$TRAVIS_OS_NAME" != "windows" ] && [ "$MATRIX_EVAL" != "JAVA_TEST" ]; then cd jxnet-native && mkdir build && cd build && cmake .. && make && sudo make install && cd ../..; fi
+  - if [ "$TRAVIS_OS_NAME" != "windows" ] && [ "$MATRIX_EVAL" != "JAVA_TEST" ]; then cd jxnet-native/libpcap && sudo make install && cd ../..; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$MATRIX_EVAL" == "JAVA_TEST" ]; then export JAVA_HOME=$(/usr/libexec/java_home) && sudo -E ./gradlew test jacocoTestReport sonarqube coveralls; fi
   - echo "Done."
 
 # Test
@@ -163,3 +170,11 @@ script:
 after_success:
   - echo "Publishing test result..."
   - echo "Done."
+
+addons:
+  sonarcloud:
+    organization: "jxnet"
+    token:
+      secure: "Za0wrUnmjHXgDPk7uEUkABb5Ds8Y8GfajPFBfYksDNVltm8AXIhY+3X4jg0tEtkeVzw0nov1AoBZvsZThOrpFnuEWEnq+UVYe72WFouTb/a9yVYGd2eQ9+YVjpX6/dfV4NtMwRNTmZvB0RO/nSlWB6+1NjaPnMGE3Holis22+hdTW5yF/rACMcF3L8ALcOQbW97STRDzaYQAcjIBDsxcezxhn/3nEjPwGPiQOZrGJIdEexg51en7ZAN9PEcQ3aQPIbtP+MaTokvclHusO2SjKUT8DX+BBuzaEipk+6EX6WTIBCfq8TltEwrrFT/J1rmnW7Ke4MOZMcEEl1Muhbz2Fj/juXcobl3Fi+87bTP1A+TAcFJ4zOa5eL+KLL4WlNJxX//2zCgXNVecZDSHempd3wDdIVK+VjLW/sNtt2fxm9uG6cBr3pju4DaXssJUYyGPaZzntfe60BPF/Reyq39wYhgi/lXDvECfdaU6G8RXc/zEIIeG3mW5xHdTczbJZXdfkHtMtLUjXjnC8GF/JV/2PPzCvQJM0vzxnFQ9w3kI4rs3S3EK7XtEX5YCFOw8jTwj1D0bnoVMfhK4e033caHuqAZhca8FPEtdRA8uDbUbs3nKrIYyxD2kWVZcYW7k2G+FiJEnPF6SyP8zk79AOpsbTIY1UiWmVoP4RlKCQw4P9Z4="
+  script:
+    - sonar-scanner

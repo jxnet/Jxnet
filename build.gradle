@@ -31,6 +31,7 @@ plugins {
 	id "com.ardikars.gjnp" version "1.0.0.Final" apply false
 	id "co.riiid.gradle" version "0.4.2" apply false
 	id "org.owasp.dependencycheck" version "3.3.4" apply false
+	id "org.sonarqube" version "2.7"
 }
 
 allprojects {
@@ -195,6 +196,14 @@ if (gradle.startParameter.taskNames.contains('generateDockerfile')) {
 	apply from: 'gradle/generateDockerfile.gradle'
 }
 
+sonarqube {
+	properties {
+		property "sonar.projectName", "Jxnet"
+		property "sonar.organization", "jxnet"
+		property "sonar.projectKey", "jxnet_Jxnet"
+        property "sonar.host.url", "https://sonarcloud.io"
+	}
+}
 
 task wrapper(type: Wrapper) {
 	distributionUrl = "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-all.zip"
