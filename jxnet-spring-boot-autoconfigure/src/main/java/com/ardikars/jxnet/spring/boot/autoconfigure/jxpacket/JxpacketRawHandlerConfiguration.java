@@ -60,6 +60,7 @@ public class JxpacketRawHandlerConfiguration<T> extends HandlerConfigurer<T, Fut
             LOGGER.warn(e);
         } catch (InterruptedException e) {
             LOGGER.warn(e);
+            Thread.currentThread().interrupt();
         }
     }
 

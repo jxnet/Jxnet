@@ -37,7 +37,7 @@ import com.ardikars.jxnet.exception.PcapCloseException;
 import com.ardikars.jxnet.exception.PcapDumperCloseException;
 import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 
-import java.io.Closeable;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -49,7 +49,7 @@ import java.util.concurrent.ExecutorService;
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
  * @since 1.5.3
  */
-public interface Context extends Factory<Context, Builder<Pcap, Void>>, Closeable {
+public interface Context extends Factory<Context, Builder<Pcap, Void>> {
 
 	String getApplicationName();
 
@@ -582,5 +582,11 @@ public interface Context extends Factory<Context, Builder<Pcap, Void>>, Closeabl
 	 * @throws PlatformNotSupportedException platform not supported exception.
 	 */
 	PcapCode pcapInject(ByteBuffer buf, int size) throws PcapCloseException, PlatformNotSupportedException;
+
+	/**
+	 * Close a handle (free memory).
+	 * @throws IOException io exception.
+	 */
+	void close() throws IOException;
 
 }

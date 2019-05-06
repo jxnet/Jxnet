@@ -77,9 +77,6 @@ public final class SockAddr implements Cloneable {
      * @return returns bytes address.
      */
     public byte[] getData() {
-        if (this.data == null) {
-            return new byte[] { };
-        }
         if (this.data.length == 0) {
             Family family = getSaFamily();
             if (family == Family.AF_INET6) {

@@ -35,7 +35,9 @@ import org.junit.runners.Suite;
         PcapPktHdrTest.class,
         ExceptionTest.class,
         PcapCodeTest.class,
-        DatalinkTypeTest.class
+        DatalinkTypeTest.class,
+        BpfProgramTest.class,
+        PcapTest.class
 })
 public class SuiteTest {
 

@@ -158,17 +158,19 @@ before_script:
   - if [ "$TRAVIS_OS_NAME" != "windows" ] && [ "$MATRIX_EVAL" != "JAVA_TEST" ]; then cd jxnet-native && export JAVA_HOME=$(pwd) && ./bootstrap.sh && ./configure && make && sudo make install && cd ..; fi
   - if [ "$TRAVIS_OS_NAME" != "windows" ] && [ "$MATRIX_EVAL" != "JAVA_TEST" ]; then cd jxnet-native && mkdir build && cd build && cmake .. && make && sudo make install && cd ../..; fi
   - if [ "$TRAVIS_OS_NAME" != "windows" ] && [ "$MATRIX_EVAL" != "JAVA_TEST" ]; then cd jxnet-native/libpcap && sudo make install && cd ../..; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$MATRIX_EVAL" == "JAVA_TEST" ]; then export JAVA_HOME=$(/usr/libexec/java_home) && sudo -E ./gradlew test jacocoTestReport sonarqube coveralls; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$MATRIX_EVAL" == "JAVA_TEST" ]; then export JAVA_HOME=$(/usr/libexec/java_home) && sudo -E ./gradlew build -x test; fi
   - echo "Done."
 
 # Test
 script:
   - echo "Testing..."
+  - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$MATRIX_EVAL" == "JAVA_TEST" ]; then export JAVA_HOME=$(/usr/libexec/java_home) && sudo -E ./gradlew test jacocoTestReport; fi
   - echo "Done."
 
 # Publish test result
 after_success:
   - echo "Publishing test result..."
+  - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$MATRIX_EVAL" == "JAVA_TEST" ]; then export JAVA_HOME=$(/usr/libexec/java_home) && sudo -E ./gradlew sonarqube coveralls; fi
   - echo "Done."
 
 addons:

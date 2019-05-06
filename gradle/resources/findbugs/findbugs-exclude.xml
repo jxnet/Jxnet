@@ -13,6 +13,12 @@
         <Class name="com.ardikars.jxnet.JxnetTest"></Class>
     </Match>
     <Match>
+        <Class name="com.ardikars.jxnet.PcapTest"></Class>
+    </Match>
+    <Match>
+        <Class name="com.ardikars.jxnet.BpfProgramTest"></Class>
+    </Match>
+    <Match>
         <Bug pattern="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR"/>
     </Match>
     <Match>

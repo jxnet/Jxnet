@@ -57,6 +57,7 @@ public class JxpacketAsyncRawHandlerConfiguration<T> extends HandlerConfigurer<T
                     LOGGER.warn(e);
                 } catch (InterruptedException e) {
                     LOGGER.warn(e);
+                    Thread.currentThread().interrupt();
                 }
             }
         });

@@ -17,15 +17,13 @@
 
 package com.ardikars.jxnet;
 
-import java.io.Closeable;
-
 /**
  * Handle a pointer addresses.
  *
  * @author <a href="mailto:contact@ardikars.com">Ardika Rommy Sanjaya</a>
  * @since 1.5.4
  */
-public interface Pointer extends Closeable, Cloneable {
+public interface Pointer extends Cloneable {
 
     @Deprecated
     long getAddress();

@@ -43,7 +43,10 @@ build_script:
   - cmd: echo "githubToken=$GITHUB_TOKEN" >> gradle.properties
   - cmd: set PATH=C:\tools\mingw64\bin;C:\Program Files (x86)\NSIS\;%PATH%
   - cmd: gradlew.bat -p jxnet-native clean build -q
-  - cmd: gradlew.bat jacocoTestReport
+  - cmd: gradlew.bat test jacocoTestReport
+  - ps: |
+      Invoke-WebRequest -Uri 'https://codecov.io/bash' -OutFile codecov.sh
+      bash codecov.sh -f jxnet-core/build/reports/jacoco/test/jacocoTestReport.xml
 
 #---------------------------------#
 #         notifications           #

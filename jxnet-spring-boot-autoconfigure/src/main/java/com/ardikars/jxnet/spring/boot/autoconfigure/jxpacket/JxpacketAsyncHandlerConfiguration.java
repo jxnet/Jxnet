@@ -50,6 +50,7 @@ public class JxpacketAsyncHandlerConfiguration<T> extends HandlerConfigurer<T, P
                     LOGGER.warn(e);
                 } catch (InterruptedException e) {
                     LOGGER.warn(e);
+                    Thread.currentThread().interrupt();
                 }
             }
         });

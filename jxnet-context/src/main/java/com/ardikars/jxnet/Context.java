@@ -25,7 +25,6 @@ import com.ardikars.jxnet.exception.PcapCloseException;
 import com.ardikars.jxnet.exception.PcapDumperCloseException;
 import com.ardikars.jxnet.exception.PlatformNotSupportedException;
 
-import java.io.Closeable;
 import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -39,7 +38,7 @@ import java.util.concurrent.ExecutorService;
  * @deprecated please use {@link com.ardikars.jxnet.context.Context}.
  */
 @Deprecated
-public interface Context extends Factory<Context, Builder<Pcap, Void>>, Closeable {
+public interface Context extends Factory<Context, Builder<Pcap, Void>> {
 
     String getApplicationName();
 

@@ -155,7 +155,10 @@ public final class Pcap implements PointerHandler {
 				.toString();
 	}
 
-	@Override
+	/**
+	 * Close pcap handle.
+	 * @throws IOException io exception.
+	 */
 	public void close() throws IOException {
 		if (!isClosed()) {
 			Jxnet.PcapClose(this);
@@ -329,7 +332,7 @@ public final class Pcap implements PointerHandler {
 				pcap = Jxnet.PcapOpenOfflineWithTStampPrecision(fileName, timestampPrecision.getValue(), errbuf);
 			}
 			if (pcap == null) {
-				throw new NativeException(errbuf.toString());
+				throw new NativeException(fileName + ": " + errbuf.toString());
 			}
 			return pcap;
 		}

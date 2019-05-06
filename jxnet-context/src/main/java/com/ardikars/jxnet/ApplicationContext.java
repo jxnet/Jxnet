@@ -257,7 +257,6 @@ public final class ApplicationContext implements Context {
 		return ctx.pcapInject(buf, size);
 	}
 
-	@Override
 	public void close() throws IOException {
 		ctx.close();
 	}

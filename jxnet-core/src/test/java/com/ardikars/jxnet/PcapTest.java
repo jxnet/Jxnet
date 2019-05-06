@@ -8,10 +8,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.junit.runners.MethodSorters;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import static com.ardikars.jxnet.Jxnet.OK;
 import static com.ardikars.jxnet.Jxnet.PcapFindAllDevs;
@@ -20,18 +20,21 @@ import static com.ardikars.jxnet.Jxnet.PcapFindAllDevs;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class PcapTest {
 
-    private File file;
+    private static final Logger LOGGER = Logger.getLogger(PcapTest.class.getName());
+
     private StringBuilder errbuf;
     private Pcap.Builder builder;
+    private String pcapPath;
 
     private String source;
 
     @Before
     public void init() throws IOException {
-        file = File.createTempFile("cap", "pcap");
         errbuf = new StringBuilder(255);
         source = findSource();
-        builder = new Pcap.Builder()
+        pcapPath = "../gradle/resources/pcap/icmp.pcap";
+        LOGGER.info("Pcap path: " + pcapPath);
+        builder = Pcap.builder()
                 .snaplen(65535)
                 .promiscuousMode(PromiscuousMode.PROMISCUOUS)
                 .timeout(2000)
@@ -42,7 +45,7 @@ public class PcapTest {
                 .rfmon(RadioFrequencyMonitorMode.NON_RFMON)
                 .enableNonBlock(false)
                 .dataLinkType(DataLinkType.EN10MB)
-                .fileName(file.getAbsolutePath() + "/" + file.getName())
+                .fileName(pcapPath)
                 .errbuf(errbuf);
     }
 
@@ -69,6 +72,42 @@ public class PcapTest {
         pcap.close();
         assert pcap.isClosed();
         assert pcap.address() == 0L;
+    }
+
+    @Test
+    public void pcapOffline() throws IOException {
+        Pcap pcap = Pcap.offline(builder);
+        assert !pcap.isClosed();
+        pcap.close();
+        assert pcap.isClosed();
+        assert pcap.address() == 0L;
+    }
+
+    @Test
+    public void pcapBuilder() throws IOException {
+        assert builder.toString() != null;
+        Pcap dead = builder.pcapType(Pcap.PcapType.DEAD)
+                .build();
+        assert !dead.isClosed();
+        Pcap offline = builder.pcapType(Pcap.PcapType.OFFLINE)
+                .build();
+        if (source != null) {
+            Pcap live = builder
+                    .source(source)
+                    .pcapType(Pcap.PcapType.LIVE)
+                    .build();
+            assert !live.isClosed();
+            live.close();
+            assert live.isClosed();
+            assert live.toString() != null;
+        }
+        assert !offline.isClosed();
+        dead.close();
+        assert dead.toString() != null;
+        assert dead.isClosed();
+        offline.close();
+        assert offline.isClosed();
+        assert offline.toString() != null;
     }
 
     @Test

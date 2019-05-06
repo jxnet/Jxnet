@@ -121,13 +121,17 @@ public final class BpfProgram implements PointerHandler {
 	 * @return returns true if closed, false otherwise.
 	 */
 	public boolean isClosed() {
-		return this.getAddress() == 0;
+		return this.address() == 0;
 	}
 
-	@Override
+	/**
+	 * Close bpf handle.
+	 * @throws IOException io exception.
+	 */
 	public void close() throws IOException {
 		if (!isClosed()) {
 			Jxnet.PcapFreeCode(this);
+			address = 0;
 		}
 	}
 

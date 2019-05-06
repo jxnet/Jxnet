@@ -67,6 +67,7 @@ public class JxpacketJsonHandlerConfiguration<T> extends HandlerConfigurer<T, St
             LOGGER.warn(e);
         } catch (InterruptedException e) {
             LOGGER.warn(e);
+            Thread.currentThread().interrupt();
         } catch (JsonProcessingException e) {
             LOGGER.warn(e);
         }

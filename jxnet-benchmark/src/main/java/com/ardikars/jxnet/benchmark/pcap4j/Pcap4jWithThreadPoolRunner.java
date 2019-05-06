@@ -64,6 +64,8 @@ public class Pcap4jWithThreadPoolRunner implements Runner {
             if (handle != null) {
                 handle.close();
             }
+            LOGGER.warn(e.getMessage());
+            Thread.currentThread().interrupt();
         }
         long now = System.currentTimeMillis();
         if (handle != null) {
