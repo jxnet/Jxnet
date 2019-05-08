@@ -4,49 +4,25 @@ trigger:
 
 strategy:
   matrix:
-    jdk8_linux:
-      imageName: "ubuntu-16.04"
-      jdk_version: "1.8"
-    jdk8_mac:
+    mac:
       imageName: 'macos-10.13'
-      jdk_version: "1.8"
-    jdk8_windows:
+    windows:
       imageName: "vs2017-win2016"
-      jdk_version: "1.8"
-  maxParallel: 3
+  maxParallel: 2
 
 pool:
   vmImage: $(imageName)
 
 steps:
-  # Linux
-  - bash: |
-      sudo apt-get update
-      sudo apt-get install -y build-essential bison flex automake autoconf libtool cmake
-      cd jxnet-native/libpcap && ./configure && make && cd ../..
-      cd jxnet-native && ./bootstrap.sh && ./configure && make && sudo make install && cd ..
-      cd jxnet-native && mkdir build && cd build && cmake .. && make && sudo make install && cd ../..
-      cd jxnet-native/libpcap && sudo make install && cd ../..
-    condition: eq( variables['Agent.OS'], 'Linux' )
-    displayName: Linux Environment
   # macOS
   - bash: |
-      brew update
-      brew install gcc make bison flex automake autoconf libtool cmake
-      cd jxnet-native/libpcap && ./configure && make && cd ../..
-      cd jxnet-native && ./bootstrap.sh && ./configure && make && sudo make install && cd ..
-      cd jxnet-native && mkdir build && cd build && cmake .. && make && sudo make install && cd ../..
-      cd jxnet-native/libpcap && sudo make install && cd ../..
+      export JAVA_HOME=`/usr/libexec/java_home -v 1.8`; java -version
+      sudo -E ./gradlew test
     condition: eq( variables['Agent.OS'], 'Darwin' )
     displayName: Darwin Environment
   # Windows
   - powershell: |
-      .\.scripts\InstallMingw64.ps1
-      .\.scripts\InstallNpcap.ps1
-      $env:Path = "C:\tools\mingw64\bin;$PATH"
+      ./.scripts/InstallNpcap.ps1
+      ./gradlew test
     condition: eq( variables['Agent.OS'], 'Windows_NT' )
     displayName: Windows Environment
-
-  - script: |
-      ./gradlew -p jxnet-native clean build -q
-      ./gradlew jacocoTestReport
