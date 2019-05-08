@@ -1,40 +1,9 @@
 
-languange: c
-
 matrix:
   include:
     # GCC on linux
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-4.9
-      env:
-        - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
-
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-5
-      env:
-        - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
-
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-6
-      env:
-        - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
-
-    - os: linux
+    - language: c
+      os: linux
       addons:
         apt:
           sources:
@@ -42,84 +11,18 @@ matrix:
           packages:
             - g++-7
       env:
-        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+        - TRAVIS_COMPILER=gcc
 
     # GCC on Darwin
-    - os: osx
-      osx_image: xcode8
+    - language: c
+      os: osx
+      osx_image: xcode10.1
       env:
-        - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
-
-    - os: osx
-      osx_image: xcode8
-      env:
-        - MATRIX_EVAL="brew install gcc5 && CC=gcc-5 && CXX=g++-5"
-
-    - os: osx
-      osx_image: xcode8
-      env:
-        - MATRIX_EVAL="brew install gcc6 && CC=gcc-6 && CXX=g++-6"
-
-    - os: osx
-      osx_image: xcode8
-      env:
-        - MATRIX_EVAL="brew install gcc && CC=gcc-7 && CXX=g++-7"
+        - TRAVIS_COMPILER=gcc
 
     # Clang on Linux
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.6
-          packages:
-            - clang-3.6
-      env:
-        - MATRIX_EVAL="CC=clang-3.6 && CXX=clang++-3.6"
-
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.7
-          packages:
-            - clang-3.7
-      env:
-        - MATRIX_EVAL="CC=clang-3.7 && CXX=clang++-3.7"
-
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.8
-          packages:
-            - clang-3.8
-      env:
-        - MATRIX_EVAL="CC=clang-3.8 && CXX=clang++-3.8"
-
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - llvm-toolchain-trusty-3.9
-          packages:
-            - clang-3.9
-      env:
-        - MATRIX_EVAL="CC=clang-3.9 && CXX=clang++-3.9"
-
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - llvm-toolchain-trusty-4.0
-          packages:
-            - clang-4.0
-      env:
-        - MATRIX_EVAL="CC=clang-4.0 && CXX=clang++-4.0"
-
-    - os: linux
+    - language: c
+      os: linux
       addons:
         apt:
           sources:
@@ -127,56 +30,56 @@ matrix:
           packages:
             - clang-5.0
       env:
-        - MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
+        - TRAVIS_COMPILER=clang
 
     # Clang on Darwin
-    - os: osx
+    - language: c
+      os: osx
       osx_image: xcode10.1
       env:
-        - MATRIX_EVAL="CC=clang && CXX=clang++"
-    - os: osx
-      osx_image: xcode9.4
-      env:
-        - MATRIX_EVAL="CC=clang && CXX=clang++"
+        - TRAVIS_COMPILER=clang
 
-    # Java 10 on Darwin
-    - os: osx
-      sudo: true
-      osx_image: xcode6.4
-      env:
-        - MATRIX_EVAL="JAVA_TEST"
+    # Mingw64 on Windows
+#    - language: shell
+#      os: windows
+#      cache:
+#        directories:
+#          - if [ "$TRAVIS_OS_NAME" != "windows" ]; then /c/tools; fi
+#          - $HOME/.gradle
+#      env:
+#        - TRAVIS_COMPILER=gcc
 
 # Install dependencies
 install:
   - echo "Installing dependencies..."
+  - if [ "$TRAVIS_OS_NAME" == "windows" ]; then export JAVA_HOME=/c/tools/jdk8; fi
+  - if [ "$TRAVIS_OS_NAME" == "windows" ]; then export PATH=/c/tools/mingw64/bin:$PATH; fi
+  - if [ "$TRAVIS_OS_NAME" == "windows" ]; then PowerShell -Command 'Set-ExecutionPolicy -ExecutionPolicy RemoteSigned'; fi
+  - if [ "$TRAVIS_OS_NAME" == "windows" ]; then PowerShell -File ./.scripts/InstallMingw64.ps1; fi
+  - if [ "$TRAVIS_OS_NAME" == "windows" ]; then PowerShell -File ./.scripts/InstallNpcap.ps1; fi
+  - if [ "$TRAVIS_OS_NAME" == "windows" ]; then PowerShell -Command 'choco install jdk8 -params "installdir=C:\\tools\\jdk8"'; fi
   - echo "Done."
 
 # Build
 before_script:
   - echo "Building..."
-  - if [ "$TRAVIS_OS_NAME" != "windows" ] && [ "$MATRIX_EVAL" != "JAVA_TEST" ]; then cd jxnet-native/libpcap && ./configure && make && cd ../..; fi
-  - if [ "$TRAVIS_OS_NAME" != "windows" ] && [ "$MATRIX_EVAL" != "JAVA_TEST" ]; then cd jxnet-native && export JAVA_HOME=$(pwd) && ./bootstrap.sh && ./configure && make && sudo make install && cd ..; fi
-  - if [ "$TRAVIS_OS_NAME" != "windows" ] && [ "$MATRIX_EVAL" != "JAVA_TEST" ]; then cd jxnet-native && mkdir build && cd build && cmake .. && make && sudo make install && cd ../..; fi
-  - if [ "$TRAVIS_OS_NAME" != "windows" ] && [ "$MATRIX_EVAL" != "JAVA_TEST" ]; then cd jxnet-native/libpcap && sudo make install && cd ../..; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$MATRIX_EVAL" == "JAVA_TEST" ]; then export JAVA_HOME=$(/usr/libexec/java_home) && sudo -E ./gradlew build -x test; fi
+  - if [ "$TRAVIS_OS_NAME" != "windows" ]; then cd jxnet-native/libpcap && ./configure && make && cd ../..; fi
+  - if [ "$TRAVIS_OS_NAME" != "windows" ]; then cd jxnet-native && export JAVA_HOME=$(pwd) && ./bootstrap.sh && ./configure && make && sudo make install && cd ..; fi
+  - if [ "$TRAVIS_OS_NAME" != "windows" ]; then cd jxnet-native && mkdir build && cd build && cmake .. && make && sudo make install && cd ../..; fi
+  - if [ "$TRAVIS_OS_NAME" != "windows" ]; then cd jxnet-native/libpcap && sudo make install && cd ../..; fi
+  - if [ "$TRAVIS_OS_NAME" == "windows" ]; then ./gradlew -p jxnet-native build; fi
   - echo "Done."
 
-# Test
 script:
-  - echo "Testing..."
-  - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$MATRIX_EVAL" == "JAVA_TEST" ]; then export JAVA_HOME=$(/usr/libexec/java_home) && sudo -E ./gradlew test jacocoTestReport; fi
+  - echo "Verifying..."
+  - if [ "$TRAVIS_OS_NAME" != "windows" ]; then ls -lat jxnet-native/libpcap/libpcap* ; fi
+  - if [ "$TRAVIS_OS_NAME" != "windows" ]; then ls -lat jxnet-native/src/.libs/libjxnet* ; fi
+  - if [ "$TRAVIS_OS_NAME" != "windows" ]; then ls -lat jxnet-native/build/libjxnet* ; fi
   - echo "Done."
 
-# Publish test result
 after_success:
-  - echo "Publishing test result..."
-  - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$MATRIX_EVAL" == "JAVA_TEST" ]; then export JAVA_HOME=$(/usr/libexec/java_home) && sudo -E ./gradlew sonarqube coveralls; fi
+  - echo "Cleaning..."
+  - if [ "$TRAVIS_OS_NAME" != "windows" ]; then cd jxnet-native/libpcap && make clean && make uninstall && cd ../..; fi
+  - if [ "$TRAVIS_OS_NAME" != "windows" ]; then cd jxnet-native && make clean && make uninstall && cd ..; fi
+  - if [ "$TRAVIS_OS_NAME" != "windows" ]; then cd jxnet-native/build/ && make clean && make uninstall && cd ../..; fi
   - echo "Done."
-
-addons:
-  sonarcloud:
-    organization: "jxnet"
-    token:
-      secure: "Za0wrUnmjHXgDPk7uEUkABb5Ds8Y8GfajPFBfYksDNVltm8AXIhY+3X4jg0tEtkeVzw0nov1AoBZvsZThOrpFnuEWEnq+UVYe72WFouTb/a9yVYGd2eQ9+YVjpX6/dfV4NtMwRNTmZvB0RO/nSlWB6+1NjaPnMGE3Holis22+hdTW5yF/rACMcF3L8ALcOQbW97STRDzaYQAcjIBDsxcezxhn/3nEjPwGPiQOZrGJIdEexg51en7ZAN9PEcQ3aQPIbtP+MaTokvclHusO2SjKUT8DX+BBuzaEipk+6EX6WTIBCfq8TltEwrrFT/J1rmnW7Ke4MOZMcEEl1Muhbz2Fj/juXcobl3Fi+87bTP1A+TAcFJ4zOa5eL+KLL4WlNJxX//2zCgXNVecZDSHempd3wDdIVK+VjLW/sNtt2fxm9uG6cBr3pju4DaXssJUYyGPaZzntfe60BPF/Reyq39wYhgi/lXDvECfdaU6G8RXc/zEIIeG3mW5xHdTczbJZXdfkHtMtLUjXjnC8GF/JV/2PPzCvQJM0vzxnFQ9w3kI4rs3S3EK7XtEX5YCFOw8jTwj1D0bnoVMfhK4e033caHuqAZhca8FPEtdRA8uDbUbs3nKrIYyxD2kWVZcYW7k2G+FiJEnPF6SyP8zk79AOpsbTIY1UiWmVoP4RlKCQw4P9Z4="
-  script:
-    - sonar-scanner
