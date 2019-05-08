@@ -6,6 +6,10 @@
 if (Test-Path "C:\tools\mingw64\bin") {
     echo "Mingw64 is already installed"
 } else {
+    if (Test-Path "C:\tools\mingw64\bin") {
+        mkdir C:\tools
+    }
+
     $urlPath = "https://excellmedia.dl.sourceforge.net/project/mingw-w64/Toolchains targetting Win64/Personal Builds/mingw-builds/8.1.0/threads-posix/sjlj/x86_64-8.1.0-release-posix-sjlj-rt_v6-rev0.7z"
 
     # Download the file

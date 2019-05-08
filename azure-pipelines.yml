@@ -17,12 +17,15 @@ steps:
   # macOS
   - bash: |
       export JAVA_HOME=`/usr/libexec/java_home -v 1.8`; java -version
-      sudo -E ./gradlew test
+      sudo -E ./gradlew test jacocoTestReport
+      sudo -E ./gradlew coveralls
     condition: eq( variables['Agent.OS'], 'Darwin' )
     displayName: Darwin Environment
   # Windows
   - powershell: |
       ./.scripts/InstallNpcap.ps1
-      ./gradlew test
+      ./gradlew test jacocoTestReport
+      Invoke-WebRequest -Uri 'https://codecov.io/bash' -OutFile codecov.sh
+      bash codecov.sh -f jxnet-core/build/reports/jacoco/test/jacocoTestReport.xml -t $env:CODECOV_TOKEN
     condition: eq( variables['Agent.OS'], 'Windows_NT' )
     displayName: Windows Environment

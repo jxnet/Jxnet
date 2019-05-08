@@ -26,8 +26,7 @@ shallow_clone: true
 cache:
   - C:\Users\appveyor\.gradle\wrapper
   - C:\Users\appveyor\.gradle\native
-  - C:\Users\appveyor\.gradle\daemon
-  - C:\Users\appveyor\.gradle\caches
+  - C:\Users\appveyor\.gradle\caches\modules-2
   - C:\tools\mingw64
 
 # scripts that run after cloning repository
@@ -40,13 +39,8 @@ install:
 #---------------------------------#
 
 build_script:
-  - cmd: echo "githubToken=$GITHUB_TOKEN" >> gradle.properties
   - cmd: set PATH=C:\tools\mingw64\bin;C:\Program Files (x86)\NSIS\;%PATH%
-  - cmd: gradlew.bat -p jxnet-native clean build -q
-  - cmd: gradlew.bat test jacocoTestReport
-  - ps: |
-      Invoke-WebRequest -Uri 'https://codecov.io/bash' -OutFile codecov.sh
-      bash codecov.sh -f jxnet-core/build/reports/jacoco/test/jacocoTestReport.xml
+  - cmd: gradlew.bat -p jxnet-native build
 
 #---------------------------------#
 #         notifications           #
