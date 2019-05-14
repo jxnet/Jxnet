@@ -141,21 +141,21 @@ public class JxnetTest {
     private final PcapHandler<String> callback = new PcapHandler<String>() {
         @Override
         public void nextPacket(String user, PcapPktHdr h, ByteBuffer bytes) {
-            System.out.println("Argument    : " + user);
-            System.out.println("PacketHeader: " + h);
-            System.out.println("PacketBuffer: " + bytes);
+            logger.info("Argument    : " + user);
+            logger.info("PacketHeader: " + h);
+            logger.info("PacketBuffer: " + bytes);
         }
     };
 
     private final RawPcapHandler<String> callback0 = new RawPcapHandler<String>() {
         @Override
         public void nextPacket(String user, int capLen, int len, int tvSec, long tvUsec, long memoryAddress) {
-            System.out.println("Argument       : " + user);
-            System.out.println("Calen          : " + capLen);
-            System.out.println("Len            : " + len);
-            System.out.println("TvSec          : " + tvSec);
-            System.out.println("TvUSec         : " + tvUsec);
-            System.out.println("Memory Address : " + memoryAddress);
+            logger.info("Argument       : " + user);
+            logger.info("Calen          : " + capLen);
+            logger.info("Len            : " + len);
+            logger.info("TvSec          : " + tvSec);
+            logger.info("TvUSec         : " + tvUsec);
+            logger.info("Memory Address : " + memoryAddress);
         }
     };
 
@@ -183,7 +183,7 @@ public class JxnetTest {
         if (source == null) {
             throw new Exception("Failed to lookup device");
         } else {
-            System.out.println("Source: " + source);
+            logger.info("Source: " + source);
         }
         pcap = PcapCreate(source, errbuf);
         if (pcap == null) {
@@ -240,36 +240,36 @@ public class JxnetTest {
             logger.warning("PcapFindAllDevs:PcapFindAllDevs(): " + errbuf.toString());
         }
         for (PcapIf dev : alldevsp) {
-            System.out.println("================================================\n\n");
-            System.out.println("Name                  = " + dev.getName());
-            System.out.println("Description           = " + dev.getDescription());
-            System.out.println("Flags                 = " + dev.getFlags());
-            System.out.println("Is loopback           = " + dev.isLoopback());
-            System.out.println("Is Up                 = " + dev.isUp());
-            System.out.println("Is Running            = " + dev.isRunning());
+            logger.info("================================================\n\n");
+            logger.info("Name                  = " + dev.getName());
+            logger.info("Description           = " + dev.getDescription());
+            logger.info("Flags                 = " + dev.getFlags());
+            logger.info("Is loopback           = " + dev.isLoopback());
+            logger.info("Is Up                 = " + dev.isUp());
+            logger.info("Is Running            = " + dev.isRunning());
             for (PcapAddr addr : dev.getAddresses()) {
                 if (addr.getAddr().getSaFamily() == SockAddr.Family.AF_INET) {
-                    System.out.println("------------------------------------------------");
-                    System.out.println("IPv4");
-                    System.out.println("Addr                   = " + addr.getAddr().toString());
-                    System.out.println("Netmask                = " + addr.getNetmask().toString());
-                    System.out.println("BroadAddr              = " + addr.getBroadAddr().toString());
-                    System.out.println("DstAddr                = " + addr.getDstAddr().toString());
-                    System.out.println("------------------------------------------------");
+                    logger.info("------------------------------------------------");
+                    logger.info("IPv4");
+                    logger.info("Addr                   = " + addr.getAddr().toString());
+                    logger.info("Netmask                = " + addr.getNetmask().toString());
+                    logger.info("BroadAddr              = " + addr.getBroadAddr().toString());
+                    logger.info("DstAddr                = " + addr.getDstAddr().toString());
+                    logger.info("------------------------------------------------");
                 } else if (addr.getAddr().getSaFamily() == SockAddr.Family.AF_INET6) {
-                    System.out.println("------------------------------------------------");
-                    System.out.println("IPv6");
-                    System.out.println("Addr                   = " + addr.getAddr().toString());
-                    System.out.println("Netmask                = " + addr.getNetmask().toString());
-                    System.out.println("BroadAddr              = " + addr.getBroadAddr().toString());
-                    System.out.println("DstAddr                = " + addr.getDstAddr().toString());
-                    System.out.println("------------------------------------------------");
+                    logger.info("------------------------------------------------");
+                    logger.info("IPv6");
+                    logger.info("Addr                   = " + addr.getAddr().toString());
+                    logger.info("Netmask                = " + addr.getNetmask().toString());
+                    logger.info("BroadAddr              = " + addr.getBroadAddr().toString());
+                    logger.info("DstAddr                = " + addr.getDstAddr().toString());
+                    logger.info("------------------------------------------------");
                 } else {
                     logger.info(addr.toString());
                 }
-                System.out.println("Family                 = " + addr.getAddr().getSaFamily().toString());
+                logger.info("Family                 = " + addr.getAddr().getSaFamily().toString());
             }
-            System.out.println("================================================\n\n");
+            logger.info("================================================\n\n");
         }
     }
 
@@ -290,14 +290,14 @@ public class JxnetTest {
             return;
         }
         PcapStat stat = new PcapStat();
-        System.out.println("Droped by kernel    : " + stat.getPsDrop());
-        System.out.println("Droped by interface : " + stat.getPsIfdrop());
-        System.out.println("Recieved            : " + stat.getPsRecv());
+        logger.info("Droped by kernel    : " + stat.getPsDrop());
+        logger.info("Droped by interface : " + stat.getPsIfdrop());
+        logger.info("Recieved            : " + stat.getPsRecv());
         if ((resultCode = PcapStats(pcap, stat)) != OK) {
             logger.warning("PcapLoopAndPcapStats:PcapStats(): " + PcapStrError(resultCode));
             return;
         }
-        System.out.println(stat);
+        logger.info(String.valueOf(stat));
     }
 
     @Test
@@ -336,8 +336,8 @@ public class JxnetTest {
             @Override
             public void nextPacket(String user, PcapPktHdr h, ByteBuffer bytes) {
                 if (h != null && bytes != null) {
-                    System.out.println("Dumping packet into a file.");
-                    System.out.println("File position: " + PcapDumpFTell(dumper));
+                    logger.info("Dumping packet into a file.");
+                    logger.info("File position: " + PcapDumpFTell(dumper));
                     PcapDump(dumper, h, bytes);
                     PcapDumpFlush(dumper);
                 }
@@ -386,8 +386,8 @@ public class JxnetTest {
         for (int i = 0; i < maxPkt; i++) {
             pkt = PcapNext(pcap, pktHdr);
             if (pktHdr != null && pkt != null) {
-                System.out.println("PacketHeader: " + pktHdr);
-                System.out.println("PacketBuffer: " + pkt);
+                logger.info("PacketHeader: " + pktHdr);
+                logger.info("PacketBuffer: " + pkt);
             }
         }
     }
@@ -399,8 +399,8 @@ public class JxnetTest {
             resultCode = PcapNextEx(pcap, pktHdr, pkt);
             logger.info("Result: " + resultCode);
             if (pktHdr != null && pkt != null) {
-                System.out.println("PacketHeader: " + pktHdr);
-                System.out.println("PacketBuffer: " + pkt);
+                logger.info("PacketHeader: " + pktHdr);
+                logger.info("PacketBuffer: " + pkt);
                 pkt.clear();
             }
 
@@ -409,7 +409,7 @@ public class JxnetTest {
 
     @Test
     public void Test12_PcapDataLink() {
-        System.out.println("Data Link Type: " + PcapDataLink(pcap));
+        logger.info("Data Link Type: " + PcapDataLink(pcap));
     }
 
     @Test
@@ -419,7 +419,7 @@ public class JxnetTest {
             logger.warning("PcapSetDataLinkPcapDataLinkPcapOpenDeadAndPcapClose:PcapOpenDead()");
             return;
         }
-        System.out.println("Data Link Type (Before): " + PcapDataLink(pcap));
+        logger.info("Data Link Type (Before): " + PcapDataLink(pcap));
         try {
             if ((resultCode = PcapSetDataLink(pcap, DataLinkType.LINUX_SLL.getValue())) != OK) {
                 logger.warning("PcapSetDataLinkPcapDataLinkPcapOpenDeadAndPcapClose:PcapSetDataLink(): " + PcapStrError(resultCode));
@@ -429,7 +429,7 @@ public class JxnetTest {
         } catch (NativeException e) {
             logger.warning(e.getMessage());
         }
-        System.out.println("Data Link Type (After): " + PcapDataLink(pcap));
+        logger.info("Data Link Type (After): " + PcapDataLink(pcap));
         PcapClose(pcap);
     }
 
@@ -440,12 +440,12 @@ public class JxnetTest {
             @Override
             public void nextPacket(String user, PcapPktHdr h, ByteBuffer bytes) {
             if (cntPkt == (maxPkt / 2)) {
-                System.out.println("Break loop.");
+                logger.info("Break loop.");
                 PcapBreakLoop(pcap);
             }
-            System.out.println("Argument    : " + user);
-            System.out.println("PacketHeader: " + h);
-            System.out.println("PacketBuffer: " + bytes);
+            logger.info("Argument    : " + user);
+            logger.info("PacketHeader: " + h);
+            logger.info("PacketBuffer: " + bytes);
             cntPkt++;
             }
         }, "This Is User Argument")) != OK) {
@@ -461,56 +461,56 @@ public class JxnetTest {
             logger.warning("PcapLookupDev:PcapLookupDev(): " + errbuf.toString());
             return;
         }
-        System.out.println("Lookup device: " + device);*/
+        logger.info("Lookup device: " + device);*/
     }
 
     @Test
     public void Test16_PcapGetErr() {
-        System.out.println("Pcap Error: " + PcapGetErr(pcap));
+        logger.info("Pcap Error: " + PcapGetErr(pcap));
     }
 
     @Test
     public void Test17_PcapLibVersionPcapMajorVersionAndPcapMinorVersion() {
-        System.out.println("Pcap Library Version: " + PcapLibVersion());
-        System.out.println("Pcap Major Version: " + PcapMajorVersion(pcap));
-        System.out.println("Pcap Minor Version: " + PcapMinorVersion(pcap));
+        PcapPError(pcap, "Pcap Library Version : (" + PcapLibVersion() + ")");
+        PcapPError(pcap, "Pcap Major Version   : (" + PcapMajorVersion(pcap) + ")");
+        PcapPError(pcap, "Pcap Minor Version   : (" + PcapMinorVersion(pcap) + ")");
     }
 
     @Test
     public void Test18_PcapIsSwapped() {
-        System.out.println("Pcap is swapped: " + PcapIsSwapped(pcap));
+        logger.info("Pcap is swapped: " + PcapIsSwapped(pcap));
     }
 
     @Test
     public void Test19_PcapSnapshot() {
-        System.out.println("Snapshot: " + PcapSnapshot(pcap));
+        logger.info("Snapshot: " + PcapSnapshot(pcap));
     }
 
     @Test
     public void Test20_PcapDataLinkValToNamePcapDataLinkValToDescriptionAndPcapDataLinkNameToVal() {
         String dataLinkName = PcapDataLinkValToName(DataLinkType.EN10MB.getValue());
-        System.out.println("Data Link Name: " + dataLinkName);
-        System.out.println("Data Link Description: " + PcapDataLinkValToDescription(DataLinkType.EN10MB.getValue()));
-        System.out.println("Data Link Value: " + PcapDataLinkNameToVal(dataLinkName));
+        logger.info("Data Link Name: " + dataLinkName);
+        logger.info("Data Link Description: " + PcapDataLinkValToDescription(DataLinkType.EN10MB.getValue()));
+        logger.info("Data Link Value: " + PcapDataLinkNameToVal(dataLinkName));
     }
 
     @Test
     public void Test21_PcapSetNonBlockPcapGetNonBlock() {
         int blocking = PcapGetNonBlock(pcap, errbuf);
-        System.out.println("Blocking (Before) : " + blocking);
-        System.out.println("Error Buffer      : " + errbuf.toString());
+        logger.info("Blocking (Before) : " + blocking);
+        logger.info("Error Buffer      : " + errbuf.toString());
         if ((resultCode = PcapSetNonBlock(pcap, (blocking == 0) ? 1 : 0, errbuf)) != OK) {
             logger.warning("PcapSetNonBlockPcapGetNonBlock:PcapSetNonBlock(): " + errbuf.toString());
             return;
         }
-        System.out.println("Blocking (After)  : " + PcapGetNonBlock(pcap, errbuf));
-        System.out.println("Error Buffer      : " + errbuf.toString());
+        logger.info("Blocking (After)  : " + PcapGetNonBlock(pcap, errbuf));
+        logger.info("Error Buffer      : " + errbuf.toString());
         if ((resultCode = PcapSetNonBlock(pcap, (blocking == 0) ? 0 : 1, errbuf)) != OK) {
             logger.warning("PcapSetNonBlockPcapGetNonBlock:PcapSetNonBlock(): " + errbuf.toString());
             return;
         }
-        System.out.println("Blocking          : " + PcapGetNonBlock(pcap, errbuf));
-        System.out.println("Error Buffer      : " + errbuf.toString());
+        logger.info("Blocking          : " + PcapGetNonBlock(pcap, errbuf));
+        logger.info("Error Buffer      : " + errbuf.toString());
     }
 
     @Test
@@ -532,7 +532,7 @@ public class JxnetTest {
 
     @Test
     public void Test23_PcapPError() {
-        PcapPError(pcap, "Pcap Error");
+        PcapPError(pcap, "Message: ");
     }
 
     @Test
@@ -570,7 +570,7 @@ public class JxnetTest {
         } catch (PlatformNotSupportedException e) {
             logger.warning(e.getMessage());
         }
-        System.out.println("Time stamp precision (before): " + timestamp);
+        logger.info("Time stamp precision (before): " + timestamp);
         try {
             if ((resultCode = PcapSetTStampPrecision(pcap, (timestamp == 0 ? 1 : 0))) != OK) {
                 logger.warning("Timestamp precision not supported by operation system.");
@@ -583,7 +583,7 @@ public class JxnetTest {
         } catch (PlatformNotSupportedException e) {
             logger.warning(e.getMessage());
         }
-        System.out.println("Time stamp precision (after) : " + timestamp);
+        logger.info("Time stamp precision (after) : " + timestamp);
     }
 
     @Test
@@ -640,16 +640,16 @@ public class JxnetTest {
         } catch (PlatformNotSupportedException e) {
             logger.warning(e.getMessage());
         }
-        System.out.println("Time stamp name       : " + tsName);
+        logger.info("Time stamp name       : " + tsName);
         try {
             if (tsName != null) {
-                System.out.println("Time stamp value      : " + PcapTStampTypeNameToVal(tsName));
+                logger.info("Time stamp value      : " + PcapTStampTypeNameToVal(tsName));
             }
         } catch (PlatformNotSupportedException e) {
             logger.warning(e.getMessage());
         }
         try {
-            System.out.println("Time stamp description: " + PcapTStampTypeValToDescription(tsVal));
+            logger.info("Time stamp description: " + PcapTStampTypeValToDescription(tsVal));
         } catch (PlatformNotSupportedException e) {
             logger.warning(e.getMessage());
         }
@@ -659,7 +659,7 @@ public class JxnetTest {
     public void Test32_PcapStatusToStr() {
         int errNum = 2;
         try {
-            System.out.println("Pcap Error (" + errNum + "): " + PcapStatusToStr(errNum));
+            logger.info("Pcap Error (" + errNum + "): " + PcapStatusToStr(errNum));
         } catch (PlatformNotSupportedException e) {
             logger.warning(e.getMessage());
         }
@@ -721,12 +721,12 @@ public class JxnetTest {
         try {
             byte[] address = Jxnet.FindHardwareAddress(source);
             if (address.length == 6) {
-                System.out.println(MacAddress.valueOf(address));
+                logger.info(String.valueOf(MacAddress.valueOf(address)));
             }
         } catch (DeviceNotFoundException e) {
-            System.out.println(e.getMessage());
+            logger.info(e.getMessage());
         } catch (PlatformNotSupportedException e) {
-            System.out.println(e.getMessage());
+            logger.info(e.getMessage());
         }
     }
     /**
