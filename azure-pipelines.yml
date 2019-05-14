@@ -13,6 +13,9 @@ strategy:
 pool:
   vmImage: $(imageName)
 
+variables:
+  - group: TOKEN
+
 steps:
   # macOS
   - bash: |
