@@ -4,6 +4,8 @@ trigger:
 
 strategy:
   matrix:
+    linux:
+      imageName: 'ubuntu-16.04'
     mac:
       imageName: 'macos-10.13'
     windows:
@@ -13,8 +15,22 @@ strategy:
 pool:
   vmImage: $(imageName)
 
+variables:
+  - group: TOKEN
+
 steps:
-  # macOS
+  # Linux
+  - bash: |
+      sudo -E apt-get update
+      sudo -E apt-get -y install bison flex make gcc
+      cd jxnet-native/libpcap && ./configure && make && cd ../..
+      sudo -E ln -s jxnet-native/libpcap/libpcap.so.1.7.4 /usr/lib/libpcap.so.1
+      sudo -E ln -s jxnet-native/libpcap/libpcap.so.1.7.4 /usr/lib/libpcap.so.0.8
+      sudo -E ln -s jxnet-native/libpcap/libpcap.so.1.7.4 /usr/lib/libpcap.so
+      sudo -E ./gradlew -p jxnet-core assemble test
+    condition: eq( variables['Agent.OS'], 'Linux' )
+    displayName: Linux Environment
+  # MacOS
   - bash: |
       export JAVA_HOME=`/usr/libexec/java_home -v 1.8`; java -version
       sudo -E ./gradlew test jacocoTestReport
