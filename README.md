@@ -1,3 +1,5 @@
+Developement has been stopped, please use https://github.com/ardikars/pcap instead.
+=
 
 Jxnet
 =====
