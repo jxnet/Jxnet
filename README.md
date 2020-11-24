@@ -25,7 +25,6 @@ Features
 =======
 
 - Lightweight (`jxnet-core` is around 160 KB in size)
-- Low lavel and asynchronous `event-driven` network application libarary
 - Easy to configure and integrated with popular java framework (`spring-boot`)
 - Using `direct buffer` (without copying buffer for minimized unnecessary memory copy)
 - Better `throughput` and `lower latency`
